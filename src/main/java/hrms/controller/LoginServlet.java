@@ -1,4 +1,4 @@
-package hrms.controller.authenticate;
+package hrms.controller;
 
 import java.io.IOException;
 

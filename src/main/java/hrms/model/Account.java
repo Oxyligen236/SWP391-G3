@@ -1,4 +1,4 @@
-package hrms.model.authenticate;
+package hrms.model;
 
 public class Account {
     private String username;
