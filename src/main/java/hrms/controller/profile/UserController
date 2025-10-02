@@ -1,0 +1,245 @@
+import java.io.IOException;
+import java.sql.Date;
+import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dao.profile.UserDAO;
+import model.profile.User;
+
+@WebServlet("/profile/*")
+public class UserController extends HttpServlet {
+    private UserDAO userDAO;
+    
+    @Override
+    public void init() {
+        userDAO = new UserDAO();
+    }
+    
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        String action = request.getPathInfo();
+        
+        if (action == null) {
+            action = "/list";
+        }
+        
+        try {
+            switch (action) {
+                case "/list":
+                    listUsers(request, response);
+                    break;
+                case "/view":
+                    viewProfile(request, response);
+                    break;
+                case "/edit":
+                    showEditForm(request, response);
+                    break;
+                case "/my-profile":
+                    viewMyProfile(request, response);
+                    break;
+                default:
+                    listUsers(request, response);
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
+            request.getRequestDispatcher("/views/error.jsp").forward(request, response);
+        }
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        request.setCharacterEncoding("UTF-8");
+        String action = request.getPathInfo();
+        
+        try {
+            if ("/update".equals(action)) {
+                updateProfile(request, response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            HttpSession session = request.getSession();
+            session.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/profile/list");
+        }
+    }
+    
+    // Lấy current user từ session
+    private User getCurrentUser(HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("userId");
+        if (userId == null) {
+            return null;
+        }
+        return userDAO.getUserById(userId);
+    }
+    
+    // Danh sách users theo quyền
+    private void listUsers(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        HttpSession session = request.getSession();
+        User currentUser = getCurrentUser(session);
+        
+        if (currentUser == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        
+        // Lấy danh sách users theo quyền
+        List<User> users = userDAO.getUsersByPermission(currentUser);
+        
+        request.setAttribute("users", users);
+        request.setAttribute("currentUser", currentUser);
+        request.getRequestDispatcher("/views/profile/listUsers.jsp").forward(request, response);
+    }
+    
+    // Xem profile của người khác hoặc chính mình
+    private void viewProfile(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        HttpSession session = request.getSession();
+        User currentUser = getCurrentUser(session);
+        
+        if (currentUser == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        
+        // Lấy userId từ parameter, nếu không có thì xem chính mình
+        String userIdParam = request.getParameter("userId");
+        int targetUserId = (userIdParam != null) ? 
+                          Integer.parseInt(userIdParam) : currentUser.getUserId();
+        
+        // Kiểm tra quyền xem
+        if (!userDAO.canViewProfile(currentUser, targetUserId)) {
+            session.setAttribute("error", "Bạn không có quyền xem thông tin này!");
+            response.sendRedirect(request.getContextPath() + "/profile/my-profile");
+            return;
+        }
+        
+        User targetUser = userDAO.getUserById(targetUserId);
+        
+        if (targetUser == null) {
+            session.setAttribute("error", "Không tìm thấy người dùng!");
+            response.sendRedirect(request.getContextPath() + "/profile/list");
+            return;
+        }
+        
+        request.setAttribute("user", targetUser);
+        request.setAttribute("currentUser", currentUser);
+        request.setAttribute("canEdit", userDAO.canEditProfile(currentUser, targetUserId));
+        request.getRequestDispatcher("/views/profile/viewProfile.jsp").forward(request, response);
+    }
+    
+    // Xem profile của chính mình
+    private void viewMyProfile(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        HttpSession session = request.getSession();
+        User currentUser = getCurrentUser(session);
+        
+        if (currentUser == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        
+        request.setAttribute("user", currentUser);
+        request.setAttribute("currentUser", currentUser);
+        request.setAttribute("canEdit", true);
+        request.getRequestDispatcher("/views/profile/viewProfile.jsp").forward(request, response);
+    }
+    
+    // Hiển thị form edit
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        HttpSession session = request.getSession();
+        User currentUser = getCurrentUser(session);
+        
+        if (currentUser == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        
+        // Lấy userId từ parameter, nếu không có thì edit chính mình
+        String userIdParam = request.getParameter("userId");
+        int targetUserId = (userIdParam != null) ? 
+                          Integer.parseInt(userIdParam) : currentUser.getUserId();
+        
+        // Kiểm tra quyền edit
+        if (!userDAO.canEditProfile(currentUser, targetUserId)) {
+            session.setAttribute("error", "Bạn không có quyền chỉnh sửa thông tin này!");
+            response.sendRedirect(request.getContextPath() + "/profile/view?userId=" + targetUserId);
+            return;
+        }
+        
+        User targetUser = userDAO.getUserById(targetUserId);
+        
+        if (targetUser == null) {
+            session.setAttribute("error", "Không tìm thấy người dùng!");
+            response.sendRedirect(request.getContextPath() + "/profile/list");
+            return;
+        }
+        
+        // Kiểm tra xem có phải đang edit chính mình không
+        boolean isEditingSelf = (currentUser.getUserId() == targetUserId);
+        
+        request.setAttribute("user", targetUser);
+        request.setAttribute("currentUser", currentUser);
+        request.setAttribute("isEditingSelf", isEditingSelf);
+        
+        // Nếu là HR/HR Manager thì load dropdown data
+        if (currentUser.isHR() || currentUser.isHRManager()) {
+            request.setAttribute("departments", userDAO.getAllDepartments());
+            request.setAttribute("positions", userDAO.getAllPositions());
+            request.setAttribute("degrees", userDAO.getAllDegrees());
+        }
+        
+        request.getRequestDispatcher("/views/profile/editProfile.jsp").forward(request, response);
+    }
+    
+    // Cập nhật profile
+    private void updateProfile(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        HttpSession session = request.getSession();
+        User currentUser = getCurrentUser(session);
+        
+        if (currentUser == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        
+        int targetUserId = Integer.parseInt(request.getParameter("userId"));
+        
+        // Kiểm tra quyền edit
+        if (!userDAO.canEditProfile(currentUser, targetUserId)) {
+            session.setAttribute("error", "Bạn không có quyền chỉnh sửa thông tin này!");
+            response.sendRedirect(request.getContextPath() + "/profile/view?userId=" + targetUserId);
+            return;
+        }
+        
+        try {
+            User user = new User();
+            user.setUserId(targetUserId);
+            
+            boolean success;
+            
+            // Nếu user đang edit chính mình
+            if (currentUser.getUserId() == targetUserId) {
+                // Chỉ cho phép update các trường cơ bản
+                user.setEmail(request.getParameter("email"));
+                user.setPhoneNumber(request.getParameter("phoneNumber"));
+                user.setAddress(request.getParameter("address"));
+                
+                
