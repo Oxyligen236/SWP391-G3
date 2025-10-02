@@ -111,7 +111,6 @@
           </deployables>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 </project>
