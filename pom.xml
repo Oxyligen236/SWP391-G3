@@ -27,12 +27,41 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Jakarta Servlet API (Tomcat 10 dùng Jakarta, không dùng javax nữa) -->
+    <!-- Jakarta Servlet API
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
       <version>5.0.0</version>
       <scope>provided</scope>
+    </dependency> 
+    <dependency>
+    <groupId>org.eclipse.ee4j.jstl</groupId>
+    <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+    <version>3.0.1</version>
+</dependency>-->
+    <!-- JSTL -->
+<dependency>
+
+    <groupId>javax.servlet</groupId>
+
+    <artifactId>javax.servlet-api</artifactId>
+
+    <version>4.0.1</version>
+
+    <scope>provided</scope>
+
+</dependency>
+       <!-- MySQL Connector -->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.33</version>
+    </dependency>
+        <!-- Microsoft JDBC Driver for SQL Server -->
+    <dependency>
+        <groupId>com.microsoft.sqlserver</groupId>
+        <artifactId>mssql-jdbc</artifactId>
+        <version>12.6.1.jre11</version> 
     </dependency>
   </dependencies>
 
