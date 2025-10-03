@@ -1,4 +1,0 @@
-hrms\controller\TicketServlet.class
-hrms\model\Account.class
-hrms\dao\TicketDAO.class
-hrms\utils\DBContext.class
