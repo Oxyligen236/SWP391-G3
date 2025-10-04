@@ -3,10 +3,13 @@ package hrms.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import hrms.model.Account;
 import hrms.utils.DBContext;
+
+
 
 public class AccountDao extends DBContext{
     private Account extractAccountFromResultSet(ResultSet rs) throws SQLException {
@@ -21,7 +24,7 @@ public class AccountDao extends DBContext{
         String sql = "select * from Account";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            List <Account> list = new java.util.ArrayList<>();
+            List <Account> list = new ArrayList<>();
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Account a = extractAccountFromResultSet(rs);

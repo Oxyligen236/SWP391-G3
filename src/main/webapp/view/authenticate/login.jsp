@@ -18,17 +18,22 @@
                     <c:if test="${not empty errorMessage}">
                         <p class="errorMessage">${errorMessage}</p>
                     </c:if>
-                    <form action="<c:url value='/login'/>" method="post">
+                    <form action="<c:url value='/authenticate'/>" method="post">
                         <label>Username:</label>
-                        <input type="text" name="username" required>
+                        <input type="text" name="username" value="${username}" required>
                         <label>Password:</label>
-                        <input type="password" name="password" required>
+                        <input type="password" name="password" value="${password}" required>
                         <button type="submit">Login</button>
-                        <div class="remember-me">
-                            <input type="checkbox" id="remember" name="remember">
-                            <label for="remember">Ghi nhớ tôi</label>
-                        </div>
 
+                        <div class="options">
+                            <div class="remember-me">
+                                <input type="checkbox" id="remember" name="remember" value="on" ${remember}>
+                                <label for="remember">Ghi nhớ tôi</label>
+                            </div>
+                            <div class="forgot-password">
+                                <a href="<c:url value='/forgotPassword'/>">Quên mật khẩu?</a>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </body>
