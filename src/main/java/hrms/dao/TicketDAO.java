@@ -10,6 +10,7 @@ import hrms.model.Ticket;
 import hrms.utils.DBContext;
 
 public class TicketDAO extends DBContext {
+   
 
     private Ticket extractTicketFromResultSet(ResultSet rs) throws SQLException {
         return new Ticket(
@@ -55,7 +56,7 @@ public class TicketDAO extends DBContext {
         return null;
     }
 
-    public void addTicket(Ticket t) {
+    public boolean add(Ticket t) {
         String sql = "insert into Ticket (userID, ticket_Type_ID, create_Date, ticket_Content, approveID, approve_Date, comment, status) values (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -76,12 +77,14 @@ public class TicketDAO extends DBContext {
             st.setString(7, t.getComment());
             st.setString(8, t.getStatus());
             st.executeUpdate();
+            return true;
         } catch (SQLException e) {
             System.out.println(e);
+            return false;
         }
-    }
 
-    public void updateTicket(Ticket t) {
+    }
+    public boolean update(Ticket t) {
         String sql = "update Ticket set userID = ?, ticket_Type_ID = ?, create_Date = ?, ticket_Content = ?, approveID = ?, approve_Date = ?, comment = ?, status = ? where ticketID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -103,9 +106,44 @@ public class TicketDAO extends DBContext {
             st.setString(8, t.getStatus());
             st.setInt(9, t.getTicketID());
             st.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+    public List<Ticket> getTicketsByUserId(int userId) {
+        List<Ticket> list = new ArrayList<>();
+        String sql = "select * from Ticket where userID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, userId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Ticket t = extractTicketFromResultSet(rs);
+                list.add(t);
+            }
         } catch (SQLException e) {
             System.out.println(e);
         }
+        return list;
+    }
+
+    public List<Ticket> getTicketsByApproveID(int approveID) {
+        List<Ticket> list = new ArrayList<>();
+        String sql = "select * from Ticket where approveID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, approveID);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Ticket t = extractTicketFromResultSet(rs);
+                list.add(t);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
     }
 
 }
