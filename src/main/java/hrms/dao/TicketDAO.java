@@ -10,6 +10,7 @@ import hrms.model.Ticket;
 import hrms.utils.DBContext;
 
 public class TicketDAO extends DBContext {
+
     private Ticket extractTicketFromResultSet(ResultSet rs) throws SQLException {
         return new Ticket(
                 rs.getInt("ticketID"),
@@ -79,6 +80,7 @@ public class TicketDAO extends DBContext {
             System.out.println(e);
         }
     }
+
     public void updateTicket(Ticket t) {
         String sql = "update Ticket set userID = ?, ticket_Type_ID = ?, create_Date = ?, ticket_Content = ?, approveID = ?, approve_Date = ?, comment = ?, status = ? where ticketID = ?";
         try {
@@ -105,8 +107,5 @@ public class TicketDAO extends DBContext {
             System.out.println(e);
         }
     }
-
-    
-
 
 }

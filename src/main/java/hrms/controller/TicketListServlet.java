@@ -12,12 +12,13 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/ticketList")
 public class TicketListServlet extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        TicketDAO ticketDAO = new TicketDAO();
-        List tickets = ticketDAO.getAll();
+        TicketDAO TicketDAO = new TicketDAO();
+        List tickets = TicketDAO.getAll();
         request.setAttribute("ticketList", tickets);
         request.getRequestDispatcher("/WEB-INF/views/ticketList.jsp").forward(request, response);
     }

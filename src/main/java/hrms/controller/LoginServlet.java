@@ -45,7 +45,7 @@ public class LoginServlet extends HttpServlet {
         AccountDao accountDao = new AccountDao();
         Account account = accountDao.getAccountByUsername(username);
         // Account account = new Account(username, password, "admin", true);
-        if (account != null && account.isActive() && account.getPassword().equals(password)) {
+        if (account != null && account.isIsActive() && account.getPassword().equals(password)) {
             if ("on".equals(remember)) {
                 Cookie usernameCookie = new Cookie("username", username);
                 Cookie passwordCookie = new Cookie("password", password);
