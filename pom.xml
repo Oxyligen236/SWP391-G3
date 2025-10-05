@@ -28,12 +28,12 @@
     </dependency>
 
     <!-- Jakarta Servlet API (Tomcat 10 dùng Jakarta) -->
-<dependency>
-    <groupId>jakarta.servlet</groupId>
-    <artifactId>jakarta.servlet-api</artifactId>
-    <version>5.0.0</version>
-    <scope>provided</scope>
-</dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>5.0.0</version>
+      <scope>provided</scope>
+    </dependency>
 
     <!-- MySQL Connector/J  -->
     <dependency>
@@ -111,7 +111,6 @@
           </deployables>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 </project>
