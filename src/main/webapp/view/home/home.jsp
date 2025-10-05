@@ -15,6 +15,8 @@
         <a href="<c:url value='/authenticate'/>">Go to Login Page</a>
         </br>
         <a href="<c:url value='/logout'/>">Logout</a>
+        </br>
+        <a href="<c:url value='/cv'/>">CV List</a>
     </body>
 
     </html>
