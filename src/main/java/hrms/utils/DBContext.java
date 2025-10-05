@@ -10,12 +10,6 @@ public class DBContext {
 
     public DBContext() {
         try {
-           
-            String url = "jdbc:mysql://localhost:3306/HRM?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-            String username = "root";  
-            String password = "123456"; 
-            
-            
             // Cấu hình kết nối MySQL
             String url = "jdbc:mysql://localhost:3306/HRM2?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
             String username = "hrm";  // Thay đổi username của bạn
@@ -23,8 +17,6 @@ public class DBContext {
 
             // Load MySQL JDBC Driver
             Class.forName("com.mysql.cj.jdbc.Driver");
-            
-        
 
             // Tạo kết nối
             connection = DriverManager.getConnection(url, username, password);
@@ -52,8 +44,5 @@ public class DBContext {
             }
         }
     }
-
-
-   
 
 }
