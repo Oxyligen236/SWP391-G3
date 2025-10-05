@@ -3,6 +3,7 @@ package hrms.model;
 import java.util.Date;
 
 public class Ticket {
+
     private int ticketID;
     private int userID;
     private int ticket_Type_ID;
@@ -102,8 +103,5 @@ public class Ticket {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    
-    
 
 }

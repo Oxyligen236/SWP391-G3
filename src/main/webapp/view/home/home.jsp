@@ -8,10 +8,14 @@
     <title>Home</title>
   </head>
 
-  <body>
-    <h1>Welcome to the Home Page</h1>
-    <p>This is a simple JSP page.</p>
-    <a href="<c:url value='/login'/>">Go to Login Page</a>
-    <a href="<c:url value='/ticketList'/>">Go to Ticket List Page</a>
-  </body>
-</html>
+    <body>
+        <h1>Welcome to the Home Page</h1>
+        <p>This is a simple JSP page.</p>
+        <a href="<c:url value='/authenticate'/>">Go to Login Page</a>
+        </br>
+        <a href="<c:url value='/logout'/>">Logout</a>
+        </br>
+        <a href="<c:url value='/cv'/>">CV List</a>
+    </body>
+
+    </html>

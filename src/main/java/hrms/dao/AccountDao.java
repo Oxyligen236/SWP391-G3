@@ -17,7 +17,7 @@ public class AccountDao extends DBContext {
                 rs.getInt("userID"),
                 rs.getString("username"),
                 rs.getString("password"),
-                rs.getString("role"),
+                rs.getInt("role"),
                 rs.getBoolean("isActive")
         );
     }

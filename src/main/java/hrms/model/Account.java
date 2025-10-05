@@ -6,13 +6,13 @@ public class Account {
     private int userID;
     private String username;
     private String password;
-    private String role;
+    private int role;
     private boolean isActive;
 
     public Account() {
     }
 
-    public Account(int accountID, int userID, String username, String password, String role, boolean isActive) {
+    public Account(int accountID, int userID, String username, String password, int role, boolean isActive) {
         this.accountID = accountID;
         this.userID = userID;
         this.username = username;
@@ -53,11 +53,11 @@ public class Account {
         this.password = password;
     }
 
-    public String getRole() {
+    public int getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(int role) {
         this.role = role;
     }
 
