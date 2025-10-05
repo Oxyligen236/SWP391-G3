@@ -73,11 +73,16 @@ body {
     font-size: 14px;
 }
 
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
 .remember-me {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    margin: 10px 0;
 }
 
 .remember-me input[type="checkbox"] {
@@ -89,4 +94,14 @@ body {
     margin: 0;
     font-size: 13px;
     color: #555;
+}
+
+.forgot-password a {
+    font-size: 13px;
+    color: #74ebd5;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
 }

@@ -2,7 +2,6 @@ package hrms.controller;
 
 import java.io.IOException;
 
-import hrms.dao.AccountDao;
 import hrms.model.Account;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,7 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/login")
+@WebServlet("/authenticate")
 public class LoginServlet extends HttpServlet {
 
     @Override
@@ -28,28 +27,29 @@ public class LoginServlet extends HttpServlet {
                 }
             }
         }
-        request.getRequestDispatcher("/view/login/login.jsp").forward(request, response);
+        if (request.getAttribute("username") != null && request.getAttribute("password") != null) {
+            request.setAttribute("remember", "checked");
+        }
+        request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
     }
-    
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String remember = request.getParameter("remember");
 
-        AccountDao accountDao = new AccountDao();
-        Account account = accountDao.getAccountByUsername(username);
-
-
+        // AccountDao accountDao = new AccountDao();
+        // Account account = accountDao.getAccountByUsername(username);
+        Account account = new Account(username, password, "admin", true);
         if (account != null && account.isActive() && account.getPassword().equals(password)) {
             if ("on".equals(remember)) {
                 Cookie usernameCookie = new Cookie("username", username);
                 Cookie passwordCookie = new Cookie("password", password);
                 usernameCookie.setMaxAge(7 * 24 * 60 * 60);
-                passwordCookie.setMaxAge(7 * 24 * 60 * 60); 
+                passwordCookie.setMaxAge(7 * 24 * 60 * 60);
                 response.addCookie(usernameCookie);
                 response.addCookie(passwordCookie);
             } else {
@@ -61,10 +61,10 @@ public class LoginServlet extends HttpServlet {
                 response.addCookie(passwordCookie);
             }
             request.getSession().setAttribute("account", account);
-            response.sendRedirect("home");
+            response.sendRedirect(request.getContextPath() + "/view/home/home.jsp");
         } else {
             request.setAttribute("errorMessage", "Invalid username or password");
-            request.getRequestDispatcher("/view/login/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
         }
     }
 }

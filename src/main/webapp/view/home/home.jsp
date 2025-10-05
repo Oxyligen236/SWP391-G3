@@ -12,7 +12,9 @@
     <body>
         <h1>Welcome to the Home Page</h1>
         <p>This is a simple JSP page.</p>
-        <a href="<c:url value='/login'/>">Go to Login Page</a>
+        <a href="<c:url value='/authenticate'/>">Go to Login Page</a>
+        </br>
+        <a href="<c:url value='/logout'/>">Logout</a>
     </body>
 
     </html>
