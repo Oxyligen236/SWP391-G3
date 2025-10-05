@@ -1,16 +1,40 @@
 package hrms.model;
 
 public class Account {
+
+    private int accountID;
+    private int userID;
     private String username;
     private String password;
     private String role;
     private boolean isActive;
 
-    public Account(String username, String password, String role, boolean isActive) {
+    public Account() {
+    }
+
+    public Account(int accountID, int userID, String username, String password, String role, boolean isActive) {
+        this.accountID = accountID;
+        this.userID = userID;
         this.username = username;
         this.password = password;
         this.role = role;
         this.isActive = isActive;
+    }
+
+    public int getAccountID() {
+        return accountID;
+    }
+
+    public void setAccountID(int accountID) {
+        this.accountID = accountID;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public String getUsername() {
@@ -37,11 +61,12 @@ public class Account {
         this.role = role;
     }
 
-    public boolean isActive() {
+    public boolean isIsActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
+
 }
