@@ -3,6 +3,7 @@ package hrms.model;
 import java.util.Date;
 
 public class Contract {
+
     private int contractId;
     private int userId;
     private Date startDate;
@@ -11,12 +12,14 @@ public class Contract {
     private int duration;
     private double baseSalary;
     private String note;
-    private String type;
+    private int typeID;
+
+    private String typeName;
 
     public Contract() {
     }
 
-    public Contract(int contractId, int userId, Date startDate, Date endDate, Date signDate, int duration, double baseSalary, String note, String type) {
+    public Contract(int contractId, int userId, Date startDate, Date endDate, Date signDate, int duration, double baseSalary, String note, int typeID) {
         this.contractId = contractId;
         this.userId = userId;
         this.startDate = startDate;
@@ -25,7 +28,7 @@ public class Contract {
         this.duration = duration;
         this.baseSalary = baseSalary;
         this.note = note;
-        this.type = type;
+        this.typeID = typeID;
     }
 
     public int getContractId() {
@@ -92,14 +95,19 @@ public class Contract {
         this.note = note;
     }
 
-    public String getType() {
-        return type;
+    public int getTypeID() {
+        return typeID;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypeID(int typeID) {
+        this.typeID = typeID;
+    }
+
+     public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }
-
-
-

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import hrms.dao.contract.ContractDAO;
+import hrms.dao.contract.ContractTypeDAO;
 import hrms.model.Contract;
+import hrms.model.ContractType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -31,6 +33,8 @@ public class ContractController extends HttpServlet {
                 request.getRequestDispatcher("/contracts/list.jsp").forward(request, response);
                 break;
             case "add":
+                List<ContractType> types = new ContractTypeDAO().getAllTypes();
+                request.setAttribute("types", types);
                 request.getRequestDispatcher("/contracts/add.jsp").forward(request, response);
                 break;
         }
@@ -48,7 +52,7 @@ public class ContractController extends HttpServlet {
             contract.setDuration(Integer.parseInt(request.getParameter("duration")));
             contract.setBaseSalary(Double.parseDouble(request.getParameter("baseSalary")));
             contract.setNote(request.getParameter("note"));
-            contract.setType(request.getParameter("type"));
+            contract.setTypeID(Integer.parseInt(request.getParameter("typeID")));
 
             dao.addContract(contract);
             response.sendRedirect("contracts?action=list");

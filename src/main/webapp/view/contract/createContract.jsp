@@ -1,4 +1,5 @@
-<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 
 <html lang="en">
@@ -6,13 +7,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Contract page</title>
-    <link rel="stylesheet" href="../../css/contract.css">
+    <link rel="stylesheet" href="../../css/contract.css" />
     <script src="" defer></script>
   </head>
   <body>
     <div class="contract-form">
       <h2>Thông tin hợp đồng</h2>
-      <form action="ContractServlet" method="post">
+      <form action="contracts" method="post">
+        <input type="hidden" name="action" value="insert" />
         <div class="form-group">
           <label for="name">Họ và tên:</label>
           <input type="text" id="name" name="name" required />
@@ -49,13 +51,18 @@
         </div>
 
         <div class="form-group">
-          <label for="type">Loại hợp đồng:</label>
-          <select id="type" name="type" required>
+          <label for="typeID">Loại hợp đồng:</label>
+          <select name="typeID" id="typeID" required>
+            <c:forEach var="t" items="${types}">
+              <option value="${t.typeID}">${t.typeName}</option>
+            </c:forEach>
+          </select>
+          <!-- <select id="type" name="type" required>
             <option value="">--Chọn loại hợp đồng--</option>
             <option value="thuviec">Thử việc</option>
             <option value="chinhthuc">Chính thức</option>
             <option value="thoivu">Thời vụ</option>
-          </select>
+          </select> -->
         </div>
 
         <div class="form-group">

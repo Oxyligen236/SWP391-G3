@@ -14,7 +14,9 @@ public class ContractDAO {
 
     public List<Contract> getAllContracts() {
         List<Contract> contracts = new ArrayList<>();
-        String sql = "SELECT * FROM contracts";
+        String sql = "SELECT c.*, t.Name AS TypeName"
+                   + "FROM Contract c"
+                   + "JOIN Contract_Type t ON c.Type = t.TypeID";
         DBContext dbContext = new DBContext();
 
         try (Connection conn = dbContext.getConnection();
@@ -31,7 +33,8 @@ public class ContractDAO {
                 contract.setDuration(rs.getInt("Duration"));
                 contract.setBaseSalary(rs.getDouble("BaseSalary"));
                 contract.setNote(rs.getString("Note"));
-                contract.setType(rs.getString("Type"));
+                contract.setTypeID(rs.getInt("Type"));
+                contract.setTypeName(rs.getString("TypeName"));
                 contracts.add(contract);
             }
         } catch (SQLException e) {
@@ -52,7 +55,7 @@ public class ContractDAO {
             ps.setInt(5, contract.getDuration());
             ps.setDouble(6, contract.getBaseSalary());
             ps.setString(7, contract.getNote());
-            ps.setString(8, contract.getType());
+            ps.setInt(8, contract.getTypeID());
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

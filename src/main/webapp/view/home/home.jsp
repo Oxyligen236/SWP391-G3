@@ -16,6 +16,9 @@
         <a href="<c:url value='/logout'/>">Logout</a>
         </br>
         <a href="<c:url value='/cv'/>">CV List</a>
+        </br>
+        <a href="<c:url value='/contract.jsp'/>">AddContract</a>
+        </br>
     </body>
 
     </html>
