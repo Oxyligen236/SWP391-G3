@@ -105,3 +105,18 @@ body {
 .forgot-password a:hover {
     text-decoration: underline;
 }
+
+.show-password {
+    display: flex;
+    align-items: center;
+    margin: 5px 0 15px 0;
+    font-size: 13px;
+    color: #555;
+    cursor: pointer;
+}
+
+.show-password input[type="checkbox"] {
+    margin-right: 5px;
+    width: auto;
+    cursor: pointer;
+}
