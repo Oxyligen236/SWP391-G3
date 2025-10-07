@@ -1,33 +1,21 @@
-package hrms.model;
+package hrms.dto;
 
-public class CVs {
+public class CVJobDetailDTO {
 
     private int cvID;
-    private int jdID;
+    private String jdTitle;
     private String name;
     private String email;
     private String phone;
     private String cv_Description;
     private String status;
 
-    // Constructor mặc định
-    public CVs() {
+    public CVJobDetailDTO() {
     }
 
-    // Constructor đọc CV từ DB
-    public CVs(int cvID, int jdID, String name, String email, String phone, String cv_Description, String status) {
+    public CVJobDetailDTO(int cvID, String jdTitle, String name, String email, String phone, String cv_Description, String status) {
         this.cvID = cvID;
-        this.jdID = jdID;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.cv_Description = cv_Description;
-        this.status = status;
-    }
-
-    // Constructor insert CV mới
-    public CVs(int jdID, String name, String email, String phone, String cv_Description, String status) {
-        this.jdID = jdID;
+        this.jdTitle = jdTitle;
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -43,12 +31,12 @@ public class CVs {
         this.cvID = cvID;
     }
 
-    public int getJdID() {
-        return jdID;
+    public String getJdTitle() {
+        return jdTitle;
     }
 
-    public void setJdID(int jdID) {
-        this.jdID = jdID;
+    public void setJdTitle(String jdTitle) {
+        this.jdTitle = jdTitle;
     }
 
     public String getName() {
@@ -90,4 +78,5 @@ public class CVs {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }
