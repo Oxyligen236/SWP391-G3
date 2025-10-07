@@ -24,8 +24,10 @@
                         <label>Password:</label>
                         <input type="password" id="password" name="password" value="${password}" required>
                         <br>
-                        <input type="checkbox" id="showPassword">
-                        <label for="showPassword">Hiển thị mật khẩu</label>
+                        <label class="show-password">
+                            <input type="checkbox" id="showPassword">
+                            Hiển thị mật khẩu
+                        </label>
                         <script>
                             const passwordInput = document.getElementById('password');
                             const showPasswordCheckbox = document.getElementById('showPassword');
