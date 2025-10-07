@@ -3,7 +3,7 @@ package hrms.dto;
 import java.util.Date;
 
 public class TicketDTO {
-     private int ticketID;
+    private int ticketID;
     private int userID;
     private int ticket_Type_ID;
     private Date create_Date;
