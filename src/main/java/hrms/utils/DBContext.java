@@ -11,8 +11,8 @@ public class DBContext {
     public DBContext() {
         try {
             // Cấu hình kết nối MySQL
-            String url = "jdbc:mysql://localhost:3306/HRM2?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-            String username = "hrm";  // Thay đổi username của bạn
+            String url = "jdbc:mysql://localhost:3306/HRMS?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+            String username = "root";  // Thay đổi username của bạn
             String password = "123456"; // Thay đổi password của bạn
 
             // Load MySQL JDBC Driver
