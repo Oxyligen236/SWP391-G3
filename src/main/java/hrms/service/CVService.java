@@ -9,7 +9,7 @@ import hrms.dto.CVJobDetailDTO;
 import hrms.model.CVs;
 import hrms.model.JobDescription;
 
-public class CvService {
+public class CVService {
 
     private final CVsDAO cvDao = new CVsDAO();
     private final JobDAO jobDao = new JobDAO();
