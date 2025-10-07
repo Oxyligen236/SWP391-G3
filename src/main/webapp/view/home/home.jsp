@@ -15,13 +15,10 @@
         </br>
         <a href="<c:url value='/logout'/>">Logout</a>
         </br>
-<<<<<<< HEAD
         <a href="<c:url value='/view'/>">View Profile</a>
         </br>
         <a href="<c:url value='/edit'/>">Edit Profile</a>
         </br>
-=======
->>>>>>> 10fe2e1d1659060b47d0e575b95baeb50b1f6f37
         <a href="<c:url value='/cv'/>">CV List</a>
     </body>
 

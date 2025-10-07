@@ -21,7 +21,7 @@ public class ProfileServlet extends HttpServlet {
 
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("userId") == null) {
-            // Chưa đăng nhập → chuyển hướng đến login
+            System.out.println("Session is null or userId not found in session.");
             resp.sendRedirect(req.getContextPath() + "/authenticate"); 
             return;
         }
@@ -31,7 +31,7 @@ public class ProfileServlet extends HttpServlet {
 
         if (user != null) {
             req.setAttribute("user", user);
-            req.getRequestDispatcher("view/profile/viewProfile.jsp").forward(req, resp);
+            req.getRequestDispatcher("/view/profile/viewProfile.jsp").forward(req, resp);
         } else {
             req.setAttribute("error", "Không tìm thấy thông tin người dùng.");
             req.getRequestDispatcher("/view/profile/error.jsp").forward(req, resp);

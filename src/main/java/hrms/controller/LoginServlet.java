@@ -2,13 +2,8 @@ package hrms.controller;
 
 import java.io.IOException;
 
-<<<<<<< HEAD
 import hrms.dao.AccountDAO;
 import hrms.dto.AccountDTO;
-=======
-import hrms.dao.AccountDao;
-import hrms.model.Account;
->>>>>>> 10fe2e1d1659060b47d0e575b95baeb50b1f6f37
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
@@ -47,13 +42,8 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         String remember = request.getParameter("remember");
 
-<<<<<<< HEAD
         AccountDAO accountDao = new AccountDAO();
         AccountDTO account = accountDao.getAccountByUsername(username);
-=======
-        AccountDao accountDao = new AccountDao();
-        Account account = accountDao.getAccountByUsername(username);
->>>>>>> 10fe2e1d1659060b47d0e575b95baeb50b1f6f37
         // Account account = new Account(username, password, "admin", true);
         if (account != null && account.isIsActive() && account.getPassword().equals(password)) {
             if ("on".equals(remember)) {

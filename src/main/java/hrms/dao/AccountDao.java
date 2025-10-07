@@ -1,55 +1,41 @@
 package hrms.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-import hrms.model.Account;
+import hrms.dto.AccountDTO;
 import hrms.utils.DBContext;
 
-public class AccountDao extends DBContext {
+public class AccountDAO extends DBContext {
 
-    private Account extractAccountFromResultSet(ResultSet rs) throws SQLException {
-        return new Account(
-                rs.getInt("accountID"),
-                rs.getInt("userID"),
-                rs.getString("username"),
-                rs.getString("password"),
-                rs.getInt("role"),
-                rs.getBoolean("isActive")
-        );
-    }
+    public AccountDTO getAccountByUsername(String username) {
+        String sql = "SELECT a.AccountID, a.Username, a.Password, a.Is_active, " +
+                     "u.FullName AS UserFullName, r.Name AS RoleName " +
+                     "FROM Account a " +
+                     "JOIN Users u ON a.UserID = u.UserID " +
+                     "JOIN Role r ON a.RoleID = r.RoleID " +
+                     "WHERE a.Username = ?";
 
-    public List<Account> getAll() {
-        String sql = "select * from Account";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            List<Account> list = new ArrayList<>();
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Account a = extractAccountFromResultSet(rs);
-                list.add(a);
-            }
-            return list;
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return null;
-    }
+        try (Connection conn = this.connection;
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-    public Account getAccountByUsername(String username) {
-        String sql = "select * from Account where username = ?";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, username);
-            ResultSet rs = st.executeQuery();
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
-                return extractAccountFromResultSet(rs);
+                AccountDTO dto = new AccountDTO();
+                dto.setAccountID(rs.getInt("AccountID"));
+                dto.setUsername(rs.getString("Username"));
+                dto.setPassword(rs.getString("Password"));
+                dto.setIsActive(rs.getBoolean("Is_active"));
+                dto.setRoleName(rs.getString("RoleName"));
+                dto.setFullName(rs.getString("UserFullName"));
+                return dto;
             }
-        } catch (SQLException e) {
-            System.out.println(e);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
