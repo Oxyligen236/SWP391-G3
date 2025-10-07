@@ -8,6 +8,11 @@ body {
     align-items: center;
 }
 
+.login-container input,
+.login-container button {
+    box-sizing: border-box;
+}
+
 .login-container {
     background: #fff;
     padding: 30px 40px;
@@ -62,8 +67,56 @@ body {
     background: #5cd0c0;
 }
 
-.error {
+.errorMessage {
     color: red;
     margin-bottom: 15px;
     font-size: 14px;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+}
+
+.remember-me input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+}
+
+.remember-me label {
+    margin: 0;
+    font-size: 13px;
+    color: #555;
+}
+
+.forgot-password a {
+    font-size: 13px;
+    color: #74ebd5;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+.show-password {
+    display: flex;
+    align-items: center;
+    margin: 5px 0 15px 0;
+    font-size: 13px;
+    color: #555;
+    cursor: pointer;
+}
+
+.show-password input[type="checkbox"] {
+    margin-right: 5px;
+    width: auto;
+    cursor: pointer;
 }
