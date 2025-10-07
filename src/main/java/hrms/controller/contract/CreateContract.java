@@ -23,7 +23,7 @@ public class CreateContract extends HttpServlet {
         request.setAttribute("types", types);
         request.getRequestDispatcher("/view/contract/createContract.jsp").forward(request, response);
     }
-
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ContractDAO dao = new ContractDAO();
         Contract contract = new Contract();

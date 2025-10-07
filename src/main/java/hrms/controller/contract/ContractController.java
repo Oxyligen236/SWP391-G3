@@ -22,7 +22,7 @@ public class ContractController extends HttpServlet {
         request.getRequestDispatcher("/view/contract/viewListContract.jsp").forward(request, response);
 
     }
-
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ContractDAO dao = new ContractDAO();
             try {
