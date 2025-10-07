@@ -17,7 +17,9 @@
         </br>
         <a href="<c:url value='/cv'/>">CV List</a>
         </br>
-        <a href="<c:url value='/contract.jsp'/>">AddContract</a>
+        <a href="<c:url value='/addContracts'/>">AddContract</a>
+        </br>
+        <a href="<c:url value='/contracts'/>">AddContract</a>
         </br>
     </body>
 

@@ -1,14 +1,14 @@
 package hrms.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Contract {
 
     private int contractId;
     private int userId;
-    private Date startDate;
-    private Date endDate;
-    private Date signDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private LocalDate signDate;
     private int duration;
     private double baseSalary;
     private String note;
@@ -19,7 +19,7 @@ public class Contract {
     public Contract() {
     }
 
-    public Contract(int contractId, int userId, Date startDate, Date endDate, Date signDate, int duration, double baseSalary, String note, int typeID) {
+    public Contract(int contractId, int userId, LocalDate startDate, LocalDate endDate, LocalDate signDate, int duration, double baseSalary, String note, int typeID) {
         this.contractId = contractId;
         this.userId = userId;
         this.startDate = startDate;
@@ -35,7 +35,7 @@ public class Contract {
         return contractId;
     }
 
-    public void setContractID(int contractId) {
+    public void setContractId(int contractId) {
         this.contractId = contractId;
     }
 
@@ -47,27 +47,27 @@ public class Contract {
         this.userId = userId;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
-    public Date getSignDate() {
+    public LocalDate getSignDate() {
         return signDate;
     }
 
-    public void setSignDate(Date signDate) {
+    public void setSignDate(LocalDate signDate) {
         this.signDate = signDate;
     }
 

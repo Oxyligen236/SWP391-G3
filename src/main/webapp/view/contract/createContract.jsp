@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8" isELIgnored="false" %> <%@ taglib
+uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 
 <html lang="en">
@@ -7,12 +8,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Contract page</title>
-    <link rel="stylesheet" href="../../css/contract.css" />
+    <link rel="stylesheet" href="<c:url value='/css/contract.css'/>" />
     <script src="" defer></script>
   </head>
   <body>
     <div class="contract-form">
       <h2>Thông tin hợp đồng</h2>
+      <c:if test="${not empty error}">
+        <div style="color: red; text-align: center">${error}</div>
+      </c:if>
       <form action="contracts" method="post">
         <input type="hidden" name="action" value="insert" />
         <div class="form-group">
@@ -42,12 +46,19 @@
 
         <div class="form-group">
           <label for="duration">Hạn hợp đồng:</label>
-          <input type="text" id="duration" name="duration" />
+          <input type="number" id="duration" name="duration" min="1" required />
         </div>
 
         <div class="form-group">
-          <label for="basicSalary">Lương cơ bản:</label>
-          <input type="text" id="basicSalary" name="basicSalary" />
+          <label for="baseSalary">Lương cơ bản:</label>
+          <input
+            type="number"
+            step="0.01"
+            id="baseSalary"
+            name="baseSalary"
+            min="0"
+            required
+          />
         </div>
 
         <div class="form-group">
@@ -69,17 +80,6 @@
           <label for="note">Ghi chú:</label>
           <textarea id="note" name="note" rows="3"></textarea>
         </div>
-
-        <div class="form-group">
-          <label for="file">Upload hợp đồng (PDF/Ảnh):</label>
-          <input
-            type="file"
-            id="file"
-            name="file"
-            accept=".pdf,.jpg,.jpeg,.png"
-          />
-        </div>
-
         <button type="submit">Lưu</button>
       </form>
     </div>

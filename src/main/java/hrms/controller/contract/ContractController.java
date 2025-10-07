@@ -1,12 +1,11 @@
 package hrms.controller.contract;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import hrms.dao.contract.ContractDAO;
-import hrms.dao.contract.ContractTypeDAO;
 import hrms.model.Contract;
-import hrms.model.ContractType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,47 +14,52 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/contracts")
 public class ContractController extends HttpServlet {
-    private ContractDAO dao;
-
     @Override
-    public void init() {
-        dao = new ContractDAO();
-    }
-    
-     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
-        if(action == null) action = "list";
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        ContractDAO dao = new ContractDAO();
+        List<Contract> contracts = dao.getAllContracts();
+        request.setAttribute("contracts", contracts);
+        request.getRequestDispatcher("/view/contract/viewListContract.jsp").forward(request, response);
 
-        switch (action) {
-            case "list":
-                List<Contract> list = dao.getAllContracts();
-                request.setAttribute("contracts", list);
-                request.getRequestDispatcher("/contracts/list.jsp").forward(request, response);
-                break;
-            case "add":
-                List<ContractType> types = new ContractTypeDAO().getAllTypes();
-                request.setAttribute("types", types);
-                request.getRequestDispatcher("/contracts/add.jsp").forward(request, response);
-                break;
-        }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
+        ContractDAO dao = new ContractDAO();
+            try {
+                Contract contract = new Contract();
+                String userID = request.getParameter("userID");
+                String startDate = request.getParameter("startDate");
+                String endDate = request.getParameter("endDate");
+                String signDate = request.getParameter("signDate");
+                String duration = request.getParameter("duration");
+                String baseSalary = request.getParameter("baseSalary");
+                String typeID = request.getParameter("typeID");
 
-        if ("insert".equals(action)) {
-            Contract contract = new Contract();
-            contract.setUserId(Integer.parseInt(request.getParameter("userID")));
-            contract.setStartDate(java.sql.Date.valueOf(request.getParameter("startDate")));
-            contract.setEndDate(java.sql.Date.valueOf(request.getParameter("endDate")));
-            contract.setSignDate(java.sql.Date.valueOf(request.getParameter("signDate")));
-            contract.setDuration(Integer.parseInt(request.getParameter("duration")));
-            contract.setBaseSalary(Double.parseDouble(request.getParameter("baseSalary")));
-            contract.setNote(request.getParameter("note"));
-            contract.setTypeID(Integer.parseInt(request.getParameter("typeID")));
+                // Xác thực đầu vào
+                if (userID == null || startDate == null || signDate == null || duration == null || baseSalary == null || typeID == null
+                        || userID.isEmpty() || startDate.isEmpty() || signDate.isEmpty() || duration.isEmpty() || baseSalary.isEmpty() || typeID.isEmpty()) {
+                    throw new IllegalArgumentException("Các trường bắt buộc bị thiếu");
+                }
 
-            dao.addContract(contract);
-            response.sendRedirect("contracts?action=list");
+                contract.setUserId(Integer.parseInt(userID));
+                contract.setStartDate(LocalDate.parse(startDate));
+                contract.setEndDate(endDate != null && !endDate.isEmpty() ? LocalDate.parse(endDate) : null);
+                contract.setSignDate(LocalDate.parse(signDate));
+                contract.setDuration(Integer.parseInt(duration));
+                contract.setBaseSalary(Double.parseDouble(baseSalary));
+                contract.setNote(request.getParameter("note"));
+                contract.setTypeID(Integer.parseInt(typeID));
+
+                dao.addContract(contract);
+                response.sendRedirect("contracts?action=list");
+            } catch (IllegalArgumentException e) {
+                request.setAttribute("error", e.getMessage());
+                request.getRequestDispatcher("/createContract.jsp").forward(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", "Đã xảy ra lỗi khi thêm hợp đồng");
+                request.getRequestDispatcher("/createContract.jsp").forward(request, response);
+            }
         }
     }
-}
+
