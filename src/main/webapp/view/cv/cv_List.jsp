@@ -21,7 +21,6 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            <th>Description</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -34,10 +33,9 @@
                                 <td>${cv.name}</td>
                                 <td>${cv.email}</td>
                                 <td>${cv.phone}</td>
-                                <td>${cv.cv_Description}</td>
                                 <td>${cv.status}</td>
                                 <td>
-                                    <a href="<c:url value='/cv/update?id=${cv.cvID}'/>">Edit</a>
+                                    <a href="<c:url value='/cv/detail?id=${cv.cvID}'/>">View Detail</a>
                                 </td>
                             </tr>
                         </c:forEach>

@@ -2,7 +2,7 @@ package hrms.controller;
 
 import java.io.IOException;
 
-import hrms.dao.AccountDao;
+import hrms.dao.AccountDAO;
 import hrms.model.Account;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         String remember = request.getParameter("remember");
 
-        AccountDao accountDao = new AccountDao();
+        AccountDAO accountDao = new AccountDAO();
         Account account = accountDao.getAccountByUsername(username);
         // Account account = new Account(username, password, "admin", true);
         if (account != null && account.isIsActive() && account.getPassword().equals(password)) {
