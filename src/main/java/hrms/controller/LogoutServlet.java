@@ -22,6 +22,13 @@ public class LogoutServlet extends HttpServlet {
         passwordCookie.setMaxAge(0);
         response.addCookie(usernameCookie);
         response.addCookie(passwordCookie);
-        request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/view/authenticate/login.jsp");
     }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Handle POST requests if necessary
+    }
+
 }

@@ -44,20 +44,20 @@ public class CVsDAO extends DBContext {
         String sql = "update CVs set jdID = ?, name = ?, email = ?, phone = ?, cv_Description = ?, status = ? where cvID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, cv.getJDid());
+            st.setInt(1, cv.getJdID());
             st.setString(2, cv.getName());
             st.setString(3, cv.getEmail());
             st.setString(4, cv.getPhone());
-            st.setString(5, cv.getCV_Description());
+            st.setString(5, cv.getCv_Description());
             st.setString(6, cv.getStatus());
-            st.setInt(7, cv.getCVid());
+            st.setInt(7, cv.getCvID());
             st.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
 
-    public CVs getCVById(int id) {
+    public CVs getCvById(int id) {
         String sql = "select * from CVs where cvID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -76,11 +76,11 @@ public class CVsDAO extends DBContext {
         String sql = "insert into CVs (jdID, name, email, phone, cv_Description, status) values (?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, cv.getJDid());
+            st.setInt(1, cv.getJdID());
             st.setString(2, cv.getName());
             st.setString(3, cv.getEmail());
             st.setString(4, cv.getPhone());
-            st.setString(5, cv.getCV_Description());
+            st.setString(5, cv.getCv_Description());
             st.setString(6, cv.getStatus());
             st.executeUpdate();
         } catch (SQLException e) {

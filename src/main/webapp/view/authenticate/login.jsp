@@ -22,7 +22,22 @@
                         <label>Username:</label>
                         <input type="text" name="username" value="${username}" required>
                         <label>Password:</label>
-                        <input type="password" name="password" value="${password}" required>
+                        <input type="password" id="password" name="password" value="${password}" required>
+                        <br>
+                        <input type="checkbox" id="showPassword">
+                        <label for="showPassword">Hiển thị mật khẩu</label>
+                        <script>
+                            const passwordInput = document.getElementById('password');
+                            const showPasswordCheckbox = document.getElementById('showPassword');
+
+                            showPasswordCheckbox.addEventListener('change', () => {
+                                if (showPasswordCheckbox.checked) {
+                                    passwordInput.type = 'text';
+                                } else {
+                                    passwordInput.type = 'password';
+                                }
+                            });
+                        </script>
                         <button type="submit">Login</button>
 
                         <div class="options">

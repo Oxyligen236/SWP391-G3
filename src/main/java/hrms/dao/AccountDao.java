@@ -9,7 +9,7 @@ import java.util.List;
 import hrms.model.Account;
 import hrms.utils.DBContext;
 
-public class AccountDao extends DBContext {
+public class AccountDAO extends DBContext {
 
     private Account extractAccountFromResultSet(ResultSet rs) throws SQLException {
         return new Account(
