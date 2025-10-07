@@ -1,6 +1,6 @@
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isELIgnored="false" %>
 
 <!DOCTYPE html>
@@ -44,10 +44,10 @@
         <c:if test="${not empty param.selectedTypeId}">
             <c:choose>
                 <c:when test="${param.selectedTypeId == '1'}">
-                    <jsp:include page="forms/leaveRequestForm.jsp" />
+                    <jsp:include page="forms/leaveTicketForm.jsp" />
                 </c:when>
                 <c:when test="${param.selectedTypeId == '2'}">
-                    <jsp:include page="forms/overtimeRequestForm.jsp" />
+                    <jsp:include page="forms/overtimeTicketForm.jsp" />
                 </c:when>
                 <c:when test="${param.selectedTypeId == '3'}">
                     <jsp:include page="forms/complaintForm.jsp" />
