@@ -13,13 +13,13 @@ public class CVsDAO extends DBContext {
 
     private CVs extractCVFromResultSet(ResultSet rs) throws SQLException {
         return new CVs(
-                rs.getInt("cvID"),
-                rs.getInt("jdID"),
-                rs.getString("name"),
-                rs.getString("email"),
-                rs.getString("phone"),
-                rs.getString("cv_Description"),
-                rs.getString("status")
+                rs.getInt(1),
+                rs.getInt(2),
+                rs.getString(3),
+                rs.getString(4),
+                rs.getString(5),
+                rs.getString(6),
+                rs.getString(7)
         );
     }
 
@@ -72,7 +72,7 @@ public class CVsDAO extends DBContext {
         return null;
     }
 
-    public void addCV(CVs cv) {
+    public boolean addCV(CVs cv) {
         String sql = "insert into CVs (jdID, name, email, phone, cv_Description, status) values (?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -86,6 +86,7 @@ public class CVsDAO extends DBContext {
         } catch (SQLException e) {
             System.out.println(e);
         }
+        return true;
     }
 
 }

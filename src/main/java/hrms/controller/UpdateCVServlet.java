@@ -5,40 +5,43 @@ import java.io.IOException;
 import hrms.dao.CVsDAO;
 import hrms.model.CVs;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@WebServlet("/cv/update")
 public class UpdateCVServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String idParam = request.getParameter("id");
+        String view = "/view/cv/cv_Update.jsp";
+
         if (idParam == null || idParam.isEmpty()) {
-            request.setAttribute("CV_ID_error", "CV ID is required");
-            request.getRequestDispatcher("/view/cv_Update.jsp").forward(request, response);
+            request.setAttribute("CV_ID_error", "Không có CV_ID");
+            request.getRequestDispatcher(view).forward(request, response);
             return;
         }
 
-        int cvId;
         try {
-            cvId = Integer.parseInt(idParam);
+            int cvId = Integer.parseInt(idParam);
+            CVsDAO cvDao = new CVsDAO();
+            CVs cv = cvDao.getCVById(cvId);
+
+            if (cv == null) {
+                request.setAttribute("CV_ID_error", "CV không tồn tại");
+            } else {
+                request.setAttribute("cv", cv);
+            }
+
         } catch (NumberFormatException e) {
-            request.setAttribute("CV_ID_error", "Invalid CV ID");
-            request.getRequestDispatcher("/view/cv_Update.jsp").forward(request, response);
-            return;
+            request.setAttribute("CV_ID_error", "Định dạng CV_ID không hợp lệ");
         }
 
-        CVsDAO cvDao = new CVsDAO();
-        CVs cv = cvDao.getCVById(cvId);
-        if (cv == null) {
-            request.setAttribute("CV_ID_error", "CV not found");
-        } else {
-            request.setAttribute("cv", cv);
-        }
-        request.getRequestDispatcher("/view/cv_Update.jsp").forward(request, response);
-
+        request.getRequestDispatcher(view).forward(request, response);
     }
 
     @Override

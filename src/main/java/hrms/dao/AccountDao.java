@@ -13,12 +13,12 @@ public class AccountDao extends DBContext {
 
     private Account extractAccountFromResultSet(ResultSet rs) throws SQLException {
         return new Account(
-                rs.getInt("accountID"),
-                rs.getInt("userID"),
-                rs.getString("username"),
-                rs.getString("password"),
-                rs.getInt("role"),
-                rs.getBoolean("isActive")
+                rs.getInt(1),
+                rs.getInt(2),
+                rs.getString(3),
+                rs.getString(4),
+                rs.getInt(5),
+                rs.getBoolean(6)
         );
     }
 
