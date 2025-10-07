@@ -5,7 +5,7 @@ import java.util.List;
 
 import hrms.dao.CVsDAO;
 import hrms.model.CVs;
-import hrms.service.CVService;
+import hrms.service.CvService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,7 +22,7 @@ public class CvDetailServlet extends HttpServlet {
         try {
             int cvId = Integer.parseInt(idParam);
             CVsDAO cv = new CVsDAO();
-            CVService cvService = new CVService();
+            CvService cvService = new CvService();
 
             List<CVs> cvDetails = cv.getAll();
             cvService.getCvWithJobDetail(cvId);
