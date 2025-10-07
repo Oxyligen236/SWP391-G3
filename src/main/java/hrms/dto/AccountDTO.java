@@ -1,6 +1,7 @@
 package hrms.dto;
 
 public class AccountDTO {
+
     private int accountID;
     private String username;
     private String password;
@@ -9,24 +10,55 @@ public class AccountDTO {
     private String fullName;   // tên user từ bảng Users
 
     // Constructor
-    public AccountDTO() {}
+    public AccountDTO() {
+    }
 
     // Getters & Setters
-    public int getAccountID() { return accountID; }
-    public void setAccountID(int accountID) { this.accountID = accountID; }
+    public int getAccountID() {
+        return accountID;
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public void setAccountID(int accountID) {
+        this.accountID = accountID;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public String getUsername() {
+        return username;
+    }
 
-    public boolean isIsActive() { return isActive; }
-    public void setIsActive(boolean isActive) { this.isActive = isActive; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String getRoleName() { return roleName; }
-    public void setRoleName(String roleName) { this.roleName = roleName; }
+    public String getPassword() {
+        return password;
+    }
 
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 }
