@@ -18,7 +18,6 @@ public class CreateContract extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ContractTypeDAO typeDAO = new ContractTypeDAO();
-        request.setAttribute("types", typeDAO.getAllTypes());
         List<ContractType> types = typeDAO.getAllTypes();
         request.setAttribute("types", types);
         request.getRequestDispatcher("/view/contract/createContract.jsp").forward(request, response);
