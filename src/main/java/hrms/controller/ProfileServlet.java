@@ -2,39 +2,38 @@ package hrms.controller;
 
 import java.io.IOException;
 
-import hrms.dao.UserDAO;
-import hrms.model.User;
+import hrms.dto.UserDTO;
+import hrms.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/view") 
+@WebServlet("/view")
 public class ProfileServlet extends HttpServlet {
-    private UserDAO userDAO = new UserDAO();
+
+    private final UserService userService = new UserService();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+        throws ServletException, IOException {
 
-        HttpSession session = req.getSession(false);
-        if (session == null || session.getAttribute("userId") == null) {
-            System.out.println("Session is null or userId not found in session.");
-            resp.sendRedirect(req.getContextPath() + "/authenticate"); 
-            return;
-        }
+    // Lấy user từ session
+    UserDTO sessionUser = (UserDTO) req.getSession().getAttribute("currentUser");
+    if (sessionUser == null) {
+        resp.sendRedirect(req.getContextPath() + "/login"); // nếu chưa đăng nhập
+        return;
+    }
 
-        int userId = (int) session.getAttribute("userId"); // Lấy từ session
-        User user = userDAO.getUserById(userId);
+    int userId = sessionUser.getUserId();
+    UserDTO user = userService.getUserById(userId);
 
-        if (user != null) {
-            req.setAttribute("user", user);
-            req.getRequestDispatcher("/view/profile/viewProfile.jsp").forward(req, resp);
-        } else {
-            req.setAttribute("error", "Không tìm thấy thông tin người dùng.");
-            req.getRequestDispatcher("/view/profile/error.jsp").forward(req, resp);
-        }
+    if (user != null) {
+        req.setAttribute("user", user);
+        req.getRequestDispatcher("/view/profile/viewProfile.jsp").forward(req, resp);
+    } else {
+        req.setAttribute("error", "Không tìm thấy thông tin người dùng.");
+        req.getRequestDispatcher("/view/profile/error.jsp").forward(req, resp);
     }
 }

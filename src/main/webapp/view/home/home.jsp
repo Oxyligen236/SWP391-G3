@@ -14,6 +14,8 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <a href="<c:url value='/authenticate'/>">Go to Login Page</a><br />
     <a href="<c:url value='/logout'/>">Logout</a><br />
     <a href="<c:url value='/cv'/>">CV List</a><br />
+     <a href="<c:url value='/view'/>">View Profile</a><br />
+      <a href="<c:url value='/edit'/>">Edit Profile</a><br />
 
     <!-- <c:url var="submitUrl" value="/cv/submit">
         <c:param name="jdID" value="${job.jobID}" />
