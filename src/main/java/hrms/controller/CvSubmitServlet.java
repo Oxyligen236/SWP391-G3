@@ -25,6 +25,9 @@ public class CvSubmitServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String name = request.getParameter("name");
+        String gender = request.getParameter("gender");
+        String address = request.getParameter("address");
+        String nationality = request.getParameter("nationality");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
         String description = request.getParameter("cv_Description");
@@ -32,7 +35,11 @@ public class CvSubmitServlet extends HttpServlet {
         CvService cvService = new CvService();
         try {
             int jdIDInt = Integer.parseInt(jdID);
-            if (name == null || name.trim().isEmpty()
+            if (name == null
+                    || name.trim().isEmpty()
+                    || gender == null || gender.trim().isEmpty()
+                    || address == null || address.trim().isEmpty()
+                    || nationality == null || nationality.trim().isEmpty()
                     || email == null || email.trim().isEmpty()
                     || phone == null || phone.trim().isEmpty()
                     || description == null || description.trim().isEmpty()
@@ -42,7 +49,7 @@ public class CvSubmitServlet extends HttpServlet {
                 request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
                 return;
             }
-            CVs newCV = new CVs(jdIDInt, name, email, phone, description, "Pending");
+            CVs newCV = new CVs(jdIDInt, name, gender, address, nationality, email, phone, description, "Pending");
             boolean isAdded = cvService.addCV(newCV);
             if (isAdded) {
                 request.setAttribute("successMessage", "Nộp CV thành công!");

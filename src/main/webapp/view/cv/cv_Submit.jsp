@@ -40,13 +40,28 @@
                             <label for="name">Full Name:</label>
                             <input type="text" id="name" name="name" placeholder="Enter your full name" required>
                         </div>
-
                         <div class="form-group">
-                            <label for="email">Email Address:</label>
-                            <input type="email" id="email" name="email" placeholder="Nhập địa chỉ email của bạn"
+                            <label for="gender">Gender:</label>
+                            <select id="gender" name="gender" required>
+                                <option value="" disabled selected>Select your gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address:</label>
+                            <input type="text" id="address" name="address" placeholder="Nhập địa chỉ của bạn" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nationality">Nationality:</label>
+                            <input type="text" id="nationality" name="nationality" placeholder="Nhập quốc tịch của bạn"
                                 required>
                         </div>
-
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required>
+                        </div>
                         <div class="form-group">
                             <label for="phone">Phone Number:</label>
                             <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại của bạn"

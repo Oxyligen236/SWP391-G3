@@ -22,16 +22,16 @@ public class CvService {
         return cvDao.getAll();
     }
 
-    public void updateCV(CVs cv) {
-        cvDao.updateCV(cv);
+    public boolean updateCvStatus(int cvId, String status) {
+        return cvDao.updateCvStatus(cvId, status);
     }
 
     public boolean addCV(CVs cv) {
         return cvDao.addCV(cv);
     }
 
-    public List<CVJobDetailDTO> searchCVs(String name, String email, String phone) {
-        return cvDao.searchCVs(name, email, phone);
+    public List<CVJobDetailDTO> searchCVs(int jobID, String name, String email, String phone, String gender, String status) {
+        return cvDao.searchCVs(jobID, name, email, phone, gender, status);
     }
 
 }
