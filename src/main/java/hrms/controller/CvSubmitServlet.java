@@ -3,6 +3,7 @@ package hrms.controller;
 import java.io.IOException;
 
 import hrms.model.CVs;
+import hrms.service.CvService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -27,16 +28,33 @@ public class CvSubmitServlet extends HttpServlet {
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
         String description = request.getParameter("cv_Description");
+        String jdID = request.getParameter("jdID");
+        CvService cvService = new CvService();
+        try {
+            int jdIDInt = Integer.parseInt(jdID);
+            if (name == null || name.trim().isEmpty()
+                    || email == null || email.trim().isEmpty()
+                    || phone == null || phone.trim().isEmpty()
+                    || description == null || description.trim().isEmpty()
+                    || jdID == null) {
 
-        if (name == null || name.trim().isEmpty()
-                || email == null || email.trim().isEmpty()
-                || phone == null || phone.trim().isEmpty()
-                || description == null || description.trim().isEmpty()) {
-
-            request.setAttribute("errorMessage", "All fields are required!");
+                request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin!");
+                request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
+                return;
+            }
+            CVs newCV = new CVs(jdIDInt, name, email, phone, description, "Pending");
+            boolean isAdded = cvService.addCV(newCV);
+            if (isAdded) {
+                request.setAttribute("successMessage", "Nộp CV thành công!");
+            } else {
+                request.setAttribute("errorMessage", "Nộp CV không thành công. Vui lòng thử lại!");
+            }
             request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
-            return;
+        } catch (NumberFormatException e) {
+            request.setAttribute("errorMessage", "JD ID không hợp lệ!");
+            request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
         }
-        CVs newCV = new CVs(0, name, email, phone, description, "Submitted");
+
     }
+
 }

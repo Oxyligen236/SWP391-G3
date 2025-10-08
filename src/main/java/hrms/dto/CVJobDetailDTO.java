@@ -3,6 +3,7 @@ package hrms.dto;
 public class CVJobDetailDTO {
 
     private int cvID;
+    private int jdID;
     private String jdTitle;
     private String name;
     private String email;
@@ -13,8 +14,9 @@ public class CVJobDetailDTO {
     public CVJobDetailDTO() {
     }
 
-    public CVJobDetailDTO(int cvID, String jdTitle, String name, String email, String phone, String cv_Description, String status) {
+    public CVJobDetailDTO(int cvID, int jdID, String jdTitle, String name, String email, String phone, String cv_Description, String status) {
         this.cvID = cvID;
+        this.jdID = jdID;
         this.jdTitle = jdTitle;
         this.name = name;
         this.email = email;
@@ -29,6 +31,14 @@ public class CVJobDetailDTO {
 
     public void setCvID(int cvID) {
         this.cvID = cvID;
+    }
+
+    public int getJdID() {
+        return jdID;
+    }
+
+    public void setJdID(int jdID) {
+        this.jdID = jdID;
     }
 
     public String getJdTitle() {
