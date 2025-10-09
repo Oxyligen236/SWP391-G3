@@ -16,6 +16,8 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <a href="<c:url value='/cv'/>">CV List</a><br />
      <a href="<c:url value='/view'/>">View Profile</a><br />
       <a href="<c:url value='/edit'/>">Edit Profile</a><br />
+     
+       <a href="<c:url value='/account/create'/>">Edit Profile</a><br />
 
     <!-- <c:url var="submitUrl" value="/cv/submit">
         <c:param name="jdID" value="${job.jobID}" />

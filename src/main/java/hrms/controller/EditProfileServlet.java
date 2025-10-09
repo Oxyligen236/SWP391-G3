@@ -27,7 +27,7 @@ public class EditProfileServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect(request.getContextPath() + "/login"); // Chưa login
+            response.sendRedirect(request.getContextPath() + "/authenticate"); 
             return;
         }
 
@@ -38,7 +38,7 @@ public class EditProfileServlet extends HttpServlet {
             return;
         }
 
-        List<Degree> degreeList = degreeDAO.getAll(); // Lấy danh sách bằng cấp
+        List<Degree> degreeList = degreeDAO.getAll(); 
 
         request.setAttribute("user", user);
         request.setAttribute("degreeList", degreeList);
@@ -52,7 +52,7 @@ public class EditProfileServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
+            response.sendRedirect(request.getContextPath() + "/authenticate");
             return;
         }
 

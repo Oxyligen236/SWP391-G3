@@ -24,7 +24,7 @@ public class ProfileServlet extends HttpServlet {
 
         if (session == null || session.getAttribute("userId") == null) {
 
-            resp.sendRedirect(req.getContextPath() + "/login");
+            resp.sendRedirect(req.getContextPath() + "/authenticate");
             return;
         }
 
