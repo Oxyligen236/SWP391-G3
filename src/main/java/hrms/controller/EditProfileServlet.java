@@ -1,102 +1,104 @@
 package hrms.controller;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.Date;
+import java.util.List;
 
+import hrms.dao.DegreeDAO;
 import hrms.dto.UserDTO;
+import hrms.model.Degree;
 import hrms.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/edit")
 public class EditProfileServlet extends HttpServlet {
 
     private final UserService userService = new UserService();
+    private final DegreeDAO degreeDAO = new DegreeDAO();
 
-   @Override
-protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws ServletException, IOException {
-    // Lấy user từ session
-    UserDTO sessionUser = (UserDTO) req.getSession().getAttribute("currentUser");
-    if (sessionUser == null) {
-        resp.sendRedirect(req.getContextPath() + "/login"); // chưa đăng nhập
-        return;
-    }
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    int userId = sessionUser.getUserId(); // lấy ID từ session
-    UserDTO user = userService.getUserById(userId);
-
-    if (user != null) {
-        req.setAttribute("user", user);
-        req.getRequestDispatcher("/view/profile/editProfile.jsp").forward(req, resp);
-    } else {
-        req.setAttribute("error", "Không tìm thấy thông tin người dùng.");
-        req.getRequestDispatcher("/view/profile/error.jsp").forward(req, resp);
-    }
-}
-
-@Override
-protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-        throws ServletException, IOException {
-    // Lấy userId từ session
-    UserDTO sessionUser = (UserDTO) req.getSession().getAttribute("currentUser");
-    if (sessionUser == null) {
-        resp.sendRedirect(req.getContextPath() + "/login"); // chưa đăng nhập
-        return;
-    }
-
-    int userId = sessionUser.getUserId();
-
-    String fullname = req.getParameter("fullname");
-    String email = req.getParameter("email");
-    String phone = req.getParameter("phoneNumber");
-    String birthDateStr = req.getParameter("birthDate");
-    String gender = req.getParameter("gender");
-    String address = req.getParameter("address");
-    String nation = req.getParameter("nation");
-    String ethnicity = req.getParameter("ethnicity");
-
-    UserDTO dto = new UserDTO();
-    dto.setUserId(userId);
-    dto.setFullname(fullname);
-    dto.setEmail(email);
-    dto.setPhoneNumber(phone);
-    dto.setGender(gender);
-    dto.setAddress(address);
-    dto.setNation(nation);
-    dto.setEthnicity(ethnicity);
-
-    if (birthDateStr != null && !birthDateStr.isEmpty()) {
-        try {
-            java.util.Date utilDate = new java.text.SimpleDateFormat("yyyy-MM-dd").parse(birthDateStr);
-            dto.setBirthDate(new java.sql.Date(utilDate.getTime()));
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            response.sendRedirect(request.getContextPath() + "/login"); // Chưa login
+            return;
         }
+
+        int userId = (Integer) session.getAttribute("userId");
+        UserDTO user = userService.getUserById(userId);
+        if (user == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "User không tồn tại");
+            return;
+        }
+
+        List<Degree> degreeList = degreeDAO.getAll(); // Lấy danh sách bằng cấp
+
+        request.setAttribute("user", user);
+        request.setAttribute("degreeList", degreeList);
+        request.getRequestDispatcher("/view/profile/editProfile.jsp").forward(request, response);
     }
 
-    boolean success = userService.updateUser(dto);
-    if (success) {
-        // Cập nhật luôn session user để giao diện hiển thị đúng
-        sessionUser.setFullname(fullname);
-        sessionUser.setEmail(email);
-        sessionUser.setPhoneNumber(phone);
-        sessionUser.setBirthDate(dto.getBirthDate());
-        sessionUser.setGender(gender);
-        sessionUser.setAddress(address);
-        sessionUser.setNation(nation);
-        sessionUser.setEthnicity(ethnicity);
-        req.getSession().setAttribute("currentUser", sessionUser);
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-        req.setAttribute("successMessage", "Cập nhật thông tin thành công!");
-        req.getRequestDispatcher("/view/profile/editProfile.jsp").forward(req, resp);
-    } else {
-        req.setAttribute("error", "Cập nhật thông tin thất bại!");
-        req.getRequestDispatcher("/view/profile/editProfile.jsp").forward(req, resp);
+        request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        int userId = (Integer) session.getAttribute("userId");
+        UserDTO user = userService.getUserById(userId);
+        if (user == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "User không tồn tại");
+            return;
+        }
+
+        // Lấy thông tin từ form
+        String fullname = request.getParameter("fullname");
+        String email = request.getParameter("email");
+        String phoneNumber = request.getParameter("phoneNumber");
+        String birthDateStr = request.getParameter("birthDate");
+        String gender = request.getParameter("gender");
+        String cccd = request.getParameter("cccd");
+        String address = request.getParameter("address");
+        String nation = request.getParameter("nation");
+        String ethnicity = request.getParameter("ethnicity");
+        String degreeIdStr = request.getParameter("degreeId");
+
+        // Chỉ update các trường có dữ liệu
+        if (fullname != null && !fullname.isEmpty()) user.setFullname(fullname);
+        if (email != null && !email.isEmpty()) user.setEmail(email);
+        if (phoneNumber != null && !phoneNumber.isEmpty()) user.setPhoneNumber(phoneNumber);
+        if (birthDateStr != null && !birthDateStr.isEmpty()) user.setBirthDate(Date.valueOf(birthDateStr));
+        if (gender != null && !gender.isEmpty()) user.setGender(gender);
+        if (cccd != null && !cccd.isEmpty()) user.setCccd(cccd);
+        if (address != null && !address.isEmpty()) user.setAddress(address);
+        if (nation != null && !nation.isEmpty()) user.setNation(nation);
+        if (ethnicity != null && !ethnicity.isEmpty()) user.setEthnicity(ethnicity);
+        if (degreeIdStr != null && !degreeIdStr.isEmpty()) user.setDegreeId(Integer.parseInt(degreeIdStr));
+
+        boolean updated = userService.updateUser(user);
+
+        if (updated) {
+            request.setAttribute("successMessage", "Cập nhật thông tin thành công!");
+        } else {
+            request.setAttribute("errorMessage", "Cập nhật thất bại hoặc không có trường nào thay đổi.");
+        }
+
+        // Gửi lại danh sách bằng cấp để hiển thị dropdown
+        List<Degree> degreeList = degreeDAO.getAll();
+        request.setAttribute("degreeList", degreeList);
+        request.setAttribute("user", user);
+        request.getRequestDispatcher("/view/profile/editProfile.jsp").forward(request, response);
     }
-}
 }

@@ -1,272 +1,204 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page isELIgnored="false" %>
-
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chỉnh Sửa Thông Tin - HRMS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px 0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chỉnh Sửa Thông Tin Cá Nhân - HRMS</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://kit.fontawesome.com/a2e0e6ad53.js" crossorigin="anonymous"></script>
+<style>
+    body {
+        background: linear-gradient(135deg, #ffe6f0, #ffb3d1);
+        font-family: 'Poppins', sans-serif;
+        margin: 0; padding: 0;
+    }
 
-        .edit-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+    .profile-container {
+        max-width: 900px;
+        background: #fff;
+        margin: 40px auto;
+        padding: 30px 40px;
+        border-radius: 20px;
+        box-shadow: 0 12px 40px rgba(255, 105, 180, 0.25);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .profile-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 50px rgba(255, 105, 180, 0.35);
+    }
 
-        .edit-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
+    .profile-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .profile-header h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #d63384;
+        margin-bottom: 5px;
+    }
+    .profile-header hr {
+        width: 60px;
+        border-top: 3px solid #ff4da6;
+        margin: 0 auto;
+    }
 
-        .edit-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-        }
+    .info-label {
+        font-weight: 600;
+        color: #d63384;
+        margin-top: 8px;
+        display: block;
+    }
+    input, select {
+        font-size: 16px;
+        color: #2c3e50;
+        margin-top: 4px;
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #ffc0cb;
+        background: #fff0f5;
+        transition: border 0.3s, box-shadow 0.3s;
+    }
+    input:focus, select:focus {
+        border-color: #ff4da6;
+        box-shadow: 0 0 8px rgba(255, 77, 166, 0.3);
+        outline: none;
+    }
 
-        .edit-header h3 {
-            margin: 0;
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
+    .btn-custom {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 30px;
+        padding: 12px 30px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .btn-custom i { margin-right: 8px; }
 
-        .edit-body {
-            padding: 40px;
-        }
+    .btn-edit {
+        background: linear-gradient(135deg, #ff80ab, #ff4da6);
+        color: #fff;
+        border: none;
+        box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+    }
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 105, 180, 0.6);
+    }
 
-        .form-label {
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
+    .btn-back {
+        background: #ffe4eb;
+        color: #d63384;
+        border: none;
+    }
+    .btn-back:hover {
+        background: #ffd6e0;
+        color: #b91d73;
+    }
 
-        .required-field::after {
-            content: " *";
-            color: #dc3545;
-            font-weight: bold;
-        }
+    .text-center.mt-4 { text-align: center; margin-top: 30px; }
 
-        .form-control,
-        .form-select {
-            border-radius: 10px;
-            border: 2px solid #e0e0e0;
-            padding: 12px 18px;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
-        }
-
-        .form-text {
-            font-size: 0.85rem;
-            color: #6c757d;
-        }
-
-        .section-divider {
-            border-top: 2px solid #e9ecef;
-            margin: 35px 0;
-            position: relative;
-        }
-
-        .section-divider::before {
-            content: attr(data-title);
-            position: absolute;
-            top: -12px;
-            left: 20px;
-            background: white;
-            padding: 0 15px;
-            color: #667eea;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
-
-        .btn-save {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            padding: 14px 45px;
-            border-radius: 30px;
-            color: white;
-            font-weight: 600;
-            font-size: 1.05rem;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-save:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-            color: white;
-        }
-
-        .btn-cancel {
-            background: #6c757d;
-            border: none;
-            padding: 14px 45px;
-            border-radius: 30px;
-            color: white;
-            font-weight: 600;
-            font-size: 1.05rem;
-            transition: all 0.3s;
-        }
-
-        .btn-cancel:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-            color: white;
-        }
-
-        .readonly-field {
-            background-color: #f8f9fa;
-            cursor: not-allowed;
-        }
-    </style>
+    @media (max-width:768px) {
+        .profile-container { padding: 20px; }
+        .btn-custom { width: 100%; margin-bottom: 10px; }
+    }
+</style>
 </head>
-
 <body>
-    <div class="container">
 
-        <!-- Error Message -->
-        <c:if test="${not empty error}">
-            <div class="edit-container mb-3">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fas fa-exclamation-circle me-2"></i><strong>Lỗi!</strong> ${error}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            </div>
-        </c:if>
-
-        <div class="edit-container">
-            <div class="edit-card">
-                <!-- Header -->
-                <div class="edit-header">
-                    <h3><i class="fas fa-user-edit me-3"></i>Chỉnh Sửa Thông Tin Cá Nhân</h3>
-                    <p class="mb-0 mt-2" style="opacity:0.9;">Cập nhật thông tin của bạn</p>
-                </div>
-
-                <!-- Form Body -->
-                <div class="edit-body">
-                    <form action="<c:url value='/edit'/>" method="post" id="editProfileForm">
-
-                        <!-- Thông tin đăng nhập -->
-                        <div class="section-divider" data-title="Thông tin đăng nhập"></div>
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <label class="form-label"><i class="fas fa-user-circle me-2"></i>Tên đăng nhập</label>
-                                <input type="text" class="form-control readonly-field" value="${user.fullname}" readonly>
-                                <div class="form-text"><i class="fas fa-info-circle me-1"></i>Không thể thay đổi tên đăng nhập</div>
-                            </div>
-                        </div>
-
-                        <!-- Thông tin cơ bản -->
-                        <div class="section-divider" data-title="Thông tin cơ bản"></div>
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <label for="fullname" class="form-label required-field"><i class="fas fa-user me-2"></i>Họ và tên</label>
-                                <input type="text" class="form-control" id="fullname" name="fullname" value="${user.fullname}" required maxlength="100" placeholder="Nhập họ và tên đầy đủ">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="email" class="form-label required-field"><i class="fas fa-envelope me-2"></i>Email</label>
-                                <input type="email" class="form-control" id="email" name="email" value="${user.email}" required maxlength="100" placeholder="example@email.com">
-                            </div>
-                        </div>
-
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <label for="phoneNumber" class="form-label"><i class="fas fa-phone me-2"></i>Số điện thoại</label>
-                                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" value="${user.phoneNumber}" maxlength="11" pattern="[0-9]{10,11}" placeholder="0123456789">
-                                <div class="form-text"><i class="fas fa-info-circle me-1"></i>10-11 chữ số</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="birthDate" class="form-label"><i class="fas fa-birthday-cake me-2"></i>Ngày sinh</label>
-                                <input type="date" class="form-control" id="birthDate" name="birthDate" value="${birthDateStr}">
-                            </div>
-                        </div>
-
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <label for="gender" class="form-label"><i class="fas fa-venus-mars me-2"></i>Giới tính</label>
-                                <select class="form-select" id="gender" name="gender">
-                                    <option value="">-- Chọn giới tính --</option>
-                                    <option value="Nam" ${user.gender=='Nam' ? 'selected' : ''}>Nam</option>
-                                    <option value="Nữ" ${user.gender=='Nữ' ? 'selected' : ''}>Nữ</option>
-                                    <option value="Khác" ${user.gender=='Khác' ? 'selected' : ''}>Khác</option>
-                                </select>
-                            </div>
-                            
-                        </div>
-
-                        <!-- Thông tin bổ sung -->
-                        <div class="section-divider" data-title="Thông tin bổ sung"></div>
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <label for="nation" class="form-label"><i class="fas fa-flag me-2"></i>Quốc tịch</label>
-                                <input type="text" class="form-control" id="nation" name="nation" value="${user.nation}" maxlength="50" placeholder="Ví dụ: Việt Nam">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="ethnicity" class="form-label"><i class="fas fa-users me-2"></i>Dân tộc</label>
-                                <input type="text" class="form-control" id="ethnicity" name="ethnicity" value="${user.ethnicity}" maxlength="50" placeholder="Ví dụ: Kinh">
-                            </div>
-                        </div>
-
-                        <div class="row mb-4">
-                            <div class="col-12">
-                                <label for="address" class="form-label"><i class="fas fa-map-marker-alt me-2"></i>Địa chỉ</label>
-                                <textarea class="form-control" id="address" name="address" rows="3" maxlength="200" placeholder="Nhập địa chỉ đầy đủ">${user.address}</textarea>
-                                <div class="form-text"><i class="fas fa-info-circle me-1"></i>Tối đa 200 ký tự</div>
-                            </div>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="text-center mt-5">
-                            <button type="submit" class="btn btn-save me-3"><i class="fas fa-save me-2"></i>Lưu thay đổi</button>
-                            <a href="<c:url value='/view' />" class="btn btn-cancel"><i class="fas fa-arrow-left"></i> Hủy bỏ</a>
-                        </div>
-
-                        <div class="text-center mt-4">
-                            <small class="text-muted"><i class="fas fa-info-circle me-1"></i>Các trường có dấu <span class="text-danger">(*)</span> là bắt buộc</small>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-        </div>
+<div class="profile-container">
+    <div class="profile-header">
+        <h2>Chỉnh Sửa Thông Tin Cá Nhân</h2>
+        <hr>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Validation giữ nguyên
-        document.getElementById('editProfileForm').addEventListener('submit', function (e) {
-            const fullname = document.getElementById('fullname').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phoneNumber = document.getElementById('phoneNumber').value.trim();
-        
-            if (!fullname) { e.preventDefault(); alert('Vui lòng nhập họ và tên!'); document.getElementById('fullname').focus(); return false; }
-            if (fullname.length < 3) { e.preventDefault(); alert('Họ và tên phải có ít nhất 3 ký tự!'); document.getElementById('fullname').focus(); return false; }
-            if (!email) { e.preventDefault(); alert('Vui lòng nhập email!'); document.getElementById('email').focus(); return false; }
-            if (!/^[A-Za-z0-9+_.-]+@(.+)$/.test(email)) { e.preventDefault(); alert('Email không hợp lệ!'); document.getElementById('email').focus(); return false; }
-            if (phoneNumber && !/^[0-9]{10,11}$/.test(phoneNumber)) { e.preventDefault(); alert('Số điện thoại phải là 10-11 chữ số!'); document.getElementById('phoneNumber').focus(); return false; }
-        });
-        document.getElementById('phoneNumber').addEventListener('input', function () { this.value = this.value.replace(/[^0-9]/g, ''); });
-    </script>
-</body>
+    <form action="<c:url value='/edit' />" method="post">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="info-label">Họ và tên:</label>
+                <input type="text" name="fullname" value="${user.fullname}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="info-label">CCCD:</label>
+                <input type="text" name="cccd" value="${user.cccd}">
+            </div>
+        </div>
 
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="info-label">Ngày sinh:</label>
+                <input type="date" name="birthDate" value="${user.birthDate}">
+            </div>
+            <div class="col-md-6">
+                <label class="info-label">Giới tính:</label>
+                <select name="gender">
+                    <option value="">-- Chọn --</option>
+                    <option value="Nam" ${user.gender=='Nam'?'selected':''}>Nam</option>
+                    <option value="Nữ" ${user.gender=='Nữ'?'selected':''}>Nữ</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="info-label">Số điện thoại:</label>
+                <input type="text" name="phoneNumber" value="${user.phoneNumber}">
+            </div>
+            <div class="col-md-6">
+                <label class="info-label">Email:</label>
+                <input type="email" name="email" value="${user.email}">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label class="info-label">Địa chỉ:</label>
+                <input type="text" name="address" value="${user.address}">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="info-label">Dân tộc:</label>
+                <input type="text" name="ethnicity" value="${user.ethnicity}">
+            </div>
+            <div class="col-md-4">
+                <label class="info-label">Quốc tịch:</label>
+                <input type="text" name="nation" value="${user.nation}">
+            </div>
+            <div class="col-md-4">
+                <label class="info-label">Trình độ học vấn:</label>
+                <select name="degreeId">
+                    <option value="">-- Chọn bằng cấp --</option>
+                    <c:forEach var="d" items="${degreeList}">
+                        <option value="${d.degreeId}" ${user.degreeId==d.degreeId?'selected':''}>${d.name}</option>
+                    </c:forEach>
+                </select>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-edit btn-custom">
+                <i class="fas fa-save"></i>Lưu thay đổi
+            </button>
+            <a href="<c:url value='/view' />" class="btn btn-back btn-custom">
+                <i class="fas fa-arrow-left"></i>Quay lại
+            </a>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<c:if test="${not empty successMessage}"><script>alert("${successMessage}");</script></c:if>
+<c:if test="${not empty errorMessage}"><script>alert("${errorMessage}");</script></c:if>
+
+</body>
 </html>
