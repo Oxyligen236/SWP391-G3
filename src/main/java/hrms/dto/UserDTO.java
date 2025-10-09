@@ -12,7 +12,7 @@ public class UserDTO {
     private String address;
     private String nation;
     private String ethnicity;
-    private String cccd; // ✅ thêm CCCD
+    private String cccd;
 
     private Integer departmentId;
     private String departmentName;
@@ -23,14 +23,14 @@ public class UserDTO {
     private Integer degreeId;
     private String degreeName;
 
-    public UserDTO() {}
+    public UserDTO() {
+    }
 
-    // Constructor đầy đủ
     public UserDTO(int userId, String fullname, String email, String phoneNumber, Date birthDate,
-                   String gender, String address, String nation, String ethnicity, String cccd,
-                   Integer departmentId, String departmentName,
-                   Integer positionId, String positionName,
-                   Integer degreeId, String degreeName) {
+            String gender, String address, String nation, String ethnicity, String cccd,
+            Integer departmentId, String departmentName,
+            Integer positionId, String positionName,
+            Integer degreeId, String degreeName) {
         this.userId = userId;
         this.fullname = fullname;
         this.email = email;
@@ -49,52 +49,131 @@ public class UserDTO {
         this.degreeName = degreeName;
     }
 
-    // ===== Getters & Setters =====
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public int getUserId() {
+        return userId;
+    }
 
-    public String getFullname() { return fullname; }
-    public void setFullname(String fullname) { this.fullname = fullname; }
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getFullname() {
+        return fullname;
+    }
 
-    public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
 
-    public Date getBirthDate() { return birthDate; }
-    public void setBirthDate(Date birthDate) { this.birthDate = birthDate; }
+    public String getEmail() {
+        return email;
+    }
 
-    public String getGender() { return gender; }
-    public void setGender(String gender) { this.gender = gender; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-    public String getNation() { return nation; }
-    public void setNation(String nation) { this.nation = nation; }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-    public String getEthnicity() { return ethnicity; }
-    public void setEthnicity(String ethnicity) { this.ethnicity = ethnicity; }
+    public Date getBirthDate() {
+        return birthDate;
+    }
 
-    public String getCccd() { return cccd; }
-    public void setCccd(String cccd) { this.cccd = cccd; }
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
 
-    public Integer getDepartmentId() { return departmentId; }
-    public void setDepartmentId(Integer departmentId) { this.departmentId = departmentId; }
+    public String getGender() {
+        return gender;
+    }
 
-    public String getDepartmentName() { return departmentName; }
-    public void setDepartmentName(String departmentName) { this.departmentName = departmentName; }
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
-    public Integer getPositionId() { return positionId; }
-    public void setPositionId(Integer positionId) { this.positionId = positionId; }
+    public String getAddress() {
+        return address;
+    }
 
-    public String getPositionName() { return positionName; }
-    public void setPositionName(String positionName) { this.positionName = positionName; }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-    public Integer getDegreeId() { return degreeId; }
-    public void setDegreeId(Integer degreeId) { this.degreeId = degreeId; }
+    public String getNation() {
+        return nation;
+    }
 
-    public String getDegreeName() { return degreeName; }
-    public void setDegreeName(String degreeName) { this.degreeName = degreeName; }
+    public void setNation(String nation) {
+        this.nation = nation;
+    }
+
+    public String getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(String ethnicity) {
+        this.ethnicity = ethnicity;
+    }
+
+    public String getCccd() {
+        return cccd;
+    }
+
+    public void setCccd(String cccd) {
+        this.cccd = cccd;
+    }
+
+    public Integer getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Integer departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public Integer getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(Integer positionId) {
+        this.positionId = positionId;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+
+    public Integer getDegreeId() {
+        return degreeId;
+    }
+
+    public void setDegreeId(Integer degreeId) {
+        this.degreeId = degreeId;
+    }
+
+    public String getDegreeName() {
+        return degreeName;
+    }
+
+    public void setDegreeName(String degreeName) {
+        this.degreeName = degreeName;
+    }
 }

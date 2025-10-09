@@ -11,11 +11,10 @@ import hrms.utils.DBContext;
 
 public class UserDAO extends DBContext {
 
-    // 🔹 Lấy thông tin User theo ID
     public User getUserById(int id) {
         String sql = "SELECT UserID, FullName, Email, PhoneNumber, BirthDate, Gender, " +
-                     "CCCD, Address, Ethnicity, Nation, DegreeID, PositionID, DepartmentID " +
-                     "FROM Users WHERE UserID = ?";
+                "CCCD, Address, Ethnicity, Nation, DegreeID, PositionID, DepartmentID " +
+                "FROM Users WHERE UserID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -28,7 +27,6 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-    // 🔹 Cập nhật thông tin User an toàn (chỉ cập nhật trường có dữ liệu)
     public boolean updateUser(User u) {
         if (u == null || u.getUserId() == 0) {
             System.out.println("❌ User hoặc UserID không hợp lệ.");
@@ -38,27 +36,60 @@ public class UserDAO extends DBContext {
         StringBuilder sql = new StringBuilder("UPDATE Users SET ");
         List<Object> params = new ArrayList<>();
 
-        // ✅ Các cột có thể cập nhật
-        if (u.getFullname() != null) { sql.append("FullName=?, "); params.add(u.getFullname()); }
-        if (u.getEmail() != null) { sql.append("Email=?, "); params.add(u.getEmail()); }
-        if (u.getPhoneNumber() != null) { sql.append("PhoneNumber=?, "); params.add(u.getPhoneNumber()); }
-        if (u.getBirthDate() != null) { sql.append("BirthDate=?, "); params.add(new java.sql.Date(u.getBirthDate().getTime())); }
-        if (u.getGender() != null) { sql.append("Gender=?, "); params.add(u.getGender()); }
-        if (u.getCccd() != null) { sql.append("CCCD=?, "); params.add(u.getCccd()); }
-        if (u.getAddress() != null) { sql.append("Address=?, "); params.add(u.getAddress()); }
-        if (u.getNation() != null) { sql.append("Nation=?, "); params.add(u.getNation()); }
-        if (u.getEthnicity() != null) { sql.append("Ethnicity=?, "); params.add(u.getEthnicity()); }
-        if (u.getDepartmentId() != null) { sql.append("DepartmentID=?, "); params.add(u.getDepartmentId()); }
-        if (u.getPositionId() != null) { sql.append("PositionID=?, "); params.add(u.getPositionId()); }
-        if (u.getDegreeId() != null) { sql.append("DegreeID=?, "); params.add(u.getDegreeId()); }
+        if (u.getFullname() != null) {
+            sql.append("FullName=?, ");
+            params.add(u.getFullname());
+        }
+        if (u.getEmail() != null) {
+            sql.append("Email=?, ");
+            params.add(u.getEmail());
+        }
+        if (u.getPhoneNumber() != null) {
+            sql.append("PhoneNumber=?, ");
+            params.add(u.getPhoneNumber());
+        }
+        if (u.getBirthDate() != null) {
+            sql.append("BirthDate=?, ");
+            params.add(new java.sql.Date(u.getBirthDate().getTime()));
+        }
+        if (u.getGender() != null) {
+            sql.append("Gender=?, ");
+            params.add(u.getGender());
+        }
+        if (u.getCccd() != null) {
+            sql.append("CCCD=?, ");
+            params.add(u.getCccd());
+        }
+        if (u.getAddress() != null) {
+            sql.append("Address=?, ");
+            params.add(u.getAddress());
+        }
+        if (u.getNation() != null) {
+            sql.append("Nation=?, ");
+            params.add(u.getNation());
+        }
+        if (u.getEthnicity() != null) {
+            sql.append("Ethnicity=?, ");
+            params.add(u.getEthnicity());
+        }
+        if (u.getDepartmentId() != null) {
+            sql.append("DepartmentID=?, ");
+            params.add(u.getDepartmentId());
+        }
+        if (u.getPositionId() != null) {
+            sql.append("PositionID=?, ");
+            params.add(u.getPositionId());
+        }
+        if (u.getDegreeId() != null) {
+            sql.append("DegreeID=?, ");
+            params.add(u.getDegreeId());
+        }
 
-        // ⚠️ Nếu không có trường nào cần cập nhật
         if (params.isEmpty()) {
             System.out.println("⚠️ Không có trường nào để cập nhật cho UserID: " + u.getUserId());
             return false;
         }
 
-        // Xóa dấu phẩy cuối cùng, thêm điều kiện WHERE
         sql.setLength(sql.length() - 2);
         sql.append(" WHERE UserID=?");
         params.add(u.getUserId());
@@ -83,11 +114,10 @@ public class UserDAO extends DBContext {
         return false;
     }
 
-    // 🔹 Lấy danh sách tất cả User
     public List<User> getAll() {
         List<User> list = new ArrayList<>();
         String sql = "SELECT UserID, FullName, Email, PhoneNumber, BirthDate, Gender, " +
-                     "CCCD, Address, Ethnicity, Nation, DegreeID, PositionID, DepartmentID FROM Users";
+                "CCCD, Address, Ethnicity, Nation, DegreeID, PositionID, DepartmentID FROM Users";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -99,7 +129,6 @@ public class UserDAO extends DBContext {
         return list;
     }
 
-    // 🔹 Hàm helper: ánh xạ ResultSet → User
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User u = new User();
         u.setUserId(rs.getInt("UserID"));
@@ -113,7 +142,6 @@ public class UserDAO extends DBContext {
         u.setNation(rs.getString("Nation"));
         u.setEthnicity(rs.getString("Ethnicity"));
 
-        // ⚙️ Dùng getObject để tránh lỗi khi cột null
         u.setDepartmentId((Integer) rs.getObject("DepartmentID"));
         u.setPositionId((Integer) rs.getObject("PositionID"));
         u.setDegreeId((Integer) rs.getObject("DegreeID"));

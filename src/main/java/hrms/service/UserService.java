@@ -14,30 +14,30 @@ public class UserService {
     private PositionDAO positionDAO = new PositionDAO();
     private DegreeDAO degreeDAO = new DegreeDAO();
 
-    // Lấy thông tin user theo ID
     public UserDTO getUserById(int userId) {
-        User user = userDAO.getUserById(userId);
-        if (user == null) return null;
+    User user = userDAO.getUserById(userId);
+    if (user == null) return null;
 
-        String departmentName = (user.getDepartmentId() != null)
-                ? departmentDAO.getNameById(user.getDepartmentId()) : null;
-        String positionName = (user.getPositionId() != null)
-                ? positionDAO.getNameById(user.getPositionId()) : null;
-        String degreeName = (user.getDegreeId() != null)
-                ? degreeDAO.getNameById(user.getDegreeId()) : null;
+    String departmentName = (user.getDepartmentId() != null)
+        ? departmentDAO.getNameById(user.getDepartmentId()) : null;
+    String positionName = (user.getPositionId() != null)
+        ? positionDAO.getNameById(user.getPositionId()) : null;
+    String degreeName = (user.getDegreeId() != null)
+        ? degreeDAO.getNameById(user.getDegreeId()) : null;
 
-        UserDTO dto = new UserDTO();
-        dto.setUserId(user.getUserId());
-        dto.setFullname(user.getFullname());
-        dto.setEmail(user.getEmail());
-        dto.setPhoneNumber(user.getPhoneNumber());
-        dto.setBirthDate(user.getBirthDate());
-        dto.setGender(user.getGender());
-        dto.setAddress(user.getAddress());
-        dto.setNation(user.getNation());
-        dto.setEthnicity(user.getEthnicity());
-        dto.setCccd(user.getCccd()); // ✅ thêm CCCD
-        dto.setDepartmentId(user.getDepartmentId());
+    UserDTO dto = new UserDTO();
+    dto.setUserId(user.getUserId());
+    dto.setFullname(user.getFullname());
+    dto.setEmail(user.getEmail());
+    dto.setPhoneNumber(user.getPhoneNumber());
+    dto.setBirthDate(user.getBirthDate());
+    dto.setGender(user.getGender());
+    dto.setAddress(user.getAddress());
+    dto.setNation(user.getNation());
+    dto.setEthnicity(user.getEthnicity());
+    dto.setCccd(user.getCccd());
+    dto.setDepartmentId(user.getDepartmentId());
+
         dto.setDepartmentName(departmentName);
         dto.setPositionId(user.getPositionId());
         dto.setPositionName(positionName);
@@ -47,7 +47,6 @@ public class UserService {
         return dto;
     }
 
-    // Cập nhật user
     public boolean updateUser(UserDTO dto) {
         if (dto == null) return false;
 
@@ -61,7 +60,7 @@ public class UserService {
         user.setAddress(dto.getAddress());
         user.setNation(dto.getNation());
         user.setEthnicity(dto.getEthnicity());
-        user.setCccd(dto.getCccd()); // ✅ thêm CCCD
+        user.setCccd(dto.getCccd());
         user.setDepartmentId(dto.getDepartmentId());
         user.setPositionId(dto.getPositionId());
         user.setDegreeId(dto.getDegreeId());

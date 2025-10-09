@@ -63,7 +63,6 @@ public class EditProfileServlet extends HttpServlet {
             return;
         }
 
-        // Lấy thông tin từ form
         String fullname = request.getParameter("fullname");
         String email = request.getParameter("email");
         String phoneNumber = request.getParameter("phoneNumber");
@@ -75,17 +74,26 @@ public class EditProfileServlet extends HttpServlet {
         String ethnicity = request.getParameter("ethnicity");
         String degreeIdStr = request.getParameter("degreeId");
 
-        // Chỉ update các trường có dữ liệu
-        if (fullname != null && !fullname.isEmpty()) user.setFullname(fullname);
-        if (email != null && !email.isEmpty()) user.setEmail(email);
-        if (phoneNumber != null && !phoneNumber.isEmpty()) user.setPhoneNumber(phoneNumber);
-        if (birthDateStr != null && !birthDateStr.isEmpty()) user.setBirthDate(Date.valueOf(birthDateStr));
-        if (gender != null && !gender.isEmpty()) user.setGender(gender);
-        if (cccd != null && !cccd.isEmpty()) user.setCccd(cccd);
-        if (address != null && !address.isEmpty()) user.setAddress(address);
-        if (nation != null && !nation.isEmpty()) user.setNation(nation);
-        if (ethnicity != null && !ethnicity.isEmpty()) user.setEthnicity(ethnicity);
-        if (degreeIdStr != null && !degreeIdStr.isEmpty()) user.setDegreeId(Integer.parseInt(degreeIdStr));
+        if (fullname != null && !fullname.isEmpty())
+            user.setFullname(fullname);
+        if (email != null && !email.isEmpty())
+            user.setEmail(email);
+        if (phoneNumber != null && !phoneNumber.isEmpty())
+            user.setPhoneNumber(phoneNumber);
+        if (birthDateStr != null && !birthDateStr.isEmpty())
+            user.setBirthDate(Date.valueOf(birthDateStr));
+        if (gender != null && !gender.isEmpty())
+            user.setGender(gender);
+        if (cccd != null && !cccd.isEmpty())
+            user.setCccd(cccd);
+        if (address != null && !address.isEmpty())
+            user.setAddress(address);
+        if (nation != null && !nation.isEmpty())
+            user.setNation(nation);
+        if (ethnicity != null && !ethnicity.isEmpty())
+            user.setEthnicity(ethnicity);
+        if (degreeIdStr != null && !degreeIdStr.isEmpty())
+            user.setDegreeId(Integer.parseInt(degreeIdStr));
 
         boolean updated = userService.updateUser(user);
 
@@ -94,8 +102,6 @@ public class EditProfileServlet extends HttpServlet {
         } else {
             request.setAttribute("errorMessage", "Cập nhật thất bại hoặc không có trường nào thay đổi.");
         }
-
-        // Gửi lại danh sách bằng cấp để hiển thị dropdown
         List<Degree> degreeList = degreeDAO.getAll();
         request.setAttribute("degreeList", degreeList);
         request.setAttribute("user", user);

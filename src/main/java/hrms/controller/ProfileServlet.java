@@ -23,12 +23,11 @@ public class ProfileServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
 
         if (session == null || session.getAttribute("userId") == null) {
-            // Nếu chưa login, redirect về login
+
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
-        // Lấy userId từ session
         int userId = (Integer) session.getAttribute("userId");
 
         UserDTO user = userService.getUserById(userId);

@@ -11,9 +11,9 @@ import hrms.utils.DBContext;
 
 public class DepartmentDAO extends DBContext {
 
-    // Lấy tên Department theo ID
     public String getNameById(Integer id) {
-        if (id == null) return null;
+        if (id == null)
+            return null;
         String sql = "SELECT Name FROM Department WHERE DepartmentID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -27,7 +27,6 @@ public class DepartmentDAO extends DBContext {
         return null;
     }
 
-    // Lấy tất cả phòng ban (nếu cần)
     public List<Department> getAll() {
         List<Department> list = new ArrayList<>();
         String sql = "SELECT DepartmentID, Name FROM Department";
