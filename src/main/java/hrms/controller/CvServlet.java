@@ -1,8 +1,10 @@
 package hrms.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import hrms.dao.JobDAO;
+import hrms.dto.CVJobDetailDTO;
 import hrms.service.CvService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -31,13 +33,21 @@ public class CvServlet extends HttpServlet {
         phone = (phone != null && !phone.trim().isEmpty()) ? phone.trim() : null;
         gender = (gender != null && !gender.trim().isEmpty()) ? gender.trim() : null;
         status = (status != null && !status.trim().isEmpty()) ? status.trim() : null;
+
         try {
             int jobIdInt = (jobID != null) ? Integer.parseInt(jobID) : 0;
+
             request.setAttribute("jobs", jobDAO.getAll());
+
             if (jobIdInt > 0 || name != null || email != null || phone != null || gender != null || status != null) {
-                request.setAttribute("cvs", cvService.searchCVs(jobIdInt, name, email, phone, gender, status));
+                List<CVJobDetailDTO> filteredList = cvService.searchCVs(jobIdInt, name, email, phone, gender, status);
+
+                request.setAttribute("cvs", filteredList);
+                request.getSession().setAttribute("filteredCVs", filteredList);
+                request.getSession().setAttribute("isFiltering", true);
             } else {
                 request.setAttribute("cvs", cvService.getAllCVJobTitle());
+                request.getSession().setAttribute("isFiltering", false);
             }
             request.getRequestDispatcher("/view/cv/cv_List.jsp").forward(request, response);
         } catch (NumberFormatException e) {

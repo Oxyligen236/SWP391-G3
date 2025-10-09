@@ -113,3 +113,33 @@ body {
 .status-update-form button:hover {
     background-color: #0056b3;
 }
+
+.nav-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.nav-buttons a {
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+    background: #0099cc;
+    /* xanh dương đậm hơn */
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.nav-buttons a:hover {
+    background: #007bb5;
+    transform: translateY(-2px);
+}
+
+.nav-buttons a:active {
+    transform: translateY(0);
+}
