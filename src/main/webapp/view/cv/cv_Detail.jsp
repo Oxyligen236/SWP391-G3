@@ -17,7 +17,7 @@
                             <p>
                                 <c:out value="${CV_ID_error}" />
                             </p>
-                            <a href="<c:url value='/cv'/>">← Quay lại danh sách</a>
+                            <meta http-equiv="refresh" content="2;url=${pageContext.request.contextPath}/cv">
                         </div>
                     </c:if>
                     <h2>Chi tiết CV #${cvDetail.cvID}</h2>
