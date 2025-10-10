@@ -19,7 +19,6 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>Ticket</th>
             <th>Title</th>
             <th>Status</th>
             <th>Start</th>
@@ -33,7 +32,6 @@
         <c:forEach var="jd" items="${jdList}">
             <tr>
                 <td>${jd.jobID}</td>
-                <td>${jd.ticketID}</td>
                 <td>${jd.jobTitle}</td>
                 <td class="status ${jd.status}">${jd.status}</td>
                 <td>${jd.startDate}</td>
