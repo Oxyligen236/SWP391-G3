@@ -1,10 +1,8 @@
 package hrms.controller;
 
 import java.io.IOException;
-import java.util.List;
 
-import hrms.dao.CVsDAO;
-import hrms.model.CVs;
+import hrms.dto.CVJobDetailDTO;
 import hrms.service.CvService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,15 +19,13 @@ public class CvDetailServlet extends HttpServlet {
         String idParam = request.getParameter("id");
         try {
             int cvId = Integer.parseInt(idParam);
-            CVsDAO cv = new CVsDAO();
             CvService cvService = new CvService();
 
-            List<CVs> cvDetails = cv.getAll();
-            cvService.getCvWithJobDetail(cvId);
-            if (cvDetails == null) {
+            CVJobDetailDTO cvDetail = cvService.getCvWithJobTitle(cvId);
+            if (cvDetail == null) {
                 request.setAttribute("CV_ID_error", "CV không tồn tại");
             } else {
-                request.setAttribute("cvDetails", cvDetails);
+                request.setAttribute("cvDetail", cvDetail);
                 request.getRequestDispatcher("/view/cv/cv_Detail.jsp").forward(request, response);
             }
         } catch (NumberFormatException e) {
