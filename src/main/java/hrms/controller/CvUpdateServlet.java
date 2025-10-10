@@ -21,7 +21,7 @@ public class CvUpdateServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String cvIdRaw = request.getParameter("cvId");
+        String cvIdRaw = request.getParameter("cvID");
         String status = request.getParameter("status");
         CvService cvService = new CvService();
 
@@ -29,7 +29,7 @@ public class CvUpdateServlet extends HttpServlet {
             int cvId = Integer.parseInt(cvIdRaw);
             boolean isUpdated = cvService.updateCvStatus(cvId, status);
             if (isUpdated) {
-                response.sendRedirect(request.getContextPath() + "/cv/list");
+                response.sendRedirect(request.getContextPath() + "/cv/detail?id=" + cvId);
             } else {
                 request.setAttribute("errorMessage", "Câp nhật trạng thái CV thất bại.");
                 request.getRequestDispatcher("/view/cv/cv_Detail.jsp").forward(request, response);

@@ -17,7 +17,7 @@
                             <p>
                                 <c:out value="${CV_ID_error}" />
                             </p>
-                            <a href="<c:url value='/cv'/>">← Quay lại danh sách</a>
+                            <meta http-equiv="refresh" content="2;url=${pageContext.request.contextPath}/cv">
                         </div>
                     </c:if>
                     <h2>Chi tiết CV #${cvDetail.cvID}</h2>
@@ -51,7 +51,18 @@
                     <p><strong>Mô tả:</strong></p>
                     <textarea readonly rows="8" cols="75">${cvDetail.cv_Description}</textarea>
                     <br />
-                    <a href="<c:url value='/cv'/>">← Quay lại danh sách</a>
+
+
+                    <div class="nav-buttons">
+                        <a href="<c:url value='/cv'/>">← Quay lại danh sách</a>
+                        <c:if test="${not empty prevCV}">
+                            <a href="<c:url value='/cv/detail?id=${prevCV.cvID}'/>">← CV trước</a>
+                        </c:if>
+                        <c:if test="${not empty nextCV}">
+                            <a href="<c:url value='/cv/detail?id=${nextCV.cvID}'/>">CV tiếp theo →</a>
+                        </c:if>
+                    </div>
+
                 </div>
             </body>
 
