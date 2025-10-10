@@ -10,40 +10,43 @@
     </head>
     <body>
         <div class="container">
-            <h2>Tạo Job Description</h2>
-            <form action="createjd" method="post">
-                <input type="hidden" name="ticketID" value="${param.ticketID}">
-                <label for="jobTitle">Tên công việc:</label>
+            <h2>Create Job Description</h2>
+            <form action="<%= request.getContextPath() %>/createjd" method="post">
+
+<!--                <input type="hidden" name="ticketID" value="${param.ticketID}">-->
+                <label for="TicketId">TicketId:</label>
+                <input type="number" id="ticketid" name="ticketID" required>
+
+                <label for="jobTitle">Job Title:</label>
                 <input type="text" id="jobTitle" name="jobTitle" required>
 
-                <label for="startDate">Ngày bắt đầu:</label>
+                <label for="startDate">Start Date:</label>
                 <input type="date" id="startDate" name="startDate" required>
 
-                <label for="endDate">Ngày kết thúc:</label>
+                <label for="endDate">End Date:</label>
                 <input type="date" id="endDate" name="endDate" required>
 
-                <label for="department">Phòng ban:</label>
+                <label for="department">Department:</label>
                 <input type="text" id="department" name="department" required>
 
-                <label for="vacancies">Số lượng tuyển:</label>
+                <label for="vacancies">Vacancies:</label>
                 <input type="number" id="vacancies" name="vacancies" required>
 
-                <label for="responsibilities">Trách nhiệm:</label>
+                <label for="responsibilities">Responsibilities:</label>
                 <textarea id="responsibilities" name="responsibilities" rows="3" required></textarea>
 
-                <label for="requirements">Yêu cầu:</label>
+                <label for="requirements">Requirements:</label>
                 <textarea id="requirements" name="requirements" rows="3" required></textarea>
 
-                <label for="compensation">Mức lương:</label>
+                <label for="compensation">Compensation:</label>
                 <input type="text" id="compensation" name="compensation">
 
-                <label for="officeAddress">Địa chỉ làm việc:</label>
+                <label for="officeAddress">OfficeAddress:</label>
                 <input type="text" id="officeAddress" name="officeAddress">
 
-                <label for="workingConditions">Điều kiện làm việc:</label>
+                <label for="workingConditions">WorkingConditions:</label>
                 <textarea id="workingConditions" name="workingConditions" rows="3"></textarea>
-
-                <button type="submit" class="btn-primary">Tạo Job Description</button>
+                <button type="submit" class="btn-primary">Save</button>
             </form>
         </div>
 

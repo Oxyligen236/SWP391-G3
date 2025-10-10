@@ -12,7 +12,14 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/createjd")
 public class CreateJdServlet extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/view/jd/createJd.jsp").forward(request, response);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -23,7 +30,6 @@ public class CreateJdServlet extends HttpServlet {
         try {
             int ticketID = Integer.parseInt(request.getParameter("ticketID"));
             String jobTitle = request.getParameter("jobTitle");
-            String status = request.getParameter("status");
             LocalDate startDate = LocalDate.parse(request.getParameter("startDate"));
             LocalDate endDate = LocalDate.parse(request.getParameter("endDate"));
             String department = request.getParameter("department");
@@ -34,13 +40,14 @@ public class CreateJdServlet extends HttpServlet {
             String officeAddress = request.getParameter("officeAddress");
             String workingConditions = request.getParameter("workingConditions");
 
-            JobDescription jd = new JobDescription(0, ticketID, jobTitle, status, startDate, endDate, department,
+            JobDescription jd = new JobDescription(0, ticketID, jobTitle, startDate, endDate, department,
                     vacancies, responsibilities, requirements, compensation, officeAddress, workingConditions);
 
             JobDAO dao = new JobDAO();
             dao.insertJobDescription(jd);
 
-            response.sendRedirect("success.jsp");
+            request.getSession().setAttribute("message", "Create JD Successfully!");
+            response.sendRedirect(request.getContextPath() + "/jdlist");
 
         } catch (Exception e) {
             e.printStackTrace();

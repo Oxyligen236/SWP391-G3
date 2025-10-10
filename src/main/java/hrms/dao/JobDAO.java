@@ -52,26 +52,40 @@ public class JobDAO extends DBContext {
     }
 
     public boolean insertJobDescription(JobDescription jd) {
-        String sql = "INSERT INTO job_description (ticketID, jobTitle, status, startDate, endDate, department, vacancies, responsibilities, requirements, compensation, officeAddress, workingConditions) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO job_description (ticketID, jobTitle, startDate, endDate, department, vacancies, responsibilities, requirements, compensation, officeAddress, workingConditions) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/HRMS?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true", "root", "123456"); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, jd.getTicketID());
             ps.setString(2, jd.getJobTitle());
-            ps.setString(3, jd.getStatus());
-            ps.setObject(4, jd.getStartDate());
-            ps.setObject(5, jd.getEndDate());
-            ps.setString(6, jd.getDepartment());
-            ps.setInt(7, jd.getVacancies());
-            ps.setString(8, jd.getResponsibilities());
-            ps.setString(9, jd.getRequirements());
-            ps.setString(10, jd.getCompensation());
-            ps.setString(11, jd.getOfficeAddress());
-            ps.setString(12, jd.getWorkingConditions());
+            ps.setObject(3, jd.getStartDate());
+            ps.setObject(4, jd.getEndDate());
+            ps.setString(5, jd.getDepartment());
+            ps.setInt(6, jd.getVacancies());
+            ps.setString(7, jd.getResponsibilities());
+            ps.setString(8, jd.getRequirements());
+            ps.setString(9, jd.getCompensation());
+            ps.setString(10, jd.getOfficeAddress());
+            ps.setString(11, jd.getWorkingConditions());
 
             return ps.executeUpdate() > 0;
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateStatus(int jobID, String status) {
+        String sql = "UPDATE job_description SET status = ? WHERE jobID = ?";
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/HRMS?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
+                "root", "123456"); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ps.setInt(2, jobID);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
