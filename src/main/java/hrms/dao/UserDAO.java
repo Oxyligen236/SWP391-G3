@@ -3,35 +3,23 @@ package hrms.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import hrms.model.User;
 import hrms.utils.DBContext;
 
 public class UserDAO extends DBContext {
 
-    // Lấy thông tin User theo ID
     public User getUserById(int id) {
         String sql = "SELECT UserID, FullName, Email, PhoneNumber, BirthDate, Gender, " +
-                     "Address, Ethnicity, Nation, DegreeID, PositionID, DepartmentID " +
-                     "FROM Users WHERE UserID = ?";
+                "CCCD, Address, Ethnicity, Nation, DegreeID, PositionID, DepartmentID " +
+                "FROM Users WHERE UserID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                User u = new User();
-                u.setUserId(rs.getInt("UserID"));
-                u.setFullname(rs.getString("FullName"));
-                u.setEmail(rs.getString("Email"));
-                u.setPhoneNumber(rs.getString("PhoneNumber"));
-                u.setBirthDate(rs.getDate("BirthDate"));
-                u.setGender(rs.getString("Gender"));
-                u.setAddress(rs.getString("Address"));
-                u.setNation(rs.getString("Nation"));
-                u.setEthnicity(rs.getString("Ethnicity"));
-                u.setDepartmentId(rs.getInt("DepartmentID"));
-                u.setPositionId(rs.getInt("PositionID"));
-                u.setDegreeId(rs.getInt("DegreeID"));
-                return u;
+                return mapResultSetToUser(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -39,25 +27,124 @@ public class UserDAO extends DBContext {
         return null;
     }
 
-    // Cập nhật thông tin User
     public boolean updateUser(User u) {
-        String sql = "UPDATE Users SET FullName=?, Email=?, PhoneNumber=?, BirthDate=?, Gender=?, " +
-                     "Address=?, Nation=?, Ethnicity=? WHERE UserID=?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, u.getFullname());
-            ps.setString(2, u.getEmail());
-            ps.setString(3, u.getPhoneNumber());
-            ps.setDate(4, u.getBirthDate() != null ? new java.sql.Date(u.getBirthDate().getTime()) : null);
-            ps.setString(5, u.getGender());
-            ps.setString(6, u.getAddress());
-            ps.setString(7, u.getNation());
-            ps.setString(8, u.getEthnicity());
-            ps.setInt(9, u.getUserId());
+        if (u == null || u.getUserId() == 0) {
+            System.out.println("❌ User hoặc UserID không hợp lệ.");
+            return false;
+        }
 
-            return ps.executeUpdate() > 0;
+        StringBuilder sql = new StringBuilder("UPDATE Users SET ");
+        List<Object> params = new ArrayList<>();
+
+        if (u.getFullname() != null) {
+            sql.append("FullName=?, ");
+            params.add(u.getFullname());
+        }
+        if (u.getEmail() != null) {
+            sql.append("Email=?, ");
+            params.add(u.getEmail());
+        }
+        if (u.getPhoneNumber() != null) {
+            sql.append("PhoneNumber=?, ");
+            params.add(u.getPhoneNumber());
+        }
+        if (u.getBirthDate() != null) {
+            sql.append("BirthDate=?, ");
+            params.add(new java.sql.Date(u.getBirthDate().getTime()));
+        }
+        if (u.getGender() != null) {
+            sql.append("Gender=?, ");
+            params.add(u.getGender());
+        }
+        if (u.getCccd() != null) {
+            sql.append("CCCD=?, ");
+            params.add(u.getCccd());
+        }
+        if (u.getAddress() != null) {
+            sql.append("Address=?, ");
+            params.add(u.getAddress());
+        }
+        if (u.getNation() != null) {
+            sql.append("Nation=?, ");
+            params.add(u.getNation());
+        }
+        if (u.getEthnicity() != null) {
+            sql.append("Ethnicity=?, ");
+            params.add(u.getEthnicity());
+        }
+        if (u.getDepartmentId() != null) {
+            sql.append("DepartmentID=?, ");
+            params.add(u.getDepartmentId());
+        }
+        if (u.getPositionId() != null) {
+            sql.append("PositionID=?, ");
+            params.add(u.getPositionId());
+        }
+        if (u.getDegreeId() != null) {
+            sql.append("DegreeID=?, ");
+            params.add(u.getDegreeId());
+        }
+
+        if (params.isEmpty()) {
+            System.out.println("⚠️ Không có trường nào để cập nhật cho UserID: " + u.getUserId());
+            return false;
+        }
+
+        sql.setLength(sql.length() - 2);
+        sql.append(" WHERE UserID=?");
+        params.add(u.getUserId());
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("✅ Cập nhật UserID " + u.getUserId() + " thành công.");
+                return true;
+            } else {
+                System.out.println("⚠️ Cập nhật thất bại. Không tìm thấy UserID: " + u.getUserId());
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Lỗi SQL khi cập nhật UserID " + u.getUserId());
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public List<User> getAll() {
+        List<User> list = new ArrayList<>();
+        String sql = "SELECT UserID, FullName, Email, PhoneNumber, BirthDate, Gender, " +
+                "CCCD, Address, Ethnicity, Nation, DegreeID, PositionID, DepartmentID FROM Users";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(mapResultSetToUser(rs));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return list;
+    }
+
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        User u = new User();
+        u.setUserId(rs.getInt("UserID"));
+        u.setFullname(rs.getString("FullName"));
+        u.setEmail(rs.getString("Email"));
+        u.setPhoneNumber(rs.getString("PhoneNumber"));
+        u.setBirthDate(rs.getDate("BirthDate"));
+        u.setGender(rs.getString("Gender"));
+        u.setCccd(rs.getString("CCCD"));
+        u.setAddress(rs.getString("Address"));
+        u.setNation(rs.getString("Nation"));
+        u.setEthnicity(rs.getString("Ethnicity"));
+
+        u.setDepartmentId((Integer) rs.getObject("DepartmentID"));
+        u.setPositionId((Integer) rs.getObject("PositionID"));
+        u.setDegreeId((Integer) rs.getObject("DegreeID"));
+        return u;
     }
 }
