@@ -27,7 +27,7 @@ public class EditProfileServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect(request.getContextPath() + "/authenticate"); 
+            response.sendRedirect(request.getContextPath() + "/authenticate");
             return;
         }
 
@@ -38,7 +38,7 @@ public class EditProfileServlet extends HttpServlet {
             return;
         }
 
-        List<Degree> degreeList = degreeDAO.getAll(); 
+        List<Degree> degreeList = degreeDAO.getAll();
 
         request.setAttribute("user", user);
         request.setAttribute("degreeList", degreeList);
@@ -74,26 +74,36 @@ public class EditProfileServlet extends HttpServlet {
         String ethnicity = request.getParameter("ethnicity");
         String degreeIdStr = request.getParameter("degreeId");
 
-        if (fullname != null && !fullname.isEmpty())
+        if (fullname != null && !fullname.isEmpty()) {
             user.setFullname(fullname);
-        if (email != null && !email.isEmpty())
+        }
+        if (email != null && !email.isEmpty()) {
             user.setEmail(email);
-        if (phoneNumber != null && !phoneNumber.isEmpty())
+        }
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
             user.setPhoneNumber(phoneNumber);
-        if (birthDateStr != null && !birthDateStr.isEmpty())
+        }
+        if (birthDateStr != null && !birthDateStr.isEmpty()) {
             user.setBirthDate(Date.valueOf(birthDateStr));
-        if (gender != null && !gender.isEmpty())
+        }
+        if (gender != null && !gender.isEmpty()) {
             user.setGender(gender);
-        if (cccd != null && !cccd.isEmpty())
+        }
+        if (cccd != null && !cccd.isEmpty()) {
             user.setCccd(cccd);
-        if (address != null && !address.isEmpty())
+        }
+        if (address != null && !address.isEmpty()) {
             user.setAddress(address);
-        if (nation != null && !nation.isEmpty())
+        }
+        if (nation != null && !nation.isEmpty()) {
             user.setNation(nation);
-        if (ethnicity != null && !ethnicity.isEmpty())
+        }
+        if (ethnicity != null && !ethnicity.isEmpty()) {
             user.setEthnicity(ethnicity);
-        if (degreeIdStr != null && !degreeIdStr.isEmpty())
+        }
+        if (degreeIdStr != null && !degreeIdStr.isEmpty()) {
             user.setDegreeId(Integer.parseInt(degreeIdStr));
+        }
 
         boolean updated = userService.updateUser(user);
 
