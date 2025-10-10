@@ -1,12 +1,10 @@
 package hrms.controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import hrms.dao.AccountDAO;
 import hrms.dao.RoleDAO;
 import hrms.model.Account;
-import hrms.model.Role;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,20 +14,18 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/account/create")
 public class CreateAccountServlet extends HttpServlet {
 
-    private final AccountDAO accountDAO = new AccountDAO();
     private final RoleDAO roleDAO = new RoleDAO();
+    private final AccountDAO accountDAO = new AccountDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
             throws ServletException, IOException {
-
-        List<Role> roleList = roleDAO.getAllRoles();
-        req.setAttribute("roleList", roleList);
+        req.setAttribute("roleList", roleDAO.getAllRoles());
         req.getRequestDispatcher("/view/account/createAccount.jsp").forward(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) 
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         req.setCharacterEncoding("UTF-8");
@@ -37,36 +33,48 @@ public class CreateAccountServlet extends HttpServlet {
         int userID = Integer.parseInt(req.getParameter("userID"));
         String username = req.getParameter("username");
         String password = req.getParameter("password");
+        String confirmPassword = req.getParameter("confirmPassword");
         int roleID = Integer.parseInt(req.getParameter("roleID"));
+        boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
 
-        String errorMessage = null;
-
-        // 1. Kiểm tra user đã có account chưa
-        if (accountDAO.getAccountByUserID(userID) != null) {
-            errorMessage = "Người dùng này đã có tài khoản!";
-        } 
-        // 2. Kiểm tra username đã tồn tại chưa
-        else if (accountDAO.getAccountByUsername(username) != null) {
-            errorMessage = "Tên đăng nhập đã tồn tại, vui lòng chọn tên khác!";
-        } 
-        // 3. Nếu hợp lệ, tạo account
-        else {
-            Account account = new Account();
-            account.setUserID(userID);
-            account.setUsername(username);
-            account.setPassword(password); // TODO: hash password
-            account.setRole(roleID);
-            account.setIsActive(true);
-
-            if (accountDAO.createAccount(account)) {
-                req.setAttribute("successMessage", "Tạo tài khoản thành công!");
-            } else {
-                errorMessage = "Tạo tài khoản thất bại!";
-            }
+        // Kiểm tra mật khẩu
+        if(!password.equals(confirmPassword)) {
+            req.setAttribute("errorMessage", "Mật khẩu xác nhận không khớp!");
+            req.setAttribute("roleList", roleDAO.getAllRoles());
+            req.getRequestDispatcher("/view/account/createAccount.jsp").forward(req, resp);
+            return;
         }
 
-        if (errorMessage != null) {
-            req.setAttribute("errorMessage", errorMessage);
+        // Kiểm tra username đã tồn tại chưa
+        if(accountDAO.getAccountByUsername(username) != null) {
+            req.setAttribute("errorMessage", "Username đã tồn tại!");
+            req.setAttribute("roleList", roleDAO.getAllRoles());
+            req.getRequestDispatcher("/view/account/createAccount.jsp").forward(req, resp);
+            return;
+        }
+
+        // Kiểm tra user đã có tài khoản chưa
+        if(accountDAO.getAccountByUserID(userID) != null) {
+            req.setAttribute("errorMessage", "Người dùng này đã có tài khoản!");
+            req.setAttribute("roleList", roleDAO.getAllRoles());
+            req.getRequestDispatcher("/view/account/createAccount.jsp").forward(req, resp);
+            return;
+        }
+
+        // Tạo account
+        Account account = new Account();
+        account.setUserID(userID);
+        account.setUsername(username);
+        account.setPassword(password); // TODO: hash password nếu muốn
+        account.setRole(roleID);
+        account.setIsActive(isActive);
+
+        boolean created = accountDAO.createAccount(account);
+
+        if(created) {
+            req.setAttribute("successMessage", "Tạo tài khoản thành công!");
+        } else {
+            req.setAttribute("errorMessage", "Tạo tài khoản thất bại!");
         }
 
         req.setAttribute("roleList", roleDAO.getAllRoles());
