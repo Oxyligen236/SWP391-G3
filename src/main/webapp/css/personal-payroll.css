@@ -12,6 +12,41 @@ h1 {
     margin-bottom: 30px;
 }
 
+form.search-form {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+form.search-form select,
+form.search-form input[type="number"],
+form.search-form button {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+form.search-form select:focus,
+form.search-form input[type="number"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+form.search-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+form.search-form button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
 table {
     width: 90%;
     margin: 0 auto;
@@ -22,18 +57,26 @@ table {
     overflow: hidden;
 }
 
+th,
+td {
+    padding: 12px;
+    text-align: center;
+}
+
 th {
     background-color: #007bff;
     color: #fff;
-    padding: 12px;
-    text-align: center;
     font-weight: 600;
 }
 
 td {
-    padding: 12px;
-    text-align: center;
     border-top: 1px solid #eee;
+}
+
+td form {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 
 tr:hover {
@@ -57,7 +100,7 @@ button:hover {
     transform: scale(1.05);
 }
 
-p[style*="color: red"] {
+p.error-msg {
     text-align: center;
     background-color: #ffe5e5;
     border: 1px solid #ffb3b3;
@@ -65,42 +108,4 @@ p[style*="color: red"] {
     padding: 10px;
     width: fit-content;
     margin: 15px auto;
-}
-
-form {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-select,
-input[type="number"] {
-    padding: 8px 12px;
-    margin: 0 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    transition: all 0.3s ease;
-}
-
-select:focus,
-input[type="number"]:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-form button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 7px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 14px;
-}
-
-form button:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
 }
