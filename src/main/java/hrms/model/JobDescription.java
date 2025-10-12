@@ -37,6 +37,23 @@ public class JobDescription {
         this.workingConditions = workingConditions;
     }
 
+    public JobDescription(int jobID, int ticketID, String jobTitle, LocalDate startDate, LocalDate endDate, String department, int vacancies, String responsibilities, String requirements, String compensation, String officeAddress, String workingConditions) {
+        this.jobID = jobID;
+        this.ticketID = ticketID;
+        this.jobTitle = jobTitle;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.department = department;
+        this.vacancies = vacancies;
+        this.responsibilities = responsibilities;
+        this.requirements = requirements;
+        this.compensation = compensation;
+        this.officeAddress = officeAddress;
+        this.workingConditions = workingConditions;
+    }
+    
+    
+
     public int getJobID() {
         return jobID;
     }
