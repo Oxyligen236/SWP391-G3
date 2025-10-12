@@ -1,8 +1,10 @@
 package hrms.dao;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,18 +13,21 @@ import hrms.utils.DBContext;
 
 public class TicketDAO extends DBContext {
    
-
     private Ticket extractTicketFromResultSet(ResultSet rs) throws SQLException {
+        Date createDate = rs.getDate("Create_Date");
+        Date approveDate = rs.getDate("Approve_Date");
+        
         return new Ticket(
-                rs.getInt("ticketID"),
-                rs.getInt("userID"),
-                rs.getInt("ticket_Type_ID"),
-                rs.getDate("create_Date"),
-                rs.getString("ticket_Content"),
-                rs.getInt("approveID"),
-                rs.getDate("approve_Date"),
-                rs.getString("comment"),
-                rs.getString("status"));
+            rs.getInt("TicketID"),           
+            rs.getInt("UserID"),            
+            rs.getInt("Ticket_Type_ID"),     
+            createDate != null ? createDate.toLocalDate() : null, 
+            rs.getString("Ticket_Content"),  
+            rs.getInt("ApproverID"),         
+            approveDate != null ? approveDate.toLocalDate() : null, 
+            rs.getString("Comment"),         
+            rs.getString("Status")
+        );
     }
 
     public List<Ticket> getAll() {
@@ -56,52 +61,68 @@ public class TicketDAO extends DBContext {
         return null;
     }
 
-    public boolean add(Ticket t) {
-        String sql = "insert into Ticket (userID, ticket_Type_ID, create_Date, ticket_Content, approveID, approve_Date, comment, status) values (?, ?, ?, ?, ?, ?, ?, ?)";
+    public int add(Ticket t) {
+      
+        String sql = "insert into Ticket (userID, ticket_Type_ID, create_Date, ticket_Content, status) values (?, ?, ?, ?, ?)";
         try {
-            PreparedStatement st = connection.prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             st.setInt(1, t.getUserID());
             st.setInt(2, t.getTicket_Type_ID());
-            st.setDate(3, new java.sql.Date(t.getCreate_Date().getTime()));
+            
+            if (t.getCreate_Date() != null) {
+                st.setDate(3, Date.valueOf(t.getCreate_Date()));
+            } else {
+                st.setDate(3, Date.valueOf(LocalDate.now()));
+            }
+            
             st.setString(4, t.getTicket_Content());
-            if (t.getApproveID() != 0) {
-                st.setInt(5, t.getApproveID());
-            } else {
-                st.setNull(5, java.sql.Types.INTEGER);
+            st.setString(5, t.getStatus());
+            
+            int affectedRows = st.executeUpdate();
+            
+            if (affectedRows > 0) {
+                ResultSet rs = st.getGeneratedKeys();
+                if (rs.next()) {
+                    int generatedId = rs.getInt(1);
+                    System.out.println("Generated TicketID: " + generatedId);
+                    return generatedId;
+                }
             }
-            if (t.getApprove_Date() != null) {
-                st.setDate(6, new java.sql.Date(t.getApprove_Date().getTime()));
-            } else {
-                st.setNull(6, java.sql.Types.DATE);
-            }
-            st.setString(7, t.getComment());
-            st.setString(8, t.getStatus());
-            st.executeUpdate();
-            return true;
         } catch (SQLException e) {
-            System.out.println(e);
-            return false;
+            System.out.println("Error in TicketDAO.add: " + e.getMessage());
+            e.printStackTrace();
         }
-
+        return -1;
     }
+
     public boolean update(Ticket t) {
-        String sql = "update Ticket set userID = ?, ticket_Type_ID = ?, create_Date = ?, ticket_Content = ?, approveID = ?, approve_Date = ?, comment = ?, status = ? where ticketID = ?";
+      
+        String sql = "update Ticket set userID = ?, ticket_Type_ID = ?, create_Date = ?, ticket_Content = ?, ApproverID = ?, approve_Date = ?, comment = ?, status = ? where ticketID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, t.getUserID());
             st.setInt(2, t.getTicket_Type_ID());
-            st.setDate(3, new java.sql.Date(t.getCreate_Date().getTime()));
+            
+            if (t.getCreate_Date() != null) {
+                st.setDate(3, Date.valueOf(t.getCreate_Date()));
+            } else {
+                st.setNull(3, java.sql.Types.DATE);
+            }
+            
             st.setString(4, t.getTicket_Content());
-            if (t.getApproveID() != 0) {
-                st.setInt(5, t.getApproveID());
+            
+            if (t.getApproverID() != 0) {
+                st.setInt(5, t.getApproverID());
             } else {
                 st.setNull(5, java.sql.Types.INTEGER);
             }
+            
             if (t.getApprove_Date() != null) {
-                st.setDate(6, new java.sql.Date(t.getApprove_Date().getTime()));
+                st.setDate(6, Date.valueOf(t.getApprove_Date()));
             } else {
                 st.setNull(6, java.sql.Types.DATE);
             }
+            
             st.setString(7, t.getComment());
             st.setString(8, t.getStatus());
             st.setInt(9, t.getTicketID());
@@ -112,6 +133,7 @@ public class TicketDAO extends DBContext {
             return false;
         }
     }
+
     public List<Ticket> getTicketsByUserId(int userId) {
         List<Ticket> list = new ArrayList<>();
         String sql = "select * from Ticket where userID = ?";
@@ -131,7 +153,8 @@ public class TicketDAO extends DBContext {
 
     public List<Ticket> getTicketsByApproveID(int approveID) {
         List<Ticket> list = new ArrayList<>();
-        String sql = "select * from Ticket where approveID = ?";
+        // Sửa: approveID → ApproverID
+        String sql = "select * from Ticket where ApproverID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, approveID);
@@ -145,5 +168,4 @@ public class TicketDAO extends DBContext {
         }
         return list;
     }
-
 }

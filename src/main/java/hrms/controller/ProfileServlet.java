@@ -2,8 +2,8 @@ package hrms.controller;
 
 import java.io.IOException;
 
-import hrms.dao.UserDAO;
-import hrms.model.User;
+import hrms.dto.UserDTO;
+import hrms.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,24 +11,26 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/view") 
+@WebServlet("/view")
 public class ProfileServlet extends HttpServlet {
-    private UserDAO userDAO = new UserDAO();
+
+    private final UserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         HttpSession session = req.getSession(false);
+
         if (session == null || session.getAttribute("userId") == null) {
-            System.out.println("Session is null or userId not found in session.");
-            resp.sendRedirect(req.getContextPath() + "/authenticate"); 
+
+            resp.sendRedirect(req.getContextPath() + "/authenticate");
             return;
         }
 
-        int userId = (int) session.getAttribute("userId"); // Lấy từ session
-        User user = userDAO.getUserById(userId);
+        int userId = (Integer) session.getAttribute("userId");
 
+        UserDTO user = userService.getUserById(userId);
         if (user != null) {
             req.setAttribute("user", user);
             req.getRequestDispatcher("/view/profile/viewProfile.jsp").forward(req, resp);
