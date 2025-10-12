@@ -1,8 +1,7 @@
 package hrms.dto;
 
+import java.time.LocalDate;
 import java.util.List;
-
-import hrms.model.PayrollItem;
 
 public class PayrollDTO {
 
@@ -16,15 +15,18 @@ public class PayrollDTO {
     private double baseSalary;
     private String month;
     private String year;
-    private List<PayrollItem> payrollItems;
+    private List<PayrollItemDetailDTO> payrollItems;
     private double totalDeductions;
-    private double netSalary;
     private double totalEarnings;
+    private double netSalary;
+    private LocalDate payDate;
 
     public PayrollDTO() {
     }
 
-    public PayrollDTO(int payrollID, int userID, String userName, String gender, String userPhone, String userEmail, String userPosition, double baseSalary, String month, String year, List<PayrollItem> payrollItems, double totalDeductions, double netSalary, double totalEarnings) {
+    public PayrollDTO(int payrollID, int userID, String userName, String gender, String userPhone, String userEmail,
+            String userPosition, double baseSalary, String month, String year, List<PayrollItemDetailDTO> payrollItems,
+            double totalDeductions, double totalEarnings, double netSalary, LocalDate payDate) {
         this.payrollID = payrollID;
         this.userID = userID;
         this.userName = userName;
@@ -37,8 +39,9 @@ public class PayrollDTO {
         this.year = year;
         this.payrollItems = payrollItems;
         this.totalDeductions = totalDeductions;
-        this.netSalary = netSalary;
         this.totalEarnings = totalEarnings;
+        this.netSalary = netSalary;
+        this.payDate = payDate;
     }
 
     public int getPayrollID() {
@@ -121,11 +124,11 @@ public class PayrollDTO {
         this.year = year;
     }
 
-    public List<PayrollItem> getPayrollItems() {
+    public List<PayrollItemDetailDTO> getPayrollItems() {
         return payrollItems;
     }
 
-    public void setPayrollItems(List<PayrollItem> payrollItems) {
+    public void setPayrollItems(List<PayrollItemDetailDTO> payrollItems) {
         this.payrollItems = payrollItems;
     }
 
@@ -151,6 +154,14 @@ public class PayrollDTO {
 
     public void setTotalEarnings(double totalEarnings) {
         this.totalEarnings = totalEarnings;
+    }
+
+    public LocalDate getPayDate() {
+        return payDate;
+    }
+
+    public void setPayDate(LocalDate payDate) {
+        this.payDate = payDate;
     }
 
 }

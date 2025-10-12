@@ -18,7 +18,7 @@ public class CompanyPayrollServlet extends HttpServlet {
         String userID = request.getParameter("userId");
         PayrollDAO payrollDAO = new PayrollDAO();
         int userId = Integer.parseInt(userID);
-        request.setAttribute("payroll", payrollDAO.getPayrollByUserId(userId));
+        request.setAttribute("payroll", payrollDAO.getAllPayrollByUserId(userId));
         request.getRequestDispatcher("/view/payroll/personal-payroll.jsp").forward(request, response);
     }
 

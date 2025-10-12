@@ -1,9 +1,11 @@
 package hrms.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import hrms.dao.PayrollDAO;
 import hrms.dto.PayrollDTO;
+import hrms.dto.PayrollItemDetailDTO;
 import hrms.dto.UserDTO;
 import hrms.model.Payroll;
 import hrms.model.PayrollItem;
@@ -13,53 +15,75 @@ public class PayrollService {
     private final PayrollDAO payrollDao = new PayrollDAO();
     private final UserService userService = new UserService();
 
-    public List<Payroll> getPayrollByUserId(int userId) {
-        return payrollDao.getPayrollByUserId(userId);
+    public List<Payroll> getAllPayrollByUserId(int userId) {
+        return payrollDao.getAllPayrollByUserId(userId);
     }
 
-    public List<PayrollItem> getAllPayrollItemsByUserID(int userId) {
-        return payrollDao.getAllPayrollItemsByUserID(userId);
+    public List<PayrollItem> getAllPayrollItemsByPayrollId(int payrollId) {
+        return payrollDao.getAllPayrollItemsByPayrollId(payrollId);
     }
 
-    public PayrollDTO getPayrollDetails(int userId) {
-        Payroll payroll = payrollDao.getPayrollByUserId(userId).get(0);
+    public List<PayrollDTO> getPayrollDetails(int userId, int payrollId) {
+
+        UserDTO user = userService.getUserById(userId);
+
+        List<Payroll> payrolls = payrollDao.getAllPayrollByUserId(userId);
+        List<PayrollItemDetailDTO> payrollItems = payrollDao.getDetailedPayrollItemsByPayrollId(payrollId);
+
+        List<PayrollDTO> payrollDTOs = new ArrayList<>();
+
+        for (Payroll payroll : payrolls) {
+            PayrollDTO dto = new PayrollDTO();
+            dto.setPayrollID(payroll.getPayrollID());
+            dto.setUserID(user.getUserId());
+            dto.setUserName(user.getFullname());
+            dto.setGender(user.getGender());
+            dto.setUserPhone(user.getPhoneNumber());
+            dto.setUserEmail(user.getEmail());
+            dto.setUserPosition(user.getPositionName());
+            dto.setBaseSalary(payroll.getBaseSalary());
+            dto.setMonth(payroll.getMonth());
+            dto.setYear(payroll.getYear());
+            dto.setPayrollItems(payrollItems);
+            dto.setTotalDeductions(payrollDao.getTotalDeductions(payroll.getPayrollID()));
+            dto.setTotalEarnings(payrollDao.getTotalEarnings(payroll.getPayrollID()));
+            dto.setNetSalary(payroll.getNetSalary());
+            dto.setPayDate(payroll.getPayDate());
+            payrollDTOs.add(dto);
+        }
+        return payrollDTOs;
+    }
+
+    public PayrollDTO getPayrollByUserIdAndPayrollId(int userId, int payrollId) {
+        Payroll payroll = payrollDao.getPayrollByUserIdAndPayrollId(userId, payrollId);
+
         if (payroll == null) {
             return null;
         }
-        List<PayrollItem> payrollItems = payrollDao.getAllPayrollItemsByUserID(userId);
-        double totalEarnings = payroll.getBaseSalary();
-        double totalDeductions = 0;
-
-        PayrollItem payrollItem = new PayrollItem();
-        for (PayrollItem item : payrollItems) {
-            if (item.isPositive() == false) {
-                totalDeductions += item.getAmount();
-            } else {
-                totalEarnings += item.getAmount();
-            }
-            payrollItem = item;
-        }
-        double netSalary = totalEarnings - totalDeductions;
         UserDTO user = userService.getUserById(userId);
-        if (user == null) {
-            return null;
-        }
-        return new PayrollDTO(
-                payroll.getPayrollID(),
-                userId,
-                user.getFullname(),
-                user.getGender(),
-                user.getPhoneNumber(),
-                user.getEmail(),
-                user.getPositionName(),
-                payroll.getBaseSalary(),
-                payroll.getMonth(),
-                payroll.getYear(),
-                payrollItems,
-                totalDeductions,
-                netSalary,
-                totalEarnings
-        );
+        List<PayrollItemDetailDTO> payrollItems = payrollDao.getDetailedPayrollItemsByPayrollId(payrollId);
+
+        PayrollDTO dto = new PayrollDTO();
+        dto.setPayrollID(payroll.getPayrollID());
+        dto.setUserID(user.getUserId());
+        dto.setUserName(user.getFullname());
+        dto.setGender(user.getGender());
+        dto.setUserPhone(user.getPhoneNumber());
+        dto.setUserEmail(user.getEmail());
+        dto.setUserPosition(user.getPositionName());
+        dto.setBaseSalary(payroll.getBaseSalary());
+        dto.setMonth(payroll.getMonth());
+        dto.setYear(payroll.getYear());
+        dto.setPayrollItems(payrollItems);
+        dto.setTotalDeductions(payrollDao.getTotalDeductions(payroll.getPayrollID()));
+        dto.setTotalEarnings(payrollDao.getTotalEarnings(payroll.getPayrollID()));
+        dto.setNetSalary(payroll.getNetSalary());
+        dto.setPayDate(payroll.getPayDate());
+        return dto;
+    }
+
+    public List<Payroll> searchPayroll(int userId, String month, String year) {
+        return payrollDao.searchPayroll(userId, month, year);
     }
 
 }
