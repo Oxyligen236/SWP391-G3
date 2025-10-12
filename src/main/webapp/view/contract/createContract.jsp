@@ -9,7 +9,41 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Contract page</title>
     <link rel="stylesheet" href="<c:url value='/css/contract.css'/>" />
-    <script src="" defer></script>
+    <script defer>
+      document.addEventListener('DOMContentLoaded', function () {
+        const findBtn = document.getElementById('findUserBtn');
+        const userIdInput = document.getElementById('userID');
+        const nameInput = document.getElementById('name');
+        const userError = document.getElementById('userError');
+        findBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          userError.textContent = '';
+          const userID = userIdInput.value.trim();
+          if (!userID) {
+            userError.textContent = 'Vui lòng nhập mã nhân viên';
+            return;
+          }
+          const url = '<c:url value="/getUser"/>' + '?userID=' + encodeURIComponent(userID);
+          fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } })
+            .then(resp => {
+              if (!resp.ok) throw new Error('Network response was not ok');
+              return resp.json();
+            })
+            .then(data => {
+              if (data.found) {
+                nameInput.value = data.name || '';
+                userError.textContent = '';
+              } else {
+                nameInput.value = '';
+                userError.textContent = data.message || 'Không tìm thấy mã nhân viên';
+              }
+            })
+            .catch(err => {
+              userError.textContent = 'Lỗi khi tìm: ' + err.message;
+            });
+        });
+      });
+    </script>
   </head>
   <body>
     <div class="contract-form">
@@ -17,7 +51,7 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
       <c:if test="${not empty error}">
         <div style="color: red; text-align: center">${error}</div>
       </c:if>
-      <form action="contracts" method="post">
+      <form action="<c:url value='/viewContracts' />" method="post">
         <input type="hidden" name="action" value="insert" />
         <div class="form-group">
           <label for="name">Họ và tên:</label>
@@ -26,7 +60,11 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
         <div class="form-group">
           <label for="userID">Mã nhân viên:</label>
-          <input type="text" id="userID" name="userID" required />
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" id="userID" name="userID" required />
+            <button id="findUserBtn">Tìm</button>
+          </div>
+          <div id="userError" style="color: red; font-size: 0.9em; margin-top:4px;"></div>
         </div>
 
         <div class="form-group">

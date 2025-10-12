@@ -19,7 +19,7 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
         </br>
         <a href="<c:url value='/addContracts'/>">AddContract</a>
         </br>
-        <a href="<c:url value='/contracts'/>">AddContract</a>
+        <a href="<c:url value='/viewContracts'/>">ViewContractList</a>
         </br>
     
 
