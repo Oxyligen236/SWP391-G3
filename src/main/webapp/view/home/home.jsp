@@ -35,5 +35,7 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
       >Apply for
       <c:out value="${jobTitle}" />
     </a>
+
+    <a href="<c:url value='/create-ticket'/>">Create Ticket</a><br />
   </body>
 </html>
