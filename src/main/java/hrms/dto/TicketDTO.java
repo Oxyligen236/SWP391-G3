@@ -1,15 +1,16 @@
 package hrms.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 public class TicketDTO {
     private int ticketID;
     private int userID;
     private int ticket_Type_ID;
-    private Date create_Date;
+    private LocalDate create_Date;
     private String ticket_Content;
-    private int approveID;
-    private Date approve_Date;
+    private int approverID;
+    private LocalDate approve_Date;
     private String comment;
     private String status;
 
@@ -19,15 +20,15 @@ public class TicketDTO {
 
     public TicketDTO() {
     }
-    public TicketDTO(int ticketID, int userID, int ticket_Type_ID, Date create_Date, String ticket_Content,
-            int approveID, Date approve_Date, String comment, String status, String ticketTypeName,
+    public TicketDTO(int ticketID, int userID, int ticket_Type_ID, LocalDate create_Date, String ticket_Content,
+            int approveID, LocalDate approve_Date, String comment, String status, String ticketTypeName,
             String userFullName, String approverFullName) {
         this.ticketID = ticketID;
         this.userID = userID;
         this.ticket_Type_ID = ticket_Type_ID;
         this.create_Date = create_Date;
         this.ticket_Content = ticket_Content;
-        this.approveID = approveID;
+        this.approverID = approveID;
         this.approve_Date = approve_Date;
         this.comment = comment;
         this.status = status;
@@ -35,6 +36,7 @@ public class TicketDTO {
         this.userFullName = userFullName;
         this.approverFullName = approverFullName;
     }
+    
     public int getTicketID() {
         return ticketID;
     }
@@ -53,10 +55,10 @@ public class TicketDTO {
     public void setTicket_Type_ID(int ticket_Type_ID) {
         this.ticket_Type_ID = ticket_Type_ID;
     }
-    public Date getCreate_Date() {
+    public LocalDate getCreate_Date() {
         return create_Date;
     }
-    public void setCreate_Date(Date create_Date) {
+    public void setCreate_Date(LocalDate create_Date) {
         this.create_Date = create_Date;
     }
     public String getTicket_Content() {
@@ -65,16 +67,16 @@ public class TicketDTO {
     public void setTicket_Content(String ticket_Content) {
         this.ticket_Content = ticket_Content;
     }
-    public int getApproveID() {
-        return approveID;
+    public int getApproverID() {
+        return approverID;
     }
-    public void setApproveID(int approveID) {
-        this.approveID = approveID;
+    public void setApproverID(int approveID) {
+        this.approverID = approveID;
     }
-    public Date getApprove_Date() {
+    public LocalDate getApprove_Date() {
         return approve_Date;
     }
-    public void setApprove_Date(Date approve_Date) {
+    public void setApprove_Date(LocalDate approve_Date) {
         this.approve_Date = approve_Date;
     }
     public String getComment() {
@@ -107,6 +109,7 @@ public class TicketDTO {
     public void setApproverFullName(String approverFullName) {
         this.approverFullName = approverFullName;
     }
+    
 
     
 }
