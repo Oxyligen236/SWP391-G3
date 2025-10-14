@@ -1,7 +1,6 @@
 package hrms.controller;
 
 import java.io.IOException;
-
 import hrms.dao.AccountDAO;
 import hrms.dao.RoleDAO;
 import hrms.model.Account;
@@ -20,6 +19,14 @@ public class CreateAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
             throws ServletException, IOException {
+        
+        // Kiểm tra quyền admin
+        Account currentUser = (Account) req.getSession().getAttribute("currentUser");
+        if(currentUser == null || currentUser.getRole() != 1) { // roleID=1 là admin
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập!");
+            return;
+        }
+
         req.setAttribute("roleList", roleDAO.getAllRoles());
         req.getRequestDispatcher("/view/account/createAccount.jsp").forward(req, resp);
     }
@@ -27,6 +34,13 @@ public class CreateAccountServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        // Kiểm tra quyền admin
+        Account currentUser = (Account) req.getSession().getAttribute("currentUser");
+        if(currentUser == null || currentUser.getRole() != 1) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền thực hiện hành động này!");
+            return;
+        }
 
         req.setCharacterEncoding("UTF-8");
 
