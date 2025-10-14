@@ -37,7 +37,6 @@
                         <td>
                             <fmt:formatNumber value="${payrollDetail.totalDeductions}" type="number" groupingUsed="true"
                                 maxFractionDigits="3" />
-                        </td>
                         <td>
                             <fmt:formatNumber value="${payrollDetail.netSalary}" type="number" groupingUsed="true"
                                 maxFractionDigits="3" />
@@ -61,6 +60,11 @@
                             <td>
                                 <fmt:formatNumber value="${item.amount}" type="number" groupingUsed="true"
                                     maxFractionDigits="3" />
+                                <c:choose>
+                                    <c:when test="${item.amountType == 'fixed'}">(₫)</c:when>
+                                    <c:when test="${item.amountType == 'percent'}">(% Lương cơ bản)</c:when>
+                                    <c:otherwise>Không xác định</c:otherwise>
+                                </c:choose>
                             </td>
                             <td>
                                 <c:choose>

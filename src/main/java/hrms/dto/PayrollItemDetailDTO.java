@@ -2,47 +2,51 @@ package hrms.dto;
 
 public class PayrollItemDetailDTO {
 
-    private int payrollItemID;
-    private int payrollID;
-    private int typeID;
+    private int payrollItemId;
+    private int payrollId;
+    private int typeId;
     private String typeName;
+    private String category;
     private double amount;
+    private String amountType;
     private boolean isPositive;
 
     public PayrollItemDetailDTO() {
     }
 
-    public PayrollItemDetailDTO(int payrollItemID, int payrollID, int typeID, String typeName, double amount, boolean isPositive) {
-        this.payrollItemID = payrollItemID;
-        this.payrollID = payrollID;
-        this.typeID = typeID;
+    public PayrollItemDetailDTO(int payrollItemId, int payrollId, int typeId, String typeName, String category, double amount, String amountType, boolean isPositive) {
+        this.payrollItemId = payrollItemId;
+        this.payrollId = payrollId;
+        this.typeId = typeId;
         this.typeName = typeName;
+        this.category = category;
         this.amount = amount;
+        this.amountType = amountType;
         this.isPositive = isPositive;
     }
 
-    public int getPayrollItemID() {
-        return payrollItemID;
+    public int getPayrollItemId() {
+        return payrollItemId;
     }
 
-    public void setPayrollItemID(int payrollItemID) {
-        this.payrollItemID = payrollItemID;
+    public void setPayrollItemId(int payrollItemId) {
+        this.payrollItemId = payrollItemId;
     }
 
-    public int getPayrollID() {
-        return payrollID;
+    public int getPayrollId() {
+        return payrollId;
     }
 
-    public void setPayrollID(int payrollID) {
-        this.payrollID = payrollID;
+    public void setPayrollId(int payrollId) {
+        this.payrollId = payrollId;
     }
 
-    public int getTypeID() {
-        return typeID;
+    public int getTypeId() {
+        return typeId;
     }
 
-    public void setTypeID(int typeID) {
-        this.typeID = typeID;
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 
     public String getTypeName() {
@@ -53,12 +57,28 @@ public class PayrollItemDetailDTO {
         this.typeName = typeName;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public double getAmount() {
         return amount;
     }
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public String getAmountType() {
+        return amountType;
+    }
+
+    public void setAmountType(String amountType) {
+        this.amountType = amountType;
     }
 
     public boolean isPositive() {
@@ -68,4 +88,5 @@ public class PayrollItemDetailDTO {
     public void setPositive(boolean isPositive) {
         this.isPositive = isPositive;
     }
+
 }

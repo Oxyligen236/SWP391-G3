@@ -14,7 +14,7 @@
 
       <a href="<c:url value='/account/create'/>">Edit Profile</a><br />
 
-      <body>
+      <>
         <h1>Welcome to the Home Page</h1>
         <p>This is a simple JSP page.</p>
         <a href="<c:url value='/authenticate'/>">Go to Login Page</a>
@@ -42,7 +42,9 @@
         </a>
         </br>
         <a href="<c:url value='/payroll/personal'/>">Personal Payroll</a>
+        </br>
+        <a href="<c:url value='/payroll/company'/>">Company Payroll</a>
 
-      </body>
+    </body>
 
     </html>

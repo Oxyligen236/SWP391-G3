@@ -52,8 +52,6 @@
                             <th>Tiêu đề công việc</th>
                             <th>Tên</th>
                             <th>Giới tính</th>
-                            <th>Địa chỉ</th>
-                            <th>Quốc tịch</th>
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Trạng thái</th>
@@ -67,8 +65,6 @@
                                 <td>${cv.jdTitle}</td>
                                 <td>${cv.name}</td>
                                 <td>${cv.gender}</td>
-                                <td>${cv.address}</td>
-                                <td>${cv.nationality}</td>
                                 <td>${cv.email}</td>
                                 <td>${cv.phone}</td>
                                 <td>${cv.status}</td>
