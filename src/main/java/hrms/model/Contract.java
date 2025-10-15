@@ -15,7 +15,7 @@ public class Contract {
     private int typeID;
 
     private String typeName;
-
+    private String contractName; 
     public Contract() {
     }
 
@@ -109,5 +109,13 @@ public class Contract {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
+    }
+    
+    public String getContractName() {
+        return contractName;
+    }
+
+    public void setContractName(String contractName) {
+        this.contractName = contractName;
     }
 }

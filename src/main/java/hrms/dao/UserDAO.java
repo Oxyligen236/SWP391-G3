@@ -12,9 +12,9 @@ import hrms.utils.DBContext;
 public class UserDAO extends DBContext {
 
     public User getUserById(int id) {
-        String sql = "SELECT UserID, FullName, Email, PhoneNumber, BirthDate, Gender, " +
-                "CCCD, Address, Ethnicity, Nation, DegreeID, PositionID, DepartmentID " +
-                "FROM Users WHERE UserID = ?";
+        String sql = "SELECT UserID, FullName, Email, PhoneNumber, BirthDate, Gender, "
+                + "CCCD, Address, Ethnicity, Nation, DegreeID, PositionID, DepartmentID "
+                + "FROM Users WHERE UserID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -116,8 +116,8 @@ public class UserDAO extends DBContext {
 
     public List<User> getAll() {
         List<User> list = new ArrayList<>();
-        String sql = "SELECT UserID, FullName, Email, PhoneNumber, BirthDate, Gender, " +
-                "CCCD, Address, Ethnicity, Nation, DegreeID, PositionID, DepartmentID FROM Users";
+        String sql = "SELECT UserID, FullName, Email, PhoneNumber, BirthDate, Gender, "
+                + "CCCD, Address, Ethnicity, Nation, DegreeID, PositionID, DepartmentID FROM Users";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -147,4 +147,5 @@ public class UserDAO extends DBContext {
         u.setDegreeId((Integer) rs.getObject("DegreeID"));
         return u;
     }
+
 }
