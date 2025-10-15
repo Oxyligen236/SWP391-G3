@@ -84,9 +84,9 @@
                 </div>
 
                 <div class="mt-4 text-center">
-                    <a href="<c:url value='/account/edit?id=${account.accountID}'/>" 
+                    <a href="<c:url value='/account/change-password'/>" 
                        class="btn btn-warning">
-                        <i class="fas fa-edit"></i> Chỉnh sửa thông tin
+                        <i class="fas fa-edit"></i> Đổi mật khẩu
                     </a>
                 </div>
             </div>
