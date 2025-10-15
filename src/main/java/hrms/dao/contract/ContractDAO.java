@@ -15,11 +15,14 @@ public class ContractDAO extends DBContext{
 
     public List<Contract> getAllContracts() {
         List<Contract> contracts = new ArrayList<>();
-        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS FullName "
-           + "FROM Contract c "
-           + "JOIN Contract_Type t ON c.TypeID = t.TypeID "
-           + "LEFT JOIN Users u ON c.UserID = u.UserID "
-           + "ORDER BY ContractID";
+        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS FullName, " +
+                 "p.Name AS PositionName, s.FullName AS SignerName " +  
+                 "FROM Contract c " +
+                 "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
+                 "LEFT JOIN Users u ON c.UserID = u.UserID " +
+                 "LEFT JOIN Positions p ON c.positionID = p.PositionID " +  
+                 "LEFT JOIN Users s ON c.SignerID = s.UserID " +
+                 "ORDER BY ContractID";
 
         try (
             PreparedStatement ps = connection.prepareStatement(sql); 
@@ -37,6 +40,10 @@ public class ContractDAO extends DBContext{
                     contract.setNote(rs.getString("Note"));
                     contract.setTypeID(rs.getInt("TypeID"));
                     contract.setTypeName(rs.getString("TypeName"));
+                    contract.setPositionId(rs.getInt("positionId"));
+                    contract.setSignerId(rs.getInt("signerId"));
+                    contract.setPositionName(rs.getString("PositionName"));
+                    contract.setSignerName(rs.getString("SignerName"));
 
                     String full = rs.getString("FullName");
                     contract.setContractName(full != null ? full : "");
@@ -52,7 +59,7 @@ public class ContractDAO extends DBContext{
     }
 
     public void addContract(Contract contract) {
-        String sql = "INSERT INTO Contract(UserID, Start_Date, End_Date, Sign_Date, Duration, BaseSalary, Note, TypeID) VALUES (?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Contract(UserID, Start_Date, End_Date, Sign_Date, Duration, BaseSalary, Note, TypeID, positionID, SignerID) VALUES (?,?,?,?,?,?,?,?)";
         try (
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, contract.getUserId());
@@ -63,6 +70,8 @@ public class ContractDAO extends DBContext{
             ps.setDouble(6, contract.getBaseSalary());
             ps.setString(7, contract.getNote());
             ps.setInt(8, contract.getTypeID());
+            ps.setInt(9, contract.getPositionId());
+            ps.setInt(10, contract.getSignerId());
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,11 +79,14 @@ public class ContractDAO extends DBContext{
     }
     public Contract getContractById(int contractId) {
         Contract contract = null;
-        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS FullName "
-                   + "FROM Contract c "
-                   + "JOIN Contract_Type t ON c.TypeID = t.TypeID "
-                   + "LEFT JOIN Users u ON c.UserID = u.UserID "
-                   + "WHERE c.ContractID = ?";
+        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS FullName, " +
+                 "p.Name AS PositionName, s.FullName AS SignerName " +
+                 "FROM Contract c " +
+                 "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
+                 "LEFT JOIN Users u ON c.UserID = u.UserID " +
+                 "LEFT JOIN Positions p ON c.positionID = p.PositionID " +
+                 "LEFT JOIN Users s ON c.SignerID = s.UserID " +
+                 "WHERE c.ContractID = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -99,6 +111,10 @@ public class ContractDAO extends DBContext{
                     contract.setNote(rs.getString("Note"));
                     contract.setTypeID(rs.getInt("TypeID"));
                     contract.setTypeName(rs.getString("TypeName"));
+                    contract.setPositionId(rs.getInt("positionId"));
+                    contract.setSignerId(rs.getInt("signerId"));
+                    contract.setPositionName(rs.getString("PositionName"));
+                    contract.setSignerName(rs.getString("SignerName"));
 
                     String full = rs.getString("FullName");
                     contract.setContractName(full != null ? full : "");
@@ -115,7 +131,16 @@ public class ContractDAO extends DBContext{
                                        String sortField, String sortOrder) throws Exception {
         List<Contract> list = new ArrayList<>();
         DBContext db = new DBContext();
-        StringBuilder sql = new StringBuilder("SELECT c.*, t.Name AS TypeName FROM Contract c JOIN Contract_Type t ON c.TypeID = t.TypeID WHERE 1=1");
+        StringBuilder sql = new StringBuilder(
+        "SELECT c.*, t.Name AS TypeName, " +
+        "p.Name AS PositionName, " +  
+        "s.FullName AS SignerName " +  
+        "FROM Contract c " +
+        "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
+        "LEFT JOIN Positions p ON c.positionID = p.PositionID " +  
+        "LEFT JOIN Users s ON c.SignerID = s.UserID " +            
+        "WHERE 1=1"
+    );
         List<Object> params = new ArrayList<>();
 
         
@@ -216,6 +241,10 @@ public class ContractDAO extends DBContext{
                     c.setTypeID(rs.getInt("TypeID"));
                     c.setNote(rs.getString("Note"));
                     c.setTypeName(rs.getString("TypeName"));
+                    c.setPositionId(rs.getInt("positionId"));
+                    c.setSignerId(rs.getInt("signerId"));
+                    c.setPositionName(rs.getString("PositionName"));
+                    c.setSignerName(rs.getString("SignerName"));
                     list.add(c);
                 }
             }
