@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/addContracts")
-public class CreateContract extends HttpServlet {
+public class CreateContractServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ContractTypeDAO typeDAO = new ContractTypeDAO();
@@ -42,7 +42,8 @@ public class CreateContract extends HttpServlet {
                 contract.setNote(request.getParameter("note"));
                 contract.setTypeID(Integer.parseInt(typeID));
                 dao.addContract(contract);
-                response.sendRedirect("contracts?action=list");
+                response.sendRedirect("viewContracts?action=list");
+                
         }
     }
 

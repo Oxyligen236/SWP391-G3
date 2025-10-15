@@ -3,6 +3,7 @@ package hrms.controller;
 import java.io.IOException;
 
 import hrms.dto.UserDTO;
+import hrms.model.Account;
 import hrms.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,14 +22,14 @@ public class ProfileServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = req.getSession(false);
-
-        if (session == null || session.getAttribute("userId") == null) {
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
 
             resp.sendRedirect(req.getContextPath() + "/authenticate");
             return;
         }
 
-        int userId = (Integer) session.getAttribute("userId");
+        int userId = account.getUserID();
 
         UserDTO user = userService.getUserById(userId);
         if (user != null) {

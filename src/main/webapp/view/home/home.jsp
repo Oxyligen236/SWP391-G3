@@ -25,9 +25,10 @@
         </br>
         <a href="<c:url value='/addContracts'/>">AddContract</a>
         </br>
-        <a href="<c:url value='/contracts'/>">AddContract</a>
+        <a href="<c:url value='/viewContracts'/>">ViewContractList</a>
         </br>
-
+        <a href="<c:url value='/account/view'/>">Account List (View/Edit/Toggle)</a><br />
+  
 
         <!-- <c:url var="submitUrl" value="/cv/submit">
         <c:param name="jdID" value="${job.jobID}" />
