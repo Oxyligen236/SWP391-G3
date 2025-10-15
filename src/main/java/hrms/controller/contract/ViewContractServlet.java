@@ -2,10 +2,14 @@ package hrms.controller.contract;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import hrms.dao.UserDAO;
 import hrms.dao.contract.ContractDAO;
 import hrms.model.Contract;
+import hrms.model.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -29,7 +33,7 @@ public class ViewContractServlet extends HttpServlet {
             try {
                 int id = Integer.parseInt(idStr);
                 ContractDAO dao = new ContractDAO();
-                Contract contract = dao.getContractById(id); // đảm bảo DAO có method này
+                Contract contract = dao.getContractById(id); 
                 if (contract == null) {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND, "Contract not found");
                     return;
@@ -54,7 +58,7 @@ public class ViewContractServlet extends HttpServlet {
         String sortOrder = request.getParameter("sortOrder");
 
         if (sortOrder == null || (!sortOrder.equals("asc") && !sortOrder.equals("desc"))) {
-            sortOrder = "asc"; // Mặc định là tăng dần
+            sortOrder = "asc"; 
         }
 
         int page = 1;
@@ -67,24 +71,24 @@ public class ViewContractServlet extends HttpServlet {
             page = 1;   
         }
 
-        // --- handle showAll: when showAll=true, reset filters/sorts and show full list paginated (pageSize=10)
+        
         String showAllParam = request.getParameter("showAll");
         boolean showAll = "true".equalsIgnoreCase(showAllParam);
         if (showAll) {
-            // clear filters/sorts so dao.getContracts returns the unfiltered list
+     
             searchField = null;
             searchValue = null;
             fromDate = null;
             toDate = null;
             sortField = null;
             sortOrder = "asc";
-            page = 1; // start from first page
+            page = 1; 
         }
         request.setAttribute("showAll", showAll);
 
         try {
             ContractDAO dao = new ContractDAO();
-            // getContracts handles null filters -> returns all when filters null
+
             List<Contract> allContracts = dao.getContracts(searchField, searchValue, fromDate, toDate, sortField, sortOrder);
 
             int totalRecords = allContracts.size();
@@ -96,13 +100,26 @@ public class ViewContractServlet extends HttpServlet {
             int toIndex = Math.min(fromIndex + pageSize, totalRecords);
             List<Contract> contractsPage = (fromIndex < totalRecords) ? allContracts.subList(fromIndex, toIndex) : java.util.Collections.emptyList();
 
+            // --- START: add user full name map ---
+            UserDAO userDAO = new UserDAO();
+            Map<Integer, String> userFullNames = new HashMap<>();
+            for (Contract c : contractsPage) {
+                int uid = c.getUserId();
+                if (!userFullNames.containsKey(uid)) {
+                    User u = userDAO.getUserById(uid); // nếu tên method khác, sửa cho phù hợp
+                    userFullNames.put(uid, u != null ? u.getFullname() : String.valueOf(uid));
+                }
+            }
+            request.setAttribute("userFullNames", userFullNames);
+            // --- END ---
+            
             request.setAttribute("contracts", contractsPage);
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("pageSize", pageSize);
             request.setAttribute("totalRecords", totalRecords);
 
-            // keep filter values for the form (they are null when showAll=true)
+
             request.setAttribute("searchField", searchField);
             request.setAttribute("searchValue", searchValue);
             request.setAttribute("fromDate", fromDate);
@@ -129,8 +146,10 @@ public class ViewContractServlet extends HttpServlet {
             String duration = request.getParameter("duration");
             String baseSalary = request.getParameter("baseSalary");
             String typeID = request.getParameter("typeID");
+            String positionID = request.getParameter("positionID");
+            String signerID = request.getParameter("signerID"); 
 
-            // Xác thực đầu vào
+
             if (userID == null || startDate == null || signDate == null || duration == null || baseSalary == null || typeID == null
                     || userID.isEmpty() || startDate.isEmpty() || signDate.isEmpty() || duration.isEmpty() || baseSalary.isEmpty() || typeID.isEmpty()) {
                 throw new IllegalArgumentException("Các trường bắt buộc bị thiếu");
@@ -144,6 +163,8 @@ public class ViewContractServlet extends HttpServlet {
             contract.setBaseSalary(Double.parseDouble(baseSalary));
             contract.setNote(request.getParameter("note"));
             contract.setTypeID(Integer.parseInt(typeID));
+            contract.setPositionId(Integer.parseInt(positionID));
+            contract.setSignerId(Integer.parseInt(signerID));
 
             dao.addContract(contract);
             response.sendRedirect("viewContracts?action=list");

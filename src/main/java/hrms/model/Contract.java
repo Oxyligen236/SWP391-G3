@@ -13,13 +13,18 @@ public class Contract {
     private double baseSalary;
     private String note;
     private int typeID;
+    private int positionId;
+    private int signerId;
 
     private String typeName;
     private String contractName; 
+    private String positionName; 
+    private String signerName;
+    
     public Contract() {
     }
 
-    public Contract(int contractId, int userId, LocalDate startDate, LocalDate endDate, LocalDate signDate, int duration, double baseSalary, String note, int typeID) {
+    public Contract(int contractId, int userId, LocalDate startDate, LocalDate endDate, LocalDate signDate, int duration, double baseSalary, String note, int typeID, int positionId, int signerId) {
         this.contractId = contractId;
         this.userId = userId;
         this.startDate = startDate;
@@ -29,6 +34,8 @@ public class Contract {
         this.baseSalary = baseSalary;
         this.note = note;
         this.typeID = typeID;
+        this.positionId = positionId;
+        this.signerId = signerId;
     }
 
     public int getContractId() {
@@ -117,5 +124,37 @@ public class Contract {
 
     public void setContractName(String contractName) {
         this.contractName = contractName;
+    }
+
+    public int getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(int positionId) {
+        this.positionId = positionId;
+    }
+
+    public int getSignerId() {
+        return signerId;
+    }
+
+    public void setSignerId(int signerId) {
+        this.signerId = signerId;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+
+    public String getSignerName() {
+        return signerName;
+    }
+
+    public void setSignerName(String signerName) {
+        this.signerName = signerName;
     }
 }
