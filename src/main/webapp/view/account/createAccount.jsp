@@ -98,7 +98,7 @@
             <button type="submit" class="btn btn-create btn-custom">
                 <i class="fas fa-user-plus"></i>Tạo tài khoản
             </button>
-            <a href="<c:url value='/account/list'/>" class="btn btn-back btn-custom">
+            <a href="<c:url value='/account/view>" class="btn btn-back btn-custom">
                 <i class="fas fa-arrow-left"></i>Quay lại
             </a>
         </div>
