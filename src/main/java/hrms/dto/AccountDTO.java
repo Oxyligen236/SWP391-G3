@@ -5,13 +5,11 @@ public class AccountDTO {
     private String username;
     private String password;
     private boolean isActive;
-    private String roleName;   // tên role từ bảng Role
-    private String fullName;   // tên user từ bảng Users
+    private String roleName;
+    private String fullName;
 
-    // Constructor
     public AccountDTO() {}
 
-    // Getters & Setters
     public int getAccountID() { return accountID; }
     public void setAccountID(int accountID) { this.accountID = accountID; }
 
@@ -21,8 +19,9 @@ public class AccountDTO {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public boolean isIsActive() { return isActive; }
-    public void setIsActive(boolean isActive) { this.isActive = isActive; }
+
+    public boolean isActive() { return isActive; }
+    public void setActive(boolean isActive) { this.isActive = isActive; }
 
     public String getRoleName() { return roleName; }
     public void setRoleName(String roleName) { this.roleName = roleName; }

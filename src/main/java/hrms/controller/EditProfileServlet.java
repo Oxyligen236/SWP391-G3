@@ -67,7 +67,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         return;
     }
 
-    // --- Lấy dữ liệu từ form ---
+  
     String fullname = request.getParameter("fullname");
     String email = request.getParameter("email");
     String phoneNumber = request.getParameter("phoneNumber");
@@ -79,7 +79,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
     String ethnicity = request.getParameter("ethnicity");
     String degreeIdStr = request.getParameter("degreeId");
 
-    // --- Validate dữ liệu ---
+    
     StringBuilder errorMsg = new StringBuilder();
 
     if (fullname == null || fullname.trim().isEmpty()) {
@@ -130,7 +130,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         errorMsg.append("Vui lòng chọn bằng cấp.<br>");
     }
 
-    // --- Nếu có lỗi ---
+
     if (errorMsg.length() > 0) {
         request.setAttribute("errorMessage", errorMsg.toString());
         List<Degree> degreeList = degreeDAO.getAll();
@@ -140,7 +140,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         return;
     }
 
-    // --- Cập nhật dữ liệu ---
+
     user.setFullname(fullname);
     user.setEmail(email);
     user.setPhoneNumber(phoneNumber);

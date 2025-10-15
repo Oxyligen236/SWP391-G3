@@ -40,7 +40,7 @@
         <hr>
     </div>
 
-    <!-- Thông báo -->
+
     <c:if test="${not empty successMessage}">
         <div class="alert alert-success">${successMessage}</div>
     </c:if>
