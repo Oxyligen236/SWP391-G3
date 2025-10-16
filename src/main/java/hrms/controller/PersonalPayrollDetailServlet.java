@@ -31,6 +31,7 @@ public class PersonalPayrollDetailServlet extends HttpServlet {
             PayrollService payrollService = new PayrollService();
             PayrollDTO payrollDetail = payrollService.getPayrollByUserIdAndPayrollId(userId, payrollId);
             if (payrollDetail == null) {
+
                 request.setAttribute("error", "Không tìm thấy chi tiết lương.");
                 request.getRequestDispatcher("/view/payroll/personalPayroll.jsp").forward(request, response);
                 return;

@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/payroll/company")
 public class CompanyPayrollServlet extends HttpServlet {
@@ -21,6 +22,11 @@ public class CompanyPayrollServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("account") == null) {
+            response.sendRedirect(request.getContextPath() + "/authenticate");
+            return;
+        }
         PayrollService payrollService = new PayrollService();
         DepartmentDAO departmentDAO = new DepartmentDAO();
         PositionDAO positionDAO = new PositionDAO();
@@ -40,6 +46,12 @@ public class CompanyPayrollServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("account") == null) {
+            response.sendRedirect(request.getContextPath() + "/authenticate");
+            return;
+        }
+
         String userName = request.getParameter("userName");
         String monthStr = request.getParameter("month");
         String yearStr = request.getParameter("year");
@@ -61,7 +73,7 @@ public class CompanyPayrollServlet extends HttpServlet {
             request.setAttribute("positions", positions);
             List<PayrollDTO> payrolls = payrollService.searchPayroll(userName, department, position, month, year, status);
             if (payrolls == null || payrolls.isEmpty()) {
-                request.setAttribute("error", "No payroll records found for the given criteria.");
+                request.setAttribute("error", "không tìm thấy dữ liệu lương.");
                 request.getRequestDispatcher("/view/payroll/companyPayroll.jsp").forward(request, response);
                 return;
             }

@@ -14,42 +14,59 @@
             <body>
                 <h1>Company Payroll</h1>
                 <h2>Tìm kiếm bảng lương</h2>
-                <form action="<c:url value='/payroll/company'/>" method="post">
-                    <label>Tên nhân viên:</label>
-                    <input type="text" name="userName" value="${param.userName}" placeholder="Nhập tên nhân viên">
+                <form action="<c:url value='/payroll/company'/>" method="post" class="search-form">
+                    <div class="field-group">
+                        <label>Tên nhân viên:</label>
+                        <input type="text" name="userName" value="${param.userName}" placeholder="Nhập tên nhân viên">
+                    </div>
 
-                    <label>Phòng ban:</label>
-                    <select name="department">
-                        <option value="">--Tất cả--</option>
-                        <c:forEach var="dept" items="${departments}">
-                            <option value="${dept.name}" ${param.department==dept.name ? 'selected' : '' }>${dept.name}
-                            </option>
+                    <div class="field-group">
+                        <label>Phòng ban:</label>
+                        <select name="department">
+                            <option value="">--Tất cả--</option>
+                            <c:forEach var="dept" items="${departments}">
+                                <option value="${dept.name}" ${param.department==dept.name ? 'selected' : '' }>
+                                    ${dept.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
 
-                        </c:forEach>
-                    </select>
+                    <div class="field-group">
+                        <label>Vị trí:</label>
+                        <select name="position">
+                            <option value="">--Tất cả--</option>
+                            <c:forEach var="pos" items="${positions}">
+                                <option value="${pos.name}" ${param.position==pos.name ? 'selected' : '' }>${pos.name}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </div>
 
-                    <label>Vị trí:</label>
-                    <select name="position">
-                        <option value="">--Tất cả--</option>
-                        <c:forEach var="pos" items="${positions}">
-                            <option value="${pos.name}" ${param.position==pos.name ? 'selected' : '' }>${pos.name}
-                            </option>
-                        </c:forEach>
-                    </select>
-                    <label>Tháng:</label>
-                    <input type="number" name="month" min="1" max="12" value="${param.month}" placeholder="1-12">
+                    <div class="field-group">
+                        <label>Tháng:</label>
+                        <select name="month" id="month">
+                            <option value="">Tất cả</option>
+                            <c:forEach var="m" begin="1" end="12">
+                                <option value="${m}" ${param.month==m ? 'selected' : '' }>${m}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
 
-                    <label>Năm:</label>
-                    <input type="number" name="year" min="2000" max="2300" value="${param.year}" placeholder="VD: 2025">
+                    <div class="field-group">
+                        <label>Năm:</label>
+                        <input type="number" name="year" min="2000" max="2300" value="${param.year}"
+                            placeholder="VD: 2025">
+                    </div>
 
-                    <label>Trạng thái:</label>
-                    <select name="status">
-                        <option value="">--Tất cả--</option>
-                        <option value="PENDING" ${param.status=='PENDING' ? 'selected' : '' }>PENDING</option>
-                        <option value="CANCELLED" ${param.status=='CANCELLED' ? 'selected' : '' }>CANCELLED
-                        </option>
-                        <option value="PAID" ${param.status=='PAID' ? 'selected' : '' }>PAID</option>
-                    </select>
+                    <div class="field-group">
+                        <label>Trạng thái:</label>
+                        <select name="status">
+                            <option value="">--Tất cả--</option>
+                            <option value="PENDING" ${param.status=='PENDING' ? 'selected' : '' }>PENDING</option>
+                            <option value="CANCELLED" ${param.status=='CANCELLED' ? 'selected' : '' }>CANCELLED</option>
+                            <option value="PAID" ${param.status=='PAID' ? 'selected' : '' }>PAID</option>
+                        </select>
+                    </div>
 
                     <button type="submit">Tìm kiếm</button>
                 </form>
@@ -120,7 +137,13 @@
                                 </td>
                                 <td>${employee.status}</td>
                                 <td>${employee.payDate}</td>
-                                <td><a href="/payroll/company/detail/${employee.userID}">Chi tiết</a></td>
+                                <td>
+                                    <form action="<c:url value='/payroll/company/detail'/>" method="get">
+                                        <input type="hidden" name="payrollID" value="${employee.payrollID}">
+                                        <input type="hidden" name="userID" value="${employee.userID}">
+                                        <button type="submit">Chi tiết</button>
+                                    </form>
+                                </td>
                             </tr>
                         </c:forEach>
                     </tbody>

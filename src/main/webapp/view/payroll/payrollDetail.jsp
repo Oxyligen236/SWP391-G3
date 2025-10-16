@@ -11,8 +11,15 @@
             </head>
 
             <body>
-                <h1>Chi tiết bảng lương</h1>
 
+                <h1>Chi tiết bảng lương</h1>
+                <c:if test="${displayType == 'management'}">
+                    <div class="management-info">
+                        <h2>Nhân viên: ${payrollDetail.userName} (ID: ${payrollDetail.userID})</h2>
+                        <h2>Phòng ban: ${payrollDetail.userDepartment}, Vị trí: ${payrollDetail.userPosition}</h2>
+                    </div>
+
+                </c:if>
                 <table border="1" cellspacing="0" cellpadding="5">
                     <tr>
                         <th>Tháng</th>

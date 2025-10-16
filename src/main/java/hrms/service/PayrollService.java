@@ -69,6 +69,7 @@ public class PayrollService {
         dto.setGender(user.getGender());
         dto.setUserPhone(user.getPhoneNumber());
         dto.setUserEmail(user.getEmail());
+        dto.setUserDepartment(user.getDepartmentName());
         dto.setUserPosition(user.getPositionName());
         dto.setBaseSalary(payroll.getBaseSalary());
         dto.setMonth(payroll.getMonth());
