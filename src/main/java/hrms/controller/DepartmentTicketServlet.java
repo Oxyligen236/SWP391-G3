@@ -1,9 +1,13 @@
 package hrms.controller;
 
 import java.io.IOException;
+import java.util.List;
 
+import hrms.dto.TicketDTO;
+import hrms.dto.UserDTO;
 import hrms.model.Account;
 import hrms.service.TicketService;
+import hrms.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,6 +20,7 @@ public class DepartmentTicketServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private TicketService ticketService = new TicketService();
+    private UserService userService = new UserService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,7 +33,11 @@ public class DepartmentTicketServlet extends HttpServlet {
         }
 
         int userId = account.getUserID();
+        UserDTO userDTO = userService.getUserById(userId);
 
+        List<TicketDTO> tickets = ticketService.getTicketsByDepartmentId(userDTO.getDepartmentId());
+        request.setAttribute("tickets", tickets);
+        request.getRequestDispatcher("/view/ticket/approveTicket.jsp").forward(request, response);
     }
 
     @Override
