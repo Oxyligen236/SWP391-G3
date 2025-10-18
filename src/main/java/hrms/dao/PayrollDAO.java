@@ -32,12 +32,6 @@ public class PayrollDAO extends DBContext {
         String totalWorkStr = rs.getString("TotalWorkHours");
         Duration workingHours = getTotalWorkHour(totalWorkStr);
 
-        if (totalWorkStr != null && !totalWorkStr.isEmpty()) {
-            String[] parts = totalWorkStr.split(":");
-            long hours = Long.parseLong(parts[0]);
-            long minutes = Long.parseLong(parts[1]);
-            workingHours = Duration.ofHours(hours).plusMinutes(minutes);
-        }
         return new Payroll(
                 rs.getInt(1),
                 rs.getInt(2),
@@ -240,9 +234,10 @@ public class PayrollDAO extends DBContext {
                 p.Status
             from Payroll p
             join Users u on p.UserID = u.UserID
-             left join Positions pos on u.PositionID = pos.PositionID
+            left join Positions pos on u.PositionID = pos.PositionID
+            left join Department d on u.DepartmentID = d.DepartmentID
             where u.userid = ?;
-                """;;
+                """;
         List<PayrollDTO> payrolls = new ArrayList<>();
         try {
             PreparedStatement st = connection.prepareStatement(sql);
