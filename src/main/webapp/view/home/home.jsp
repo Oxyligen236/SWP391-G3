@@ -30,7 +30,7 @@
         <a href="<c:url value='/viewContracts'/>">ViewContractList</a>
         </br>
         <a href="<c:url value='/account/view'/>">Account List (View/Edit/Toggle)</a><br />
-  
+
 
         <!-- <c:url var="submitUrl" value="/cv/submit">
         <c:param name="jdID" value="${job.jobID}" />
