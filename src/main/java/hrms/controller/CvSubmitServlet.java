@@ -24,6 +24,7 @@ public class CvSubmitServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
+        String title = request.getParameter("title");
         String name = request.getParameter("name");
         String gender = request.getParameter("gender");
         String address = request.getParameter("address");
@@ -33,6 +34,8 @@ public class CvSubmitServlet extends HttpServlet {
         String description = request.getParameter("cv_Description");
         String jdID = request.getParameter("jdID");
         CvService cvService = new CvService();
+        request.setAttribute("title", title);
+        request.setAttribute("jdID", jdID);
         try {
             int jdIDInt = Integer.parseInt(jdID);
             if (name == null

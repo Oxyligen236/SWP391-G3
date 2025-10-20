@@ -89,17 +89,18 @@ public class CVsDAO extends DBContext {
     }
 
     public boolean addCV(CVs cv) {
-        String sql = "insert into CVs (jobID, name, gender,address, nationality, mail, phone_number, cv_Description, status) values (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into CVs (jobID, name, gender,address, nationality, mail, phone_number, cv_Description, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, cv.getJdID());
             st.setString(2, cv.getName());
             st.setString(3, cv.getGender());
-            st.setString(4, cv.getNationality());
-            st.setString(5, cv.getEmail());
-            st.setString(4, cv.getPhone());
-            st.setString(5, cv.getCv_Description());
-            st.setString(6, cv.getStatus());
+            st.setString(4, cv.getAddress());
+            st.setString(5, cv.getNationality());
+            st.setString(6, cv.getEmail());
+            st.setString(7, cv.getPhone());
+            st.setString(8, cv.getCv_Description());
+            st.setString(9, cv.getStatus());
             int row = st.executeUpdate();
             return row > 0;
         } catch (SQLException e) {

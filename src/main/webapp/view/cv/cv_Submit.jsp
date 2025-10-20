@@ -34,7 +34,9 @@
                             <p><strong>Applying for:</strong>
                                 <c:out value="${not empty param.title ? param.title : 'Unknown Job'}" />
                             </p>
+                            <input type="hidden" name="title" value="<c:out value='${param.title}' />">
                             <input type="hidden" name="jdID" value="<c:out value='${param.jdID}' />">
+
                         </c:if>
                         <div class="form-group">
                             <label for="name">Full Name:</label>
