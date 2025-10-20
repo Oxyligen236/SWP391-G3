@@ -10,7 +10,7 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>View user contract list</title>
-    <link rel="stylesheet" href="<c:url value='/css/cv-list.css'/>" />
+    <link rel="stylesheet" href="<c:url value='/css/contract-list.css'/>" />
     <script src="" defer></script>
   </head>
   <body>
@@ -35,6 +35,8 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
           Đến: <input type="date" id="toDate" name="toDate" value="${toDate}" />
         </span>
 
+        <button type="submit" onclick="">SEARCH</button>
+
         <label for="sortField">Sắp xếp theo:</label>
         <select id="sortField" name="sortField">
           <option value="">--Chọn--</option>
@@ -48,7 +50,7 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
           <option value="desc" <c:if test="${sortOrder == 'desc'}">selected</c:if>>Giảm dần</option>
         </select>
 
-        <button type="submit" onclick="">SEARCH</button>
+        
         <button type="submit" name="action" value="sort" onclick="">SORT</button>
         
         <a href="<c:url value='/viewContracts'><c:param name='showAll' value='true' /></c:url>" class="btn">Hiển thị toàn bộ</a>
@@ -79,7 +81,7 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
         <thead>
           <tr>
             <th>ID</th>
-            <th>UserID</th>
+            <th>Fullname</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Sign Date</th>
@@ -94,7 +96,16 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
           <c:forEach var="contract" items="${contracts}">
             <tr>
               <td>${contract.contractId}</td>
-              <td>${contract.userId}</td>
+              <td>
+                <c:choose>
+                  <c:when test="${not empty userFullNames[contract.userId]}">
+                    ${fn:escapeXml(userFullNames[contract.userId])}
+                  </c:when>
+                  <c:otherwise>
+                    ${contract.userId}
+                  </c:otherwise>
+                </c:choose>
+              </td>
               <td>${contract.startDate}</td>
               <td>${contract.endDate}</td>
               <td>${contract.signDate}</td>
@@ -156,7 +167,7 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
           </div>
       </div>
       <div class="right-actions">
-        <a href="<c:url value='/view/home/home.jsp'/>" class="back-link">Back to Home</a>
+        <a href="<c:url value='/home'/>" class="back-link">Back to Home</a>
       </div>
     </div>
 

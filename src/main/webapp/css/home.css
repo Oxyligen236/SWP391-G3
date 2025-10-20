@@ -1,0 +1,248 @@
+/* Styles hiện có */
+header {
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+  font-family: Arial, sans-serif;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 40px;
+}
+
+.welcome-text {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.login-btn a {
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.login-btn a:hover {
+  background-color: #45a049;
+}
+
+nav {
+  background-color: #333;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul li a {
+  color: white;
+  padding: 14px 20px;
+  display: block;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+nav ul li a:hover {
+  background-color: #555;
+}
+
+footer {
+  background-color: #f2f2f2;
+  padding: 30px 60px;
+  border-top: 1px solid #ccc;
+  font-family: Arial, sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.footer-left {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-left h3 {
+  font-size: 20px;
+  color: #222;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.footer-left ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  line-height: 1.8;
+}
+
+.footer-left ul li a {
+  color: #333;
+  text-decoration: none;
+}
+
+.footer-left ul li a:hover {
+  text-decoration: underline;
+}
+
+.footer-right {
+  flex: 2;
+  min-width: 300px;
+  text-align: right;
+}
+
+.footer-right p {
+  margin: 0;
+  line-height: 1.6;
+  color: #555;
+  font-size: 14px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+}
+
+.avatar-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.avatar-btn img {
+  border-radius: 50%;
+  border: 2px solid #fff;
+  width: 120px;
+  height: 120px;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -350px;
+  width: 250px;
+  height: 100%;
+  background-color: #f9f9f9;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: left 0.3s ease;
+  padding: 20px;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sidebar-header img {
+  border-radius: 50%;
+  border: 2px solid #fff;
+  width: 40px;
+  height: 40px;
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.sidebar ul {
+  list-style: none; /* Xóa dấu chấm cho tất cả các ul trong sidebar */
+  padding: 0;
+}
+
+.sidebar ul li {
+  list-style: none; /* Xác định rõ cho li */
+  margin: 15px 0;
+}
+
+/* Định dạng cho thành phần mẹ */
+.sidebar ul li a {
+  text-decoration: none;
+  color: #1a1a1a; /* Màu đen đậm */
+  font-size: 18px; /* Kích thước lớn hơn */
+  font-weight: 600; /* Làm đậm */
+  display: block;
+  padding: 10px 0;
+}
+
+/* Định dạng khi hover cho thành phần mẹ */
+.sidebar ul li a:hover {
+  color: #007bff; /* Màu xanh dương khi hover */
+}
+
+/* Định dạng cho thành phần con trong submenu */
+.sidebar .submenu li a {
+  text-decoration: none;
+  color: #666666; /* Màu xám nhạt */
+  font-size: 14px; /* Kích thước nhỏ hơn */
+  font-weight: 400; /* Font bình thường */
+  display: block;
+  padding: 5px 0;
+}
+
+/* Định dạng khi hover cho thành phần con */
+.sidebar .submenu li a:hover {
+  color: #0056b3; /* Màu xanh đậm hơn khi hover */
+}
+
+.submenu {
+  display: none; /* Ẩn ban đầu */
+  list-style: none;
+  padding-left: 20px;
+  margin: 5px 0 0 0;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #333;
+  padding: 5px;
+  width: 30px;
+  text-align: center;
+  z-index: 1001;
+}
+
+.close-btn:hover {
+  color: #007bff;
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .footer-right {
+    text-align: left;
+    margin-top: 20px;
+  }
+}

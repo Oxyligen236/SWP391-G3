@@ -5,16 +5,16 @@ public class PayrollItem {
     private int payrollItemID;
     private int payrollID;
     private String typeID;
-    private String name;
+    private double amount;
 
     public PayrollItem() {
     }
 
-    public PayrollItem(int payrollItemID, int payrollID, String typeID, String name) {
+    public PayrollItem(int payrollItemID, int payrollID, String typeID, double amount) {
         this.payrollItemID = payrollItemID;
         this.payrollID = payrollID;
         this.typeID = typeID;
-        this.name = name;
+        this.amount = amount;
     }
 
     public int getPayrollItemID() {
@@ -41,11 +41,11 @@ public class PayrollItem {
         this.typeID = typeID;
     }
 
-    public String getName() {
-        return name;
+    public double getAmount() {
+        return amount;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 }

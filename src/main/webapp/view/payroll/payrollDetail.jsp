@@ -11,8 +11,15 @@
             </head>
 
             <body>
-                <h1>Chi tiết bảng lương</h1>
 
+                <h1>Chi tiết bảng lương</h1>
+                <c:if test="${displayType == 'management'}">
+                    <div class="management-info">
+                        <h2>Nhân viên: ${payrollDetail.userName} (ID: ${payrollDetail.userID})</h2>
+                        <h2>Phòng ban: ${payrollDetail.userDepartment}, Vị trí: ${payrollDetail.userPosition}</h2>
+                    </div>
+
+                </c:if>
                 <table border="1" cellspacing="0" cellpadding="5">
                     <tr>
                         <th>Tháng</th>
@@ -37,7 +44,6 @@
                         <td>
                             <fmt:formatNumber value="${payrollDetail.totalDeductions}" type="number" groupingUsed="true"
                                 maxFractionDigits="3" />
-                        </td>
                         <td>
                             <fmt:formatNumber value="${payrollDetail.netSalary}" type="number" groupingUsed="true"
                                 maxFractionDigits="3" />
@@ -61,6 +67,11 @@
                             <td>
                                 <fmt:formatNumber value="${item.amount}" type="number" groupingUsed="true"
                                     maxFractionDigits="3" />
+                                <c:choose>
+                                    <c:when test="${item.amountType == 'fixed'}">(₫)</c:when>
+                                    <c:when test="${item.amountType == 'percent'}">(% Lương cơ bản)</c:when>
+                                    <c:otherwise>Không xác định</c:otherwise>
+                                </c:choose>
                             </td>
                             <td>
                                 <c:choose>

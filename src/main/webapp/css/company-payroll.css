@@ -1,0 +1,175 @@
+body {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    margin: 0;
+    padding: 40px;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+form.search-form {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+form.search-form select,
+form.search-form input[type="number"],
+form.search-form button {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+form.search-form select:focus,
+form.search-form input[type="number"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+form.search-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+form.search-form button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 12px 6px;
+    text-align: center;
+}
+
+th {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 600;
+}
+
+td {
+    border-top: 1px solid #eee;
+}
+
+td form {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+tr:hover {
+    background-color: #f2f8ff;
+    transition: background-color 0.3s;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+p.error-msg {
+    text-align: center;
+    background-color: #ffe5e5;
+    border: 1px solid #ffb3b3;
+    border-radius: 6px;
+    padding: 10px;
+    width: fit-content;
+    margin: 15px auto;
+}
+
+form.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px 16px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    padding: 18px 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+form.search-form label {
+    font-weight: 500;
+    color: #2c3e50;
+    margin-right: 6px;
+}
+
+form.search-form div.field-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+form.search-form input[type="text"],
+form.search-form input[type="number"],
+form.search-form select {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+form.search-form input:focus,
+form.search-form select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+form.search-form button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 120px;
+    line-height: 1;
+    height: 38px;
+    font-size: 14px;
+    font-weight: 500;
+}

@@ -1,5 +1,6 @@
 package hrms.model;
 
+import java.time.Duration;
 import java.time.LocalDate;
 
 public class Payroll {
@@ -9,6 +10,7 @@ public class Payroll {
     private double baseSalary;
     private String month;
     private String year;
+    private Duration workingHours;
     private double netSalary;
     private LocalDate payDate;
     private String status;
@@ -16,13 +18,14 @@ public class Payroll {
     public Payroll() {
     }
 
-    public Payroll(int payrollID, int userID, double baseSalary, String month, String year, double netSalary, LocalDate payDate,
+    public Payroll(int payrollID, int userID, double baseSalary, String month, String year, Duration workingHours, double netSalary, LocalDate payDate,
             String status) {
         this.payrollID = payrollID;
         this.userID = userID;
         this.baseSalary = baseSalary;
         this.month = month;
         this.year = year;
+        this.workingHours = workingHours;
         this.netSalary = netSalary;
         this.payDate = payDate;
         this.status = status;
@@ -90,6 +93,14 @@ public class Payroll {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Duration getWorkingHours() {
+        return workingHours;
+    }
+
+    public void setWorkingHours(Duration workingHours) {
+        this.workingHours = workingHours;
     }
 
 }

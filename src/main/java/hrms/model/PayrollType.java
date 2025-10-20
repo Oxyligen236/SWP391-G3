@@ -3,19 +3,19 @@ package hrms.model;
 public class PayrollType {
 
     private int payrollTypeID;
-    private int payrollItemID;
     private String typeName;
-    private double amount;
+    private String category;
+    private double amountType;
     private boolean isPositive;
 
     public PayrollType() {
     }
 
-    public PayrollType(int payrollTypeID, int payrollItemID, String typeName, double amount, boolean isPositive) {
+    public PayrollType(int payrollTypeID, String typeName, String category, double amountType, boolean isPositive) {
         this.payrollTypeID = payrollTypeID;
-        this.payrollItemID = payrollItemID;
         this.typeName = typeName;
-        this.amount = amount;
+        this.category = category;
+        this.amountType = amountType;
         this.isPositive = isPositive;
     }
 
@@ -27,12 +27,28 @@ public class PayrollType {
         this.payrollTypeID = payrollTypeID;
     }
 
-    public int getItemID() {
-        return payrollItemID;
+    public String getCategory() {
+        return category;
     }
 
-    public void setItemID(int payrollItemID) {
-        this.payrollItemID = payrollItemID;
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public double getAmountType() {
+        return amountType;
+    }
+
+    public void setAmountType(double amountType) {
+        this.amountType = amountType;
+    }
+
+    public boolean isIsPositive() {
+        return isPositive;
+    }
+
+    public void setIsPositive(boolean isPositive) {
+        this.isPositive = isPositive;
     }
 
     public String getTypeName() {
@@ -41,22 +57,6 @@ public class PayrollType {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public boolean isPositive() {
-        return isPositive;
-    }
-
-    public void setPositive(boolean isPositive) {
-        this.isPositive = isPositive;
     }
 
 }

@@ -1,5 +1,6 @@
 package hrms.dto;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,37 +12,62 @@ public class PayrollDTO {
     private String gender;
     private String userPhone;
     private String userEmail;
+    private String userDepartment;
     private String userPosition;
     private double baseSalary;
     private String month;
     private String year;
     private List<PayrollItemDetailDTO> payrollItems;
+    private Duration totalWorkHours;
     private double totalDeductions;
     private double totalEarnings;
     private double netSalary;
     private LocalDate payDate;
+    private String status;
 
     public PayrollDTO() {
     }
 
     public PayrollDTO(int payrollID, int userID, String userName, String gender, String userPhone, String userEmail,
-            String userPosition, double baseSalary, String month, String year, List<PayrollItemDetailDTO> payrollItems,
-            double totalDeductions, double totalEarnings, double netSalary, LocalDate payDate) {
+            String userDepartment, String userPosition, double baseSalary, String month, String year, List<PayrollItemDetailDTO> payrollItems,
+            Duration totalWorkHours, double totalDeductions, double totalEarnings, double netSalary, LocalDate payDate, String status) {
         this.payrollID = payrollID;
         this.userID = userID;
         this.userName = userName;
         this.gender = gender;
         this.userPhone = userPhone;
         this.userEmail = userEmail;
+        this.userDepartment = userDepartment;
         this.userPosition = userPosition;
         this.baseSalary = baseSalary;
         this.month = month;
         this.year = year;
         this.payrollItems = payrollItems;
+        this.totalWorkHours = totalWorkHours;
         this.totalDeductions = totalDeductions;
         this.totalEarnings = totalEarnings;
         this.netSalary = netSalary;
         this.payDate = payDate;
+        this.status = status;
+    }
+
+    public PayrollDTO(int payrollID, int userID, String userName, String userDepartment, String userPosition, double baseSalary, String month,
+            String year, Duration totalWorkHours, double totalDeductions, double totalEarnings,
+            double netSalary, LocalDate payDate, String status) {
+        this.payrollID = payrollID;
+        this.userID = userID;
+        this.userName = userName;
+        this.userDepartment = userDepartment;
+        this.userPosition = userPosition;
+        this.baseSalary = baseSalary;
+        this.month = month;
+        this.year = year;
+        this.totalWorkHours = totalWorkHours;
+        this.totalDeductions = totalDeductions;
+        this.totalEarnings = totalEarnings;
+        this.netSalary = netSalary;
+        this.payDate = payDate;
+        this.status = status;
     }
 
     public int getPayrollID() {
@@ -164,4 +190,27 @@ public class PayrollDTO {
         this.payDate = payDate;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Duration getTotalWorkHours() {
+        return totalWorkHours;
+    }
+
+    public void setTotalWorkHours(Duration totalWorkHours) {
+        this.totalWorkHours = totalWorkHours;
+    }
+
+    public String getUserDepartment() {
+        return userDepartment;
+    }
+
+    public void setUserDepartment(String userDepartment) {
+        this.userDepartment = userDepartment;
+    }
 }

@@ -36,6 +36,7 @@
                         <th>Năm</th>
                         <th>Ngày trả lương</th>
                         <th>Base Salary</th>
+                        <th>Tổng giờ làm</th>
                         <th>Lương tổng</th>
                         <th>Chi tiết</th>
                     </tr>
@@ -49,12 +50,27 @@
                                     maxFractionDigits="3" />
                             </td>
                             <td>
+                                <c:choose>
+                                    <c:when test="${payroll.totalWorkHours.toHours() >= 1}">
+                                        ${payroll.totalWorkHours.toHours()} giờ
+                                        <c:if test="${payroll.totalWorkHours.toMinutesPart() > 0}">
+                                            ${payroll.totalWorkHours.toMinutesPart()} phút
+                                        </c:if>
+                                    </c:when>
+                                    <c:when test="${payroll.totalWorkHours.toMinutesPart() > 0}">
+                                        ${payroll.totalWorkHours.toMinutesPart()} phút
+                                    </c:when>
+                                    <c:otherwise>
+                                        0 phút
+                                    </c:otherwise>
+                                </c:choose>
+                            <td>
                                 <fmt:formatNumber value="${payroll.netSalary}" type="number" groupingUsed="true"
                                     maxFractionDigits="3" />
                             </td>
 
                             <td>
-                                <form action="<c:url value='/payroll/detail'/>" method="get">
+                                <form action="<c:url value='/payroll/personal/detail'/>" method="get">
                                     <input type="hidden" name="payrollID" value="${payroll.payrollID}">
                                     <button type="submit">Chi tiết</button>
                                 </form>

@@ -12,25 +12,28 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/payroll/detail")
-public class PayrollDetailServlet extends HttpServlet {
+@WebServlet("/payroll/company/detail")
+public class CompanyPayrollDetailServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String payrollID = request.getParameter("payrollID");
+        String userID = request.getParameter("userID");
         Account account = (Account) session.getAttribute("account");
         if (account == null) {
             response.sendRedirect(request.getContextPath() + "/authenticate");
             return;
         }
-        int userId = account.getUserID();
         try {
             int payrollId = Integer.parseInt(payrollID);
+            int userId = Integer.parseInt(userID);
             PayrollService payrollService = new PayrollService();
             PayrollDTO payrollDetail = payrollService.getPayrollByUserIdAndPayrollId(userId, payrollId);
+            request.setAttribute("displayType", "management");
             if (payrollDetail == null) {
+
                 request.setAttribute("error", "Không tìm thấy chi tiết lương.");
                 request.getRequestDispatcher("/view/payroll/personalPayroll.jsp").forward(request, response);
                 return;
@@ -40,7 +43,6 @@ public class PayrollDetailServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             response.sendRedirect(request.getContextPath() + "/error");
         }
-
     }
 
 }
