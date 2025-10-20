@@ -36,12 +36,14 @@
                             </p>
                             <input type="hidden" name="title" value="<c:out value='${param.title}' />">
                             <input type="hidden" name="jdID" value="<c:out value='${param.jdID}' />">
-
                         </c:if>
+
                         <div class="form-group">
                             <label for="name">Full Name:</label>
-                            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                            <input type="text" id="name" name="name" placeholder="Enter your full name" required
+                                pattern="[A-Za-zÀ-ỹ\s]+" title="Name must not contain special characters or numbers.">
                         </div>
+
                         <div class="form-group">
                             <label for="gender">Gender:</label>
                             <select id="gender" name="gender" required>
@@ -51,34 +53,40 @@
                                 <option value="other">Other</option>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label for="address">Address:</label>
-                            <input type="text" id="address" name="address" placeholder="Nhập địa chỉ của bạn" required>
+                            <input type="text" id="address" name="address" placeholder="Enter your address" required
+                                pattern="[A-Za-zÀ-ỹ0-9\s,.\-]+" title="Address must not contain special characters.">
                         </div>
+
                         <div class="form-group">
                             <label for="nationality">Nationality:</label>
-                            <input type="text" id="nationality" name="nationality" placeholder="Nhập quốc tịch của bạn"
-                                required>
+                            <input type="text" id="nationality" name="nationality" placeholder="Enter your nationality"
+                                required pattern="[A-Za-zÀ-ỹ\s]+"
+                                title="Nationality must not contain special characters or numbers.">
                         </div>
+
                         <div class="form-group">
                             <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required>
+                            <input type="email" id="email" name="email" placeholder="Enter your email" required>
                         </div>
+
                         <div class="form-group">
                             <label for="phone">Phone Number:</label>
-                            <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại của bạn"
-                                required>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required
+                                pattern="^0\d{9}$" title="Phone number must be 10 digits and start with 0.">
                         </div>
 
                         <div class="form-group">
                             <label for="cv_Description">CV Description:</label>
                             <textarea id="cv_Description" name="cv_Description" rows="5"
-                                placeholder="Viết mô tả về kinh nghiệm của bạn..." required></textarea>
+                                placeholder="Write about your experience..." required></textarea>
                         </div>
 
                         <div class="form-actions">
-                            <button type="submit" class="btn-submit">Gửi CV</button>
-                            <button type="reset" class="btn-reset">Xóa</button>
+                            <button type="submit" class="btn-submit">Submit CV</button>
+                            <button type="reset" class="btn-reset">Clear</button>
                         </div>
                     </form>
                 </div>

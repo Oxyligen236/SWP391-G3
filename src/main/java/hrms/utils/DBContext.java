@@ -10,15 +10,12 @@ public class DBContext {
 
     public DBContext() {
         try {
-            // Cấu hình kết nối MySQL
             String url = "jdbc:mysql://localhost:3306/HRMS?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-            String username = "root";  // Thay đổi username của bạn
-            String password = "123456"; // Thay đổi password của bạn
+            String username = "root";
+            String password = "123456";
 
-            // Load MySQL JDBC Driver
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            // Tạo kết nối
             connection = DriverManager.getConnection(url, username, password);
 
             System.out.println("Kết nối MySQL thành công!");

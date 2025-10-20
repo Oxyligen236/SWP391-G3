@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import hrms.dao.AccountDAO;
 import hrms.model.Account;
+import hrms.utils.PasswordUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
@@ -23,13 +24,10 @@ public class LoginServlet extends HttpServlet {
                 if ("username".equals(cookie.getName())) {
                     request.setAttribute("username", cookie.getValue());
                 }
-                if ("password".equals(cookie.getName())) {
-                    request.setAttribute("password", cookie.getValue());
+                if ("rememberMe".equals(cookie.getName())) {
+                    request.setAttribute("remember", "checked");
                 }
             }
-        }
-        if (request.getAttribute("username") != null && request.getAttribute("password") != null) {
-            request.setAttribute("remember", "checked");
         }
         request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
     }
@@ -44,28 +42,45 @@ public class LoginServlet extends HttpServlet {
 
         AccountDAO accountDao = new AccountDAO();
         Account account = accountDao.getAccountByUsername(username);
-        // Account account = new Account(username, password, "admin", true);
-        if (account != null && account.isIsActive() && account.getPassword().equals(password)) {
-            if ("on".equals(remember)) {
-                Cookie usernameCookie = new Cookie("username", username);
-                Cookie passwordCookie = new Cookie("password", password);
-                usernameCookie.setMaxAge(7 * 24 * 60 * 60);
-                passwordCookie.setMaxAge(7 * 24 * 60 * 60);
-                response.addCookie(usernameCookie);
-                response.addCookie(passwordCookie);
+
+        if (account != null && account.isIsActive()) {
+            boolean passwordMatch = false;
+
+            if (PasswordUtil.isHashed(account.getPassword())) {
+                passwordMatch = PasswordUtil.verifyPassword(password, account.getPassword());
             } else {
-                Cookie usernameCookie = new Cookie("username", "");
-                Cookie passwordCookie = new Cookie("password", "");
-                usernameCookie.setMaxAge(0);
-                passwordCookie.setMaxAge(0);
-                response.addCookie(usernameCookie);
-                response.addCookie(passwordCookie);
+                passwordMatch = account.getPassword().equals(password);
+
+                if (passwordMatch) {
+                    String hashedPassword = PasswordUtil.hashPassword(password);
+                    accountDao.updatePassword(account.getUserID(), hashedPassword);
+                }
             }
-            request.getSession().setAttribute("account", account);
-            response.sendRedirect(request.getContextPath() + "/view/home/home.jsp");
-        } else {
-            request.setAttribute("errorMessage", "Invalid username or password");
-            request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+
+            if (passwordMatch) {
+                if ("on".equals(remember)) {
+                    Cookie usernameCookie = new Cookie("username", username);
+                    Cookie rememberCookie = new Cookie("rememberMe", "true");
+                    usernameCookie.setMaxAge(7 * 24 * 60 * 60);
+                    rememberCookie.setMaxAge(7 * 24 * 60 * 60);
+                    response.addCookie(usernameCookie);
+                    response.addCookie(rememberCookie);
+                } else {
+                    Cookie usernameCookie = new Cookie("username", "");
+                    Cookie rememberCookie = new Cookie("rememberMe", "");
+                    usernameCookie.setMaxAge(0);
+                    rememberCookie.setMaxAge(0);
+                    response.addCookie(usernameCookie);
+                    response.addCookie(rememberCookie);
+                }
+
+                request.getSession().setAttribute("account", account);
+                response.sendRedirect(request.getContextPath() + "/view/home/homepage_quest.jsp");
+                return;
+            }
         }
+
+        request.setAttribute("errorMessage", "Invalid username or password");
+        request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
     }
 }

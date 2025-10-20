@@ -5,13 +5,13 @@ public class PayrollType {
     private int payrollTypeID;
     private String typeName;
     private String category;
-    private double amountType;
+    private String amountType;
     private boolean isPositive;
 
     public PayrollType() {
     }
 
-    public PayrollType(int payrollTypeID, String typeName, String category, double amountType, boolean isPositive) {
+    public PayrollType(int payrollTypeID, String typeName, String category, String amountType, boolean isPositive) {
         this.payrollTypeID = payrollTypeID;
         this.typeName = typeName;
         this.category = category;
@@ -19,11 +19,11 @@ public class PayrollType {
         this.isPositive = isPositive;
     }
 
-    public int getpayrollTypeID() {
+    public int getPayrollTypeID() {
         return payrollTypeID;
     }
 
-    public void setpayrollTypeID(int payrollTypeID) {
+    public void setPayrollTypeID(int payrollTypeID) {
         this.payrollTypeID = payrollTypeID;
     }
 
@@ -35,19 +35,19 @@ public class PayrollType {
         this.category = category;
     }
 
-    public double getAmountType() {
+    public String getAmountType() {
         return amountType;
     }
 
-    public void setAmountType(double amountType) {
+    public void setAmountType(String amountType) {
         this.amountType = amountType;
     }
 
-    public boolean isIsPositive() {
+    public boolean isPositive() {
         return isPositive;
     }
 
-    public void setIsPositive(boolean isPositive) {
+    public void setPositive(boolean isPositive) {
         this.isPositive = isPositive;
     }
 
