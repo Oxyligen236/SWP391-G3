@@ -136,6 +136,14 @@ public class ViewContractServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        
+        // Xử lý cập nhật note
+        if ("updateNote".equalsIgnoreCase(action)) {
+            handleUpdateNote(request, response);
+            return;
+        }
+        
         ContractDAO dao = new ContractDAO();
         try {
             Contract contract = new Contract();
@@ -175,6 +183,65 @@ public class ViewContractServlet extends HttpServlet {
             e.printStackTrace();
             request.setAttribute("error", "Đã xảy ra lỗi khi thêm hợp đồng");
             request.getRequestDispatcher("/view/contract/createContract.jsp").forward(request, response);
+        }
+    }
+
+    private void handleUpdateNote(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        
+        try {
+
+            hrms.model.Account account = (hrms.model.Account) request.getSession().getAttribute("account");
+            if (account == null) {
+                response.sendRedirect(request.getContextPath() + "/authenticate");
+                return;
+            }
+            
+            int userRole = account.getRole();
+            if (userRole != 3 && userRole != 2) {
+                request.setAttribute("error", "Bạn không có quyền sửa ghi chú hợp đồng!");
+                String contractId = request.getParameter("contractId");
+                if (contractId != null) {
+                    response.sendRedirect("viewContracts?action=detail&id=" + contractId);
+                } else {
+                    response.sendRedirect("viewContracts");
+                }
+                return;
+            }
+
+            String contractIdStr = request.getParameter("contractId");
+            String note = request.getParameter("note");
+
+            if (contractIdStr == null || contractIdStr.trim().isEmpty()) {
+                throw new IllegalArgumentException("Contract ID không hợp lệ");
+            }
+
+            int contractId = Integer.parseInt(contractIdStr);
+            ContractDAO dao = new ContractDAO();
+            
+            // Cập nhật note
+            boolean success = dao.updateContractNote(contractId, note);
+            
+            if (success) {
+                // Lấy lại thông tin contract để hiển thị
+                Contract contract = dao.getContractById(contractId);
+                request.setAttribute("contract", contract);
+                request.setAttribute("successMessage", "Cập nhật ghi chú thành công!");
+            } else {
+                request.setAttribute("error", "Không thể cập nhật ghi chú!");
+            }
+            
+            request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
+            
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Contract ID không hợp lệ!");
+            request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Đã xảy ra lỗi khi cập nhật ghi chú: " + e.getMessage());
+            request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
         }
     }
 }
