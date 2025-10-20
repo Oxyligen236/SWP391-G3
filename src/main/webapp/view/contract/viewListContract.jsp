@@ -167,7 +167,7 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
           </div>
       </div>
       <div class="right-actions">
-        <a href="<c:url value='/view/home/home.jsp'/>" class="back-link">Back to Home</a>
+        <a href="<c:url value='/home'/>" class="back-link">Back to Home</a>
       </div>
     </div>
 

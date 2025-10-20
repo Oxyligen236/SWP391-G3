@@ -50,7 +50,6 @@ public class ContractDAO extends DBContext{
 
                     contracts.add(contract);
             }
-            System.out.println("Contracts loaded: " + contracts.size()); // Debug
             return contracts;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -59,7 +58,7 @@ public class ContractDAO extends DBContext{
     }
 
     public void addContract(Contract contract) {
-        String sql = "INSERT INTO Contract(UserID, Start_Date, End_Date, Sign_Date, Duration, BaseSalary, Note, TypeID, positionID, SignerID) VALUES (?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Contract(UserID, Start_Date, End_Date, Sign_Date, Duration, BaseSalary, Note, TypeID, positionID, SignerID) VALUES (?,?,?,?,?,?,?,?,?,?)";
         try (
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, contract.getUserId());
@@ -252,4 +251,46 @@ public class ContractDAO extends DBContext{
 
         return list;
     }
+
+    public List<Contract> getContractsByUserId(int userId) throws SQLException {
+    List<Contract> contracts = new ArrayList<>();
+    String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS FullName, " +
+                     "p.Name AS PositionName, s.FullName AS SignerName " +
+                     "FROM Contract c " +
+                     "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
+                     "LEFT JOIN Users u ON c.UserID = u.UserID " +
+                     "LEFT JOIN Positions p ON c.PositionID = p.PositionID " +
+                     "LEFT JOIN Users s ON c.SignerID = s.UserID " +
+                     "WHERE c.UserID = ? ORDER BY c.Start_Date DESC";
+    
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, userId);
+        try (ResultSet rs = ps.executeQuery()) {
+        
+        while (rs.next()) {
+            Contract contract = new Contract();
+            contract.setContractId(rs.getInt("ContractID"));
+            contract.setUserId(rs.getInt("UserID"));
+            Date startDate = rs.getDate("Start_Date");
+            contract.setStartDate(startDate != null ? startDate.toLocalDate() : null);
+            Date endDate = rs.getDate("End_Date");
+            contract.setEndDate(endDate != null ? endDate.toLocalDate() : null);
+            Date signDate = rs.getDate("Sign_Date");
+            contract.setSignDate(signDate != null ? signDate.toLocalDate() : null);
+            contract.setDuration(rs.getInt("Duration"));
+            contract.setBaseSalary(rs.getDouble("BaseSalary"));
+            contract.setNote(rs.getString("Note"));
+            contract.setTypeID(rs.getInt("TypeID"));
+            contract.setTypeName(rs.getString("TypeName"));
+            contract.setPositionId(rs.getInt("PositionId"));
+            contract.setSignerId(rs.getInt("SignerId"));
+            contract.setPositionName(rs.getString("PositionName"));
+            contract.setSignerName(rs.getString("SignerName"));
+            contracts.add(contract);
+        }
+    }
+    }
+        return contracts;
+    }
+
 }
