@@ -106,4 +106,20 @@ public class JobDAO extends DBContext {
         }
         return null;
     }
+    
+    public JobDescription getJobByJobId(int jobId) {
+    String sql = "SELECT * FROM Job_Description WHERE jobID = ?";
+    try {
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setInt(1, jobId);
+        ResultSet rs = st.executeQuery();
+        if (rs.next()) {
+            return extractJobFromResultSet(rs);
+        }
+    } catch (SQLException e) {
+        System.out.println(e);
+    }
+    return null;
+}
+
 }
