@@ -8,28 +8,8 @@
     <title>Chi Tiết Tài Khoản - HRMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .detail-card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-        .info-row {
-            padding: 15px;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .info-row:last-child { border-bottom: none; }
-        .info-label { font-weight: 600; color: #6c757d; margin-bottom: 5px; }
-        .info-value { font-size: 1.1em; color: #212529; }
-        .status-active { color: #28a745; }
-        .status-inactive { color: #dc3545; }
-    </style>
+        
+        <link rel="stylesheet" href="<c:url value='/css/view-account.css'/>">
 </head>
 <body>
 <div class="container">
