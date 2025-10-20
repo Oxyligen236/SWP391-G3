@@ -1,14 +1,11 @@
 package hrms.dao;
 
-import static com.mysql.cj.conf.PropertyKey.PASSWORD;
-import static com.mysql.cj.conf.PropertyKey.USER;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import hrms.model.JobDescription;
 import hrms.utils.DBContext;
-import static jakarta.servlet.SessionTrackingMode.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
