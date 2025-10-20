@@ -148,35 +148,61 @@ public class AccountDAO extends DBContext {
         }
         return null;
     }
-public boolean changePassword(int accountID, String oldPassword, String newPassword) {
-    String checkSql = "SELECT Password FROM Account WHERE AccountID = ?";
-    String updateSql = "UPDATE Account SET Password = ? WHERE AccountID = ?";
 
-    try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
-        checkStmt.setInt(1, accountID);
-        ResultSet rs = checkStmt.executeQuery();
+    public boolean changePassword(int accountId, String oldPassword, String newPassword) {
+        String verifySql = "SELECT Password FROM Account WHERE AccountID = ?";
+        String updateSql = "UPDATE Account SET Password = ? WHERE AccountID = ?";
 
-        if (rs.next()) {
-            String currentPassword = rs.getString("Password");
+        PreparedStatement verifyStmt = null;
+        PreparedStatement updateStmt = null;
+        ResultSet rs = null;
 
-            // Kiểm tra mật khẩu cũ
-            if (!currentPassword.equals(oldPassword)) {
-                return false; // mật khẩu cũ không đúng
+        try {
+            // Bước 1: Kiểm tra mật khẩu cũ
+            verifyStmt = connection.prepareStatement(verifySql);
+            verifyStmt.setInt(1, accountId);
+            rs = verifyStmt.executeQuery();
+
+            if (rs.next()) {
+                String dbPassword = rs.getString("Password");
+
+                if (!dbPassword.equals(oldPassword)) {
+                    return false;
+                }
+
+            } else {
+                return false;
             }
 
-            // Cập nhật mật khẩu mới
-            try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
-                updateStmt.setString(1, newPassword);
-                updateStmt.setInt(2, accountID);
-                return updateStmt.executeUpdate() > 0;
+            updateStmt = connection.prepareStatement(updateSql);
+            updateStmt.setString(1, newPassword);
+            updateStmt.setInt(2, accountId);
+
+            int rows = updateStmt.executeUpdate();
+
+            if (rows > 0) {
+
+                return true;
+            } else {
+
+                return false;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi đổi mật khẩu: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (verifyStmt != null)
+                    verifyStmt.close();
+                if (updateStmt != null)
+                    updateStmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
     }
-
-    return false;
-}
-
 }
