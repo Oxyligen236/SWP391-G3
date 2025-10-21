@@ -27,6 +27,9 @@ public class ViewAccountServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("account");
 
+        List<Role> roles = roleDAO.getAllRoles();
+        request.setAttribute("roles", roles);
+
         if (currentUser == null) {
             response.sendRedirect(request.getContextPath() + "/authenticate");
             return;
@@ -34,24 +37,21 @@ public class ViewAccountServlet extends HttpServlet {
 
         try {
             // === Nhận tham số filter/sort/search/pagination ===
-            String search = request.getParameter("search");           // tìm theo tên hoặc username
-            String roleFilter = request.getParameter("role");         // lọc theo role
-            String statusFilter = request.getParameter("status");     // lọc theo trạng thái
-            String sortBy = request.getParameter("sortBy");           // cột sắp xếp
-            String sortOrder = request.getParameter("sortOrder");     // ASC/DESC
+            String search = request.getParameter("search"); // tìm theo tên hoặc username
+            String roleFilter = request.getParameter("role"); // lọc theo role
+            String statusFilter = request.getParameter("status"); // lọc theo trạng thái
+            String sortBy = request.getParameter("sortBy"); // cột sắp xếp
+            String sortOrder = request.getParameter("sortOrder"); // ASC/DESC
             int page = parseIntOrDefault(request.getParameter("page"), 1);
             int pageSize = parseIntOrDefault(request.getParameter("pageSize"), 10);
 
             if (currentUser.getRole() == 1) { // Admin
                 // Lấy danh sách tài khoản theo các điều kiện lọc, tìm kiếm, phân trang
                 List<AccountDTO> accounts = accountDAO.getFilteredAccounts(
-                        search, roleFilter, statusFilter, sortBy, sortOrder, page, pageSize
-                );
+                        search, roleFilter, statusFilter, sortBy, sortOrder, page, pageSize);
 
                 int totalRecords = accountDAO.countFilteredAccounts(search, roleFilter, statusFilter);
                 int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
-
-                List<Role> roles = roleDAO.getAllRoles();
 
                 // Gửi dữ liệu tới JSP
                 request.setAttribute("accounts", accounts);

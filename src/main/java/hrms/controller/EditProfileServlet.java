@@ -48,6 +48,7 @@ public class EditProfileServlet extends HttpServlet {
 
         setDropdowns(request);
         request.setAttribute("user", user);
+        request.setAttribute("roleId", account.getRole()); // truyền roleID xuống JSP
         request.getRequestDispatcher("/view/profile/editProfile.jsp").forward(request, response);
     }
 
@@ -71,10 +72,8 @@ public class EditProfileServlet extends HttpServlet {
             return;
         }
 
-        // ✅ PHÂN QUYỀN THEO ROLE ID
-        // Admin (1), HR Manager (2), HR (3) có quyền chỉnh sửa toàn bộ
-        int roleId = userDAO.getRoleIdByUserId(userId);
-        boolean canEditAll = ( roleId == 2 || roleId == 3);
+        // Chỉ HR và HR Manager mới được chỉnh Department, Position
+        boolean canEditAll = (account.getRole() == 2 || account.getRole() == 3);
 
         // --- Nhận dữ liệu từ form ---
         String fullname = request.getParameter("fullname");
@@ -147,6 +146,7 @@ public class EditProfileServlet extends HttpServlet {
         if (errorMsg.length() > 0) {
             setDropdowns(request);
             request.setAttribute("user", currentUser);
+            request.setAttribute("roleId", account.getRole());
             request.setAttribute("errorMessage", errorMsg.toString());
             request.getRequestDispatcher("/view/profile/editProfile.jsp").forward(request, response);
             return;
@@ -164,7 +164,7 @@ public class EditProfileServlet extends HttpServlet {
         currentUser.setEthnicity(ethnicity);
         currentUser.setDegreeId(parseOrNull(degreeIdStr));
 
-        // ✅ Chỉ HR, HR Manager, Admin mới được chỉnh sửa Department, Position
+        // Chỉ HR và HR Manager mới được chỉnh Department và Position
         if (canEditAll) {
             currentUser.setDepartmentId(parseOrNull(departmentIdStr));
             currentUser.setPositionId(parseOrNull(positionIdStr));
@@ -181,10 +181,9 @@ public class EditProfileServlet extends HttpServlet {
 
         setDropdowns(request);
         request.setAttribute("user", refreshedUser);
+        request.setAttribute("roleId", account.getRole());
         request.getRequestDispatcher("/view/profile/editProfile.jsp").forward(request, response);
     }
-
-    // --------------------- HÀM PHỤ TRỢ ---------------------
 
     private void setDropdowns(HttpServletRequest request) {
         request.setAttribute("degreeList", degreeDAO.getAll());

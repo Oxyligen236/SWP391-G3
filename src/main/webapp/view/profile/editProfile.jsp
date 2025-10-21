@@ -85,49 +85,49 @@
                 </div>
             </div>
 
-            <!-- Phần chỉ HR/HR Manager được phép chỉnh sửa -->
-            <c:if test="${account.role == 2 || account.role == 3}">
-                <hr class="my-4">
-                <h5 class="text-primary fw-bold mb-3"><i class="fas fa-briefcase"></i> Thông Tin Công Việc</h5>
+            <!-- Phần thông tin công việc -->
+            <hr class="my-4">
+            <h5 class="text-primary fw-bold mb-3"><i class="fas fa-briefcase"></i> Thông Tin Công Việc</h5>
 
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label class="info-label fw-semibold">Phòng ban:</label>
-                        <select name="departmentId" class="form-select">
-                            <option value="">-- Chọn phòng ban --</option>
-                            <c:forEach var="dept" items="${departmentList}">
-                                <option value="${dept.departmentId}" ${user.departmentId==dept.departmentId?'selected':''}>
-                                    ${dept.name}
-                                </option>
-                            </c:forEach>
-                        </select>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="info-label fw-semibold">Chức vụ:</label>
-                        <select name="positionId" class="form-select">
-                            <option value="">-- Chọn chức vụ --</option>
-                            <c:forEach var="pos" items="${positionList}">
-                                <option value="${pos.positionId}" ${user.positionId==pos.positionId?'selected':''}>
-                                    ${pos.name}
-                                </option>
-                            </c:forEach>
-                        </select>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="info-label fw-semibold">Bằng cấp:</label>
-                        <select name="degreeId" class="form-select">
-                            <option value="">-- Chọn bằng cấp --</option>
-                            <c:forEach var="d" items="${degreeList}">
-                                <option value="${d.degreeId}" ${user.degreeId==d.degreeId?'selected':''}>
-                                    ${d.name}
-                                </option>
-                            </c:forEach>
-                        </select>
-                    </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="info-label fw-semibold">Phòng ban:</label>
+                    <select name="departmentId" class="form-select" 
+                        <c:if test="${roleId != 2 && roleId != 3}">disabled</c:if>>
+                        <option value="">-- Chọn phòng ban --</option>
+                        <c:forEach var="dept" items="${departmentList}">
+                            <option value="${dept.departmentId}" ${user.departmentId==dept.departmentId?'selected':''}>
+                                ${dept.name}
+                            </option>
+                        </c:forEach>
+                    </select>
                 </div>
-            </c:if>
+
+                <div class="col-md-4">
+                    <label class="info-label fw-semibold">Chức vụ:</label>
+                    <select name="positionId" class="form-select" 
+                        <c:if test="${roleId != 2 && roleId != 3}">disabled</c:if>>
+                        <option value="">-- Chọn chức vụ --</option>
+                        <c:forEach var="pos" items="${positionList}">
+                            <option value="${pos.positionId}" ${user.positionId==pos.positionId?'selected':''}>
+                                ${pos.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="info-label fw-semibold">Bằng cấp:</label>
+                    <select name="degreeId" class="form-select">
+                        <option value="">-- Chọn bằng cấp --</option>
+                        <c:forEach var="d" items="${degreeList}">
+                            <option value="${d.degreeId}" ${user.degreeId==d.degreeId?'selected':''}>
+                                ${d.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+            </div>
 
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-success px-4">
