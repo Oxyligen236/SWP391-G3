@@ -335,6 +335,8 @@ public class AccountDAO extends DBContext {
         return list;
     }
 
+    
+
     public int countFilteredAccounts(String search, String roleFilter, String statusFilter) throws SQLException {
         StringBuilder sql = new StringBuilder(
                 "SELECT COUNT(*) FROM Account a " +
