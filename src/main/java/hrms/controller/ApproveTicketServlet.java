@@ -45,6 +45,7 @@ public class ApproveTicketServlet extends HttpServlet {
             boolean isPending = "Pending".equalsIgnoreCase(ticket.getStatus());
             request.setAttribute("isPending", isPending);
 
+
             request.getRequestDispatcher("/view/ticket/ticketDetail.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
@@ -52,9 +53,11 @@ public class ApproveTicketServlet extends HttpServlet {
         }
     }
 
-    // ...existing code...
+ 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
 

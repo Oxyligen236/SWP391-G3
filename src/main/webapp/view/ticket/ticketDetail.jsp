@@ -1,3 +1,4 @@
+<!-- filepath: d:\FPT\Ky_5\SWP391\Project\SWP391-G3\src\main\webapp\view\ticket\ticketDetail.jsp -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %> <%@
 taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ page
 isELIgnored="false" %>
@@ -7,146 +8,208 @@ isELIgnored="false" %>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ticket Details</title>
+    <title>Ticket Detail</title>
     <link
       rel="stylesheet"
       href="${pageContext.request.contextPath}/webjars/bootstrap/5.3.3/css/bootstrap.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/css/ticketDetail.css"
+    />
   </head>
   <body>
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-              <h4 class="mb-0">Ticket Details</h4>
+    <div class="ticket-detail-container">
+      <div class="ticket-card">
+        <div class="ticket-header ticket-type-${ticket.ticket_Type_ID}">
+          <h2 class="ticket-title">
+            <c:choose>
+              <c:when test="${ticket.ticket_Type_ID == 1}"
+                >Leave Request</c:when
+              >
+              <c:when test="${ticket.ticket_Type_ID == 2}"
+                >Overtime Request</c:when
+              >
+              <c:when test="${ticket.ticket_Type_ID == 3}"
+                >Recruitment Request</c:when
+              >
+              <c:otherwise>Other Request</c:otherwise>
+            </c:choose>
+          </h2>
+          <span class="ticket-id">#${ticket.ticketID}</span>
+        </div>
+
+        <div class="ticket-body">
+          <section class="employee-info-section">
+            <h3 class="section-title">Employee Information</h3>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Employee ID</span>
+                <span class="info-value">${ticket.userID}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Employee Name</span>
+                <span class="info-value">${ticket.userFullName}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Department</span>
+                <span class="info-value">${ticket.departmentName}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Created Date</span>
+                <span class="info-value">${ticket.create_Date}</span>
+              </div>
             </div>
-            <div class="card-body">
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <strong>Ticket ID:</strong> ${ticket.ticketID}
-                </div>
-                <div class="col-md-6">
-                  <strong>Type:</strong> ${ticket.ticketTypeName}
-                </div>
-              </div>
+          </section>
 
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <strong>Sender:</strong> ${ticket.userFullName != null ?
-                  ticket.userFullName : 'N/A'}
-                </div>
-                <div class="col-md-6">
-                  <strong>Created Date:</strong> ${ticket.create_Date}
-                </div>
-              </div>
+          <section class="status-section">
+            <div class="status-badge status-${ticket.status.toLowerCase()}">
+              ${ticket.status}
+            </div>
+          </section>
 
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <strong>Status:</strong>
-                  <span
-                    class="badge ${ticket.status == 'Approved' ? 'bg-success' : ticket.status == 'Rejected' ? 'bg-danger' : 'bg-warning'}"
-                  >
-                    ${ticket.status}
-                  </span>
-                </div>
-                <div class="col-md-6">
-                  <strong>Approve Date:</strong>
-                  ${ticket.approve_Date != null ? ticket.approve_Date : 'N/A'}
-                </div>
-              </div>
+          <section class="content-section">
+            <h3 class="section-title">Request Details</h3>
 
-              <div class="mb-3">
-                <strong>Content:</strong>
-                <div class="border p-3 bg-light" style="white-space: pre-wrap">
-                  ${ticket.ticket_Content}
-                </div>
-              </div>
-
-              <!-- Hiển thị comment nếu đã duyệt -->
-              <c:if test="${!isPending && ticket.comment != null}">
-                <div class="mb-3">
-                  <strong>Comment:</strong>
-                  <div
-                    class="border p-3 bg-light"
-                    style="white-space: pre-wrap"
-                  >
-                    ${ticket.comment}
+            <c:choose>
+              <%-- Leave Ticket --%>
+              <c:when test="${ticket.ticket_Type_ID == 1}">
+                <div class="ticket-details ticket-details-leave">
+                  <div class="detail-row">
+                    <span class="detail-label">Leave Type</span>
+                    <span class="detail-value">${ticket.leaveType}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Start Date</span>
+                    <span class="detail-value">${ticket.startDate}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">End Date</span>
+                    <span class="detail-value">${ticket.endDate}</span>
+                  </div>
+                  <div class="detail-row detail-full">
+                    <span class="detail-label">Reason</span>
+                    <p class="detail-content">${ticket.ticket_Content}</p>
                   </div>
                 </div>
-              </c:if>
+              </c:when>
 
-              <hr />
-
-              <!-- Form Approve/Reject (chỉ hiện khi Pending) -->
-              <c:choose>
-                <c:when test="${isPending}">
-                  <h5 class="mb-3 text-primary">Approve or Reject</h5>
-                  <!-- POST to cùng servlet -->
-                  <form
-                    action="${pageContext.request.contextPath}/ticket-detail"
-                    method="post"
-                  >
-                    <input
-                      type="hidden"
-                      name="ticketId"
-                      value="${ticket.ticketID}"
-                    />
-
-                    <div class="mb-3">
-                      <label for="comment" class="form-label">Comment:</label>
-                      <textarea
-                        class="form-control"
-                        id="comment"
-                        name="comment"
-                        rows="4"
-                        placeholder="Enter your comment (optional)"
-                      ></textarea>
-                    </div>
-
-                    <div class="d-flex gap-2">
-                      <button
-                        type="submit"
-                        name="action"
-                        value="approve"
-                        class="btn btn-success flex-fill"
-                        onclick="return confirm('Are you sure you want to APPROVE this ticket?')"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        type="submit"
-                        name="action"
-                        value="reject"
-                        class="btn btn-danger flex-fill"
-                        onclick="return confirm('Are you sure you want to REJECT this ticket?')"
-                      >
-                        Reject
-                      </button>
-                      <a
-                        href="${pageContext.request.contextPath}/department-ticket"
-                        class="btn btn-secondary flex-fill"
-                      >
-                        Cancel
-                      </a>
-                    </div>
-                  </form>
-                </c:when>
-
-                <c:otherwise>
-                  <!-- Nếu đã duyệt, chỉ hiện nút Back -->
-                  <div class="text-center">
-                    <a
-                      href="${pageContext.request.contextPath}/department-ticket"
-                      class="btn btn-secondary"
-                    >
-                      Back to List
-                    </a>
+              <%-- Overtime Ticket --%>
+              <c:when test="${ticket.ticket_Type_ID == 2}">
+                <div class="ticket-details ticket-details-overtime">
+                  <div class="detail-row">
+                    <span class="detail-label">Overtime Date</span>
+                    <span class="detail-value">${ticket.overtimeDate}</span>
                   </div>
-                </c:otherwise>
-              </c:choose>
+                  <div class="detail-row">
+                    <span class="detail-label">Start Time</span>
+                    <span class="detail-value">${ticket.startTime}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">End Time</span>
+                    <span class="detail-value">${ticket.endTime}</span>
+                  </div>
+                  <div class="detail-row detail-full">
+                    <span class="detail-label">Reason</span>
+                    <p class="detail-content">${ticket.ticket_Content}</p>
+                  </div>
+                </div>
+              </c:when>
+
+              <%-- Recruitment/Other Tickets --%>
+              <c:otherwise>
+                <div class="ticket-details ticket-details-general">
+                  <div class="detail-row detail-full">
+                    <span class="detail-label">Request Content</span>
+                    <p class="detail-content">${ticket.ticket_Content}</p>
+                  </div>
+                </div>
+              </c:otherwise>
+            </c:choose>
+          </section>
+
+          <c:if test="${isPending}">
+            <section class="approval-section">
+              <h3 class="section-title">Manager Action</h3>
+              <form
+                class="approval-form"
+                action="${pageContext.request.contextPath}/approve-ticket"
+                method="post"
+              >
+                <input
+                  type="hidden"
+                  name="ticketId"
+                  value="${ticket.ticketID}"
+                />
+
+                <div class="form-group">
+                  <label class="form-label" for="comment"
+                    >Comment (Optional)</label
+                  >
+                  <textarea
+                    id="comment"
+                    name="comment"
+                    class="form-textarea"
+                    rows="4"
+                    placeholder="Add your feedback here..."
+                  ></textarea>
+                </div>
+
+                <div class="action-buttons">
+                  <button
+                    type="submit"
+                    name="action"
+                    value="approve"
+                    class="btn btn-approve"
+                  >
+                    <span class="btn-icon">✓</span>
+                    <span class="btn-text">Approve</span>
+                  </button>
+                  <button
+                    type="submit"
+                    name="action"
+                    value="reject"
+                    class="btn btn-reject"
+                  >
+                    <span class="btn-icon">✗</span>
+                    <span class="btn-text">Reject</span>
+                  </button>
+                  <a
+                    href="${pageContext.request.contextPath}/department-ticket"
+                    class="btn btn-cancel"
+                  >
+                    <span class="btn-text">Back to List</span>
+                  </a>
+                </div>
+              </form>
+            </section>
+          </c:if>
+
+          <c:if test="${!isPending && not empty ticket.comment}">
+            <section class="manager-comment-section">
+              <h3 class="section-title">Manager Feedback</h3>
+              <div class="manager-comment">
+                <div class="comment-header">
+                  <span class="comment-author"
+                    >Approved by: ${ticket.approverName}</span
+                  >
+                  <span class="comment-date">${ticket.approve_Date}</span>
+                </div>
+                <p class="comment-content">${ticket.comment}</p>
+              </div>
+            </section>
+          </c:if>
+
+          <c:if test="${!isPending}">
+            <div class="back-button-wrapper">
+              <a
+                href="${pageContext.request.contextPath}/department-ticket"
+                class="btn btn-secondary"
+              >
+                ← Back to List
+              </a>
             </div>
-          </div>
+          </c:if>
         </div>
       </div>
     </div>
