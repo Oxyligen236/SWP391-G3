@@ -115,10 +115,4 @@ public class CvServlet extends HttpServlet {
             request.getRequestDispatcher("/view/cv/cv_List.jsp").forward(request, response);
         }
     }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // Implementation if needed
-    }
 }
