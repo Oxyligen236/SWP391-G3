@@ -53,6 +53,8 @@
         <a href="<c:url value='/payroll/personal'/>">Personal Payroll</a>
         </br>
         <a href="<c:url value='/payroll/company'/>">Company Payroll</a>
+         <a href="<c:url value='/user/create'/>">Create User</a>
+        
 
     </body>
 

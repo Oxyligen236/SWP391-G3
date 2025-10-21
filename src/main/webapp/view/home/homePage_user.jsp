@@ -50,13 +50,14 @@
         <li>
           <a href="#" onclick="toggleSubmenu('profile-submenu')">Profile</a>
           <ul class="submenu" id="profile-submenu">
-            <li><a href="<c:url value='/profile'/>">View Profile</a></li>
-            <li><a href="<c:url value='/account/create/profile'/>">Create Profile</a></li>
-            <li><a href="#">Edit Profile</a></li>
+            <li><a href="<c:url value='/view'/>">View Profile</a></li>
+            <li> <a href="<c:url value='/user/create'/>">Create User</a></li>
+            <li><a href="<c:url value='/edit'/>">Edit Profile</a></li>
             <li><a href="<c:url value='/updateDepartment'/>">Edit Department</a></li>
             <li><a href="<c:url value='/updatePosition'/>">Edit Position</a></li>
           </ul>
         </li>
+        
         <li>
           <a href="#" onclick="toggleSubmenu('account-submenu')">Account</a>
           <ul class="submenu" id="account-submenu">
