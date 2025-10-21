@@ -20,9 +20,10 @@ public class CreateAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
-        Account currentUser = (Account) req.getSession().getAttribute("account");
-        if (currentUser == null || currentUser.getRole() != 1) {
+        
+        // Kiểm tra quyền admin
+        Account currentUser = (Account) req.getSession().getAttribute("currentUser");
+        if(currentUser == null || currentUser.getRole() != 1) { // roleID=1 là admin
             resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập!");
             return;
         }
@@ -35,10 +36,10 @@ public class CreateAccountServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        Account currentUser = (Account) req.getSession().getAttribute("account");
-        if (currentUser == null || currentUser.getRole() != 1) {
-            req.setAttribute("message", "Bạn không có quyền truy cập!");
-            req.getRequestDispatcher("/view/profile/accessDenied.jsp").forward(req, resp);
+        // Kiểm tra quyền admin
+        Account currentUser = (Account) req.getSession().getAttribute("currentUser");
+        if(currentUser == null || currentUser.getRole() != 1) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền thực hiện hành động này!");
             return;
         }
 
