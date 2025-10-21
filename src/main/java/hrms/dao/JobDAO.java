@@ -34,7 +34,7 @@ public class JobDAO extends DBContext {
     public List<JobDescription> getAll() {
         String sql = "select * from Job_Description";
         try {
-            var st = connection.prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
             List<JobDescription> list = new java.util.ArrayList<>();
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -76,13 +76,11 @@ public class JobDAO extends DBContext {
 
     public boolean updateStatus(int jobID, String status) {
         String sql = "UPDATE job_description SET status = ? WHERE jobID = ?";
-        try (Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/HRMS?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
-                "root", "123456"); PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement st = connection.prepareStatement(sql);) {
 
-            ps.setString(1, status);
-            ps.setInt(2, jobID);
-            return ps.executeUpdate() > 0;
+            st.setString(1, status);
+            st.setInt(2, jobID);
+            return st.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -92,7 +90,7 @@ public class JobDAO extends DBContext {
     public JobDescription getJobByCvId(int id) {
         String sql = "select * from Job_Description where cvID = ?";
         try {
-            var st = connection.prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, id);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
