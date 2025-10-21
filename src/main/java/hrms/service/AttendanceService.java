@@ -24,12 +24,13 @@ public class AttendanceService {
     private final DepartmentDAO departmentDAO = new DepartmentDAO();
     private final PositionDAO positionDAO = new PositionDAO();
 
-    // Helper method: Chuyển Model → DTO
-    private AttendanceDTO convertToDTO(Attendance attendance, List<User> users,
-            List<Department> departments, List<Position> positions,
-            List<Shift> shifts) {
+    // Helper method: Chuyển Model → DTO (KHÔNG CẦN CONVERT LocalTime NỮA)
+    private AttendanceDTO convertToDTO(Attendance attendance, List<User> users, 
+                                      List<Department> departments, List<Position> positions,
+                                      List<Shift> shifts) {
         AttendanceDTO dto = new AttendanceDTO();
-
+        
+        // Set trực tiếp vì cùng kiểu LocalTime
         dto.setAttendanceID(attendance.getAttendanceID());
         dto.setUserID(attendance.getUserID());
         dto.setDate(attendance.getDate());
@@ -51,7 +52,7 @@ public class AttendanceService {
                 .filter(u -> u.getUserId() == attendance.getUserID())
                 .findFirst()
                 .orElse(null);
-
+        
         if (user != null) {
             dto.setUserName(user.getFullname());
 
@@ -74,18 +75,18 @@ public class AttendanceService {
             }
         }
 
-        // Lấy thông tin Shift (KHÔNG QUERY DB, TÌM TỪ LIST)
+        // Lấy thông tin Shift - Trực tiếp vì cùng kiểu LocalTime
         Shift shift = shifts.stream()
                 .filter(s -> s.getShiftID() == attendance.getShiftID())
                 .findFirst()
                 .orElse(null);
-
+        
         if (shift != null) {
-            dto.setShiftName(shift.getShiftName());
-            dto.setShiftCheckin1(shift.getCheckIn1());
-            dto.setShiftCheckout1(shift.getCheckOut1());
-            dto.setShiftCheckin2(shift.getCheckIn2());
-            dto.setShiftCheckout2(shift.getCheckOut2());
+            dto.setShiftName(shift.getName());
+            dto.setShiftCheckin1(shift.getCheckin1());
+            dto.setShiftCheckout1(shift.getCheckout1());
+            dto.setShiftCheckin2(shift.getCheckin2());
+            dto.setShiftCheckout2(shift.getCheckout2());
         }
 
         return dto;
@@ -94,12 +95,12 @@ public class AttendanceService {
     public List<AttendanceDTO> getAllAttendances() {
         // Lấy Model từ DAO
         List<Attendance> attendances = attendanceDAO.getAllAttendances();
-
-        // Load dữ liệu cần thiết 1 lần (QUAN TRỌNG!)
+        
+        // Load dữ liệu cần thiết 1 lần
         List<User> users = userDAO.getAll();
         List<Department> departments = departmentDAO.getAll();
         List<Position> positions = positionDAO.getAll();
-        List<Shift> shifts = shiftDAO.getAllShifts(); // ← Query 1 lần thôi
+        List<Shift> shifts = shiftDAO.getAllShifts();
 
         // Chuyển đổi sang DTO
         List<AttendanceDTO> attendanceDTOs = new ArrayList<>();
@@ -111,7 +112,7 @@ public class AttendanceService {
 
     public List<AttendanceDTO> getAttendancesByUser(int userID) {
         List<Attendance> attendances = attendanceDAO.getByUser(userID);
-
+        
         List<User> users = userDAO.getAll();
         List<Department> departments = departmentDAO.getAll();
         List<Position> positions = positionDAO.getAll();
@@ -125,10 +126,10 @@ public class AttendanceService {
     }
 
     public List<AttendanceDTO> searchAttendances(String name, String department, String position,
-            boolean hasCheckout3, boolean hasLate,
-            boolean hasEarlyLeave, boolean hasOT) {
+                                                 boolean hasCheckout3, boolean hasLate, 
+                                                 boolean hasEarlyLeave, boolean hasOT) {
         List<Attendance> attendances = attendanceDAO.getAllAttendances();
-
+        
         List<User> users = userDAO.getAll();
         List<Department> departments = departmentDAO.getAll();
         List<Position> positions = positionDAO.getAll();
@@ -137,54 +138,70 @@ public class AttendanceService {
         List<AttendanceDTO> attendanceDTOs = new ArrayList<>();
         for (Attendance attendance : attendances) {
             AttendanceDTO dto = convertToDTO(attendance, users, departments, positions, shifts);
-
+            
             boolean match = true;
 
+            // Filter by name
             if (name != null && !name.trim().isEmpty()) {
-                if (dto.getUserName() == null
-                        || !dto.getUserName().toLowerCase().contains(name.toLowerCase().trim())) {
+                if (dto.getUserName() == null || 
+                    !dto.getUserName().toLowerCase().contains(name.toLowerCase().trim())) {
                     match = false;
                 }
             }
 
+            // Filter by department
             if (department != null && !department.trim().isEmpty()) {
-                if (dto.getDepartmentName() == null
-                        || !dto.getDepartmentName().toLowerCase().contains(department.toLowerCase().trim())) {
+                if (dto.getDepartmentName() == null || 
+                    !dto.getDepartmentName().toLowerCase().contains(department.toLowerCase().trim())) {
                     match = false;
                 }
             }
 
+            // Filter by position
             if (position != null && !position.trim().isEmpty()) {
-                if (dto.getPositionName() == null
-                        || !dto.getPositionName().toLowerCase().contains(position.toLowerCase().trim())) {
+                if (dto.getPositionName() == null || 
+                    !dto.getPositionName().toLowerCase().contains(position.toLowerCase().trim())) {
                     match = false;
                 }
             }
 
+            // Filter by checkout3
             if (hasCheckout3 && dto.getCheckout3() == null) {
                 match = false;
             }
 
-            if (hasLate && (dto.getLateMinutes() == null
-                    || dto.getLateMinutes().equals(LocalTime.MIDNIGHT))) {
-                match = false;
+            // Filter by late (00:00:00 = không trễ)
+            if (hasLate) {
+                if (dto.getLateMinutes() == null || 
+                    dto.getLateMinutes().equals(LocalTime.MIDNIGHT) ||
+                    dto.getLateMinutes().equals(LocalTime.of(0, 0, 0))) {
+                    match = false;
+                }
             }
 
-            if (hasEarlyLeave && (dto.getEarlyLeaveMinutes() == null
-                    || dto.getEarlyLeaveMinutes().equals(LocalTime.MIDNIGHT))) {
-                match = false;
+            // Filter by early leave
+            if (hasEarlyLeave) {
+                if (dto.getEarlyLeaveMinutes() == null || 
+                    dto.getEarlyLeaveMinutes().equals(LocalTime.MIDNIGHT) ||
+                    dto.getEarlyLeaveMinutes().equals(LocalTime.of(0, 0, 0))) {
+                    match = false;
+                }
             }
 
-            if (hasOT && (dto.getOtHours() == null
-                    || dto.getOtHours().equals(LocalTime.MIDNIGHT))) {
-                match = false;
+            // Filter by OT
+            if (hasOT) {
+                if (dto.getOtHours() == null || 
+                    dto.getOtHours().equals(LocalTime.MIDNIGHT) ||
+                    dto.getOtHours().equals(LocalTime.of(0, 0, 0))) {
+                    match = false;
+                }
             }
 
             if (match) {
                 attendanceDTOs.add(dto);
             }
         }
-
+        
         return attendanceDTOs;
     }
 }
