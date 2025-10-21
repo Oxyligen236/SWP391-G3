@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,7 +40,7 @@
                                 <td>${contract.typeName}</td>
                                 <td>${contract.startDate}</td>
                                 <td>${contract.endDate != null ? contract.endDate : 'Không xác định'}</td>
-                                <td>${contract.baseSalary} VNĐ</td>
+                                <td><fmt:formatNumber value="${contract.baseSalary}" type="number" groupingUsed="true" /> VNĐ</td>
                                 <td>${contract.positionName != null ? contract.positionName : 'N/A'}</td>
                                 <td>${contract.signerName != null ? contract.signerName : 'N/A'}</td>
                                 <td>

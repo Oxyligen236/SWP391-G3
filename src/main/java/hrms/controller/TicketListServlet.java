@@ -36,15 +36,12 @@ public class TicketListServlet extends HttpServlet {
 
         int userId = account.getUserID();
 
-        // Get filter parameters
         String statusFilter = request.getParameter("status");
         String typeFilter = request.getParameter("type");
 
-        // Get sort parameters
         String sortBy = request.getParameter("sortBy");
         String sortOrder = request.getParameter("sortOrder");
 
-        // (2) Mặc định: Sort by Create Date DESC nếu chưa chọn
         if (sortBy == null || sortBy.isEmpty()) {
             sortBy = "createDate";
         }
@@ -52,7 +49,6 @@ public class TicketListServlet extends HttpServlet {
             sortOrder = "desc";
         }
 
-        // Pagination parameters
         int itemsPerPage = 5;
         if (request.getParameter("itemsPerPage") != null) {
             try {
@@ -71,17 +67,14 @@ public class TicketListServlet extends HttpServlet {
             }
         }
 
-        // Get tickets
         List<TicketDTO> tickets = ticketService.getTicketsByUserId(userId);
 
-        // Filter by Status
         if (statusFilter != null && !statusFilter.isEmpty() && !statusFilter.equals("All")) {
             tickets = tickets.stream()
                     .filter(t -> t.getStatus().equalsIgnoreCase(statusFilter))
                     .collect(Collectors.toList());
         }
 
-        // Filter by Type
         if (typeFilter != null && !typeFilter.isEmpty() && !typeFilter.equals("All")) {
             try {
                 int typeId = Integer.parseInt(typeFilter);
@@ -89,11 +82,10 @@ public class TicketListServlet extends HttpServlet {
                         .filter(t -> t.getTicket_Type_ID() == typeId)
                         .collect(Collectors.toList());
             } catch (NumberFormatException e) {
-                // Keep all if invalid
+                System.out.println(e.getMessage());
             }
         }
 
-        // Sorting
         if (sortBy != null && !sortBy.isEmpty()) {
             Comparator<TicketDTO> comparator = null;
 
@@ -116,7 +108,6 @@ public class TicketListServlet extends HttpServlet {
             }
         }
 
-        // Pagination
         int totalItems = tickets.size();
         int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
 
@@ -129,10 +120,8 @@ public class TicketListServlet extends HttpServlet {
 
         List<TicketDTO> paginatedTickets = tickets.subList(startIndex, endIndex);
 
-        // Load ticket types for filter
         List<Ticket_Types> ticketTypes = ticketTypesDAO.getAllTicketTypes();
 
-        // Set attributes
         request.setAttribute("ticketList", paginatedTickets);
         request.setAttribute("ticketTypes", ticketTypes);
         request.setAttribute("currentPage", currentPage);
@@ -140,7 +129,6 @@ public class TicketListServlet extends HttpServlet {
         request.setAttribute("itemsPerPage", itemsPerPage);
         request.setAttribute("totalItems", totalItems);
 
-        // Preserve filter/sort parameters
         request.setAttribute("selectedStatus", statusFilter != null ? statusFilter : "All");
         request.setAttribute("selectedType", typeFilter != null ? typeFilter : "All");
         request.setAttribute("sortBy", sortBy);

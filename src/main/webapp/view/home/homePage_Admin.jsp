@@ -6,7 +6,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home page</title>
+    <title>Home page for Admin</title>
     <link rel="stylesheet" href="<c:url value='/css/home.css'/>" />
     <script src="" defer></script>
   </head>
@@ -53,8 +53,6 @@
             <li><a href="<c:url value='/profile'/>">View Profile</a></li>
             <li><a href="<c:url value='/account/create/profile'/>">Create Profile</a></li>
             <li><a href="#">Edit Profile</a></li>
-            <li><a href="<c:url value='/updateDepartment'/>">Edit Department</a></li>
-            <li><a href="<c:url value='/updatePosition'/>">Edit Position</a></li>
           </ul>
         </li>
         <li>
@@ -69,8 +67,6 @@
           <a href="#" onclick="toggleSubmenu('contract-submenu')">Contract</a>
           <ul class="submenu" id="contract-submenu">
             <li><a href="<c:url value='/myContracts'/>">My Contract</a></li>
-            <li><a href="<c:url value='/addContracts'/>">Create Contract</a></li>
-            <li><a href="<c:url value='/viewContracts'/>">View Contract List</a></li>
           </ul>
         </li>
         <li>
@@ -78,7 +74,6 @@
           <ul class="submenu" id="cv-submenu">
             <li><a href="#">My CV</a></li>
             <li><a href="<c:url value='/cv-submit'/>">Submit CV</a></li>
-            <li><a href="<c:url value='/cv'/>">View CV List</a></li>
           </ul>
         </li>
         <li>
@@ -91,8 +86,6 @@
           <a href="#" onclick="toggleSubmenu('payroll-submenu')">Payroll</a>
           <ul class="submenu" id="payroll-submenu">
             <li><a href="<c:url value='/payroll/personal'/>">Personal Payroll</a></li>
-            <li><a href="<c:url value='/payroll/company'/>">Company Payroll</a></li>
-            <li><a href="#">Company Payroll <summary></summary></a></li>
           </ul>
         </li>
         <li>
@@ -100,14 +93,6 @@
           <ul class="submenu" id="ticket-submenu">
             <li><a href="#">Create Ticket</a></li>
             <li><a href="#">View Sent Tickets</a></li>
-            <li><a href="#">View Employee Tickets</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#" onclick="toggleSubmenu('attendance-submenu')">Attendance</a>
-          <ul class="submenu" id="attendance-submenu">
-            <li><a href="#">Company Attendance</a></li>
-            <li><a href="#">Personal Attendance</a></li>
           </ul>
         </li>
       </ul>
