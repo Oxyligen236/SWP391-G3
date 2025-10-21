@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/account/change-password")
 public class ChangePasswordServlet extends HttpServlet {
+
     private final AccountDAO accountDAO = new AccountDAO();
 
     @Override
@@ -49,9 +50,9 @@ public class ChangePasswordServlet extends HttpServlet {
         String confirmPassword = request.getParameter("confirmPassword");
 
         try {
-            if (oldPassword == null || oldPassword.trim().isEmpty() ||
-                newPassword == null || newPassword.trim().isEmpty() ||
-                confirmPassword == null || confirmPassword.trim().isEmpty()) {
+            if (oldPassword == null || oldPassword.trim().isEmpty()
+                    || newPassword == null || newPassword.trim().isEmpty()
+                    || confirmPassword == null || confirmPassword.trim().isEmpty()) {
 
                 request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin!");
                 request.getRequestDispatcher("/view/account/changePassword.jsp").forward(request, response);
@@ -77,9 +78,9 @@ public class ChangePasswordServlet extends HttpServlet {
             }
 
             boolean success = accountDAO.changePassword(
-                currentUser.getAccountID(), 
-                oldPassword, 
-                newPassword
+                    currentUser.getAccountID(),
+                    oldPassword,
+                    newPassword
             );
 
             if (success) {
