@@ -3,6 +3,7 @@ package hrms.model;
 import java.time.LocalTime;
 
 public class Shift {
+
     private int shiftID;
     private String name;
     private LocalTime checkin1;

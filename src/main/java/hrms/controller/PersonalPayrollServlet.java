@@ -6,7 +6,6 @@ import java.util.List;
 import hrms.dto.PayrollDTO;
 import hrms.model.Account;
 import hrms.service.PayrollService;
-import hrms.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,60 +20,103 @@ public class PersonalPayrollServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        PayrollService payrollService = new PayrollService();
         Account account = (Account) session.getAttribute("account");
+
         if (account == null) {
             response.sendRedirect(request.getContextPath() + "/authenticate");
             return;
         }
-        int userId = account.getUserID();
-        List<PayrollDTO> personalPayrolls = payrollService.getAllPayrollByUserId(userId);
-        if (personalPayrolls == null || personalPayrolls.isEmpty()) {
-            request.setAttribute("error", "Không có dữ liệu lương cá nhân.");
-        } else {
-            request.setAttribute("PersonalPayrolls", personalPayrolls);
-        }
-        request.getRequestDispatcher("/view/payroll/personalPayroll.jsp").forward(request, response);
-    }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        String monthStr = request.getParameter("month");
+        String yearStr = request.getParameter("year");
+        String pageStr = request.getParameter("page");
+        String itemsPerPageStr = request.getParameter("itemsPerPage");
 
-        String monthParam = request.getParameter("month");
-        String yearParam = request.getParameter("year");
-        int month;
-        int year;
-        HttpSession session = request.getSession();
-        Account account = (Account) session.getAttribute("account");
-        if (account == null) {
-            response.sendRedirect(request.getContextPath() + "/authenticate");
-            return;
-        }
-        int userId = account.getUserID();
-        UserService userService = new UserService();
-        if (userService.getUserById(userId) == null) {
-            response.sendRedirect(request.getContextPath() + "/authenticate");
-            return;
-        }
-        String fullName = userService.getUserById(userId).getFullname();
-        PayrollService payrollService = new PayrollService();
-        try {
-            month = Integer.parseInt(monthParam);
-            year = Integer.parseInt(yearParam);
-            List<PayrollDTO> personalPayrolls = payrollService.searchPayroll(fullName, "", "", month, year, "");
-            if (personalPayrolls == null || personalPayrolls.isEmpty()) {
-                request.setAttribute("error", "Không có dữ liệu lương cá nhân.");
-            } else {
-                request.setAttribute("PersonalPayrolls", personalPayrolls);
+        int itemsPerPage = 5;
+        if (itemsPerPageStr != null && !itemsPerPageStr.trim().isEmpty()) {
+            try {
+                itemsPerPage = Integer.parseInt(itemsPerPageStr);
+                if (itemsPerPage <= 0) {
+                    itemsPerPage = 5;
+                }
+            } catch (NumberFormatException e) {
+                itemsPerPage = 5;
             }
-            request.getRequestDispatcher("/view/payroll/personalPayroll.jsp").forward(request, response);
-        } catch (NumberFormatException e) {
-            request.setAttribute("error", "Tháng và năm phải là số nguyên.");
-            request.getRequestDispatcher("/view/payroll/personalPayroll.jsp").forward(request, response);
-            return;
         }
 
+        int currentPage = 1;
+        if (pageStr != null && !pageStr.trim().isEmpty()) {
+            try {
+                currentPage = Integer.parseInt(pageStr);
+                if (currentPage < 1) {
+                    currentPage = 1;
+                }
+            } catch (NumberFormatException e) {
+                currentPage = 1;
+            }
+        }
+
+        int userId = account.getUserID();
+        PayrollService payrollService = new PayrollService();
+
+        request.setAttribute("itemsPerPage", itemsPerPage);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("month", monthStr);
+        request.setAttribute("year", yearStr);
+
+        try {
+            List<PayrollDTO> personalPayrolls;
+
+            if ((monthStr != null && !monthStr.trim().isEmpty())
+                    || (yearStr != null && !yearStr.trim().isEmpty())) {
+
+                int month = 0;
+                int year = 0;
+
+                if (monthStr != null && !monthStr.trim().isEmpty()) {
+                    month = Integer.parseInt(monthStr);
+                }
+                if (yearStr != null && !yearStr.trim().isEmpty()) {
+                    year = Integer.parseInt(yearStr);
+                }
+
+                personalPayrolls = payrollService.searchPersonalPayroll(userId, month, year);
+            } else {
+                personalPayrolls = payrollService.getAllPayrollByUserId(userId);
+            }
+
+            if (personalPayrolls == null || personalPayrolls.isEmpty()) {
+                request.setAttribute("error", "No payroll records found.");
+                request.setAttribute("totalPages", 0);
+                request.getRequestDispatcher("/view/payroll/personalPayroll.jsp").forward(request, response);
+                return;
+            }
+
+            int totalPayrolls = personalPayrolls.size();
+            int totalPages = (int) Math.ceil((double) totalPayrolls / itemsPerPage);
+
+            if (currentPage > totalPages && totalPages > 0) {
+                currentPage = totalPages;
+            }
+            if (currentPage < 1) {
+                currentPage = 1;
+            }
+
+            int startIndex = (currentPage - 1) * itemsPerPage;
+            int endIndex = Math.min(startIndex + itemsPerPage, totalPayrolls);
+            List<PayrollDTO> paginatedPayrolls = personalPayrolls.subList(startIndex, endIndex);
+
+            request.setAttribute("PersonalPayrolls", paginatedPayrolls);
+            request.setAttribute("currentPage", currentPage);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("totalPayrolls", totalPayrolls);
+
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Invalid month or year format.");
+            request.setAttribute("totalPages", 0);
+        }
+
+        request.getRequestDispatcher("/view/payroll/personalPayroll.jsp").forward(request, response);
     }
 
 }

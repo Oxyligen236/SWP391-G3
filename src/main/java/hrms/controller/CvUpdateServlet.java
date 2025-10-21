@@ -31,14 +31,12 @@ public class CvUpdateServlet extends HttpServlet {
             if (isUpdated) {
                 response.sendRedirect(request.getContextPath() + "/cv/detail?id=" + cvId);
             } else {
-                request.setAttribute("errorMessage", "Câp nhật trạng thái CV thất bại.");
+                request.setAttribute("errorMessage", "Failed to update CV status.");
                 request.getRequestDispatcher("/view/cv/cv_Detail.jsp").forward(request, response);
             }
         } catch (NumberFormatException e) {
-            request.setAttribute("errorMessage", "ID CV không hợp lệ.");
+            request.setAttribute("errorMessage", "Invalid CV ID.");
             request.getRequestDispatcher("/view/cv/cv_Detail.jsp").forward(request, response);
         }
-
     }
-
 }
