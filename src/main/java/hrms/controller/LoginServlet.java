@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class LoginServlet extends HttpServlet {
 
     private static final int MIN_USERNAME_LENGTH = 4;
-    private static final int MIN_PASSWORD_LENGTH = 7;
+    private static final int MIN_PASSWORD_LENGTH = 6;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
