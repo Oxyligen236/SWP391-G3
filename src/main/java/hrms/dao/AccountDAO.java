@@ -9,6 +9,7 @@ import java.util.List;
 import hrms.dto.AccountDTO;
 import hrms.model.Account;
 import hrms.utils.DBContext;
+import hrms.utils.PasswordUtil;
 
 public class AccountDAO extends DBContext {
 
@@ -163,45 +164,46 @@ public class AccountDAO extends DBContext {
         }
     }
 
-    // public int migratePasswords() {
-    //     String selectSql = "SELECT UserID, Password FROM Account";
-    //     String updateSql = "UPDATE Account SET Password = ? WHERE UserID = ?";
-    //     int count = 0;
-    //     try (PreparedStatement selectStmt = connection.prepareStatement(selectSql); PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
-    //         ResultSet rs = selectStmt.executeQuery();
-    //         while (rs.next()) {
-    //             int userId = rs.getInt("UserID");
-    //             String plainPassword = rs.getString("Password");
-    //             if (!PasswordUtil.isHashed(plainPassword)) {
-    //                 String hashedPassword = PasswordUtil.hashPassword(plainPassword);
-    //                 updateStmt.setString(1, hashedPassword);
-    //                 updateStmt.setInt(2, userId);
-    //                 updateStmt.executeUpdate();
-    //                 count++;
-    //                 System.out.println("Migrated password for UserID: " + userId);
-    //             }
-    //         }
-    //         System.out.println("Migration completed. Total passwords hashed: " + count);
-    //     } catch (SQLException e) {
-    //         System.err.println("Error during password migration: " + e.getMessage());
-    //         e.printStackTrace();
-    //     }
-    //     return count;
-    // }
-    // public boolean areAllPasswordsHashed() {
-    //     String sql = "SELECT COUNT(*) as total FROM Account";
-    //     String hashedSql = "SELECT COUNT(*) as hashed FROM Account WHERE Password LIKE '%:%'";
-    //     try (PreparedStatement st1 = connection.prepareStatement(sql); PreparedStatement st2 = connection.prepareStatement(hashedSql)) {
-    //         ResultSet rs1 = st1.executeQuery();
-    //         ResultSet rs2 = st2.executeQuery();
-    //         if (rs1.next() && rs2.next()) {
-    //             int total = rs1.getInt("total");
-    //             int hashed = rs2.getInt("hashed");
-    //             return total == hashed;
-    //         }
-    //     } catch (SQLException e) {
-    //         System.err.println("Error checking password status: " + e.getMessage());
-    //     }
-    //     return false;
-    // }
+    public int migratePasswords() {
+        String selectSql = "SELECT UserID, Password FROM Account";
+        String updateSql = "UPDATE Account SET Password = ? WHERE UserID = ?";
+        int count = 0;
+        try (PreparedStatement selectStmt = connection.prepareStatement(selectSql); PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
+            ResultSet rs = selectStmt.executeQuery();
+            while (rs.next()) {
+                int userId = rs.getInt("UserID");
+                String plainPassword = rs.getString("Password");
+                if (!PasswordUtil.isHashed(plainPassword)) {
+                    String hashedPassword = PasswordUtil.hashPassword(plainPassword);
+                    updateStmt.setString(1, hashedPassword);
+                    updateStmt.setInt(2, userId);
+                    updateStmt.executeUpdate();
+                    count++;
+                    System.out.println("Migrated password for UserID: " + userId);
+                }
+            }
+            System.out.println("Migration completed. Total passwords hashed: " + count);
+        } catch (SQLException e) {
+            System.err.println("Error during password migration: " + e.getMessage());
+            System.out.println("Migration halted. Total passwords hashed before error: " + count);
+        }
+        return count;
+    }
+
+    public boolean areAllPasswordsHashed() {
+        String sql = "SELECT COUNT(*) as total FROM Account";
+        String hashedSql = "SELECT COUNT(*) as hashed FROM Account WHERE Password LIKE '%:%'";
+        try (PreparedStatement st1 = connection.prepareStatement(sql); PreparedStatement st2 = connection.prepareStatement(hashedSql)) {
+            ResultSet rs1 = st1.executeQuery();
+            ResultSet rs2 = st2.executeQuery();
+            if (rs1.next() && rs2.next()) {
+                int total = rs1.getInt("total");
+                int hashed = rs2.getInt("hashed");
+                return total == hashed;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking password status: " + e.getMessage());
+        }
+        return false;
+    }
 }
