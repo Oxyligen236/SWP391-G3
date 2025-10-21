@@ -1,4 +1,4 @@
-
+/* Styles hiện có */
 header {
   background-color: #f9f9f9;
   border-bottom: 1px solid #ddd;
@@ -31,7 +31,6 @@ header {
   background-color: #45a049;
 }
 
-
 nav {
   background-color: #333;
 }
@@ -56,7 +55,6 @@ nav ul li a:hover {
   background-color: #555;
 }
 
-
 footer {
   background-color: #f2f2f2;
   padding: 30px 60px;
@@ -70,7 +68,6 @@ footer {
   align-items: flex-start;
   flex-wrap: wrap;
 }
-
 
 .footer-left {
   flex: 1;
@@ -100,7 +97,6 @@ footer {
   text-decoration: underline;
 }
 
-
 .footer-right {
   flex: 2;
   min-width: 300px;
@@ -112,6 +108,131 @@ footer {
   line-height: 1.6;
   color: #555;
   font-size: 14px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+}
+
+.avatar-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.avatar-btn img {
+  border-radius: 50%;
+  border: 2px solid #fff;
+  width: 120px;
+  height: 120px;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -350px;
+  width: 250px;
+  height: 100%;
+  background-color: #f9f9f9;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: left 0.3s ease;
+  padding: 20px;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sidebar-header img {
+  border-radius: 50%;
+  border: 2px solid #fff;
+  width: 40px;
+  height: 40px;
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.sidebar ul {
+  list-style: none; /* Xóa dấu chấm cho tất cả các ul trong sidebar */
+  padding: 0;
+}
+
+.sidebar ul li {
+  list-style: none; /* Xác định rõ cho li */
+  margin: 15px 0;
+}
+
+/* Định dạng cho thành phần mẹ */
+.sidebar ul li a {
+  text-decoration: none;
+  color: #1a1a1a; /* Màu đen đậm */
+  font-size: 18px; /* Kích thước lớn hơn */
+  font-weight: 600; /* Làm đậm */
+  display: block;
+  padding: 10px 0;
+}
+
+/* Định dạng khi hover cho thành phần mẹ */
+.sidebar ul li a:hover {
+  color: #007bff; /* Màu xanh dương khi hover */
+}
+
+/* Định dạng cho thành phần con trong submenu */
+.sidebar .submenu li a {
+  text-decoration: none;
+  color: #666666; /* Màu xám nhạt */
+  font-size: 14px; /* Kích thước nhỏ hơn */
+  font-weight: 400; /* Font bình thường */
+  display: block;
+  padding: 5px 0;
+}
+
+/* Định dạng khi hover cho thành phần con */
+.sidebar .submenu li a:hover {
+  color: #0056b3; /* Màu xanh đậm hơn khi hover */
+}
+
+.submenu {
+  display: none; /* Ẩn ban đầu */
+  list-style: none;
+  padding-left: 20px;
+  margin: 5px 0 0 0;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #333;
+  padding: 5px;
+  width: 30px;
+  text-align: center;
+  z-index: 1001;
+}
+
+.close-btn:hover {
+  color: #007bff;
 }
 
 @media (max-width: 768px) {

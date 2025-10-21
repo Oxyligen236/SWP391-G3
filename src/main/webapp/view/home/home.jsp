@@ -27,6 +27,12 @@
         </br>
         <a href="<c:url value='/updateRole'/>">updateRole</a>
         </br>
+        <a href="<c:url value='/updateDepartment'/>">updateDepartment</a>
+        </br>
+        <a href="<c:url value='/updatePosition'/>">updatePosition</a>
+        </br>
+        <a href="<c:url value='/viewContracts'/>">ViewContractList</a>
+        </br>
         <a href="<c:url value='/viewContracts'/>">ViewContractList</a>
         </br>
         <a href="<c:url value='/account/view'/>">Account List (View/Edit/Toggle)</a><br />

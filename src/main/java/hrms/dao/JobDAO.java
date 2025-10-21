@@ -1,14 +1,11 @@
 package hrms.dao;
 
-import static com.mysql.cj.conf.PropertyKey.PASSWORD;
-import static com.mysql.cj.conf.PropertyKey.USER;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import hrms.model.JobDescription;
 import hrms.utils.DBContext;
-import static jakarta.servlet.SessionTrackingMode.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -106,4 +103,20 @@ public class JobDAO extends DBContext {
         }
         return null;
     }
+    
+    public JobDescription getJobByJobId(int jobId) {
+    String sql = "SELECT * FROM Job_Description WHERE jobID = ?";
+    try {
+        PreparedStatement st = connection.prepareStatement(sql);
+        st.setInt(1, jobId);
+        ResultSet rs = st.executeQuery();
+        if (rs.next()) {
+            return extractJobFromResultSet(rs);
+        }
+    } catch (SQLException e) {
+        System.out.println(e);
+    }
+    return null;
+}
+
 }

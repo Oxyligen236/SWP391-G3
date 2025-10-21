@@ -32,7 +32,7 @@ public class Contract {
         this.signDate = signDate;
         this.duration = duration;
         this.baseSalary = baseSalary;
-        this.note = note;
+        this.note = note; 
         this.typeID = typeID;
         this.positionId = positionId;
         this.signerId = signerId;

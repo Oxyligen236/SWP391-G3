@@ -3,6 +3,7 @@ pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib
 uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 
 <html lang="en">
@@ -110,7 +111,7 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
               <td>${contract.endDate}</td>
               <td>${contract.signDate}</td>
               <td>${contract.duration}</td>
-              <td>${contract.baseSalary}</td>
+              <td><fmt:formatNumber value="${contract.baseSalary}" type="number" groupingUsed="true" /> VNĐ</td>
               <td>${contract.typeName}</td>
               <td>${contract.note}</td>
               <td><a href="<c:url value='/viewContracts?action=detail&id=${contract.contractId}'/>">Chi tiết</a></td>
@@ -167,7 +168,7 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
           </div>
       </div>
       <div class="right-actions">
-        <a href="<c:url value='/view/home/home.jsp'/>" class="back-link">Back to Home</a>
+        <a href="<c:url value='/home'/>" class="back-link">Back to Home</a>
       </div>
     </div>
 

@@ -15,6 +15,15 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
         const userIdInput = document.getElementById("userID");
         const nameInput = document.getElementById("name");
         const userError = document.getElementById("userError");
+        
+        const form = document.querySelector("form");
+        const signDateInput = document.getElementById("signDate");
+        const startDateInput = document.getElementById("startDate");
+        const endDateInput = document.getElementById("endDate");
+        const signDateError = document.getElementById("signDateError");
+        const startDateError = document.getElementById("startDateError");
+        const endDateError = document.getElementById("endDateError");
+
         findBtn.addEventListener("click", function (e) {
           e.preventDefault();
           userError.textContent = "";
@@ -46,6 +55,47 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
               userError.textContent = "Lỗi khi tìm: " + err.message;
             });
         });
+
+
+        form.addEventListener("submit", function (e) {
+
+          signDateError.textContent = "";
+          startDateError.textContent = "";
+          endDateError.textContent = "";
+
+          let hasError = false;
+
+          const signDate = new Date(signDateInput.value);
+          const startDate = new Date(startDateInput.value);
+          const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+
+          if (signDate >= startDate) {
+            signDateError.textContent = "Ngày ký phải trước ngày bắt đầu";
+            hasError = true;
+          }
+
+          if (endDate && endDate <= startDate) {
+            endDateError.textContent = "Ngày kết thúc phải sau ngày bắt đầu";
+            hasError = true;
+          }
+
+          if (hasError) {
+            e.preventDefault();
+          }
+        });
+
+        signDateInput.addEventListener("change", function() {
+          signDateError.textContent = "";
+        });
+
+        startDateInput.addEventListener("change", function() {
+          startDateError.textContent = "";
+          signDateError.textContent = "";
+        });
+
+        endDateInput.addEventListener("change", function() {
+          endDateError.textContent = "";
+        });
       });
     </script>
   </head>
@@ -59,7 +109,7 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
         <input type="hidden" name="action" value="insert" />
         <div class="form-group">
           <label for="name">Họ và tên:</label>
-          <input type="text" id="name" name="name" required />
+          <input type="text" id="name" name="name" required readonly style="background-color: #f0f0f0; cursor: not-allowed;" />
         </div>
 
         <div class="form-group">
@@ -84,16 +134,19 @@ uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
         <div class="form-group">
           <label for="signDate">Ngày ký:</label>
           <input type="date" id="signDate" name="signDate" required />
+          <div id="signDateError" style="color: red; font-size: 0.9em; margin-top: 4px"></div>
         </div>
 
         <div class="form-group">
           <label for="startDate">Ngày bắt đầu:</label>
           <input type="date" id="startDate" name="startDate" required />
+          <div id="startDateError" style="color: red; font-size: 0.9em; margin-top: 4px"></div>
         </div>
 
         <div class="form-group">
           <label for="endDate">Ngày kết thúc:</label>
           <input type="date" id="endDate" name="endDate" />
+          <div id="endDateError" style="color: red; font-size: 0.9em; margin-top: 4px"></div>
         </div>
 
         <div class="form-group">
