@@ -107,7 +107,7 @@ public class CompanyPayrollServlet extends HttpServlet {
             }
 
             if (payrolls == null || payrolls.isEmpty()) {
-                request.setAttribute("error", "Không tìm thấy dữ liệu lương.");
+                request.setAttribute("error", "No payroll data found.");
                 request.setAttribute("totalPages", 0);
                 request.setAttribute("totalPayrolls", 0);
                 request.getRequestDispatcher("/view/payroll/companyPayroll.jsp").forward(request, response);
@@ -134,7 +134,7 @@ public class CompanyPayrollServlet extends HttpServlet {
             request.setAttribute("totalPayrolls", totalPayrolls);
 
         } catch (NumberFormatException e) {
-            request.setAttribute("error", "Định dạng tháng hoặc năm không hợp lệ.");
+            request.setAttribute("error", "Invalid month or year format.");
             request.setAttribute("totalPages", 0);
             request.setAttribute("totalPayrolls", 0);
         }

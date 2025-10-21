@@ -15,6 +15,9 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/authenticate")
 public class LoginServlet extends HttpServlet {
 
+    private static final int MIN_USERNAME_LENGTH = 4;
+    private static final int MIN_PASSWORD_LENGTH = 7;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -40,8 +43,24 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         String remember = request.getParameter("remember");
 
+        // Validate username length
+        if (username == null || username.trim().length() <= MIN_USERNAME_LENGTH) {
+            request.setAttribute("errorMessage", "Username must be more than " + MIN_USERNAME_LENGTH + " characters");
+            request.setAttribute("username", username);
+            request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+            return;
+        }
+
+        // Validate password length
+        if (password == null || password.length() <= MIN_PASSWORD_LENGTH) {
+            request.setAttribute("errorMessage", "Password must be more than " + MIN_PASSWORD_LENGTH + " characters");
+            request.setAttribute("username", username);
+            request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+            return;
+        }
+
         AccountDAO accountDao = new AccountDAO();
-        Account account = accountDao.getAccountByUsername(username);
+        Account account = accountDao.getAccountByUsername(username.trim());
 
         if (account != null && account.isIsActive()) {
             boolean passwordMatch = false;
@@ -59,7 +78,7 @@ public class LoginServlet extends HttpServlet {
 
             if (passwordMatch) {
                 if ("on".equals(remember)) {
-                    Cookie usernameCookie = new Cookie("username", username);
+                    Cookie usernameCookie = new Cookie("username", username.trim());
                     Cookie rememberCookie = new Cookie("rememberMe", "true");
                     usernameCookie.setMaxAge(7 * 24 * 60 * 60);
                     rememberCookie.setMaxAge(7 * 24 * 60 * 60);
@@ -81,6 +100,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         request.setAttribute("errorMessage", "Invalid username or password");
+        request.setAttribute("username", username);
         request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
     }
 }

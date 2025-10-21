@@ -65,6 +65,7 @@ public class CvServlet extends HttpServlet {
             if (jobIdInt > 0 || name != null || email != null || phone != null || gender != null || status != null) {
                 cvs = cvService.searchCVs(jobIdInt, name, email, phone, gender, status);
                 request.getSession().setAttribute("isFiltering", true);
+                request.getSession().setAttribute("filteredCVs", cvs);
             } else {
                 cvs = cvService.getAllCVJobTitle();
                 request.getSession().setAttribute("isFiltering", false);
@@ -108,16 +109,16 @@ public class CvServlet extends HttpServlet {
             request.setAttribute("jobID", jobID);
 
             request.getRequestDispatcher("/view/cv/cv_List.jsp").forward(request, response);
+
         } catch (NumberFormatException e) {
-            request.setAttribute("jobID_error", "Định dạng Job_ID không hợp lệ");
+            request.setAttribute("jobID_error", "Invalid Job ID format");
             request.getRequestDispatcher("/view/cv/cv_List.jsp").forward(request, response);
         }
-
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        // Implementation if needed
     }
 }
