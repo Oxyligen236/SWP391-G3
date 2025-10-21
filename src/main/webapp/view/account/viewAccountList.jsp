@@ -11,14 +11,16 @@
     <link rel="stylesheet" href="<c:url value='/css/view-accountlist.css'/>">
 </head>
 <body>
-<div class="container">
+<div class="container py-4">
+    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="fas fa-users"></i> Quản Lý Tài Khoản</h2>
         <a href="<c:url value='/account/create'/>" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Thêm Tài Khoản Mới
+            <i class="fas fa-plus"></i> Add New Account
         </a>
     </div>
 
+    <!-- Alerts -->
     <c:if test="${not empty successMessage}">
         <div class="alert alert-success alert-dismissible fade show">
             ${successMessage}
@@ -32,93 +34,144 @@
         </div>
     </c:if>
 
+    <!-- Filter & Search Form -->
+    <form class="row g-2 mb-3 align-items-end" method="get" action="<c:url value='/account/view'/>">
+        <div class="col-md-3">
+            <label class="form-label">Search</label>
+            <input type="text" name="search" value="${search}" class="form-control"
+                   placeholder="Enter name or username...">
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Role</label>
+            <select name="role" class="form-select">
+                <option value="">All</option>
+                <option value="1" ${roleFilter == '1' ? 'selected' : ''}>Admin</option>
+                <option value="2" ${roleFilter == '2' ? 'selected' : ''}>Staff</option>
+                <option value="3" ${roleFilter == '3' ? 'selected' : ''}>User</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-select">
+                <option value="">All</option>
+                <option value="active" ${statusFilter == 'active' ? 'selected' : ''}>Active</option>
+                <option value="inactive" ${statusFilter == 'inactive' ? 'selected' : ''}>Inactive</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Sort by</label>
+            <select name="sortBy" class="form-select">
+                <option value="">Default</option>
+                <option value="username" ${sortBy == 'username' ? 'selected' : ''}>Username</option>
+                <option value="fullName" ${sortBy == 'fullName' ? 'selected' : ''}>Full Name</option>
+                <option value="role" ${sortBy == 'role' ? 'selected' : ''}>Role</option>
+                <option value="status" ${sortBy == 'status' ? 'selected' : ''}>Status</option>
+            </select>
+        </div>
+
+        <div class="col-md-1">
+            <label class="form-label">Order</label>
+            <select name="sortOrder" class="form-select">
+                <option value="ASC" ${sortOrder == 'ASC' ? 'selected' : ''}>↑ Asc</option>
+                <option value="DESC" ${sortOrder == 'DESC' ? 'selected' : ''}>↓ Desc</option>
+            </select>
+        </div>
+
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-search"></i> Filter
+            </button>
+            <a href="<c:url value='/account/view'/>" class="btn btn-secondary w-100" title="Reset">
+                <i class="fas fa-rotate-right"></i> Reset
+            </a>
+        </div>
+    </form>
+
+    <!-- Table -->
     <div class="table-responsive">
         <table class="table table-hover table-bordered align-middle">
             <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Họ Tên</th>
-                <th>Vai Trò</th>
-                <th>Trạng Thái</th>
-                <th style="width: 280px;">Thao Tác</th>
-            </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th style="width: 250px;">Actions</th>
+                </tr>
             </thead>
             <tbody>
-            <c:forEach var="account" items="${accountList}">
-                <tr>
-                    <td>${account.accountID}</td>
-                    <td><strong>${account.username}</strong></td>
-                    <td>${account.fullName}</td>
-                    <td><span class="badge bg-info">${account.roleName}</span></td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${account.active}">
-                                <span class="status-badge status-active">
-                                    <i class="fas fa-check-circle"></i> Hoạt động
-                                </span>
-                            </c:when>
-                            <c:otherwise>
-                                <span class="status-badge status-inactive">
-                                    <i class="fas fa-times-circle"></i> Vô hiệu
-                                </span>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>
-                        <a href="<c:url value='/account/view?id=${account.accountID}'/>"
-                           class="btn btn-sm btn-info btn-action" title="Xem chi tiết">
-                            <i class="fas fa-eye"></i> Xem
-                        </a>
-                        <a href="<c:url value='/account/edit?id=${account.accountID}'/>"
-                           class="btn btn-sm btn-warning btn-action" title="Chỉnh sửa">
-                            <i class="fas fa-edit"></i> Sửa
-                        </a>
-
-                        <button type="button"
-                                class="btn btn-sm ${account.active ? 'btn-danger' : 'btn-success'} btn-action"
-                                data-bs-toggle="modal"
-                                data-bs-target="#toggleModal${account.accountID}"
-                                title="${account.active ? 'Vô hiệu hóa' : 'Kích hoạt'}">
-                            <i class="fas ${account.active ? 'fa-ban' : 'fa-check'}"></i>
-                            ${account.active ? 'Disable' : 'Active'}
-                        </button>
-
-                        <!-- Modal xác nhận toggle status -->
-                        <div class="modal fade" id="toggleModal${account.accountID}" tabindex="-1">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Xác Nhận</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Bạn có chắc chắn muốn
-                                        <strong>${account.active ? 'vô hiệu hóa (Disable)' : 'kích hoạt (Active)'}</strong>
-                                        tài khoản <strong>${account.username}</strong>?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                        <form action="<c:url value='/account/toggle-status'/>" method="post" style="display:inline;">
-                                            <input type="hidden" name="accountID" value="${account.accountID}">
-                                            <button type="submit" class="btn ${account.active ? 'btn-danger' : 'btn-success'}">
-                                                Xác nhận
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </c:forEach>
+                <c:forEach var="account" items="${accounts}">
+                    <tr>
+                        <td>${account.accountID}</td>
+                        <td><strong>${account.username}</strong></td>
+                        <td>${account.fullName}</td>
+                        <td><span class="badge bg-info">${account.roleName}</span></td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${account.active}">
+                                    <span class="badge bg-success"><i class="fas fa-check"></i> Active</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="badge bg-danger"><i class="fas fa-times"></i> Inactive</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td>
+                            <a href="<c:url value='/account/view?id=${account.accountID}'/>"
+                               class="btn btn-sm btn-info"><i class="fas fa-eye"></i> View</a>
+                            <a href="<c:url value='/account/updateRole?id=${account.accountID}'/>"
+                               class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                            <form action="<c:url value='/account/toggle-status'/>" method="post" style="display:inline;">
+                                <input type="hidden" name="accountID" value="${account.accountID}">
+                                <button type="submit" class="btn btn-sm ${account.active ? 'btn-danger' : 'btn-success'}">
+                                    <i class="fas ${account.active ? 'fa-ban' : 'fa-check'}"></i>
+                                    ${account.active ? 'Disable' : 'Activate'}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </c:forEach>
             </tbody>
         </table>
     </div>
 
-    <c:if test="${empty accountList}">
-        <div class="alert alert-info text-center">
-            <i class="fas fa-info-circle"></i> Chưa có tài khoản nào trong hệ thống.
+    <!-- Items per page + Pagination -->
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <!-- Items per page -->
+        <form method="get" action="<c:url value='/account/view'/>" class="d-flex align-items-center gap-2">
+            <label for="pageSize" class="form-label mb-0">Items per page:</label>
+            <select id="pageSize" name="pageSize" class="form-select" style="width: 80px;"
+                    onchange="this.form.submit()">
+                <option value="5" ${pageSize == 5 ? 'selected' : ''}>5</option>
+                <option value="10" ${pageSize == 10 ? 'selected' : ''}>10</option>
+                <option value="20" ${pageSize == 20 ? 'selected' : ''}>20</option>
+            </select>
+        </form>
+
+        <!-- Pagination -->
+        <c:if test="${totalPages > 1}">
+            <nav>
+                <ul class="pagination justify-content-center mb-0">
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <li class="page-item ${i == currentPage ? 'active' : ''}">
+                            <a class="page-link"
+                               href="?page=${i}&search=${search}&role=${roleFilter}&status=${statusFilter}&sortBy=${sortBy}&sortOrder=${sortOrder}&pageSize=${pageSize}">
+                                ${i}
+                            </a>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </nav>
+        </c:if>
+    </div>
+
+    <c:if test="${empty accounts}">
+        <div class="alert alert-info text-center mt-3">
+            <i class="fas fa-info-circle"></i> No accounts found.
         </div>
     </c:if>
 </div>

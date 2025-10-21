@@ -152,7 +152,7 @@ public class AccountDAO extends DBContext {
         return null;
     }
 
-    public boolean updatePassword(int userId, String newPassword) {
+      public boolean updatePassword(int userId, String newPassword) {
         String sql = "update Account set Password = ? where UserID = ?";
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setString(1, newPassword);
@@ -205,5 +205,169 @@ public class AccountDAO extends DBContext {
             System.err.println("Error checking password status: " + e.getMessage());
         }
         return false;
+    }
+
+     public boolean changePassword(int accountId, String oldPassword, String newPassword) {
+        String verifySql = "SELECT Password FROM Account WHERE AccountID = ?";
+        String updateSql = "UPDATE Account SET Password = ? WHERE AccountID = ?";
+
+        PreparedStatement verifyStmt = null;
+        PreparedStatement updateStmt = null;
+        ResultSet rs = null;
+
+        try {
+            // Bước 1: Kiểm tra mật khẩu cũ
+            verifyStmt = connection.prepareStatement(verifySql);
+            verifyStmt.setInt(1, accountId);
+            rs = verifyStmt.executeQuery();
+
+            if (rs.next()) {
+                String dbPassword = rs.getString("Password");
+
+                if (!dbPassword.equals(oldPassword)) {
+                    return false;
+                }
+
+            } else {
+                return false;
+            }
+
+            updateStmt = connection.prepareStatement(updateSql);
+            updateStmt.setString(1, newPassword);
+            updateStmt.setInt(2, accountId);
+
+            int rows = updateStmt.executeUpdate();
+
+            if (rows > 0) {
+
+                return true;
+            } else {
+
+                return false;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi đổi mật khẩu: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (verifyStmt != null)
+                    verifyStmt.close();
+                if (updateStmt != null)
+                    updateStmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+  public List<AccountDTO> getFilteredAccounts(
+            String search, String roleFilter, String statusFilter,
+            String sortBy, String sortOrder, int page, int pageSize) throws SQLException {
+
+        List<AccountDTO> list = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT a.AccountID, a.Username, u.FullName, a.Is_active, r.Name AS RoleName " +
+                        "FROM Account a " +
+                        "JOIN Users u ON a.UserID = u.UserID " +
+                        "JOIN Role r ON a.RoleID = r.RoleID WHERE 1=1 "
+        );
+
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append("AND (u.FullName LIKE ? OR a.Username LIKE ?) ");
+        }
+
+        if (roleFilter != null && !roleFilter.equalsIgnoreCase("all") && !roleFilter.isEmpty()) {
+            sql.append("AND r.RoleID = ? ");
+        }
+
+        if (statusFilter != null && !statusFilter.equalsIgnoreCase("all") && !statusFilter.isEmpty()) {
+            sql.append("AND a.Is_active = ? ");
+        }
+
+        if ("role".equalsIgnoreCase(sortBy)) {
+            sql.append("ORDER BY r.Name ");
+        } else if ("name".equalsIgnoreCase(sortBy)) {
+            sql.append("ORDER BY u.FullName ");
+        } else {
+            sql.append("ORDER BY a.AccountID ");
+        }
+
+        sql.append(" ").append("desc".equalsIgnoreCase(sortOrder) ? "DESC " : "ASC ");
+        sql.append("LIMIT ? OFFSET ?");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int index = 1;
+
+            if (search != null && !search.trim().isEmpty()) {
+                ps.setString(index++, "%" + search + "%");
+                ps.setString(index++, "%" + search + "%");
+            }
+
+            if (roleFilter != null && !roleFilter.equalsIgnoreCase("all") && !roleFilter.isEmpty()) {
+                ps.setInt(index++, Integer.parseInt(roleFilter));
+            }
+
+            if (statusFilter != null && !statusFilter.equalsIgnoreCase("all") && !statusFilter.isEmpty()) {
+                ps.setBoolean(index++, "active".equalsIgnoreCase(statusFilter));
+            }
+
+            ps.setInt(index++, pageSize);
+            ps.setInt(index, (page - 1) * pageSize);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                AccountDTO dto = new AccountDTO();
+                dto.setAccountID(rs.getInt("AccountID"));
+                dto.setUsername(rs.getString("Username"));
+                dto.setFullName(rs.getString("FullName"));
+                dto.setActive(rs.getBoolean("Is_active"));
+                dto.setRoleName(rs.getString("RoleName"));
+                list.add(dto);
+            }
+        }
+
+        return list;
+    }
+
+    public int countFilteredAccounts(String search, String roleFilter, String statusFilter) throws SQLException {
+        StringBuilder sql = new StringBuilder(
+                "SELECT COUNT(*) FROM Account a " +
+                        "JOIN Users u ON a.UserID = u.UserID " +
+                        "JOIN Role r ON a.RoleID = r.RoleID WHERE 1=1 "
+        );
+
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append("AND (u.FullName LIKE ? OR a.Username LIKE ?) ");
+        }
+        if (roleFilter != null && !roleFilter.equalsIgnoreCase("all") && !roleFilter.isEmpty()) {
+            sql.append("AND r.RoleID = ? ");
+        }
+        if (statusFilter != null && !statusFilter.equalsIgnoreCase("all") && !statusFilter.isEmpty()) {
+            sql.append("AND a.Is_active = ? ");
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int index = 1;
+            if (search != null && !search.trim().isEmpty()) {
+                ps.setString(index++, "%" + search + "%");
+                ps.setString(index++, "%" + search + "%");
+            }
+            if (roleFilter != null && !roleFilter.equalsIgnoreCase("all") && !roleFilter.isEmpty()) {
+                ps.setInt(index++, Integer.parseInt(roleFilter));
+            }
+            if (statusFilter != null && !statusFilter.equalsIgnoreCase("all") && !statusFilter.isEmpty()) {
+                ps.setBoolean(index++, "active".equalsIgnoreCase(statusFilter));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        }
+        return 0;
     }
 }
