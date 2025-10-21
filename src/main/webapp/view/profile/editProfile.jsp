@@ -10,141 +10,16 @@
     <title>Chỉnh Sửa Thông Tin Cá Nhân - HRMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a2e0e6ad53.js" crossorigin="anonymous"></script>
-    <style>
-        body {
-            background: linear-gradient(135deg, #ffe6f0, #ffb3d1);
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .profile-container {
-            max-width: 900px;
-            background: #fff;
-            margin: 40px auto;
-            padding: 30px 40px;
-            border-radius: 20px;
-            box-shadow: 0 12px 40px rgba(255, 105, 180, 0.25);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .profile-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 50px rgba(255, 105, 180, 0.35);
-        }
-
-        .profile-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .profile-header h2 {
-            font-size: 28px;
-            font-weight: 600;
-            color: #d63384;
-            margin-bottom: 5px;
-        }
-
-        .profile-header hr {
-            width: 60px;
-            border-top: 3px solid #ff4da6;
-            margin: 0 auto;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: #d63384;
-            margin-top: 8px;
-            display: block;
-        }
-
-        input,
-        select {
-            font-size: 16px;
-            color: #2c3e50;
-            margin-top: 4px;
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #ffc0cb;
-            background: #fff0f5;
-            transition: border 0.3s, box-shadow 0.3s;
-        }
-
-        input:focus,
-        select:focus {
-            border-color: #ff4da6;
-            box-shadow: 0 0 8px rgba(255, 77, 166, 0.3);
-            outline: none;
-        }
-
-        .btn-custom {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 30px;
-            padding: 12px 30px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .btn-custom i {
-            margin-right: 8px;
-        }
-
-        .btn-edit {
-            background: linear-gradient(135deg, #ff80ab, #ff4da6);
-            color: #fff;
-            border: none;
-            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
-        }
-
-        .btn-edit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.6);
-        }
-
-        .btn-back {
-            background: #ffe4eb;
-            color: #d63384;
-            border: none;
-        }
-
-        .btn-back:hover {
-            background: #ffd6e0;
-            color: #b91d73;
-        }
-
-        .text-center.mt-4 {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        @media (max-width:768px) {
-            .profile-container {
-                padding: 20px;
-            }
-
-            .btn-custom {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="<c:url value='/css/edit-profile.css'/>">
 </head>
 
 <body>
-
     <div class="profile-container">
-        <div class="profile-header">
-            <h2>Chỉnh Sửa Thông Tin Cá Nhân</h2>
+        <div class="profile-header text-center mb-4">
+            <h2 class="fw-bold text-primary">Chỉnh Sửa Thông Tin Cá Nhân</h2>
             <hr>
         </div>
 
-        <!-- Thông báo lỗi / thành công -->
         <c:if test="${not empty successMessage}">
             <div class="alert alert-success text-center">${successMessage}</div>
         </c:if>
@@ -152,27 +27,28 @@
             <div class="alert alert-danger text-center">${errorMessage}</div>
         </c:if>
 
-        <form action="<c:url value='/edit' />" method="post">
+        <form action="<c:url value='/edit' />" method="post" class="p-4 bg-light rounded shadow-sm">
+            <!-- Thông tin cơ bản -->
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label class="info-label">Họ và tên:</label>
-                    <input type="text" name="fullname" value="${user.fullname}" required>
+                    <label class="info-label fw-semibold">Họ và tên:</label>
+                    <input type="text" class="form-control" name="fullname" value="${user.fullname}" required>
                 </div>
                 <div class="col-md-6">
-                    <label class="info-label">CCCD:</label>
-                    <input type="text" name="cccd" value="${user.cccd}">
+                    <label class="info-label fw-semibold">CCCD:</label>
+                    <input type="text" class="form-control" name="cccd" value="${user.cccd}">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label class="info-label">Ngày sinh:</label>
-                    <input type="date" name="birthDate"
+                    <label class="info-label fw-semibold">Ngày sinh:</label>
+                    <input type="date" class="form-control" name="birthDate"
                         value="<fmt:formatDate value='${user.birthDate}' pattern='yyyy-MM-dd'/>">
                 </div>
                 <div class="col-md-6">
-                    <label class="info-label">Giới tính:</label>
-                    <select name="gender">
+                    <label class="info-label fw-semibold">Giới tính:</label>
+                    <select name="gender" class="form-select">
                         <option value="Male" ${user.gender=='Male' ? 'selected' : '' }>Nam</option>
                         <option value="Female" ${user.gender=='Female' ? 'selected' : '' }>Nữ</option>
                         <option value="Other" ${user.gender=='Other' ? 'selected' : '' }>Khác</option>
@@ -182,34 +58,67 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label class="info-label">Số điện thoại:</label>
-                    <input type="text" name="phoneNumber" value="${user.phoneNumber}">
+                    <label class="info-label fw-semibold">Số điện thoại:</label>
+                    <input type="text" class="form-control" name="phoneNumber" value="${user.phoneNumber}">
                 </div>
                 <div class="col-md-6">
-                    <label class="info-label">Email:</label>
-                    <input type="email" name="email" value="${user.email}">
+                    <label class="info-label fw-semibold">Email:</label>
+                    <input type="email" class="form-control" name="email" value="${user.email}">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-12">
-                    <label class="info-label">Địa chỉ:</label>
-                    <input type="text" name="address" value="${user.address}">
+                    <label class="info-label fw-semibold">Địa chỉ:</label>
+                    <input type="text" class="form-control" name="address" value="${user.address}">
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <label class="info-label">Dân tộc:</label>
-                    <input type="text" name="ethnicity" value="${user.ethnicity}">
+                    <label class="info-label fw-semibold">Dân tộc:</label>
+                    <input type="text" class="form-control" name="ethnicity" value="${user.ethnicity}">
                 </div>
                 <div class="col-md-4">
-                    <label class="info-label">Quốc tịch:</label>
-                    <input type="text" name="nation" value="${user.nation}">
+                    <label class="info-label fw-semibold">Quốc tịch:</label>
+                    <input type="text" class="form-control" name="nation" value="${user.nation}">
                 </div>
+            </div>
+
+            <!-- Phần thông tin công việc -->
+            <hr class="my-4">
+            <h5 class="text-primary fw-bold mb-3"><i class="fas fa-briefcase"></i> Thông Tin Công Việc</h5>
+
+            <div class="row mb-3">
                 <div class="col-md-4">
-                    <label class="info-label">Trình độ học vấn:</label>
-                    <select name="degreeId">
+                    <label class="info-label fw-semibold">Phòng ban:</label>
+                    <select name="departmentId" class="form-select" 
+                        <c:if test="${roleId != 2 && roleId != 3}">disabled</c:if>>
+                        <option value="">-- Chọn phòng ban --</option>
+                        <c:forEach var="dept" items="${departmentList}">
+                            <option value="${dept.departmentId}" ${user.departmentId==dept.departmentId?'selected':''}>
+                                ${dept.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="info-label fw-semibold">Chức vụ:</label>
+                    <select name="positionId" class="form-select" 
+                        <c:if test="${roleId != 2 && roleId != 3}">disabled</c:if>>
+                        <option value="">-- Chọn chức vụ --</option>
+                        <c:forEach var="pos" items="${positionList}">
+                            <option value="${pos.positionId}" ${user.positionId==pos.positionId?'selected':''}>
+                                ${pos.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="info-label fw-semibold">Bằng cấp:</label>
+                    <select name="degreeId" class="form-select">
                         <option value="">-- Chọn bằng cấp --</option>
                         <c:forEach var="d" items="${degreeList}">
                             <option value="${d.degreeId}" ${user.degreeId==d.degreeId?'selected':''}>
@@ -221,11 +130,11 @@
             </div>
 
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-edit btn-custom">
-                    <i class="fas fa-save"></i>Lưu thay đổi
+                <button type="submit" class="btn btn-success px-4">
+                    <i class="fas fa-save"></i> Lưu thay đổi
                 </button>
-                <a href="<c:url value='/view' />" class="btn btn-back btn-custom">
-                    <i class="fas fa-arrow-left"></i>Quay lại
+                <a href="<c:url value='/view' />" class="btn btn-secondary px-4">
+                    <i class="fas fa-arrow-left"></i> Quay lại
                 </a>
             </div>
         </form>
@@ -233,5 +142,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

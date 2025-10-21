@@ -20,11 +20,11 @@ public class CreateAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        
+
         // Kiểm tra quyền admin
-        Account currentUser = (Account) req.getSession().getAttribute("currentUser");
-        if(currentUser == null || currentUser.getRole() != 1) { // roleID=1 là admin
-            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập!");
+        Account account = (Account) req.getSession().getAttribute("account");
+        if (account == null || account.getRole() != 1) { // roleID=1 là admin
+            resp.sendRedirect(req.getContextPath() + "/view/profile/accessDenied.jsp");
             return;
         }
 
@@ -37,9 +37,9 @@ public class CreateAccountServlet extends HttpServlet {
             throws ServletException, IOException {
 
         // Kiểm tra quyền admin
-        Account currentUser = (Account) req.getSession().getAttribute("currentUser");
-        if(currentUser == null || currentUser.getRole() != 1) {
-            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền thực hiện hành động này!");
+        Account account = (Account) req.getSession().getAttribute("account");
+        if (account == null || account.getRole() != 1) {
+            resp.sendRedirect(req.getContextPath() + "/view/profile/accessDenied.jsp");
             return;
         }
 
@@ -73,14 +73,14 @@ public class CreateAccountServlet extends HttpServlet {
             return;
         }
 
-        Account account = new Account();
-        account.setUserID(userID);
-        account.setUsername(username);
-        account.setPassword(password);
-        account.setRole(roleID);
-        account.setIsActive(isActive);
+        Account newAccount = new Account();
+        newAccount.setUserID(userID);
+        newAccount.setUsername(username);
+        newAccount.setPassword(password);
+        newAccount.setRole(roleID);
+        newAccount.setIsActive(isActive);
 
-        boolean created = accountDAO.createAccount(account);
+        boolean created = accountDAO.createAccount(newAccount);
 
         if (created) {
             req.setAttribute("successMessage", "Tạo tài khoản thành công!");
