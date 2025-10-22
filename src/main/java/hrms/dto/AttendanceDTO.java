@@ -1,7 +1,7 @@
 package hrms.dto;
 
+import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class AttendanceDTO {
 
@@ -9,26 +9,28 @@ public class AttendanceDTO {
     private int userID;
     private LocalDate date;
     private String day;
-    private LocalTime checkin1;
-    private LocalTime checkout1;
-    private LocalTime checkin2;
-    private LocalTime checkout2;
-    private LocalTime checkin3;
-    private LocalTime checkout3;
+    private Time checkin1;
+    private Time checkout1;
+    private Time checkin2;
+    private Time checkout2;
+    private Time checkin3;
+    private Time checkout3;
     private int shiftID;
-    private LocalTime lateMinutes;
-    private LocalTime earlyLeaveMinutes;
-    private LocalTime totalWorkHours;
-    private LocalTime otHours;
+    private Time lateMinutes;
+    private Time earlyLeaveMinutes;
+    private Time totalWorkHours;
+    private Time otHours;
 
     private String shiftName;
-    private LocalTime shiftCheckin1;
-    private LocalTime shiftCheckout1;
-    private LocalTime shiftCheckin2;
-    private LocalTime shiftCheckout2;
+    private Time shiftCheckin1;
+    private Time shiftCheckout1;
+    private Time shiftCheckin2;
+    private Time shiftCheckout2;
 
     private String userName;
+
     private String departmentName;
+
     private String positionName;
 
     public AttendanceDTO() {
@@ -66,51 +68,51 @@ public class AttendanceDTO {
         this.day = day;
     }
 
-    public LocalTime getCheckin1() {
+    public Time getCheckin1() {
         return checkin1;
     }
 
-    public void setCheckin1(LocalTime checkin1) {
+    public void setCheckin1(Time checkin1) {
         this.checkin1 = checkin1;
     }
 
-    public LocalTime getCheckout1() {
+    public Time getCheckout1() {
         return checkout1;
     }
 
-    public void setCheckout1(LocalTime checkout1) {
+    public void setCheckout1(Time checkout1) {
         this.checkout1 = checkout1;
     }
 
-    public LocalTime getCheckin2() {
+    public Time getCheckin2() {
         return checkin2;
     }
 
-    public void setCheckin2(LocalTime checkin2) {
+    public void setCheckin2(Time checkin2) {
         this.checkin2 = checkin2;
     }
 
-    public LocalTime getCheckout2() {
+    public Time getCheckout2() {
         return checkout2;
     }
 
-    public void setCheckout2(LocalTime checkout2) {
+    public void setCheckout2(Time checkout2) {
         this.checkout2 = checkout2;
     }
 
-    public LocalTime getCheckin3() {
+    public Time getCheckin3() {
         return checkin3;
     }
 
-    public void setCheckin3(LocalTime checkin3) {
+    public void setCheckin3(Time checkin3) {
         this.checkin3 = checkin3;
     }
 
-    public LocalTime getCheckout3() {
+    public Time getCheckout3() {
         return checkout3;
     }
 
-    public void setCheckout3(LocalTime checkout3) {
+    public void setCheckout3(Time checkout3) {
         this.checkout3 = checkout3;
     }
 
@@ -122,35 +124,35 @@ public class AttendanceDTO {
         this.shiftID = shiftID;
     }
 
-    public LocalTime getLateMinutes() {
+    public Time getLateMinutes() {
         return lateMinutes;
     }
 
-    public void setLateMinutes(LocalTime lateMinutes) {
+    public void setLateMinutes(Time lateMinutes) {
         this.lateMinutes = lateMinutes;
     }
 
-    public LocalTime getEarlyLeaveMinutes() {
+    public Time getEarlyLeaveMinutes() {
         return earlyLeaveMinutes;
     }
 
-    public void setEarlyLeaveMinutes(LocalTime earlyLeaveMinutes) {
+    public void setEarlyLeaveMinutes(Time earlyLeaveMinutes) {
         this.earlyLeaveMinutes = earlyLeaveMinutes;
     }
 
-    public LocalTime getTotalWorkHours() {
+    public Time getTotalWorkHours() {
         return totalWorkHours;
     }
 
-    public void setTotalWorkHours(LocalTime totalWorkHours) {
+    public void setTotalWorkHours(Time totalWorkHours) {
         this.totalWorkHours = totalWorkHours;
     }
 
-    public LocalTime getOtHours() {
+    public Time getOtHours() {
         return otHours;
     }
 
-    public void setOtHours(LocalTime otHours) {
+    public void setOtHours(Time otHours) {
         this.otHours = otHours;
     }
 
@@ -162,35 +164,35 @@ public class AttendanceDTO {
         this.shiftName = shiftName;
     }
 
-    public LocalTime getShiftCheckin1() {
+    public Time getShiftCheckin1() {
         return shiftCheckin1;
     }
 
-    public void setShiftCheckin1(LocalTime shiftCheckin1) {
+    public void setShiftCheckin1(Time shiftCheckin1) {
         this.shiftCheckin1 = shiftCheckin1;
     }
 
-    public LocalTime getShiftCheckout1() {
+    public Time getShiftCheckout1() {
         return shiftCheckout1;
     }
 
-    public void setShiftCheckout1(LocalTime shiftCheckout1) {
+    public void setShiftCheckout1(Time shiftCheckout1) {
         this.shiftCheckout1 = shiftCheckout1;
     }
 
-    public LocalTime getShiftCheckin2() {
+    public Time getShiftCheckin2() {
         return shiftCheckin2;
     }
 
-    public void setShiftCheckin2(LocalTime shiftCheckin2) {
+    public void setShiftCheckin2(Time shiftCheckin2) {
         this.shiftCheckin2 = shiftCheckin2;
     }
 
-    public LocalTime getShiftCheckout2() {
+    public Time getShiftCheckout2() {
         return shiftCheckout2;
     }
 
-    public void setShiftCheckout2(LocalTime shiftCheckout2) {
+    public void setShiftCheckout2(Time shiftCheckout2) {
         this.shiftCheckout2 = shiftCheckout2;
     }
 

@@ -1,133 +1,21 @@
-/* 🌸 Nền tổng thể */
-body {
-    background: linear-gradient(135deg, #ffe6f0 0%, #ffd6e8 100%);
-    min-height: 100vh;
-    padding: 30px;
-    font-family: "Poppins", sans-serif;
-    color: #4a4a4a;
-}
 
-/* 🌸 Container chính */
-.container {
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 10px 35px rgba(255, 182, 193, 0.25);
-    transition: all 0.3s ease;
-    animation: fadeIn 0.6s ease;
-}
-
-.container:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(255, 105, 180, 0.25);
-}
-
-/* 🌸 Tiêu đề trang */
-h2, h3, h4 {
-    color: #d63384;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 25px;
-    letter-spacing: 0.5px;
-}
-
-/* 🌸 Bảng dữ liệu */
-.table {
-    border-radius: 15px;
-    overflow: hidden;
-    border: none;
-}
-
-.table thead {
-    background: linear-gradient(135deg, #ffb3c6, #ff80ab);
-    color: white;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.table-hover tbody tr {
-    transition: all 0.2s ease;
-}
-
-.table-hover tbody tr:hover {
-    background-color: #fff0f6;
-    transform: scale(1.01);
-}
-
-/* 🌸 Nút hành động */
-.btn-action {
-    margin: 0 3px;
-    border-radius: 25px;
-    padding: 6px 14px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.btn-action i {
-    margin-right: 5px;
-}
-
-/* 🌸 Các loại nút */
-.btn-edit {
-    background: linear-gradient(135deg, #ff80ab, #ff4da6);
-    color: white;
-    box-shadow: 0 5px 10px rgba(255, 105, 180, 0.3);
-}
-
-.btn-edit:hover {
-    background: linear-gradient(135deg, #ff4da6, #ff6fa5);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4);
-}
-
-.btn-delete {
-    background: #ffe4eb;
-    color: #d63384;
-    border: 1px solid #ff99b8;
-}
-
-.btn-delete:hover {
-    background: #ffd6e0;
-    color: #b91d73;
-}
-
-/* 🌸 Trạng thái */
-.status-badge {
-    padding: 6px 12px;
-    border-radius: 25px;
-    font-size: 0.85rem;
-    font-weight: 500;
-}
-
-.status-active {
-    background-color: #f8e1ec;
-    color: #a3245d;
-    border: 1px solid #ffb3c6;
-}
-
-.status-inactive {
-    background-color: #ffe9e9;
-    color: #b04153;
-    border: 1px solid #ffc2c2;
-}
-
-/* 🌸 Hiệu ứng xuất hiện */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* 🌸 Responsive */
-@media (max-width: 768px) {
-    .container {
-        padding: 25px 20px;
-    }
-
-    .btn-action {
-        padding: 6px 10px;
-        font-size: 0.85rem;
-    }
-}
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .table-hover tbody tr:hover { background-color: #f8f9fa; }
+        .btn-action { margin: 0 2px; }
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+        .status-active { background-color: #d4edda; color: #155724; }
+        .status-inactive { background-color: #f8d7da; color: #721c24; }

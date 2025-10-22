@@ -28,8 +28,7 @@ thead {
     color: #fff;
 }
 
-th,
-td {
+th, td {
     padding: 10px 12px;
     text-align: center;
     border-bottom: 1px solid #e0e0e0;
@@ -59,9 +58,7 @@ td {
         width: 100%;
         font-size: 12px;
     }
-
-    th,
-    td {
+    th, td {
         padding: 8px 6px;
     }
 }

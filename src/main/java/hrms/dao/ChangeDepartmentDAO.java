@@ -79,5 +79,55 @@ public class ChangeDepartmentDAO extends DBContext {
         return list;
     }
     
+    /**
+     * Get detailed user information by user ID
+     * @param userID the user ID
+     * @return UserDTO object or null if not found
+     */
+    public UserDTO getUserDetailById(int userID) {
+        String sql = "SELECT u.UserID, u.FullName, u.Email, u.PhoneNumber, " +
+                     "u.DepartmentID, d.Name AS DepartmentName " +
+                     "FROM Users u " +
+                     "LEFT JOIN Department d ON u.DepartmentID = d.DepartmentID " +
+                     "WHERE u.UserID = ?";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                UserDTO dto = new UserDTO();
+                dto.setUserId(rs.getInt("UserID"));
+                dto.setFullname(rs.getString("FullName"));
+                dto.setEmail(rs.getString("Email"));
+                dto.setPhoneNumber(rs.getString("PhoneNumber"));
+                dto.setDepartmentId(rs.getInt("DepartmentID"));
+                dto.setDepartmentName(rs.getString("DepartmentName"));
+                return dto;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Get current departmentID of a user
+     * @param userID the user ID
+     * @return departmentID or 0 if not found
+     */
+    public int getCurrentDepartmentID(int userID) {
+        String sql = "SELECT DepartmentID FROM Users WHERE UserID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("DepartmentID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
     
 }

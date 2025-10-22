@@ -20,14 +20,13 @@ public class CvDetailServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String idParam = request.getParameter("id");
-
         try {
             int cvId = Integer.parseInt(idParam);
             CvService cvService = new CvService();
             CVJobDetailDTO cvDetail = cvService.getCvWithJobTitle(cvId);
 
             if (cvDetail == null) {
-                request.setAttribute("CV_ID_error", "CV does not exist");
+                request.setAttribute("CV_ID_error", "CV không tồn tại");
             } else {
                 HttpSession session = request.getSession();
                 Boolean isFiltering = (Boolean) session.getAttribute("isFiltering");
@@ -38,7 +37,6 @@ public class CvDetailServlet extends HttpServlet {
                 } else {
                     cvList = cvService.getAllCVJobTitle();
                 }
-
                 if (cvList != null && !cvList.isEmpty()) {
                     int index = -1;
                     for (int i = 0; i < cvList.size(); i++) {
@@ -47,11 +45,10 @@ public class CvDetailServlet extends HttpServlet {
                             break;
                         }
                     }
-
                     if (index > 0) {
                         request.setAttribute("prevCV", cvList.get(index - 1));
                     }
-                    if (index < cvList.size() - 1 && index != -1) {
+                    if (index < cvList.size() - 1) {
                         request.setAttribute("nextCV", cvList.get(index + 1));
                     }
                 }
@@ -62,8 +59,10 @@ public class CvDetailServlet extends HttpServlet {
             request.getRequestDispatcher("/view/cv/cv_Detail.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
-            request.setAttribute("CV_ID_error", "Invalid CV ID format");
+            request.setAttribute("CV_ID_error", "Định dạng CV_ID không hợp lệ");
             request.getRequestDispatcher("/view/cv/cv_Detail.jsp").forward(request, response);
         }
+
     }
+
 }

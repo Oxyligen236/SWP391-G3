@@ -20,30 +20,30 @@ public class EditUserPositionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        PositionDAO positionDAO = new PositionDAO();
-        ChangePositionDAO changePositionDAO = new ChangePositionDAO();
-
-        String searchValue = request.getParameter("searchValue");
-
-        List<Position> positions = positionDAO.getAll();
-        List<UserDTO> users = changePositionDAO.getAllUsersWithPosition();
-
-        if (searchValue != null && !searchValue.trim().isEmpty()) {
-            users = changePositionDAO.searchUsersWithPosition(searchValue.trim());
-            request.setAttribute("searchValue", searchValue);
-        } else {
-            users = changePositionDAO.getAllUsersWithPosition();
+        String userIDParam = request.getParameter("userID");
+        if (userIDParam == null || userIDParam.trim().isEmpty()) {
+            response.sendRedirect("account/view");
+            return;
         }
 
-        request.setAttribute("positions", positions);
-        request.setAttribute("users", users);
+        int userID = Integer.parseInt(userIDParam);
         
-        HttpSession session = request.getSession();
-        String message = (String) session.getAttribute("message");
-        if(message != null) {
-            request.setAttribute("message", message);
-            session.removeAttribute("message"); 
+        ChangePositionDAO changePositionDAO = new ChangePositionDAO();
+        PositionDAO positionDAO = new PositionDAO();
+
+        UserDTO user = changePositionDAO.getUserDetailById(userID);
+        if (user == null) {
+            response.sendRedirect("account/view");
+            return;
         }
+
+        int currentPositionID = changePositionDAO.getCurrentPositionID(userID);
+        List<Position> positions = positionDAO.getAll();
+
+        request.setAttribute("user", user);
+        request.setAttribute("currentPositionID", currentPositionID);
+        request.setAttribute("positions", positions);
+
         request.getRequestDispatcher("view/users/changeUserPosition.jsp").forward(request, response);
     }
 
@@ -59,11 +59,11 @@ public class EditUserPositionServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         if(success) {
-            session.setAttribute("message", "User department updated successfully!");
+            session.setAttribute("message", "User position updated successfully!");
         }   else {
-            session.setAttribute("message", "Failed to update user department.");
+            session.setAttribute("message", "Failed to update user position.");
         }
 
-        response.sendRedirect("updatePosition");
+        response.sendRedirect("account/view");
     }
 }

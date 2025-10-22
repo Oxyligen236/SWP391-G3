@@ -36,7 +36,7 @@
         <a href="<c:url value='/viewContracts'/>">ViewContractList</a>
         </br>
         <a href="<c:url value='/account/view'/>">Account List (View/Edit/Toggle)</a><br />
-
+  
 
         <!-- <c:url var="submitUrl" value="/cv/submit">
         <c:param name="jdID" value="${job.jobID}" />
@@ -53,8 +53,6 @@
         <a href="<c:url value='/payroll/personal'/>">Personal Payroll</a>
         </br>
         <a href="<c:url value='/payroll/company'/>">Company Payroll</a>
-         <a href="<c:url value='/user/create'/>">Create User</a>
-        
 
     </body>
 

@@ -12,23 +12,23 @@
 
             <body>
 
-                <h1>Payroll Details</h1>
+                <h1>Chi tiết bảng lương</h1>
                 <c:if test="${displayType == 'management'}">
                     <div class="management-info">
-                        <h2>Employee: ${payrollDetail.userName} (ID: ${payrollDetail.userID})</h2>
-                        <h2>Department: ${payrollDetail.userDepartment}, Position: ${payrollDetail.userPosition}</h2>
+                        <h2>Nhân viên: ${payrollDetail.userName} (ID: ${payrollDetail.userID})</h2>
+                        <h2>Phòng ban: ${payrollDetail.userDepartment}, Vị trí: ${payrollDetail.userPosition}</h2>
                     </div>
-                </c:if>
 
+                </c:if>
                 <table border="1" cellspacing="0" cellpadding="5">
                     <tr>
-                        <th>Month</th>
-                        <th>Year</th>
-                        <th>Base Salary</th>
-                        <th>Total Earnings</th>
-                        <th>Total Deductions</th>
-                        <th>Net Salary</th>
-                        <th>Pay Date</th>
+                        <th>Tháng</th>
+                        <th>Năm</th>
+                        <th>Lương cơ bản</th>
+                        <th>Tổng nhận thêm</th>
+                        <th>Tổng khấu trừ</th>
+                        <th>Lương thực nhận</th>
+                        <th>Ngày trả lương</th>
                     </tr>
                     <tr>
                         <td>${payrollDetail.month}</td>
@@ -44,7 +44,6 @@
                         <td>
                             <fmt:formatNumber value="${payrollDetail.totalDeductions}" type="number" groupingUsed="true"
                                 maxFractionDigits="3" />
-                        </td>
                         <td>
                             <fmt:formatNumber value="${payrollDetail.netSalary}" type="number" groupingUsed="true"
                                 maxFractionDigits="3" />
@@ -53,29 +52,31 @@
                     </tr>
                 </table>
 
-                <h1>Item Details:</h1>
+                <h1>Chi tiết các khoản:</h1>
                 <table border="1" cellspacing="0" cellpadding="5">
                     <tr>
-                        <th>Item Name</th>
-                        <th>Amount</th>
-                        <th>Type</th>
+                        <th>Tên khoản</th>
+                        <th>Số tiền</th>
+                        <th>Loại</th>
                     </tr>
                     <c:forEach var="item" items="${payrollDetail.payrollItems}">
                         <tr>
-                            <td>${item.typeName}</td>
+                            <td>
+                                ${item.typeName}
+                            </td>
                             <td>
                                 <fmt:formatNumber value="${item.amount}" type="number" groupingUsed="true"
                                     maxFractionDigits="3" />
                                 <c:choose>
                                     <c:when test="${item.amountType == 'fixed'}">(₫)</c:when>
-                                    <c:when test="${item.amountType == 'percent'}">(% Base Salary)</c:when>
-                                    <c:otherwise>Unknown</c:otherwise>
+                                    <c:when test="${item.amountType == 'percent'}">(% Lương cơ bản)</c:when>
+                                    <c:otherwise>Không xác định</c:otherwise>
                                 </c:choose>
                             </td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${item.positive}">Earnings (+)</c:when>
-                                    <c:otherwise>Deductions (-)</c:otherwise>
+                                    <c:when test="${item.positive}">Thu nhập (+)</c:when>
+                                    <c:otherwise>Khấu trừ (-)</c:otherwise>
                                 </c:choose>
                             </td>
                         </tr>

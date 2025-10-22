@@ -60,7 +60,7 @@ public class HomeServlet extends HttpServlet {
                 return "/view/home/homePage_Admin.jsp";
             case 2:
                 return "/view/home/homePage_HRManager.jsp";
-            case 3:
+            case 3  :
                 return "/view/home/homePage_HR.jsp";
             case 4:
                 return "/view/home/homePage_DeptManager.jsp";

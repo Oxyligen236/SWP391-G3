@@ -93,4 +93,52 @@ public class UserRoleDAO extends DBContext {
     }
     return list;
 }
+
+    /**
+     * Get detailed account information by account ID
+     * @param accountID the account ID
+     * @return AccountDTO object or null if not found
+     */
+    public AccountDTO getAccountDetailById(int accountID) {
+        String sql = "SELECT a.AccountID, a.Username, u.FullName, r.Name AS RoleName "
+                   + "FROM Account a "
+                   + "LEFT JOIN Users u ON a.UserID = u.UserID "
+                   + "LEFT JOIN Role r ON a.RoleID = r.RoleID "
+                   + "WHERE a.AccountID = ?";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, accountID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                AccountDTO acc = new AccountDTO();
+                acc.setAccountID(rs.getInt("AccountID"));
+                acc.setUsername(rs.getString("Username"));
+                acc.setFullName(rs.getString("FullName"));
+                acc.setRoleName(rs.getString("RoleName"));
+                return acc;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Get current roleID of an account
+     * @param accountID the account ID
+     * @return roleID or 0 if not found
+     */
+    public int getCurrentRoleID(int accountID) {
+        String sql = "SELECT RoleID FROM Account WHERE AccountID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, accountID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("RoleID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

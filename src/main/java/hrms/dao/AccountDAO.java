@@ -9,7 +9,6 @@ import java.util.List;
 import hrms.dto.AccountDTO;
 import hrms.model.Account;
 import hrms.utils.DBContext;
-import hrms.utils.PasswordUtil;
 
 public class AccountDAO extends DBContext {
 
@@ -26,9 +25,8 @@ public class AccountDAO extends DBContext {
     public List<Account> getAllAccounts() {
         List<Account> list = new ArrayList<>();
         String sql = "SELECT * FROM Account";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
+        try (PreparedStatement st = connection.prepareStatement(sql);
+                ResultSet rs = st.executeQuery()) {
             while (rs.next()) {
                 list.add(extractAccountFromResultSet(rs));
             }
@@ -92,9 +90,8 @@ public class AccountDAO extends DBContext {
                     LEFT JOIN Role r ON a.RoleID = r.RoleID
                 """;
 
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
+        try (PreparedStatement st = connection.prepareStatement(sql);
+                ResultSet rs = st.executeQuery()) {
 
             while (rs.next()) {
                 AccountDTO dto = new AccountDTO();
@@ -125,14 +122,14 @@ public class AccountDAO extends DBContext {
 
     public AccountDTO getAccountDTOByID(int accountID) {
         String sql = """
-        SELECT a.AccountID, a.Username, a.Is_active,
-               u.Fullname AS fullName,
-               r.Name AS roleName
-        FROM Account a
-        LEFT JOIN Users u ON a.UserID = u.UserID
-        LEFT JOIN Role r ON a.RoleID = r.RoleID
-        WHERE a.AccountID = ?
-    """;
+                    SELECT a.AccountID, a.Username, a.Is_active,
+                           u.Fullname AS fullName,
+                           r.Name AS roleName
+                    FROM Account a
+                    LEFT JOIN Users u ON a.UserID = u.UserID
+                    LEFT JOIN Role r ON a.RoleID = r.RoleID
+                    WHERE a.AccountID = ?
+                """;
 
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, accountID);
@@ -152,62 +149,7 @@ public class AccountDAO extends DBContext {
         return null;
     }
 
-      public boolean updatePassword(int userId, String newPassword) {
-        String sql = "update Account set Password = ? where UserID = ?";
-        try (PreparedStatement st = connection.prepareStatement(sql)) {
-            st.setString(1, newPassword);
-            st.setInt(2, userId);
-            return st.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.err.println("Error updating password: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public int migratePasswords() {
-        String selectSql = "SELECT UserID, Password FROM Account";
-        String updateSql = "UPDATE Account SET Password = ? WHERE UserID = ?";
-        int count = 0;
-        try (PreparedStatement selectStmt = connection.prepareStatement(selectSql); PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
-            ResultSet rs = selectStmt.executeQuery();
-            while (rs.next()) {
-                int userId = rs.getInt("UserID");
-                String plainPassword = rs.getString("Password");
-                if (!PasswordUtil.isHashed(plainPassword)) {
-                    String hashedPassword = PasswordUtil.hashPassword(plainPassword);
-                    updateStmt.setString(1, hashedPassword);
-                    updateStmt.setInt(2, userId);
-                    updateStmt.executeUpdate();
-                    count++;
-                    System.out.println("Migrated password for UserID: " + userId);
-                }
-            }
-            System.out.println("Migration completed. Total passwords hashed: " + count);
-        } catch (SQLException e) {
-            System.err.println("Error during password migration: " + e.getMessage());
-            System.out.println("Migration halted. Total passwords hashed before error: " + count);
-        }
-        return count;
-    }
-
-    public boolean areAllPasswordsHashed() {
-        String sql = "SELECT COUNT(*) as total FROM Account";
-        String hashedSql = "SELECT COUNT(*) as hashed FROM Account WHERE Password LIKE '%:%'";
-        try (PreparedStatement st1 = connection.prepareStatement(sql); PreparedStatement st2 = connection.prepareStatement(hashedSql)) {
-            ResultSet rs1 = st1.executeQuery();
-            ResultSet rs2 = st2.executeQuery();
-            if (rs1.next() && rs2.next()) {
-                int total = rs1.getInt("total");
-                int hashed = rs2.getInt("hashed");
-                return total == hashed;
-            }
-        } catch (SQLException e) {
-            System.err.println("Error checking password status: " + e.getMessage());
-        }
-        return false;
-    }
-
-     public boolean changePassword(int accountId, String oldPassword, String newPassword) {
+    public boolean changePassword(int accountId, String oldPassword, String newPassword) {
         String verifySql = "SELECT Password FROM Account WHERE AccountID = ?";
         String updateSql = "UPDATE Account SET Password = ? WHERE AccountID = ?";
 
@@ -262,114 +204,5 @@ public class AccountDAO extends DBContext {
                 e.printStackTrace();
             }
         }
-    }
-
-
-  public List<AccountDTO> getFilteredAccounts(
-            String search, String roleFilter, String statusFilter,
-            String sortBy, String sortOrder, int page, int pageSize) throws SQLException {
-
-        List<AccountDTO> list = new ArrayList<>();
-
-        StringBuilder sql = new StringBuilder(
-                "SELECT a.AccountID, a.Username, u.FullName, a.Is_active, r.Name AS RoleName " +
-                        "FROM Account a " +
-                        "JOIN Users u ON a.UserID = u.UserID " +
-                        "JOIN Role r ON a.RoleID = r.RoleID WHERE 1=1 "
-        );
-
-        if (search != null && !search.trim().isEmpty()) {
-            sql.append("AND (u.FullName LIKE ? OR a.Username LIKE ?) ");
-        }
-
-        if (roleFilter != null && !roleFilter.equalsIgnoreCase("all") && !roleFilter.isEmpty()) {
-            sql.append("AND r.RoleID = ? ");
-        }
-
-        if (statusFilter != null && !statusFilter.equalsIgnoreCase("all") && !statusFilter.isEmpty()) {
-            sql.append("AND a.Is_active = ? ");
-        }
-
-        if ("role".equalsIgnoreCase(sortBy)) {
-            sql.append("ORDER BY r.Name ");
-        } else if ("name".equalsIgnoreCase(sortBy)) {
-            sql.append("ORDER BY u.FullName ");
-        } else {
-            sql.append("ORDER BY a.AccountID ");
-        }
-
-        sql.append(" ").append("desc".equalsIgnoreCase(sortOrder) ? "DESC " : "ASC ");
-        sql.append("LIMIT ? OFFSET ?");
-
-        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-            int index = 1;
-
-            if (search != null && !search.trim().isEmpty()) {
-                ps.setString(index++, "%" + search + "%");
-                ps.setString(index++, "%" + search + "%");
-            }
-
-            if (roleFilter != null && !roleFilter.equalsIgnoreCase("all") && !roleFilter.isEmpty()) {
-                ps.setInt(index++, Integer.parseInt(roleFilter));
-            }
-
-            if (statusFilter != null && !statusFilter.equalsIgnoreCase("all") && !statusFilter.isEmpty()) {
-                ps.setBoolean(index++, "active".equalsIgnoreCase(statusFilter));
-            }
-
-            ps.setInt(index++, pageSize);
-            ps.setInt(index, (page - 1) * pageSize);
-
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                AccountDTO dto = new AccountDTO();
-                dto.setAccountID(rs.getInt("AccountID"));
-                dto.setUsername(rs.getString("Username"));
-                dto.setFullName(rs.getString("FullName"));
-                dto.setActive(rs.getBoolean("Is_active"));
-                dto.setRoleName(rs.getString("RoleName"));
-                list.add(dto);
-            }
-        }
-
-        return list;
-    }
-
-    
-
-    public int countFilteredAccounts(String search, String roleFilter, String statusFilter) throws SQLException {
-        StringBuilder sql = new StringBuilder(
-                "SELECT COUNT(*) FROM Account a " +
-                        "JOIN Users u ON a.UserID = u.UserID " +
-                        "JOIN Role r ON a.RoleID = r.RoleID WHERE 1=1 "
-        );
-
-        if (search != null && !search.trim().isEmpty()) {
-            sql.append("AND (u.FullName LIKE ? OR a.Username LIKE ?) ");
-        }
-        if (roleFilter != null && !roleFilter.equalsIgnoreCase("all") && !roleFilter.isEmpty()) {
-            sql.append("AND r.RoleID = ? ");
-        }
-        if (statusFilter != null && !statusFilter.equalsIgnoreCase("all") && !statusFilter.isEmpty()) {
-            sql.append("AND a.Is_active = ? ");
-        }
-
-        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-            int index = 1;
-            if (search != null && !search.trim().isEmpty()) {
-                ps.setString(index++, "%" + search + "%");
-                ps.setString(index++, "%" + search + "%");
-            }
-            if (roleFilter != null && !roleFilter.equalsIgnoreCase("all") && !roleFilter.isEmpty()) {
-                ps.setInt(index++, Integer.parseInt(roleFilter));
-            }
-            if (statusFilter != null && !statusFilter.equalsIgnoreCase("all") && !statusFilter.isEmpty()) {
-                ps.setBoolean(index++, "active".equalsIgnoreCase(statusFilter));
-            }
-
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
-        }
-        return 0;
     }
 }

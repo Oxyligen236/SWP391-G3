@@ -13,7 +13,7 @@
 
             <body>
                 <div class="login-container">
-                    <h2>Login Page</h2>
+                    <h2>Trang đăng nhập</h2>
 
                     <c:if test="${not empty errorMessage}">
                         <p class="errorMessage">${errorMessage}</p>
@@ -26,7 +26,7 @@
                         <br>
                         <label class="show-password">
                             <input type="checkbox" id="showPassword">
-                            Show Password
+                            Hiển thị mật khẩu
                         </label>
                         <script>
                             const passwordInput = document.getElementById('password');
@@ -45,10 +45,10 @@
                         <div class="options">
                             <div class="remember-me">
                                 <input type="checkbox" id="remember" name="remember" value="on" ${remember}>
-                                <label for="remember">Remember Me</label>
+                                <label for="remember">Ghi nhớ tôi</label>
                             </div>
                             <div class="forgot-password">
-                                <a href="<c:url value='/forgotPassword'/>">Forgot Password?</a>
+                                <a href="<c:url value='/forgotPassword'/>">Quên mật khẩu?</a>
                             </div>
                         </div>
                     </form>

@@ -78,6 +78,47 @@ public class ChangePositionDAO extends DBContext {
         }
         return list;
     }
+
+    public UserDTO getUserDetailById(int userID) {
+        String sql = "SELECT u.UserID, u.FullName, u.Email, u.PhoneNumber, " +
+                     "u.PositionID, p.Name AS PositionName " +
+                     "FROM Users u " +
+                     "LEFT JOIN Positions p ON u.PositionID = p.PositionID " +
+                     "WHERE u.UserID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                UserDTO dto = new UserDTO();
+                dto.setUserId(rs.getInt("UserID"));
+                dto.setFullname(rs.getString("FullName"));
+                dto.setEmail(rs.getString("Email"));
+                dto.setPhoneNumber(rs.getString("PhoneNumber"));
+                dto.setPositionId(rs.getInt("PositionID"));
+                dto.setPositionName(rs.getString("PositionName"));
+                return dto;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public int getCurrentPositionID(int userID) {
+        String sql = "SELECT PositionID FROM Users WHERE UserID = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("PositionID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
     
     
 }

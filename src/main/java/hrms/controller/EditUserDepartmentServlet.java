@@ -19,51 +19,67 @@ public class EditUserDepartmentServlet extends HttpServlet {
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        DepartmentDAO departmentDAO = new DepartmentDAO();
-        ChangeDepartmentDAO changeDepartmentDAO = new ChangeDepartmentDAO();
-
-        String searchValue = request.getParameter("searchValue");
-
-        List<Department> departments = departmentDAO.getAll();
-        List<UserDTO> users = changeDepartmentDAO.getAllUsersWithDepartment();
-
-        if (searchValue != null && !searchValue.trim().isEmpty()) {
-            users = changeDepartmentDAO.searchUsersWithDepartment(searchValue.trim());
-            request.setAttribute("searchValue", searchValue);
-        } else {
-            users = changeDepartmentDAO.getAllUsersWithDepartment();
-        }
-
-        request.setAttribute("departments", departments);
-        request.setAttribute("users", users);
+        String userIDParam = request.getParameter("userID");
         
-        HttpSession session = request.getSession();
-        String message = (String) session.getAttribute("message");
-        if(message != null) {
-            request.setAttribute("message", message);
-            session.removeAttribute("message"); 
+        if (userIDParam == null || userIDParam.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/account/view");
+            return;
         }
-        request.getRequestDispatcher("view/users/changeUserDepartment.jsp").forward(request, response);
+        
+        try {
+            int userID = Integer.parseInt(userIDParam);
+            ChangeDepartmentDAO changeDepartmentDAO = new ChangeDepartmentDAO();
+            DepartmentDAO departmentDAO = new DepartmentDAO();
+            
+            // Lấy thông tin user
+            UserDTO userDetail = changeDepartmentDAO.getUserDetailById(userID);
+            
+            if (userDetail == null) {
+                HttpSession session = request.getSession();
+                session.setAttribute("errorMessage", "Không tìm thấy người dùng!");
+                response.sendRedirect(request.getContextPath() + "/account/view");
+                return;
+            }
+            
+            
+            int currentDepartmentID = changeDepartmentDAO.getCurrentDepartmentID(userID);
+            
+            
+            List<Department> departments = departmentDAO.getAll();
+            
+            request.setAttribute("user", userDetail);
+            request.setAttribute("currentDepartmentID", currentDepartmentID);
+            request.setAttribute("departments", departments);
+            request.getRequestDispatcher("/view/users/changeUserDepartment.jsp").forward(request, response);
+            
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "");
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
-        
-        int userID = Integer.parseInt(request.getParameter("userID"));
-        int newDepartmentID = Integer.parseInt(request.getParameter("newDepartmentID"));
-
-        ChangeDepartmentDAO changeDepartmentDAO = new ChangeDepartmentDAO();
-        boolean success = changeDepartmentDAO.updateUserDepartment(userID, newDepartmentID);
-
         HttpSession session = request.getSession();
-        if(success) {
-            session.setAttribute("message", "User department updated successfully!");
-        }   else {
-            session.setAttribute("message", "Failed to update user department.");
+        
+        try {
+            int userID = Integer.parseInt(request.getParameter("userID"));
+            int newDepartmentID = Integer.parseInt(request.getParameter("newDepartmentID"));
+
+            ChangeDepartmentDAO changeDepartmentDAO = new ChangeDepartmentDAO();
+            boolean success = changeDepartmentDAO.updateUserDepartment(userID, newDepartmentID);
+
+            if(success) {
+                session.setAttribute("successMessage", "Cập nhật phòng ban thành công!");
+            } else {
+                session.setAttribute("errorMessage", "Cập nhật phòng ban thất bại!");
+            }
+        } catch (NumberFormatException e) {
+            session.setAttribute("errorMessage", "Dữ liệu không hợp lệ!");
+        } catch (Exception e) {
+            session.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
         }
 
-        response.sendRedirect("updateDepartment");
+
+        response.sendRedirect(request.getContextPath() + "");
     }
 }
