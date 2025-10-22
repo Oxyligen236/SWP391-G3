@@ -57,11 +57,11 @@ form select:focus {
     border: none;
     color: #fff;
     padding: 12px 0;
-    width: 100%;
     border-radius: 6px;
     font-size: 1rem;
     font-weight: 600;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
 }
 
 .btn-primary:hover {
@@ -71,17 +71,35 @@ form select:focus {
 
 .btn-secondary {
     background-color: #6c757d;
+    color: #fff;
     border: none;
-    padding: 10px 18px;
+    padding: 12px 0;
     border-radius: 6px;
+    font-size: 1rem;
     font-weight: 500;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
 }
 
 .btn-secondary:hover {
     background-color: #5a6268;
+    transform: scale(1.02);
 }
 
+/* 👉 Căn 2 nút nằm ngang */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.button-group .btn-primary,
+.button-group .btn-secondary {
+    flex: 1;
+}
+
+/* Thông báo */
 .alert-info {
     background-color: #eaf9ff;
     color: #0b5c8e;

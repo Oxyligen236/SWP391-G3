@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="<c:url value='/css/createjd.css'/>">
     </head>
     <body>
+
         <div class="container">
             <h2>Create Job Description</h2>
             <form action="<%= request.getContextPath() %>/createjd" method="post">
@@ -46,7 +47,11 @@
 
                 <label for="workingConditions">WorkingConditions:</label>
                 <textarea id="workingConditions" name="workingConditions" rows="3"></textarea>
-                <button type="submit" class="btn-primary">Save</button>
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">Save</button>
+                    <button type="button" class="btn-secondary" onclick="window.location.href = '/jdlist'">Cancel</button>
+                </div>
+
             </form>
         </div>
 
