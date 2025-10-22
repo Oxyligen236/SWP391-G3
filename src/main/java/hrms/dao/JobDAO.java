@@ -117,7 +117,7 @@ public class JobDAO extends DBContext {
         return null;
     }
 
-    public List<JobDescription> getFilteredAccounts(
+    public List<JobDescription> getFilteredJD(
             String search, String departmentFilter, String statusFilter,
             int page, int pageSize) throws SQLException {
 

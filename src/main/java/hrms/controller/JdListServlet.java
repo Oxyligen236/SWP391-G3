@@ -31,7 +31,7 @@ public class JdListServlet extends HttpServlet {
             String departmentFilter = request.getParameter("department");
             String statusFilter = request.getParameter("status");
 
-            List<JobDescription> jdList = dao.getFilteredAccounts(
+            List<JobDescription> jdList = dao.getFilteredJD(
                     search, departmentFilter, statusFilter, 1, 100);
 
             request.setAttribute("jdList", jdList);
