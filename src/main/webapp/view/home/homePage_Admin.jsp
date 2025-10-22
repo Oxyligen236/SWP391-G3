@@ -25,7 +25,7 @@
         </div>
 
         <div class="login-btn">
-          <a href="<c:url value='/logout'/>">Log out</a>
+          <a href="<c:url value='/view/home/homepage_guest.jsp'/>">Log out</a>
         </div>
       </div>
     </header>
@@ -34,7 +34,7 @@
       <ul>
         <li><a href="<c:url value='/home'/>">Trang chủ</a></li>
         <li><a href="<c:url value='/jd-list'/>">Thông tin tuyển dụng</a></li>
-        <li><a href="<c:url value='/company-info'/>">Thông tin công ty</a></li>
+        <li><a href="#">Thông tin công ty</a></li>
       </ul>
     </nav>
 
@@ -50,36 +50,20 @@
         <li>
           <a href="#" onclick="toggleSubmenu('profile-submenu')">Profile</a>
           <ul class="submenu" id="profile-submenu">
-            <li><a href="<c:url value='/profile'/>">View Profile</a></li>
-            <li><a href="<c:url value='/account/create/profile'/>">Create Profile</a></li>
-            <li><a href="#">Edit Profile</a></li>
+            <li><a href="<c:url value='/view'/>">View Profile</a></li>
+            <li><a href="<c:url value='/edit'/>">Edit Profile</a></li>
           </ul>
         </li>
         <li>
           <a href="#" onclick="toggleSubmenu('account-submenu')">Account</a>
           <ul class="submenu" id="account-submenu">
-            <li><a href="#">View Account</a></li>
             <li><a href="<c:url value='/account/view'/>">View Account List</a></li>
-            <li><a href="<c:url value='/updateRole'/>">Change Account Role</a></li>
           </ul>
         </li>
         <li>
           <a href="#" onclick="toggleSubmenu('contract-submenu')">Contract</a>
           <ul class="submenu" id="contract-submenu">
             <li><a href="<c:url value='/myContracts'/>">My Contract</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#" onclick="toggleSubmenu('cv-submenu')">CV</a>
-          <ul class="submenu" id="cv-submenu">
-            <li><a href="#">My CV</a></li>
-            <li><a href="<c:url value='/cv-submit'/>">Submit CV</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#" onclick="toggleSubmenu('attendance-submenu')">Attendance</a>
-          <ul class="submenu" id="attendance-submenu">
-            <li><a href="<c:url value='/my-attendance'/>">My Attendance</a></li>
           </ul>
         </li>
         <li>
@@ -91,8 +75,7 @@
         <li>
           <a href="#" onclick="toggleSubmenu('ticket-submenu')">Ticket</a>
           <ul class="submenu" id="ticket-submenu">
-            <li><a href="#">Create Ticket</a></li>
-            <li><a href="#">View Sent Tickets</a></li>
+            <li><a href="<c:url value='/ticketList'/>">My Ticket</a></li>
           </ul>
         </li>
       </ul>
