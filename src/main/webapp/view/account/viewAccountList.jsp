@@ -20,7 +20,11 @@
                     <a href="<c:url value='/account/create'/>" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Add New Account
                     </a>
+                    <a href="<c:url value='/home'/>" class="btn btn-secondary">
+                        <i class="fas fa-home"></i> Back to Home
+                    </a>
                 </div>
+
 
                 <!-- Alerts -->
                 <c:if test="${not empty successMessage}">
@@ -48,11 +52,12 @@
                         <label class="form-label">Role</label>
                         <select name="role" class="form-select">
                             <option value="">All</option>
-                            <option value="1" ${roleFilter=='1' ? 'selected' : '' }>Admin</option>
-                            <option value="4" ${roleFilter=='4' ? 'selected' : '' }>Dept Manager</option>
-                            <option value="5" ${roleFilter=='5' ? 'selected' : '' }>Employee</option>
-                            <option value="3" ${roleFilter=='3' ? 'selected' : '' }>HR</option>
-                            <option value="2" ${roleFilter=='2' ? 'selected' : '' }>HR Manager</option>
+                            <!-- Lặp qua danh sách role từ server -->
+                            <c:forEach var="role" items="${roleList}">
+                                <option value="${role.roleID}" ${roleFilter==role.roleID ? 'selected' : '' }>
+                                    ${role.name}
+                                </option>
+                            </c:forEach>
                         </select>
                     </div>
 

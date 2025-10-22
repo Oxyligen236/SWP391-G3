@@ -27,9 +27,6 @@ public class ViewAccountServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("account");
 
-        List<Role> roles = roleDAO.getAllRoles();
-        request.setAttribute("roles", roles);
-
         if (currentUser == null) {
             response.sendRedirect(request.getContextPath() + "/authenticate");
             return;
@@ -38,12 +35,16 @@ public class ViewAccountServlet extends HttpServlet {
         try {
             // === Nhận tham số filter/sort/search/pagination ===
             String search = request.getParameter("search"); // tìm theo tên hoặc username
-            String roleFilter = request.getParameter("role"); // lọc theo role
+            String roleFilter = request.getParameter("role"); // lọc theo role (string)
             String statusFilter = request.getParameter("status"); // lọc theo trạng thái
             String sortBy = request.getParameter("sortBy"); // cột sắp xếp
             String sortOrder = request.getParameter("sortOrder"); // ASC/DESC
             int page = parseIntOrDefault(request.getParameter("page"), 1);
             int pageSize = parseIntOrDefault(request.getParameter("pageSize"), 10);
+
+            // Lấy danh sách role từ DB
+            List<Role> roleList = roleDAO.getAllRoles();
+            request.setAttribute("roleList", roleList); // <--- đồng bộ với JSP
 
             if (currentUser.getRole() == 1) { // Admin
                 // Lấy danh sách tài khoản theo các điều kiện lọc, tìm kiếm, phân trang
@@ -55,7 +56,6 @@ public class ViewAccountServlet extends HttpServlet {
 
                 // Gửi dữ liệu tới JSP
                 request.setAttribute("accounts", accounts);
-                request.setAttribute("roles", roles);
                 request.setAttribute("currentPage", page);
                 request.setAttribute("totalPages", totalPages);
                 request.setAttribute("pageSize", pageSize);
