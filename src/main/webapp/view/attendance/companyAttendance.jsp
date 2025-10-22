@@ -1,4 +1,3 @@
-<!-- filepath: d:\FPT\Ky_5\SWP391\Project\SWP391-G3\src\main\webapp\view\attendance\companyAttendance.jsp -->
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isELIgnored="false" %>
@@ -10,24 +9,20 @@
     <title>Company Attendance</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/company-attendance.css" />
     <style>
-        body {
-            background-color: #f5f7fa;
+       
+        .table-responsive {
+            overflow-x: auto;
         }
-        .container {
-            background-color: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .table td {
-            vertical-align: middle;
+        th, td {
+            white-space: nowrap;
         }
     </style>
 </head>
 <body>
     <div class="container mt-4">
-        <!-- Header with Back Button -->
+      
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="text-primary mb-0">Company Attendance Records</h4>
             <a href="${pageContext.request.contextPath}/home" class="btn btn-outline-primary">
@@ -35,7 +30,7 @@
             </a>
         </div>
 
-        <!-- Error Message -->
+  
         <c:if test="${not empty dateError}">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>${dateError}
@@ -43,16 +38,14 @@
             </div>
         </c:if>
 
-        <!-- Filter Section -->
+     
         <form action="${pageContext.request.contextPath}/company-attendance" method="get" class="row g-3 mb-4">
-            
-            <!-- Row 1: Employee Name, Department, Position, Shift -->
+           
             <div class="col-md-3">
                 <label class="form-label">Employee Name</label>
                 <input type="text" name="userName" value="${searchUserName}" 
                        class="form-control" placeholder="Enter name">
             </div>
-
             <div class="col-md-3">
                 <label class="form-label">Department</label>
                 <select name="department" class="form-select">
@@ -64,7 +57,6 @@
                     </c:forEach>
                 </select>
             </div>
-
             <div class="col-md-3">
                 <label class="form-label">Position</label>
                 <select name="position" class="form-select">
@@ -76,7 +68,6 @@
                     </c:forEach>
                 </select>
             </div>
-
             <div class="col-md-3">
                 <label class="form-label">Shift</label>
                 <select name="shiftId" class="form-select">
@@ -89,19 +80,16 @@
                     </c:forEach>
                 </select>
             </div>
-
-            <!-- Row 2: From Date, To Date -->
+        
             <div class="col-md-6">
                 <label class="form-label">From Date</label>
                 <input type="date" name="fromDate" value="${fromDate}" class="form-control">
             </div>
-
             <div class="col-md-6">
                 <label class="form-label">To Date</label>
                 <input type="date" name="toDate" value="${toDate}" class="form-control">
             </div>
-
-            <!-- Checkboxes -->
+         
             <div class="col-md-12">
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" name="hasCheckout3" 
@@ -124,8 +112,7 @@
                     <label class="form-check-label">Has OT</label>
                 </div>
             </div>
-
-            <!-- Buttons -->
+       
             <div class="col-md-12 d-flex gap-2">
                 <input type="hidden" name="itemsPerPage" value="${itemsPerPage}" />
                 <button type="submit" class="btn btn-primary">
@@ -137,9 +124,9 @@
             </div>
         </form>
 
-        <!-- Table -->
+   
         <div class="table-responsive">
-            <table class="table table-bordered table-hover text-center">
+            <table class="table table-bordered table-hover text-center align-middle">
                 <thead class="table-primary">
                     <tr>
                         <th>No</th>
@@ -159,13 +146,14 @@
                         <th>Early Leave</th>
                         <th>Total Hours</th>
                         <th>OT Hours</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty attendances}">
                             <tr>
-                                <td colspan="17" class="text-danger fw-bold">No data available</td>
+                                <td colspan="18" class="text-danger fw-bold">No data available</td>
                             </tr>
                         </c:when>
                         <c:otherwise>
@@ -209,6 +197,11 @@
                                             <c:otherwise>-</c:otherwise>
                                         </c:choose>
                                     </td>
+                                    <td>
+                                        <a href="${pageContext.request.contextPath}/updateattendance?id=${a.attendanceID}" class="btn btn-sm btn-warning">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </c:otherwise>
@@ -217,14 +210,13 @@
             </table>
         </div>
 
-        <!-- Pagination -->
+
         <div class="d-flex justify-content-between align-items-center mt-4">
             <form action="${pageContext.request.contextPath}/company-attendance" method="get" class="d-flex align-items-center">
                 <label class="me-2">Items per page:</label>
                 <input type="number" name="itemsPerPage" value="${itemsPerPage}" 
                        class="form-control w-auto me-2" min="1" max="100" style="width: 80px;" />
                 <button type="submit" class="btn btn-sm btn-primary">Set</button>
-                
                 <input type="hidden" name="userName" value="${searchUserName}" />
                 <input type="hidden" name="department" value="${searchDepartment}" />
                 <input type="hidden" name="position" value="${searchPosition}" />
@@ -237,7 +229,6 @@
                 <input type="hidden" name="hasOT" value="${hasOT}" />
                 <input type="hidden" name="page" value="1" />
             </form>
-
             <nav>
                 <ul class="pagination mb-0">
                     <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
@@ -246,11 +237,9 @@
                             Previous
                         </a>
                     </li>
-
                     <li class="page-item disabled">
                         <span class="page-link">Page ${currentPage} of ${totalPages}</span>
                     </li>
-
                     <li class="page-item ${currentPage == totalPages || totalPages == 0 ? 'disabled' : ''}">
                         <a class="page-link" 
                            href="${pageContext.request.contextPath}/company-attendance?page=${currentPage + 1}&itemsPerPage=${itemsPerPage}&userName=${searchUserName}&department=${searchDepartment}&position=${searchPosition}&shiftId=${selectedShift}&fromDate=${fromDate}&toDate=${toDate}&hasCheckout3=${hasCheckout3}&hasLate=${hasLate}&hasEarlyLeave=${hasEarlyLeave}&hasOT=${hasOT}">
@@ -260,10 +249,8 @@
                 </ul>
             </nav>
         </div>
-
         <p class="text-center text-muted mt-2">Showing ${attendances.size()} of ${totalItems} records</p>
     </div>
-
     <script src="${pageContext.request.contextPath}/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
