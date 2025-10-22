@@ -25,11 +25,11 @@ public class AttendanceService {
     private final PositionDAO positionDAO = new PositionDAO();
 
     // Helper method: Chuyển Model → DTO (KHÔNG CẦN CONVERT LocalTime NỮA)
-    private AttendanceDTO convertToDTO(Attendance attendance, List<User> users, 
-                                      List<Department> departments, List<Position> positions,
-                                      List<Shift> shifts) {
+    private AttendanceDTO convertToDTO(Attendance attendance, List<User> users,
+            List<Department> departments, List<Position> positions,
+            List<Shift> shifts) {
         AttendanceDTO dto = new AttendanceDTO();
-        
+
         // Set trực tiếp vì cùng kiểu LocalTime
         dto.setAttendanceID(attendance.getAttendanceID());
         dto.setUserID(attendance.getUserID());
@@ -52,7 +52,7 @@ public class AttendanceService {
                 .filter(u -> u.getUserId() == attendance.getUserID())
                 .findFirst()
                 .orElse(null);
-        
+
         if (user != null) {
             dto.setUserName(user.getFullname());
 
@@ -80,7 +80,7 @@ public class AttendanceService {
                 .filter(s -> s.getShiftID() == attendance.getShiftID())
                 .findFirst()
                 .orElse(null);
-        
+
         if (shift != null) {
             dto.setShiftName(shift.getName());
             dto.setShiftCheckin1(shift.getCheckin1());
@@ -95,7 +95,7 @@ public class AttendanceService {
     public List<AttendanceDTO> getAllAttendances() {
         // Lấy Model từ DAO
         List<Attendance> attendances = attendanceDAO.getAllAttendances();
-        
+
         // Load dữ liệu cần thiết 1 lần
         List<User> users = userDAO.getAll();
         List<Department> departments = departmentDAO.getAll();
@@ -112,7 +112,7 @@ public class AttendanceService {
 
     public List<AttendanceDTO> getAttendancesByUser(int userID) {
         List<Attendance> attendances = attendanceDAO.getByUser(userID);
-        
+
         List<User> users = userDAO.getAll();
         List<Department> departments = departmentDAO.getAll();
         List<Position> positions = positionDAO.getAll();
@@ -126,10 +126,10 @@ public class AttendanceService {
     }
 
     public List<AttendanceDTO> searchAttendances(String name, String department, String position,
-                                                 boolean hasCheckout3, boolean hasLate, 
-                                                 boolean hasEarlyLeave, boolean hasOT) {
+            boolean hasCheckout3, boolean hasLate,
+            boolean hasEarlyLeave, boolean hasOT) {
         List<Attendance> attendances = attendanceDAO.getAllAttendances();
-        
+
         List<User> users = userDAO.getAll();
         List<Department> departments = departmentDAO.getAll();
         List<Position> positions = positionDAO.getAll();
@@ -138,29 +138,29 @@ public class AttendanceService {
         List<AttendanceDTO> attendanceDTOs = new ArrayList<>();
         for (Attendance attendance : attendances) {
             AttendanceDTO dto = convertToDTO(attendance, users, departments, positions, shifts);
-            
+
             boolean match = true;
 
             // Filter by name
             if (name != null && !name.trim().isEmpty()) {
-                if (dto.getUserName() == null || 
-                    !dto.getUserName().toLowerCase().contains(name.toLowerCase().trim())) {
+                if (dto.getUserName() == null
+                        || !dto.getUserName().toLowerCase().contains(name.toLowerCase().trim())) {
                     match = false;
                 }
             }
 
             // Filter by department
             if (department != null && !department.trim().isEmpty()) {
-                if (dto.getDepartmentName() == null || 
-                    !dto.getDepartmentName().toLowerCase().contains(department.toLowerCase().trim())) {
+                if (dto.getDepartmentName() == null
+                        || !dto.getDepartmentName().toLowerCase().contains(department.toLowerCase().trim())) {
                     match = false;
                 }
             }
 
             // Filter by position
             if (position != null && !position.trim().isEmpty()) {
-                if (dto.getPositionName() == null || 
-                    !dto.getPositionName().toLowerCase().contains(position.toLowerCase().trim())) {
+                if (dto.getPositionName() == null
+                        || !dto.getPositionName().toLowerCase().contains(position.toLowerCase().trim())) {
                     match = false;
                 }
             }
@@ -172,27 +172,27 @@ public class AttendanceService {
 
             // Filter by late (00:00:00 = không trễ)
             if (hasLate) {
-                if (dto.getLateMinutes() == null || 
-                    dto.getLateMinutes().equals(LocalTime.MIDNIGHT) ||
-                    dto.getLateMinutes().equals(LocalTime.of(0, 0, 0))) {
+                if (dto.getLateMinutes() == null
+                        || dto.getLateMinutes().equals(LocalTime.MIDNIGHT)
+                        || dto.getLateMinutes().equals(LocalTime.of(0, 0, 0))) {
                     match = false;
                 }
             }
 
             // Filter by early leave
             if (hasEarlyLeave) {
-                if (dto.getEarlyLeaveMinutes() == null || 
-                    dto.getEarlyLeaveMinutes().equals(LocalTime.MIDNIGHT) ||
-                    dto.getEarlyLeaveMinutes().equals(LocalTime.of(0, 0, 0))) {
+                if (dto.getEarlyLeaveMinutes() == null
+                        || dto.getEarlyLeaveMinutes().equals(LocalTime.MIDNIGHT)
+                        || dto.getEarlyLeaveMinutes().equals(LocalTime.of(0, 0, 0))) {
                     match = false;
                 }
             }
 
             // Filter by OT
             if (hasOT) {
-                if (dto.getOtHours() == null || 
-                    dto.getOtHours().equals(LocalTime.MIDNIGHT) ||
-                    dto.getOtHours().equals(LocalTime.of(0, 0, 0))) {
+                if (dto.getOtHours() == null
+                        || dto.getOtHours().equals(LocalTime.MIDNIGHT)
+                        || dto.getOtHours().equals(LocalTime.of(0, 0, 0))) {
                     match = false;
                 }
             }
@@ -201,7 +201,7 @@ public class AttendanceService {
                 attendanceDTOs.add(dto);
             }
         }
-        
+
         return attendanceDTOs;
     }
 }

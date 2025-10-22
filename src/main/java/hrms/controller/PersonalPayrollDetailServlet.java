@@ -32,7 +32,7 @@ public class PersonalPayrollDetailServlet extends HttpServlet {
             PayrollDTO payrollDetail = payrollService.getPayrollByUserIdAndPayrollId(userId, payrollId);
             if (payrollDetail == null) {
 
-                request.setAttribute("error", "Không tìm thấy chi tiết lương.");
+                request.setAttribute("error", "Payroll record not found.");
                 request.getRequestDispatcher("/view/payroll/personalPayroll.jsp").forward(request, response);
                 return;
             }
