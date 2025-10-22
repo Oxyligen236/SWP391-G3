@@ -90,7 +90,7 @@
 
         <div class="buttons">
             <button type="submit"><i class="fas fa-user-plus"></i> Tạo User</button>
-            <a href="${userListUrl}"><i class="fas fa-times"></i> Hủy</a>
+            <a href="<c:url value='/home'/>"><i class="fas fa-times"></i> Hủy</a>
         </div>
     </form>
 
