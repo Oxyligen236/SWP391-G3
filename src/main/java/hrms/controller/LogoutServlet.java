@@ -22,7 +22,7 @@ public class LogoutServlet extends HttpServlet {
         passwordCookie.setMaxAge(0);
         response.addCookie(usernameCookie);
         response.addCookie(passwordCookie);
-        response.sendRedirect(request.getContextPath() + "/view/authenticate/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/view/home/homePage_guest.jsp");
     }
 
     @Override

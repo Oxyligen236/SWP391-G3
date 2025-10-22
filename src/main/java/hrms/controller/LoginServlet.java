@@ -92,7 +92,7 @@ public class LoginServlet extends HttpServlet {
                 }
 
                 request.getSession().setAttribute("account", account);
-                response.sendRedirect(request.getContextPath() + "/view/home/homepage_quest.jsp");
+                response.sendRedirect(request.getContextPath() + "/home");
                 return;
             }
         }
