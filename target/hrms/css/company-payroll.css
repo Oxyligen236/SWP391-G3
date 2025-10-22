@@ -1,0 +1,319 @@
+body {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    font-size: 24px;
+}
+
+h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+form.search-form {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form.search-form select,
+form.search-form input[type="number"],
+form.search-form button {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+form.search-form select:focus,
+form.search-form input[type="number"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+form.search-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+form.search-form button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    border-spacing: 0;
+}
+
+th,
+td {
+    padding: 8px 6px;
+    text-align: center;
+    line-height: 1.4;
+}
+
+th {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 600;
+}
+
+td {
+    border-top: 1px solid #eee;
+}
+
+td form {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+tr:hover {
+    background-color: #f2f8ff;
+    transition: background-color 0.3s;
+}
+
+tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+p.error-msg {
+    text-align: center;
+    background-color: #ffe5e5;
+    border: 1px solid #ffb3b3;
+    border-radius: 6px;
+    padding: 10px;
+    width: fit-content;
+    margin: 15px auto;
+}
+
+form.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px 12px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+form.search-form label {
+    font-weight: 500;
+    color: #2c3e50;
+    margin-right: 6px;
+}
+
+form.search-form div.field-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+form.search-form input[type="text"],
+form.search-form input[type="number"],
+form.search-form select {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+form.search-form input:focus,
+form.search-form select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+form.search-form button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 120px;
+    line-height: 1;
+    height: 38px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+form.search-form a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 18px;
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 120px;
+    line-height: 1;
+    height: 38px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+form.search-form a:hover {
+    background-color: #5a6268;
+    transform: scale(1.05);
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-container form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination-container label {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.pagination-container input[type="number"] {
+    width: 70px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.pagination-container input[type="number"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+.pagination-container button {
+    padding: 6px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.pagination-container button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 8px;
+}
+
+.page-item {
+    display: inline-block;
+}
+
+.page-link {
+    display: block;
+    padding: 8px 14px;
+    background-color: #fff;
+    color: #007bff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.page-item.disabled .page-link:hover {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    transform: none;
+}
+
+.page-link span {
+    display: block;
+}

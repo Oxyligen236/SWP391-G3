@@ -20,7 +20,7 @@ public class UserListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
     UserDAO userDAO = new UserDAO();
-    List<User> users = userDAO.getAll();
+      List<User> users = userDAO.getAllWithJoin();
 
     request.setAttribute ("users", users);
 

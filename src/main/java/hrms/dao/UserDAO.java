@@ -313,5 +313,36 @@ public String getRoleNameByUserId(int userId) {
     return null;
 }
 
+public List<User> getAllWithJoin() {
+    List<User> list = new ArrayList<>();
+    String sql = """
+        SELECT 
+            u.UserID, u.FullName, u.Email, u.PhoneNumber, 
+            u.BirthDate, u.Gender, u.CCCD, u.Address, 
+            u.Ethnicity, u.Nation, 
+            u.DegreeID, d.Name AS DegreeName, 
+            u.PositionID, p.Name AS PositionName, 
+            u.DepartmentID, dep.Name AS DepartmentName
+        FROM Users u
+        LEFT JOIN Degree d ON u.DegreeID = d.DegreeID
+        LEFT JOIN Positions p ON u.PositionID = p.PositionID
+        LEFT JOIN Department dep ON u.DepartmentID = dep.DepartmentID
+        ORDER BY u.UserID;
+        """;
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            User u = mapResultSetToUser(rs);
+            u.setDepartmentName(rs.getString("DepartmentName"));
+            u.setDegreeName(rs.getString("DegreeName"));
+            u.setPositionName(rs.getString("PositionName"));
+            list.add(u);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return list;
+}
 
 }

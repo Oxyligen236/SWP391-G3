@@ -1,0 +1,122 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #74ebd5, #ACB6E5);
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container input,
+.login-container button {
+    box-sizing: border-box;
+}
+
+.login-container {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    text-align: center;
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.login-container label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+    color: #555;
+    font-size: 14px;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    font-size: 14px;
+}
+
+.login-container input:focus {
+    border-color: #74ebd5;
+    box-shadow: 0px 0px 4px rgba(116, 235, 213, 0.8);
+}
+
+.login-container button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background: #74ebd5;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-container button:hover {
+    background: #5cd0c0;
+}
+
+.errorMessage {
+    color: red;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+}
+
+.remember-me input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+}
+
+.remember-me label {
+    margin: 0;
+    font-size: 13px;
+    color: #555;
+}
+
+.forgot-password a {
+    font-size: 13px;
+    color: #74ebd5;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+.show-password {
+    display: flex;
+    align-items: center;
+    margin: 5px 0 15px 0;
+    font-size: 13px;
+    color: #555;
+    cursor: pointer;
+}
+
+.show-password input[type="checkbox"] {
+    margin-right: 5px;
+    width: auto;
+    cursor: pointer;
+}
