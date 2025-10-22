@@ -90,7 +90,7 @@
                         <div class="button-container">
                             <a href="<c:url value='/edit' />" class="btn-edit btn-custom me-3"><i
                                     class="fas fa-edit"></i>Chỉnh sửa</a>
-                            <a href="<c:url value='/authenticate' />" class="btn-back btn-custom"><i
+                            <a href="<c:url value='/home' />" class="btn-back btn-custom"><i
                                     class="fas fa-arrow-left"></i>Quay lại</a>
                         </div>
 

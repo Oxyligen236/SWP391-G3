@@ -1,21 +1,36 @@
+body {
+    background: linear-gradient(135deg, #ffd6e0 0%, #ffe6f0 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
 
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-        .table-hover tbody tr:hover { background-color: #f8f9fa; }
-        .btn-action { margin: 0 2px; }
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.85em;
-        }
-        .status-active { background-color: #d4edda; color: #155724; }
-        .status-inactive { background-color: #f8d7da; color: #721c24; }
+.container {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(255, 192, 203, 0.3); /* hồng nhạt */
+}
+
+.table-hover tbody tr:hover { 
+    background-color: #fff0f5; /* hồng nhạt khi hover */
+}
+
+.btn-action { 
+    margin: 0 2px; 
+}
+
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85em;
+}
+
+.status-active { 
+    background-color: #ffe6f0; 
+    color: #d6336c; /* đỏ hồng */
+}
+
+.status-inactive { 
+    background-color: #ffe0e6; 
+    color: #a61d36; /* đỏ nhạt */
+}

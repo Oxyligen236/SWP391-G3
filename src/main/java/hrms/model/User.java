@@ -3,6 +3,7 @@ package hrms.model;
 import java.sql.Date;
 
 public class User {
+
     private int userId;
 
     private String fullname;
@@ -15,6 +16,9 @@ public class User {
     private String ethnicity;
     private String nation;
 
+    private String departmentName;
+    private String positionName;
+    private String degreeName;
     private Integer degreeId;
     private Integer positionId;
     private Integer departmentId;
@@ -27,6 +31,28 @@ public class User {
         this.fullname = fullname;
         this.email = email;
     }
+
+    public User(int userId, String fullname, Date birthDate, String gender, String email, String phoneNumber, String cccd, String address, String ethnicity, String nation, String departmentName, String positionName, String degreeName, Integer degreeId, Integer positionId, Integer departmentId) {
+        this.userId = userId;
+        this.fullname = fullname;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.cccd = cccd;
+        this.address = address;
+        this.ethnicity = ethnicity;
+        this.nation = nation;
+        this.departmentName = departmentName;
+        this.positionName = positionName;
+        this.degreeName = degreeName;
+        this.degreeId = degreeId;
+        this.positionId = positionId;
+        this.departmentId = departmentId;
+    }
+    
+    
+    
 
     public User(int userId, String fullname, Date birthDate, String gender,
             String email, String phoneNumber, String cccd, String address,
@@ -46,6 +72,32 @@ public class User {
         this.positionId = positionId;
         this.departmentId = departmentId;
     }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+
+    public String getDegreeName() {
+        return degreeName;
+    }
+
+    public void setDegreeName(String degreeName) {
+        this.degreeName = degreeName;
+    }
+    
+    
 
     public int getUserId() {
         return userId;
@@ -153,20 +205,20 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", fullname='" + fullname + '\'' +
-                ", birthDate=" + birthDate +
-                ", gender='" + gender + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", cccd='" + cccd + '\'' +
-                ", address='" + address + '\'' +
-                ", ethnicity='" + ethnicity + '\'' +
-                ", nation='" + nation + '\'' +
-                ", degreeId=" + degreeId +
-                ", positionId=" + positionId +
-                ", departmentId=" + departmentId +
-                '}';
+        return "User{"
+                + "userId=" + userId
+                + ", fullname='" + fullname + '\''
+                + ", birthDate=" + birthDate
+                + ", gender='" + gender + '\''
+                + ", email='" + email + '\''
+                + ", phoneNumber='" + phoneNumber + '\''
+                + ", cccd='" + cccd + '\''
+                + ", address='" + address + '\''
+                + ", ethnicity='" + ethnicity + '\''
+                + ", nation='" + nation + '\''
+                + ", degreeId=" + degreeId
+                + ", positionId=" + positionId
+                + ", departmentId=" + departmentId
+                + '}';
     }
 }
