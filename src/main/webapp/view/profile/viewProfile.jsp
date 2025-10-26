@@ -39,8 +39,74 @@
                         <label class="info-label">Ngày sinh</label>
                         <p class="info-value"><fmt:formatDate value="${user.birthDate}" pattern="dd/MM/yyyy"/></p>
 
-                        <label class="info-label mt-3">Giới tính</label>
-                        <p class="info-value">${user.gender}</p>
+                        <div class="profile-body">
+
+
+                            <div class="section-title"><i class="fas fa-user"></i> Thông Tin Cơ Bản</div>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="info-label">Họ và tên</label>
+                                    <p class="info-value">${user.fullname}</p>
+
+                                    <label class="info-label mt-3">Email</label>
+                                    <p class="info-value">${user.email}</p>
+
+                                    <label class="info-label mt-3">Số điện thoại</label>
+                                    <p class="info-value">${user.phoneNumber}</p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="info-label">Ngày sinh</label>
+                                    <p class="info-value">
+                                        <fmt:formatDate value="${user.birthDate}" pattern="dd/MM/yyyy" />
+                                    </p>
+
+                                    <label class="info-label mt-3">Giới tính</label>
+                                    <p class="info-value">${user.gender}</p>
+
+                                    <label class="info-label mt-3">CCCD</label>
+                                    <p class="info-value">${user.cccd}</p>
+                                </div>
+                            </div>
+
+                            <div class="section-title"><i class="fas fa-info-circle"></i> Thông Tin Bổ Sung</div>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="info-label">Quốc tịch</label>
+                                    <p class="info-value">${user.nation}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="info-label">Dân tộc</label>
+                                    <p class="info-value">${user.ethnicity}</p>
+                                </div>
+                            </div>
+
+
+                            <div class="section-title"><i class="fas fa-briefcase"></i> Thông Tin Công Việc</div>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="info-label">Phòng ban</label>
+                                    <p class="info-value">${user.departmentName != null ? user.departmentName : 'Chưa
+                                        phân công'}</p>
+
+                                    <label class="info-label mt-3">Chức vụ</label>
+                                    <p class="info-value">${user.positionName != null ? user.positionName : 'Chưa xác
+                                        định'}</p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="info-label">Bằng cấp</label>
+                                    <p class="info-value">${user.degreeName != null ? user.degreeName : ''}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-container">
+                            <a href="<c:url value='/edit' />" class="btn-edit btn-custom me-3"><i
+                                    class="fas fa-edit"></i>Chỉnh sửa</a>
+                            <a href="<c:url value='/home' />" class="btn-back btn-custom"><i
+                                    class="fas fa-arrow-left"></i>Quay lại</a>
+                        </div>
 
                         <label class="info-label mt-3">CCCD</label>
                         <p class="info-value">${user.cccd}</p>

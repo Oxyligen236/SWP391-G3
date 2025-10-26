@@ -21,10 +21,9 @@ public class CreateAccountServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
- 
         Account currentUser = (Account) req.getSession().getAttribute("account");
         if (currentUser == null || currentUser.getRole() != 1) {
-            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền truy cập!");
+            resp.sendRedirect(req.getContextPath() + "/view/profile/accessDenied.jsp");
             return;
         }
 
@@ -51,14 +50,12 @@ public class CreateAccountServlet extends HttpServlet {
         int roleID = Integer.parseInt(req.getParameter("roleID"));
         boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
 
-
         if (!password.equals(confirmPassword)) {
             req.setAttribute("errorMessage", "Mật khẩu xác nhận không khớp!");
             req.setAttribute("roleList", roleDAO.getAllRoles());
             req.getRequestDispatcher("/view/account/createAccount.jsp").forward(req, resp);
             return;
         }
-
 
         if (accountDAO.getAccountByUsername(username) != null) {
             req.setAttribute("errorMessage", "Username đã tồn tại!");
@@ -67,7 +64,6 @@ public class CreateAccountServlet extends HttpServlet {
             return;
         }
 
-
         if (accountDAO.getAccountByUserID(userID) != null) {
             req.setAttribute("errorMessage", "Người dùng này đã có tài khoản!");
             req.setAttribute("roleList", roleDAO.getAllRoles());
@@ -75,7 +71,6 @@ public class CreateAccountServlet extends HttpServlet {
             return;
         }
 
-   
         Account account = new Account();
         account.setUserID(userID);
         account.setUsername(username);

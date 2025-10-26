@@ -18,7 +18,7 @@
             <div class="detail-card">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2><i class="fas fa-user-circle"></i> Chi Tiết Tài Khoản</h2>
-                    <a href="<c:url value='/account/view'/>" class="btn btn-secondary">
+                    <a href="<c:url value='/home'/>" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> Quay lại
                     </a>
                 </div>

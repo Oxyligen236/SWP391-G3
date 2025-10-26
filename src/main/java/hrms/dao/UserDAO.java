@@ -313,5 +313,56 @@ public String getRoleNameByUserId(int userId) {
     return null;
 }
 
+public List<UserDTO> getAllWithJoin() {
+    List<UserDTO> list = new ArrayList<>();
+    String sql = """
+        SELECT 
+            u.UserID, u.FullName, u.Email, u.PhoneNumber, 
+            u.BirthDate, u.Gender, u.CCCD, u.Address, 
+            u.Ethnicity, u.Nation, 
+            u.DegreeID, d.Name AS DegreeName, 
+            u.PositionID, p.Name AS PositionName, 
+            u.DepartmentID, dep.Name AS DepartmentName
+        FROM Users u
+        LEFT JOIN Degree d ON u.DegreeID = d.DegreeID
+        LEFT JOIN Positions p ON u.PositionID = p.PositionID
+        LEFT JOIN Department dep ON u.DepartmentID = dep.DepartmentID
+        ORDER BY u.UserID
+        """;
+
+    try (PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+            UserDTO udto = new UserDTO();
+            udto.setUserId(rs.getInt("UserID"));
+            udto.setFullname(rs.getString("FullName"));
+            udto.setEmail(rs.getString("Email"));
+            udto.setPhoneNumber(rs.getString("PhoneNumber"));
+            udto.setBirthDate(rs.getDate("BirthDate"));
+            udto.setGender(rs.getString("Gender"));
+            udto.setCccd(rs.getString("CCCD"));
+            udto.setAddress(rs.getString("Address"));
+            udto.setEthnicity(rs.getString("Ethnicity"));
+            udto.setNation(rs.getString("Nation"));
+            udto.setDegreeId(rs.getInt("DegreeID"));
+            udto.setPositionId(rs.getInt("PositionID"));
+            udto.setDepartmentId(rs.getInt("DepartmentID"));
+
+            // các trường join thêm
+            udto.setDegreeName(rs.getString("DegreeName"));
+            udto.setPositionName(rs.getString("PositionName"));
+            udto.setDepartmentName(rs.getString("DepartmentName"));
+
+            list.add(udto);
+        }
+
+    } catch (SQLException e) {
+        System.err.println("Error in getAllWithJoin(): " + e.getMessage());
+    }
+
+    return list;
+}
+
 
 }
