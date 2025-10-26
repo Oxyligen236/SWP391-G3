@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.util.ArrayList;
+
 
 public class JobDAO extends DBContext {
 
@@ -116,5 +118,62 @@ public class JobDAO extends DBContext {
     }
     return null;
 }
+
+    public List<JobDescription> getFilteredJD(
+            String search, String departmentFilter, String statusFilter,
+            int page, int pageSize) throws SQLException {
+
+        List<JobDescription> list = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT * FROM job_description WHERE 1=1 "
+        );
+
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append(" AND jobTitle LIKE ? ");
+        }
+        if (departmentFilter != null && !departmentFilter.trim().isEmpty()) {
+            sql.append(" AND department = ? ");
+        }
+        if (statusFilter != null && !statusFilter.trim().isEmpty()) {
+            sql.append(" AND status = ? ");
+        }
+
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            int index = 1;
+
+            if (search != null && !search.trim().isEmpty()) {
+                ps.setString(index++, "%" + search + "%");
+            }
+            if (departmentFilter != null && !departmentFilter.trim().isEmpty()) {
+                ps.setString(index++, departmentFilter);
+            }
+            if (statusFilter != null && !statusFilter.trim().isEmpty()) {
+                ps.setString(index++, statusFilter);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                JobDescription jd = new JobDescription();
+                jd.setJobID(rs.getInt("jobID"));
+                jd.setJobTitle(rs.getString("jobTitle"));
+                jd.setStartDate(rs.getDate("startDate").toLocalDate());
+                jd.setEndDate(rs.getDate("endDate").toLocalDate());
+                jd.setDepartment(rs.getString("department"));
+                jd.setVacancies(rs.getInt("vacancies"));
+                jd.setStatus(rs.getString("status"));
+                list.add(jd);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    
+    
+    
 
 }

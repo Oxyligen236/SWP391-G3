@@ -19,6 +19,7 @@
                 <th>Checkout 1</th>
                 <th>Checkin 2</th>
                 <th>Checkout 2</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -30,6 +31,12 @@
                     <td>${s.checkout1}</td>
                     <td>${s.checkin2}</td>
                     <td>${s.checkout2}</td>
+                    <td>
+                        <form action="EditShiftServlet" method="get" style="display:inline;">
+                            <input type="hidden" name="shiftID" value="${s.shiftID}">
+                            <button type="submit">Edit</button>
+                        </form>
+                    </td>
                 </tr>
             </c:forEach>
         </tbody>

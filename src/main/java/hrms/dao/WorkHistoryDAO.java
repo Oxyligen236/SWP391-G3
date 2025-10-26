@@ -1,5 +1,6 @@
 package hrms.dao;
 
+import com.mysql.cj.Messages;
 import hrms.model.WorkHistory;
 import hrms.utils.DBContext;
 
@@ -22,12 +23,10 @@ public class WorkHistoryDAO extends DBContext {
         );
     }
 
-
     public List<WorkHistory> getAll() {
         List<WorkHistory> list = new ArrayList<>();
         String sql = "SELECT * FROM WorkHistory";
-        try (PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 list.add(extractFromResultSet(rs));
@@ -37,7 +36,6 @@ public class WorkHistoryDAO extends DBContext {
         }
         return list;
     }
-
 
     public List<WorkHistory> getByUserId(int userId) {
         List<WorkHistory> list = new ArrayList<>();
@@ -53,4 +51,46 @@ public class WorkHistoryDAO extends DBContext {
         }
         return list;
     }
+
+    public List<WorkHistory> getFilteredHistory(
+            String search) throws SQLException {
+
+        List<WorkHistory> list = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT * FROM WorkHistory WHERE 1=1 "
+        );
+
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append(" AND Type LIKE ? ");
+        }
+
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            int index = 1;
+
+            if (search != null && !search.trim().isEmpty()) {
+                ps.setString(index++, "%" + search + "%");
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                WorkHistory wh = new WorkHistory();
+                wh.setType(rs.getString("type"));
+                wh.setDescription(rs.getString("description"));
+                wh.setOldValue(rs.getString("old_Value"));
+                wh.setNewValue(rs.getString("new_Value"));
+                wh.setEvaluate(rs.getString("evaluate"));
+                wh.setEffectiveDate(rs.getDate("effective_Date").toLocalDate());
+
+                list.add(wh);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 }

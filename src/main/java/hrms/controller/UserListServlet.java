@@ -6,6 +6,7 @@ import hrms.model.User;
 import java.io.IOException;
 import java.util.List;
 import hrms.dao.TicketDAO;
+import hrms.dto.UserDTO;
 import hrms.model.Ticket;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,7 +21,7 @@ public class UserListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
     UserDAO userDAO = new UserDAO();
-    List<User> users = userDAO.getAll();
+      List<UserDTO> users = userDAO.getAllWithJoin();
 
     request.setAttribute ("users", users);
 

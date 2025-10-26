@@ -132,7 +132,7 @@
                                     </td>
                                     <td>
 
-                                        <a href="<c:url value='/account/updateRole?id=${account.accountID}'/>"
+                                        <a href="<c:url value='/updateRole?accountID=${account.accountID}'/>"
                                             class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Edit</a>
                                         <form action="<c:url value='/account/toggle-status'/>" method="post"
                                             style="display:inline;">
