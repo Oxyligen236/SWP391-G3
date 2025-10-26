@@ -31,7 +31,7 @@ public class ViewAccountServlet extends HttpServlet {
         try {
             if (currentUser.getRole() == 1) {
 
-                request.setAttribute("accountList", accountDAO.getAllAccountsDTO());
+                request.setAttribute("accounts", accountDAO.getAllAccountsDTO());
                 request.getRequestDispatcher("/view/account/viewAccountList.jsp").forward(request, response);
             } else {
 

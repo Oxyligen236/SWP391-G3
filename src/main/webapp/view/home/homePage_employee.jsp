@@ -25,7 +25,7 @@
         </div>
 
         <div class="login-btn">
-          <a href="<c:url value='/view/home/homepage_guest.jsp'/>">Log out</a>
+          <a href="<c:url value='/view/home/homePage_guest.jsp'/>">Log out</a>
         </div>
       </div>
     </header>
@@ -65,12 +65,6 @@
           <ul class="submenu" id="cv-submenu">
             <li><a href="#">My CV</a></li>
             <li><a href="<c:url value='/cv-submit'/>">Submit CV</a></li>
-          </ul>
-        </li>
-        <li>
-          <a href="#" onclick="toggleSubmenu('attendance-submenu')">Attendance</a>
-          <ul class="submenu" id="attendance-submenu">
-            <li><a href="<c:url value='/my-attendance'/>">My Attendance</a></li>
           </ul>
         </li>
         <li>
