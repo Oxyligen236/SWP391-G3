@@ -8,8 +8,8 @@ public class Payroll {
     private int payrollID;
     private int userID;
     private double baseSalary;
-    private String month;
-    private String year;
+    private int month;
+    private int year;
     private Duration workingHours;
     private double netSalary;
     private LocalDate payDate;
@@ -18,7 +18,7 @@ public class Payroll {
     public Payroll() {
     }
 
-    public Payroll(int payrollID, int userID, double baseSalary, String month, String year, Duration workingHours, double netSalary, LocalDate payDate,
+    public Payroll(int payrollID, int userID, double baseSalary, int month, int year, Duration workingHours, double netSalary, LocalDate payDate,
             String status) {
         this.payrollID = payrollID;
         this.userID = userID;
@@ -55,19 +55,19 @@ public class Payroll {
         this.baseSalary = baseSalary;
     }
 
-    public String getMonth() {
+    public int getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(int month) {
         this.month = month;
     }
 
-    public String getYear() {
+    public int getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(int year) {
         this.year = year;
     }
 

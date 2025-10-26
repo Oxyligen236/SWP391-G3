@@ -33,8 +33,8 @@ public class PayrollDAO extends DBContext {
                 rs.getInt(1),
                 rs.getInt(2),
                 rs.getDouble(3),
-                rs.getString(4),
-                rs.getString(5),
+                rs.getInt(4),
+                rs.getInt(5),
                 workingHours,
                 rs.getDouble(7),
                 rs.getDate(8).toLocalDate(),
@@ -46,8 +46,10 @@ public class PayrollDAO extends DBContext {
         return new PayrollItem(
                 rs.getInt(1),
                 rs.getInt(2),
-                rs.getString(3),
-                rs.getDouble(4)
+                rs.getInt(3),
+                rs.getDouble(4),
+                rs.getString(5),
+                rs.getBoolean(6)
         );
     }
 
@@ -55,9 +57,7 @@ public class PayrollDAO extends DBContext {
         return new PayrollType(
                 rs.getInt(1),
                 rs.getString(2),
-                rs.getString(3),
-                rs.getString(4),
-                rs.getBoolean(5)
+                rs.getString(3)
         );
     }
 
@@ -124,11 +124,11 @@ public class PayrollDAO extends DBContext {
         return items;
     }
 
-    public PayrollType getPayrollTypeById(String typeId) {
+    public PayrollType getPayrollTypeById(int typeId) {
         String sql = "select * from Payroll_Type where Type_ID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, typeId);
+            st.setInt(1, typeId);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 return extractPayrollTypeFromResultSet(rs);
@@ -216,12 +216,12 @@ public class PayrollDAO extends DBContext {
 
         if (month > 0) {
             sql.append(" and Month = ?");
-            params.add(String.valueOf(month));
+            params.add(month);
         }
 
         if (year > 0) {
             sql.append(" and Year = ?");
-            params.add(String.valueOf(year));
+            params.add(year);
         }
 
         List<Payroll> payrolls = new ArrayList<>();
@@ -244,16 +244,15 @@ public class PayrollDAO extends DBContext {
 
     public double calculateTotalByType(int payrollId, boolean isPositive, double baseSalary) {
         String sql = """
-            select
+            SELECT
                 ROUND(SUM(
                     CASE 
-                        WHEN pt.AmountType = 'fixed' THEN pi.Amount
-                        WHEN pt.AmountType = 'percent' THEN (? * pi.Amount / 100)
+                        WHEN pi.AmountType = 'fixed' THEN pi.Amount
+                        WHEN pi.AmountType = 'percent' THEN (? * pi.Amount / 100)
                     END
-                ), 3) AS Total
+                ), 2) AS Total
             FROM Payroll_Item pi
-            JOIN Payroll_Type pt ON pi.Type_ID = pt.Type_ID
-            WHERE pi.Payroll_ID = ? AND pt.Is_Positive = ?
+            WHERE pi.Payroll_ID = ? AND pi.Is_Positive = ?
         """;
 
         try {
@@ -263,7 +262,8 @@ public class PayrollDAO extends DBContext {
             st.setBoolean(3, isPositive);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                return rs.getDouble("Total");
+                double total = rs.getDouble("Total");
+                return rs.wasNull() ? 0.0 : total;
             }
         } catch (SQLException e) {
             System.out.println(e);

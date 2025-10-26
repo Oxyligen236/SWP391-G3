@@ -66,8 +66,8 @@ public class PayrollService {
                         type.getTypeName(),
                         type.getCategory(),
                         item.getAmount(),
-                        type.getAmountType(),
-                        type.isPositive()
+                        item.getAmountType(),
+                        item.isPositive()
                 );
                 details.add(detail);
             }

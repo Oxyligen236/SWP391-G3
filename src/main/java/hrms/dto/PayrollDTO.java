@@ -15,8 +15,8 @@ public class PayrollDTO {
     private String userDepartment;
     private String userPosition;
     private double baseSalary;
-    private String month;
-    private String year;
+    private int month;
+    private int year;
     private List<PayrollItemDetailDTO> payrollItems;
     private Duration totalWorkHours;
     private double totalDeductions;
@@ -29,7 +29,7 @@ public class PayrollDTO {
     }
 
     public PayrollDTO(int payrollID, int userID, String userName, String gender, String userPhone, String userEmail,
-            String userDepartment, String userPosition, double baseSalary, String month, String year, List<PayrollItemDetailDTO> payrollItems,
+            String userDepartment, String userPosition, double baseSalary, int month, int year, List<PayrollItemDetailDTO> payrollItems,
             Duration totalWorkHours, double totalDeductions, double totalEarnings, double netSalary, LocalDate payDate, String status) {
         this.payrollID = payrollID;
         this.userID = userID;
@@ -51,8 +51,8 @@ public class PayrollDTO {
         this.status = status;
     }
 
-    public PayrollDTO(int payrollID, int userID, String userName, String userDepartment, String userPosition, double baseSalary, String month,
-            String year, Duration totalWorkHours, double totalDeductions, double totalEarnings,
+    public PayrollDTO(int payrollID, int userID, String userName, String userDepartment, String userPosition, double baseSalary, int month,
+            int year, Duration totalWorkHours, double totalDeductions, double totalEarnings,
             double netSalary, LocalDate payDate, String status) {
         this.payrollID = payrollID;
         this.userID = userID;
@@ -134,19 +134,19 @@ public class PayrollDTO {
         this.baseSalary = baseSalary;
     }
 
-    public String getMonth() {
+    public int getMonth() {
         return month;
     }
 
-    public void setMonth(String month) {
+    public void setMonth(int month) {
         this.month = month;
     }
 
-    public String getYear() {
+    public int getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(int year) {
         this.year = year;
     }
 
