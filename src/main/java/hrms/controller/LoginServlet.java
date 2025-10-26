@@ -43,62 +43,48 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         String remember = request.getParameter("remember");
 
-        if (username == null || username.trim().length() <= MIN_USERNAME_LENGTH) {
-            request.setAttribute("errorMessage", "Username must be more than " + MIN_USERNAME_LENGTH + " characters");
-            request.setAttribute("username", username);
-            request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
-            return;
-        }
-
-        if (password == null || password.length() <= MIN_PASSWORD_LENGTH) {
-            request.setAttribute("errorMessage", "Password must be more than " + MIN_PASSWORD_LENGTH + " characters");
-            request.setAttribute("username", username);
-            request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
-            return;
-        }
+        username = username != null ? username.trim() : null;
+        password = password != null ? password.trim() : null;
 
         AccountDAO accountDao = new AccountDAO();
-        Account account = accountDao.getAccountByUsername(username.trim());
-
-        if (account != null && account.isIsActive()) {
-            boolean passwordMatch = false;
-
-            if (PasswordUtil.isHashed(account.getPassword())) {
-                passwordMatch = PasswordUtil.verifyPassword(password, account.getPassword());
-            } else {
-                passwordMatch = account.getPassword().equals(password);
-
-                if (passwordMatch) {
-                    String hashedPassword = PasswordUtil.hashPassword(password);
-                    accountDao.updatePassword(account.getUserID(), hashedPassword);
-                }
-            }
-
-            if (passwordMatch) {
-                if ("on".equals(remember)) {
-                    Cookie usernameCookie = new Cookie("username", username.trim());
-                    Cookie rememberCookie = new Cookie("rememberMe", "true");
-                    usernameCookie.setMaxAge(7 * 24 * 60 * 60);
-                    rememberCookie.setMaxAge(7 * 24 * 60 * 60);
-                    response.addCookie(usernameCookie);
-                    response.addCookie(rememberCookie);
-                } else {
-                    Cookie usernameCookie = new Cookie("username", "");
-                    Cookie rememberCookie = new Cookie("rememberMe", "");
-                    usernameCookie.setMaxAge(0);
-                    rememberCookie.setMaxAge(0);
-                    response.addCookie(usernameCookie);
-                    response.addCookie(rememberCookie);
-                }
-
-                request.getSession().setAttribute("account", account);
-                response.sendRedirect(request.getContextPath() + "/home");
-                return;
-            }
+        Account account = accountDao.getAccountByUsername(username);
+        
+        if (account == null) {
+            request.setAttribute("errorMessage", "Invalid username or password");
+            request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+            return;
         }
-
-        request.setAttribute("errorMessage", "Invalid username or password");
-        request.setAttribute("username", username);
-        request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+        
+        if (!account.isIsActive()) {
+            request.setAttribute("errorMessage", "Your account has been deactivated. Please contact administrator.");
+            request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+            return;
+        }
+        
+        boolean passwordMatch = PasswordUtil.verifyPassword(password, account.getPassword());
+        
+        if (!passwordMatch) {
+            request.setAttribute("errorMessage", "Invalid username or password");
+            request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+            return;
+        }
+        
+        if ("on".equals(remember)) {
+            Cookie usernameCookie = new Cookie("username", username);
+            Cookie passwordCookie = new Cookie("password", password);
+            usernameCookie.setMaxAge(7 * 24 * 60 * 60);
+            passwordCookie.setMaxAge(7 * 24 * 60 * 60);
+            response.addCookie(usernameCookie);
+            response.addCookie(passwordCookie);
+        } else {
+            Cookie usernameCookie = new Cookie("username", "");
+            Cookie passwordCookie = new Cookie("password", "");
+            usernameCookie.setMaxAge(0);
+            passwordCookie.setMaxAge(0);
+            response.addCookie(usernameCookie);
+            response.addCookie(passwordCookie);
+        }
+        request.getSession().setAttribute("account", account);
+        response.sendRedirect(request.getContextPath() + "/home");
     }
 }

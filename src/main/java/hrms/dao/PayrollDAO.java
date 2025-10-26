@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +30,10 @@ public class PayrollDAO extends DBContext {
     }
 
     private Payroll extractPayrollFromResultSet(ResultSet rs) throws SQLException {
-        String totalWorkStr = rs.getString("TotalWorkHours");
-        Duration workingHours = getTotalWorkHour(totalWorkStr);
+        Duration workingHours = getTotalWorkHour(rs.getString(6));
+        
+        // Convert java.sql.Date sang LocalDate (null-safe)
+        LocalDate payDate = rs.getObject(8, LocalDate.class);
 
         return new Payroll(
                 rs.getInt(1),
@@ -40,7 +43,7 @@ public class PayrollDAO extends DBContext {
                 rs.getString(5),
                 workingHours,
                 rs.getDouble(7),
-                rs.getDate(8).toLocalDate(),
+                payDate,
                 rs.getString(9)
         );
     }
@@ -90,6 +93,9 @@ public class PayrollDAO extends DBContext {
             PreparedStatement st = connection.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
+                // Convert trực tiếp sang LocalDate (null-safe)
+                LocalDate payDate = rs.getObject(11, LocalDate.class);
+                
                 PayrollDTO dto = new PayrollDTO(
                         rs.getInt(1),
                         rs.getInt(2),
@@ -103,7 +109,7 @@ public class PayrollDAO extends DBContext {
                         getTotalDeductions(rs.getInt(1)),
                         getTotalEarnings(rs.getInt(1)),
                         rs.getDouble(10),
-                        rs.getDate(11).toLocalDate(),
+                        payDate,
                         rs.getString(12)
                 );
                 payrollDTOs.add(dto);
@@ -245,6 +251,9 @@ public class PayrollDAO extends DBContext {
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
+                // Convert trực tiếp sang LocalDate (null-safe)
+                LocalDate payDate = rs.getObject(11, LocalDate.class);
+                
                 PayrollDTO dto = new PayrollDTO(
                         rs.getInt(1),
                         rs.getInt(2),
@@ -258,7 +267,7 @@ public class PayrollDAO extends DBContext {
                         getTotalDeductions(rs.getInt(1)),
                         getTotalEarnings(rs.getInt(1)),
                         rs.getDouble(10),
-                        rs.getDate(11).toLocalDate(),
+                        payDate,
                         rs.getString(12)
                 );
                 payrolls.add(dto);
@@ -450,6 +459,9 @@ public class PayrollDAO extends DBContext {
             PreparedStatement st = connection.prepareStatement(sql.toString());
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
+                // Convert trực tiếp sang LocalDate (null-safe)
+                LocalDate payDate = rs.getObject(11, LocalDate.class);
+                
                 PayrollDTO dto = new PayrollDTO(
                         rs.getInt(1),
                         rs.getInt(2),
@@ -463,7 +475,7 @@ public class PayrollDAO extends DBContext {
                         getTotalDeductions(rs.getInt(1)),
                         getTotalEarnings(rs.getInt(1)),
                         rs.getDouble(10),
-                        rs.getDate(11).toLocalDate(),
+                        payDate,
                         rs.getString(12)
                 );
                 payrollDTOs.add(dto);

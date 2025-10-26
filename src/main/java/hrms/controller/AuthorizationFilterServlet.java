@@ -30,7 +30,13 @@ public class AuthorizationFilterServlet implements Filter {
 
         if (requestURI.contains("/authenticate") ||
             requestURI.contains("/css/") ||
-            requestURI.contains("/picture/")) {
+            requestURI.contains("/js/") ||
+            requestURI.contains("/assets/") ||
+            requestURI.contains("/picture/") ||
+            requestURI.contains("/view/home/homePage_guest.jsp") ||
+            requestURI.contains("/view/landing.jsp") ||
+            requestURI.endsWith("/") ||
+            requestURI.equals(contextPath)) {
             chain.doFilter(request, response);
             return;
         }
@@ -54,34 +60,19 @@ public class AuthorizationFilterServlet implements Filter {
         if (roleID == 1) {
             return true;
         }
-
         if (roleID == 2) {
-            return !requestURI.contains("/updateRole");
+            return true;
         }
-
-
         if (roleID == 3) {
-            return requestURI.contains("/cv") || 
-                   requestURI.contains("/jd-list") || 
-                   requestURI.contains("/home") ||
-                   requestURI.contains("/cv-submit");
+        return true;
         }
-
 
         if (roleID == 4) {
-            return !requestURI.contains("/account/view") &&
-                   !requestURI.contains("/updateRole") &&
-                   !requestURI.contains("/payroll/company");
+            return true;
         }
 
-
         if (roleID == 5) {
-            return requestURI.contains("/my-") || 
-                   requestURI.contains("/profile") || 
-                   requestURI.contains("/cv-submit") ||
-                   requestURI.contains("/home") ||
-                   requestURI.contains("/payroll/personal") ||
-                   requestURI.contains("/ticket");
+            return true;
         }
 
         return false;

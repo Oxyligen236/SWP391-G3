@@ -25,7 +25,7 @@
         </div>
 
         <div class="login-btn">
-          <a href="<c:url value='/view/home/homepage_guest.jsp'/>">Log out</a>
+          <a href="<c:url value='/view/home/homePage_guest.jsp'/>">Log out</a>
         </div>
       </div>
     </header>
