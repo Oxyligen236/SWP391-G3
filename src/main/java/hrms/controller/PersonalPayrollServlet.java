@@ -62,7 +62,7 @@ public class PersonalPayrollServlet extends HttpServlet {
         try {
             month = Integer.parseInt(monthParam);
             year = Integer.parseInt(yearParam);
-            List<PayrollDTO> personalPayrolls = payrollService.searchPayroll(fullName, "", "", month, year, "");
+            List<PayrollDTO> personalPayrolls = payrollService.searchPayroll(userId, month, year, "");
             if (personalPayrolls == null || personalPayrolls.isEmpty()) {
                 request.setAttribute("error", "Không có dữ liệu lương cá nhân.");
             } else {

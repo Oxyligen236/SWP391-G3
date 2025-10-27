@@ -12,9 +12,78 @@ h1 {
     margin-bottom: 30px;
 }
 
-form.search-form {
-    text-align: center;
+h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Employee List Section Styles */
+.employee-list-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
+}
+
+.employee-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.employee-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: white;
+}
+
+.employee-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.employee-id {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+.employee-name {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+form.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px 16px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    padding: 18px 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+form.search-form label {
+    font-weight: 500;
+    color: #2c3e50;
+    margin-right: 6px;
+}
+
+form.search-form div.field-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
 }
 
 form.search-form select,
@@ -40,11 +109,38 @@ form.search-form button {
     color: #fff;
     border: none;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 18px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 120px;
+    line-height: 1;
+    height: 38px;
+    font-weight: 500;
 }
 
 form.search-form button:hover {
     background-color: #0056b3;
     transform: scale(1.05);
+}
+
+form.search-form input[type="text"],
+form.search-form input[type="number"],
+form.search-form select {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+form.search-form input:focus,
+form.search-form select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
 }
 
 table {
@@ -108,68 +204,4 @@ p.error-msg {
     padding: 10px;
     width: fit-content;
     margin: 15px auto;
-}
-
-form.search-form {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 12px 16px;
-    margin-bottom: 30px;
-    background-color: #fff;
-    padding: 18px 24px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    margin-left: auto;
-    margin-right: auto;
-}
-
-form.search-form label {
-    font-weight: 500;
-    color: #2c3e50;
-    margin-right: 6px;
-}
-
-form.search-form div.field-group {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-}
-
-form.search-form input[type="text"],
-form.search-form input[type="number"],
-form.search-form select {
-    padding: 8px 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    transition: all 0.3s ease;
-}
-
-form.search-form input:focus,
-form.search-form select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-}
-
-form.search-form button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 9px 18px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    flex-shrink: 0;
-    min-width: 120px;
-    line-height: 1;
-    height: 38px;
-    font-size: 14px;
-    font-weight: 500;
 }

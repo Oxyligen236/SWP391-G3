@@ -3,11 +3,7 @@ package hrms.controller;
 import java.io.IOException;
 import java.util.List;
 
-import hrms.dao.DepartmentDAO;
-import hrms.dao.PositionDAO;
 import hrms.dto.PayrollDTO;
-import hrms.model.Department;
-import hrms.model.Position;
 import hrms.service.PayrollService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,18 +24,15 @@ public class CompanyPayrollServlet extends HttpServlet {
             return;
         }
         PayrollService payrollService = new PayrollService();
-        DepartmentDAO departmentDAO = new DepartmentDAO();
-        PositionDAO positionDAO = new PositionDAO();
-        List<Department> departments = departmentDAO.getAll();
-        List<Position> positions = positionDAO.getAll();
-        List<PayrollDTO> payrolls = payrollService.getAllCompanyPayrolls();
+        List<PayrollDTO> payrolls = payrollService.getAllPayrollByUserId(1);//Integer.parseInt(request.getParameter("userID"))
         if (payrolls == null || payrolls.isEmpty()) {
             request.setAttribute("error", "No payroll records found.");
             request.getRequestDispatcher("/view/payroll/companyPayroll.jsp").forward(request, response);
+            return;
         }
         request.setAttribute("payrolls", payrolls);
-        request.setAttribute("departments", departments);
-        request.setAttribute("positions", positions);
+        request.setAttribute("userID", payrolls.get(0).getUserID());
+        request.setAttribute("userName", payrolls.get(0).getUserName());
         request.getRequestDispatcher("/view/payroll/companyPayroll.jsp").forward(request, response);
     }
 
@@ -52,32 +45,29 @@ public class CompanyPayrollServlet extends HttpServlet {
             return;
         }
 
-        String userName = request.getParameter("userName");
+        String userID = request.getParameter("userID");
         String monthStr = request.getParameter("month");
         String yearStr = request.getParameter("year");
         String status = request.getParameter("status");
-        String department = request.getParameter("department");
-        String position = request.getParameter("position");
 
         int month;
         int year;
+        int userId;
         PayrollService payrollService = new PayrollService();
-        DepartmentDAO departmentDAO = new DepartmentDAO();
-        PositionDAO positionDAO = new PositionDAO();
-        List<Department> departments = departmentDAO.getAll();
-        List<Position> positions = positionDAO.getAll();
+
         try {
             month = (monthStr == null || monthStr.isEmpty()) ? 0 : Integer.parseInt(monthStr);
             year = (yearStr == null || yearStr.isEmpty()) ? 0 : Integer.parseInt(yearStr);
-            request.setAttribute("departments", departments);
-            request.setAttribute("positions", positions);
-            List<PayrollDTO> payrolls = payrollService.searchPayroll(userName, department, position, month, year, status);
+            userId = (userID == null || userID.isEmpty()) ? 0 : Integer.parseInt(userID);
+            List<PayrollDTO> payrolls = payrollService.searchPayroll(userId, month, year, status);
             if (payrolls == null || payrolls.isEmpty()) {
                 request.setAttribute("error", "không tìm thấy dữ liệu lương.");
                 request.getRequestDispatcher("/view/payroll/companyPayroll.jsp").forward(request, response);
                 return;
             }
             request.setAttribute("payrolls", payrolls);
+            request.setAttribute("userID", payrolls.get(0).getUserID());
+            request.setAttribute("userName", payrolls.get(0).getUserName());
             request.getRequestDispatcher("/view/payroll/companyPayroll.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             request.setAttribute("error", "Invalid month or year format.");

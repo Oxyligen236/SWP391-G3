@@ -13,35 +13,19 @@
 
             <body>
                 <h1>Company Payroll</h1>
+
+                <div class="employee-list-section">
+                    <h2>Nhân viên</h2>
+                    <div class="employee-grid">
+                        <div class="employee-card">
+                            <div class="employee-id">ID: ${userID}</div>
+                            <div class="employee-name">${userName}</div>
+                        </div>
+                    </div>
+                </div>
+
                 <h2>Tìm kiếm bảng lương</h2>
                 <form action="<c:url value='/payroll/company'/>" method="post" class="search-form">
-                    <div class="field-group">
-                        <label>Tên nhân viên:</label>
-                        <input type="text" name="userName" value="${param.userName}" placeholder="Nhập tên nhân viên">
-                    </div>
-
-                    <div class="field-group">
-                        <label>Phòng ban:</label>
-                        <select name="department">
-                            <option value="">--Tất cả--</option>
-                            <c:forEach var="dept" items="${departments}">
-                                <option value="${dept.name}" ${param.department==dept.name ? 'selected' : '' }>
-                                    ${dept.name}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
-
-                    <div class="field-group">
-                        <label>Vị trí:</label>
-                        <select name="position">
-                            <option value="">--Tất cả--</option>
-                            <c:forEach var="pos" items="${positions}">
-                                <option value="${pos.name}" ${param.position==pos.name ? 'selected' : '' }>${pos.name}
-                                </option>
-                            </c:forEach>
-                        </select>
-                    </div>
-
                     <div class="field-group">
                         <label>Tháng:</label>
                         <select name="month" id="month">
@@ -67,7 +51,7 @@
                             <option value="PAID" ${param.status=='PAID' ? 'selected' : '' }>PAID</option>
                         </select>
                     </div>
-
+                    <input type="hidden" name="userID" value="${userID}">
                     <button type="submit">Tìm kiếm</button>
                 </form>
                 <hr>
@@ -78,8 +62,6 @@
                 <table border="1">
                     <thead>
                         <tr>
-                            <th>Employee ID</th>
-                            <th>Tên</th>
                             <th>Phòng ban</th>
                             <th>Vị trí</th>
                             <th>Tháng</th>
@@ -97,8 +79,6 @@
                     <tbody>
                         <c:forEach var="employee" items="${payrolls}">
                             <tr>
-                                <td>${employee.userID}</td>
-                                <td>${employee.userName}</td>
                                 <td>${employee.userDepartment}</td>
                                 <td>${employee.userPosition}</td>
                                 <td>${employee.month}</td>

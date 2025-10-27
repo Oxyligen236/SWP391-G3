@@ -62,7 +62,7 @@ public class PayrollService {
                 PayrollItemDetailDTO detail = new PayrollItemDetailDTO(
                         item.getPayrollItemID(),
                         item.getPayrollID(),
-                        type.getPayrollTypeID(),
+                        type.getpayrollTypeID(),
                         type.getTypeName(),
                         type.getCategory(),
                         item.getAmount(),
@@ -120,8 +120,8 @@ public class PayrollService {
         return dto;
     }
 
-    public List<PayrollDTO> searchPayroll(String userName, String department, String position, int month, int year, String status) {
-        List<Payroll> payrolls = payrollDao.searchPayroll(userName, department, position, month, year, status);
+    public List<PayrollDTO> searchPayroll(int userID, int month, int year, String status) {
+        List<Payroll> payrolls = payrollDao.searchPayroll(userID, month, year, status);
         List<PayrollDTO> dtos = new ArrayList<>();
 
         for (Payroll payroll : payrolls) {

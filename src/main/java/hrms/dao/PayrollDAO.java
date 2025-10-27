@@ -37,7 +37,7 @@ public class PayrollDAO extends DBContext {
                 rs.getInt(5),
                 workingHours,
                 rs.getDouble(7),
-                rs.getDate(8).toLocalDate(),
+                rs.getDate(8).toLocalDate() != null ? rs.getDate(8).toLocalDate() : null,
                 rs.getString(9)
         );
     }
@@ -154,7 +154,7 @@ public class PayrollDAO extends DBContext {
         return types;
     }
 
-    public List<Payroll> searchPayroll(String userName, String department, String position, int month, int year, String status) {
+    public List<Payroll> searchPayroll(int userID, int month, int year, String status) {
         StringBuilder sql = new StringBuilder("""
             select p.* from Payroll p
             join Users u on p.UserID = u.UserID
@@ -164,19 +164,23 @@ public class PayrollDAO extends DBContext {
         """);
 
         List<Object> params = new ArrayList<>();
+        if (userID > 0) {
+            sql.append(" and p.UserID = ?");
+            params.add(userID);
+        }
 
-        if (userName != null && !userName.trim().isEmpty()) {
-            sql.append(" and u.FullName like ?");
-            params.add("%" + userName + "%");
-        }
-        if (department != null && !department.trim().isEmpty()) {
-            sql.append(" and d.name = ?");
-            params.add(department);
-        }
-        if (position != null && !position.trim().isEmpty()) {
-            sql.append(" and pos.name = ?");
-            params.add(position);
-        }
+        // if (userName != null && !userName.trim().isEmpty()) {
+        //     sql.append(" and u.FullName like ?");
+        //     params.add("%" + userName + "%");
+        // }
+        // if (department != null && !department.trim().isEmpty()) {
+        //     sql.append(" and d.name = ?");
+        //     params.add(department);
+        // }
+        // if (position != null && !position.trim().isEmpty()) {
+        //     sql.append(" and pos.name = ?");
+        //     params.add(position);
+        // }
         if (month > 0) {
             sql.append(" and p.Month = ?");
             params.add(month);
@@ -194,7 +198,6 @@ public class PayrollDAO extends DBContext {
         try {
             PreparedStatement st = connection.prepareStatement(sql.toString());
 
-            // Set parameters
             for (int i = 0; i < params.size(); i++) {
                 st.setObject(i + 1, params.get(i));
             }

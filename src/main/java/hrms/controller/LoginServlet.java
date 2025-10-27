@@ -46,29 +46,41 @@ public class LoginServlet extends HttpServlet {
         username = username != null ? username.trim() : null;
         password = password != null ? password.trim() : null;
 
+        if (username == null || username.length() < MIN_USERNAME_LENGTH) {
+            request.setAttribute("errorMessage", "Username must be at least " + MIN_USERNAME_LENGTH + " characters long.");
+            request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+            return;
+        }
+
+        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
+            request.setAttribute("errorMessage", "Password must be at least " + MIN_PASSWORD_LENGTH + " characters long.");
+            request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+            return;
+        }
+
         AccountDAO accountDao = new AccountDAO();
         Account account = accountDao.getAccountByUsername(username);
-        
+
         if (account == null) {
             request.setAttribute("errorMessage", "Invalid username or password");
             request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
             return;
         }
-        
+
         if (!account.isIsActive()) {
             request.setAttribute("errorMessage", "Your account has been deactivated. Please contact administrator.");
             request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
             return;
         }
-        
+
         boolean passwordMatch = PasswordUtil.verifyPassword(password, account.getPassword());
-        
+
         if (!passwordMatch) {
             request.setAttribute("errorMessage", "Invalid username or password");
             request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
             return;
         }
-        
+
         if ("on".equals(remember)) {
             Cookie usernameCookie = new Cookie("username", username);
             Cookie passwordCookie = new Cookie("password", password);
