@@ -1,8 +1,5 @@
 package hrms.controller;
 
-import hrms.dao.UserDAO;
-import hrms.model.User;
-
 import java.io.IOException;
 import java.util.List;
 import hrms.dao.TicketDAO;
@@ -23,7 +20,7 @@ public class UserListServlet extends HttpServlet {
     UserDAO userDAO = new UserDAO();
       List<UserDTO> users = userDAO.getAllWithJoin();
 
-    request.setAttribute ("users", users);
+    request.setAttribute ("users", userDAO.getAll());
 
     request.getRequestDispatcher ("/view/users/userlist.jsp").forward(request, response);
     }

@@ -30,15 +30,39 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
                         <li class="nav-item"><a class="nav-link" href="#contact">Job description</a></li>
-                        <li class="nav-item"><a class="nav-link" href="<c:url value='/authenticate'/>">Login</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle p-0" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://ui-avatars.com/api/?name=${fn:escapeXml(sessionScope.users.fullname)}&size=40&background=ff80ab&color=fff&bold=true" 
+                                     alt="Avatar" 
+                                     class="rounded-circle" 
+                                     style="width: 40px; height: 40px; object-fit: cover; border: 2px solid #fff;" />
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="min-width: 250px;">
+                                <li>
+                                    <div class="dropdown-item-text d-flex align-items-center py-3">
+                                        <img src="https://ui-avatars.com/api/?name=${fn:escapeXml(sessionScope.users.fullname)}&size=60&background=ff80ab&color=fff&bold=true" 
+                                             alt="Avatar" 
+                                             class="rounded-circle me-3" 
+                                             style="width: 60px; height: 60px; object-fit: cover;" />
+                                        <div>
+                                            <div class="fw-bold">${sessionScope.users.fullname}</div>
+                                            <small class="text-muted">ID: ${sessionScope.users.userId}</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="<c:url value='/home'/>"><i class="fas fa-home me-2"></i> Home</a></li>
+                                <li><a class="dropdown-item" href="<c:url value='/logout'/>"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
         <header class="masthead">
             <div class="container">
-                <div class="masthead-subheading">Welcome to our Company</div>
-                <div class="masthead-heading text-uppercase">Join with us and change the world</div>
+                <div class="masthead-subheading">WELCOME back, ${users.fullname}</div>
+                <div class="masthead-heading text-uppercase">We are the best</div>
                 <a class="btn btn-primary btn-xl text-uppercase" href="#services">More</a>
             </div>
         </header>
