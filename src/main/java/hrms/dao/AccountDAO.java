@@ -15,12 +15,14 @@ public class AccountDAO extends DBContext {
 
     private Account extractAccountFromResultSet(ResultSet rs) throws SQLException {
         return new Account(
-                rs.getInt("AccountID"),
-                rs.getInt("UserID"),
-                rs.getString("Username"),
-                rs.getString("Password"),
-                rs.getInt("RoleID"),
-                rs.getBoolean("Is_active"));
+                rs.getInt(1),
+                rs.getInt(2),
+                rs.getString(3),
+                rs.getString(4),
+                rs.getInt(5),
+                rs.getBoolean(6),
+                rs.getString(7)
+        );
     }
 
     public List<Account> getAllAccounts() {
@@ -374,4 +376,20 @@ public class AccountDAO extends DBContext {
         }
         return 0;
     }
+
+    public Account getAccountByGoogleEmail(String googleEmail) {
+        String sql = "SELECT * FROM Account WHERE GoogleEmail = ? AND Is_active = 1";
+        try (
+                PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, googleEmail);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return extractAccountFromResultSet(rs);
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi lấy account bằng email Google: " + e.getMessage());
+        }
+        return null;
+    }
+
 }

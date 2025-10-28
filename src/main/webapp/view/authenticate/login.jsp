@@ -48,10 +48,21 @@
                                 <label for="remember">Ghi nhớ tôi</label>
                             </div>
                             <div class="forgot-password">
-                                <a href="<c:url value='/forgotPassword'/>">Quên mật khẩu?</a>
+                                <a href="${pageContext.request.contextPath}/forgot-password">Quên mật khẩu?</a>
                             </div>
                         </div>
                     </form>
+
+                    <div class="divider">
+                        <span>HOẶC</span>
+                    </div>
+
+                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email profile openid&redirect_uri=http://localhost:8080/hrms/authenticate&response_type=code&client_id=58943187648-crqjkdmm3l59d2bk2qsfvgfn23buonso.apps.googleusercontent.com&approval_prompt=force"
+                        class="google-btn">
+                        <i class="fab fa-google"></i>
+                        Đăng nhập bằng Google
+                    </a>
+                    <input type="hidden" id="accessToken" value="${accessToken}">
                 </div>
             </body>
 

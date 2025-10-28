@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import hrms.dao.AccountDAO;
 import hrms.model.Account;
+import hrms.model.User;
 import hrms.utils.PasswordUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,6 +22,45 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        String code = request.getParameter("code");
+        String error = request.getParameter("error");
+
+        if (code != null) {
+            try {
+                GoogleLogin gg = new GoogleLogin();
+                String accessToken = gg.getToken(code);
+                User googleUser = gg.getUserInfo(accessToken);
+
+                String googleEmail = googleUser.getEmail();
+
+                AccountDAO accountDao = new AccountDAO();
+                Account account = accountDao.getAccountByGoogleEmail(googleEmail);
+
+                if (account == null) {
+                    request.setAttribute("errorMessage",
+                            "Email chưa được đăng ký!");
+                    request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+                    return;
+                }
+
+                request.getSession().setAttribute("account", account);
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("errorMessage", "Google login failed: " + e.getMessage());
+                request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+            }
+        }
+
+        if (error != null) {
+            request.setAttribute("errorMessage", "You cancelled Google login");
+            request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
+            return;
+        }
+
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {

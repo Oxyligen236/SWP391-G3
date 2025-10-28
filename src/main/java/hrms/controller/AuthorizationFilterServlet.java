@@ -13,14 +13,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-
 @WebFilter("/*")
 public class AuthorizationFilterServlet implements Filter {
-    
+
     @Override
-    public void doFilter (ServletRequest request, ServletResponse response, FilterChain chain)
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        
+
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession(false);
@@ -28,19 +27,20 @@ public class AuthorizationFilterServlet implements Filter {
         String requestURI = httpRequest.getRequestURI();
         String contextPath = httpRequest.getContextPath();
 
-        if (requestURI.contains("/authenticate") ||
-            requestURI.contains("/css/") ||
-            requestURI.contains("/js/") ||
-            requestURI.contains("/assets/") ||
-            requestURI.contains("/picture/") ||
-            requestURI.contains("/view/home/homePage_guest.jsp") ||
-            requestURI.contains("/view/landing.jsp") ||
-            requestURI.endsWith("/") ||
-            requestURI.equals(contextPath)) {
+        if (requestURI.contains("/authenticate")
+                || requestURI.contains("/forgot-password")
+                || requestURI.contains("/css/")
+                || requestURI.contains("/js/")
+                || requestURI.contains("/assets/")
+                || requestURI.contains("/picture/")
+                || requestURI.contains("/view/home/homePage_guest.jsp")
+                || requestURI.contains("/view/landing.jsp")
+                || requestURI.endsWith("/")
+                || requestURI.equals(contextPath)) {
             chain.doFilter(request, response);
             return;
         }
-        
+
         Account account = (session != null) ? (Account) session.getAttribute("account") : null;
 
         if (account == null) {
@@ -64,7 +64,7 @@ public class AuthorizationFilterServlet implements Filter {
             return true;
         }
         if (roleID == 3) {
-        return true;
+            return true;
         }
 
         if (roleID == 4) {

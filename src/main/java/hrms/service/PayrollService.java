@@ -62,7 +62,7 @@ public class PayrollService {
                 PayrollItemDetailDTO detail = new PayrollItemDetailDTO(
                         item.getPayrollItemID(),
                         item.getPayrollID(),
-                        type.getpayrollTypeID(),
+                        type.getPayrollTypeID(),
                         type.getTypeName(),
                         type.getCategory(),
                         item.getAmount(),

@@ -15,11 +15,11 @@ public class PayrollType {
         this.category = category;
     }
 
-    public int getpayrollTypeID() {
+    public int getPayrollTypeID() {
         return payrollTypeID;
     }
 
-    public void setpayrollTypeID(int payrollTypeID) {
+    public void setPayrollTypeID(int payrollTypeID) {
         this.payrollTypeID = payrollTypeID;
     }
 

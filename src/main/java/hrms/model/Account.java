@@ -8,17 +8,19 @@ public class Account {
     private String password;
     private int role;
     private boolean isActive;
+    private String googleEmail;
 
     public Account() {
     }
 
-    public Account(int accountID, int userID, String username, String password, int role, boolean isActive) {
+    public Account(int accountID, int userID, String username, String password, int role, boolean isActive, String googleEmail) {
         this.accountID = accountID;
         this.userID = userID;
         this.username = username;
         this.password = password;
         this.role = role;
         this.isActive = isActive;
+        this.googleEmail = googleEmail;
     }
 
     public int getAccountID() {
@@ -69,4 +71,11 @@ public class Account {
         this.isActive = isActive;
     }
 
+    public String getGoogleEmail() {
+        return googleEmail;
+    }
+
+    public void setGoogleEmail(String googleEmail) {
+        this.googleEmail = googleEmail;
+    }
 }
