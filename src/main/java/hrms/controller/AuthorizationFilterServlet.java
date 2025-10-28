@@ -34,6 +34,7 @@ public class AuthorizationFilterServlet implements Filter {
             requestURI.contains("/assets/") ||
             requestURI.contains("/picture/") ||
             requestURI.contains("/view/home/homePage_guest.jsp") ||
+            requestURI.contains("/view/home/test.jsp") ||
             requestURI.contains("/view/landing.jsp") ||
             requestURI.endsWith("/") ||
             requestURI.equals(contextPath)) {

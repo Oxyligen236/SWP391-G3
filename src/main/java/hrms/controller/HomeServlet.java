@@ -37,7 +37,7 @@ public class HomeServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/authenticate");
                 return;
             }
-            request.setAttribute("users", users);
+            session.setAttribute("users", users);
 
             String homePage = getHomePageByRole(roleID);
 

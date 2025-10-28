@@ -85,6 +85,6 @@ public class LoginServlet extends HttpServlet {
             response.addCookie(passwordCookie);
         }
         request.getSession().setAttribute("account", account);
-        response.sendRedirect(request.getContextPath() + "/home");
+        response.sendRedirect(request.getContextPath() + "/landing");
     }
 }
