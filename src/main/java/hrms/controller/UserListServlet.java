@@ -3,6 +3,7 @@ package hrms.controller;
 import java.io.IOException;
 import java.util.List;
 import hrms.dao.TicketDAO;
+import hrms.dao.UserDAO;
 import hrms.dto.UserDTO;
 import hrms.model.Ticket;
 import jakarta.servlet.ServletException;
