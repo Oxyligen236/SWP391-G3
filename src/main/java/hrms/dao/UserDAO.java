@@ -27,10 +27,25 @@ public class UserDAO extends DBContext {
         }
         return null;
     }
+    public User getUserByEmail(String email) {
+        String sql = "SELECT UserID, FullName, Email, PhoneNumber, BirthDate, Gender, "
+                + "CCCD, Address, Ethnicity, Nation, DegreeID, PositionID, DepartmentID "
+                + "FROM Users WHERE Email = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public boolean updateUser(User u) {
     if (u == null || u.getUserId() == 0) {
-        System.out.println("❌ User hoặc UserID không hợp lệ.");
+        System.out.println(" User hoặc UserID không hợp lệ.");
         return false;
     }
 
@@ -88,13 +103,13 @@ public class UserDAO extends DBContext {
 
         int rows = ps.executeUpdate();
         if (rows > 0) {
-            System.out.println("✅ Cập nhật thành công UserID: " + u.getUserId());
+            System.out.println(" Cập nhật thành công UserID: " + u.getUserId());
             return true;
         } else {
-            System.out.println("⚠️ Không có bản ghi nào được cập nhật.");
+            System.out.println(" Không có bản ghi nào được cập nhật.");
         }
     } catch (SQLException e) {
-        System.out.println("❌ Lỗi SQL khi cập nhật user:");
+        System.out.println(" Lỗi SQL khi cập nhật user:");
         e.printStackTrace();
     }
 
