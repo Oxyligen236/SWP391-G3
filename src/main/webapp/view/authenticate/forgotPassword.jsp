@@ -7,20 +7,35 @@
 
             <head>
                 <meta charset="UTF-8">
-                <title>Forgot password</title>
+                <title>Quên mật khẩu</title>
+                <link rel="stylesheet" href="<c:url value='/css/forgotPassword.css'/>">
             </head>
 
             <body>
-                <div>
+                <div class="login-container">
                     <h2>Quên mật khẩu</h2>
-                    <form action="<c:url value='/forgot-password'/>" method="post">
-                        <input type="hidden" name="email" value="pqm1290@gmail.com">
-                        <input type="hidden" name="subject" value="Thông báo">
-                        <input type="hidden" name="body" value="Xin chào, đây là nội dung email.">
 
-                        <button type="submit" name="type" value="mailto">Gửi bằng mail client</button>
-                        <button type="submit" name="type" value="gmail">Gửi bằng Gmail web</button>
+                    <c:if test="${not empty successMessage}">
+                        <p class="successMessage" style="color: green;">${successMessage}</p>
+                    </c:if>
+
+                    <c:if test="${not empty errorMessage}">
+                        <p class="errorMessage" style="color: red;">${errorMessage}</p>
+                    </c:if>
+
+                    <form action="<c:url value='/forgot-password'/>" method="post">
+                        <label for="email">Email đăng ký trong hệ thống:</label>
+                        <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required>
+                        <input type="text" name="subject" placeholder="Yêu cầu đặt lại mật khẩu (tùy chọn)">
+                        <textarea name="body" rows="4"
+                            placeholder="Nhập nội dung yêu cầu đặt lại mật khẩu (tùy chọn)"></textarea>
+
+                        <button type="submit">Gửi yêu cầu đặt lại mật khẩu</button>
                     </form>
+
+                    <div class="back-to-login">
+                        <a href="${pageContext.request.contextPath}/authenticate">Quay lại đăng nhập</a>
+                    </div>
                 </div>
             </body>
 
