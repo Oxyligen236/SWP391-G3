@@ -130,6 +130,7 @@ table {
     border-radius: 6px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 thead {
@@ -148,7 +149,7 @@ thead th {
 tbody td {
     padding: 12px;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     color: #444;
     border-bottom: 1px solid #eee;
 }
@@ -157,14 +158,149 @@ tbody tr:hover {
     background: #f9f9f9;
 }
 
-tbody td a {
+tbody td.no-data {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.action-link {
     color: #4a90e2;
     text-decoration: none;
     font-weight: 500;
 }
 
-tbody td a:hover {
+.action-link:hover {
     text-decoration: underline;
+}
+
+/* Status Badge */
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-accepted {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-rejected {
+    background-color: #dc3545;
+    color: white;
+}
+
+.status-reviewed {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.status-pending {
+    background-color: #ffc107;
+    color: #333;
+}
+
+/* Pagination Styles */
+.pagination-container {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+.items-per-page-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.items-per-page-form label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.items-per-page-form input[type="number"] {
+    width: 70px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.items-per-page-form button {
+    padding: 6px 20px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.items-per-page-form button:hover {
+    background-color: #357abd;
+}
+
+.pagination-nav {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    gap: 5px;
+    margin: 0;
+    padding: 0;
+}
+
+.page-item {
+    display: inline-block;
+}
+
+.page-item.disabled .page-link {
+    color: #999;
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #f0f0f0;
+}
+
+.page-link {
+    padding: 8px 16px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #4a90e2;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.page-link:hover {
+    background-color: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+.page-item.disabled .page-link {
+    background-color: #f0f0f0;
+    border-color: #ddd;
+    color: #666;
+}
+
+.total-info {
+    width: 90%;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 10px;
 }
 
 /* Responsive Design */
@@ -203,6 +339,20 @@ tbody td a:hover {
         padding: 8px 4px;
         font-size: 12px;
     }
+
+    .pagination-container {
+        width: 100%;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .pagination-nav {
+        justify-content: center;
+    }
+
+    .total-info {
+        width: 100%;
+    }
 }
 
 @media (max-width: 600px) {
@@ -224,5 +374,10 @@ tbody td a:hover {
     tbody td {
         padding: 6px 2px;
         font-size: 11px;
+    }
+
+    .page-link {
+        padding: 6px 12px;
+        font-size: 12px;
     }
 }
