@@ -10,7 +10,10 @@ public class CVs {
     private String nationality;
     private String email;
     private String phone;
-    private String cv_Description;
+    private String experience;
+    private String education;
+    private String skills;
+    private String aboutMe;
     private String status;
 
     // Constructor mặc định
@@ -18,7 +21,8 @@ public class CVs {
     }
 
     // Constructor đọc CV từ DB
-    public CVs(int cvID, int jdID, String name, String gender, String address, String nationality, String email, String phone, String cv_Description, String status) {
+    public CVs(int cvID, int jdID, String name, String gender, String address, String nationality, String email,
+            String phone, String experience, String education, String skills, String aboutMe, String status) {
         this.cvID = cvID;
         this.jdID = jdID;
         this.name = name;
@@ -27,12 +31,16 @@ public class CVs {
         this.nationality = nationality;
         this.email = email;
         this.phone = phone;
-        this.cv_Description = cv_Description;
+        this.experience = experience;
+        this.education = education;
+        this.skills = skills;
+        this.aboutMe = aboutMe;
         this.status = status;
     }
 
-    // Constructor insert CV mới
-    public CVs(int jdID, String name, String gender, String address, String nationality, String email, String phone, String cv_Description, String status) {
+    // Constructor nộp CV mới
+    public CVs(int jdID, String name, String gender, String address, String nationality, String email,
+            String phone, String experience, String education, String skills, String aboutMe, String status) {
         this.jdID = jdID;
         this.name = name;
         this.gender = gender;
@@ -40,7 +48,10 @@ public class CVs {
         this.nationality = nationality;
         this.email = email;
         this.phone = phone;
-        this.cv_Description = cv_Description;
+        this.experience = experience;
+        this.education = education;
+        this.skills = skills;
+        this.aboutMe = aboutMe;
         this.status = status;
     }
 
@@ -76,6 +87,14 @@ public class CVs {
         this.gender = gender;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getNationality() {
         return nationality;
     }
@@ -100,12 +119,36 @@ public class CVs {
         this.phone = phone;
     }
 
-    public String getCv_Description() {
-        return cv_Description;
+    public String getExperience() {
+        return experience;
     }
 
-    public void setCv_Description(String cv_Description) {
-        this.cv_Description = cv_Description;
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
+    }
+
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
     }
 
     public String getStatus() {
@@ -114,14 +157,6 @@ public class CVs {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
 }

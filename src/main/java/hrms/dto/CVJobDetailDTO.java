@@ -12,13 +12,18 @@ public class CVJobDetailDTO {
     private String email;
     private String phone;
 
-    private String cv_Description;
+    private String experience;
+    private String education;
+    private String skills;
+    private String aboutMe;
     private String status;
 
     public CVJobDetailDTO() {
     }
 
-    public CVJobDetailDTO(int cvID, int jdID, String jdTitle, String name, String gender, String address, String nationality, String email, String phone, String cv_Description, String status) {
+    public CVJobDetailDTO(int cvID, int jdID, String jdTitle, String name, String gender, String address,
+            String nationality, String email, String phone, String experience, String education, String skills,
+            String aboutMe, String status) {
         this.cvID = cvID;
         this.jdID = jdID;
         this.jdTitle = jdTitle;
@@ -28,7 +33,10 @@ public class CVJobDetailDTO {
         this.nationality = nationality;
         this.email = email;
         this.phone = phone;
-        this.cv_Description = cv_Description;
+        this.experience = experience;
+        this.education = education;
+        this.skills = skills;
+        this.aboutMe = aboutMe;
         this.status = status;
     }
 
@@ -96,12 +104,36 @@ public class CVJobDetailDTO {
         this.phone = phone;
     }
 
-    public String getCv_Description() {
-        return cv_Description;
+    public String getExperience() {
+        return experience;
     }
 
-    public void setCv_Description(String cv_Description) {
-        this.cv_Description = cv_Description;
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
+    }
+
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
     }
 
     public String getStatus() {

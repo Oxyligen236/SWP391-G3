@@ -51,27 +51,44 @@
                         </div>
                         <div class="form-group">
                             <label for="address">Address:</label>
-                            <input type="text" id="address" name="address" placeholder="Nhập địa chỉ của bạn" required>
+                            <input type="text" id="address" name="address" placeholder="Enter your address" required>
                         </div>
                         <div class="form-group">
                             <label for="nationality">Nationality:</label>
-                            <input type="text" id="nationality" name="nationality" placeholder="Nhập quốc tịch của bạn"
+                            <input type="text" id="nationality" name="nationality" placeholder="Enter your nationality"
                                 required>
                         </div>
                         <div class="form-group">
                             <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required>
+                            <input type="email" id="email" name="email" placeholder="Enter your email" required>
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number:</label>
-                            <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại của bạn"
-                                required>
+                            <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="cv_Description">CV Description:</label>
-                            <textarea id="cv_Description" name="cv_Description" rows="5"
-                                placeholder="Viết mô tả về kinh nghiệm của bạn..." required></textarea>
+                            <label for="experience">Experience:</label>
+                            <textarea id="experience" name="experience" rows="5" placeholder="Describe your experience"
+                                required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="education">Education:</label>
+                            <textarea id="education" name="education" rows="5" placeholder="Describe your education"
+                                required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="skills">Skills:</label>
+                            <textarea id="skills" name="skills" rows="5" placeholder="List your skills"
+                                required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="aboutMe">About Me:</label>
+                            <textarea id="aboutMe" name="aboutMe" rows="5" placeholder="Introduce yourself"
+                                required></textarea>
                         </div>
 
                         <div class="form-actions">

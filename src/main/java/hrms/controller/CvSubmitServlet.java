@@ -30,7 +30,10 @@ public class CvSubmitServlet extends HttpServlet {
         String nationality = request.getParameter("nationality");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
-        String description = request.getParameter("cv_Description");
+        String experience = request.getParameter("experience");
+        String education = request.getParameter("education");
+        String skills = request.getParameter("skills");
+        String aboutMe = request.getParameter("aboutMe");
         String jdID = request.getParameter("jdID");
         CvService cvService = new CvService();
         try {
@@ -42,14 +45,17 @@ public class CvSubmitServlet extends HttpServlet {
                     || nationality == null || nationality.trim().isEmpty()
                     || email == null || email.trim().isEmpty()
                     || phone == null || phone.trim().isEmpty()
-                    || description == null || description.trim().isEmpty()
+                    || experience == null || experience.trim().isEmpty()
+                    || education == null || education.trim().isEmpty()
+                    || skills == null || skills.trim().isEmpty()
+                    || aboutMe == null || aboutMe.trim().isEmpty()
                     || jdID == null) {
 
                 request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin!");
                 request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
                 return;
             }
-            CVs newCV = new CVs(jdIDInt, name, gender, address, nationality, email, phone, description, "Pending");
+            CVs newCV = new CVs(jdIDInt, name, gender, address, nationality, email, phone, experience, education, skills, aboutMe, "Pending");
             boolean isAdded = cvService.addCV(newCV);
             if (isAdded) {
                 request.setAttribute("successMessage", "Nộp CV thành công!");
