@@ -31,6 +31,7 @@ public class CvService {
                 cv.getJdID(),
                 jobTitle,
                 cv.getName(),
+                cv.getDob(),
                 cv.getGender(),
                 cv.getAddress(),
                 cv.getNationality(),

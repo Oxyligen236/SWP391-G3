@@ -41,6 +41,10 @@
                             <input type="text" id="name" name="name" placeholder="Enter your full name" required>
                         </div>
                         <div class="form-group">
+                            <label for="dob">Date of Birth:</label>
+                            <input type="date" id="dob" name="dob" required>
+                        </div>
+                        <div class="form-group">
                             <label for="gender">Gender:</label>
                             <select id="gender" name="gender" required>
                                 <option value="" disabled selected>Select your gender</option>

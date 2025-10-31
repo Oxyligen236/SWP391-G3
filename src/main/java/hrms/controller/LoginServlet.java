@@ -112,31 +112,30 @@ public class LoginServlet extends HttpServlet {
             request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
             return;
         }
-
         boolean passwordMatch = PasswordUtil.verifyPassword(password, account.getPassword());
-
-        if (!passwordMatch) {
+        if (account.getPassword().equals(password) || passwordMatch) {
+            if ("on".equals(remember)) {
+                Cookie usernameCookie = new Cookie("username", username);
+                Cookie passwordCookie = new Cookie("password", password);
+                usernameCookie.setMaxAge(7 * 24 * 60 * 60);
+                passwordCookie.setMaxAge(7 * 24 * 60 * 60);
+                response.addCookie(usernameCookie);
+                response.addCookie(passwordCookie);
+            } else {
+                Cookie usernameCookie = new Cookie("username", "");
+                Cookie passwordCookie = new Cookie("password", "");
+                usernameCookie.setMaxAge(0);
+                passwordCookie.setMaxAge(0);
+                response.addCookie(usernameCookie);
+                response.addCookie(passwordCookie);
+            }
+            request.getSession().setAttribute("account", account);
+            response.sendRedirect(request.getContextPath() + "/landing");
+        } else {
             request.setAttribute("errorMessage", "Invalid username or password");
             request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
             return;
-        }
 
-        if ("on".equals(remember)) {
-            Cookie usernameCookie = new Cookie("username", username);
-            Cookie passwordCookie = new Cookie("password", password);
-            usernameCookie.setMaxAge(7 * 24 * 60 * 60);
-            passwordCookie.setMaxAge(7 * 24 * 60 * 60);
-            response.addCookie(usernameCookie);
-            response.addCookie(passwordCookie);
-        } else {
-            Cookie usernameCookie = new Cookie("username", "");
-            Cookie passwordCookie = new Cookie("password", "");
-            usernameCookie.setMaxAge(0);
-            passwordCookie.setMaxAge(0);
-            response.addCookie(usernameCookie);
-            response.addCookie(passwordCookie);
         }
-        request.getSession().setAttribute("account", account);
-        response.sendRedirect(request.getContextPath() + "/landing");
     }
 }

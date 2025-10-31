@@ -105,6 +105,7 @@
                                 <td>${cv.cvID}</td>
                                 <td>${cv.jdTitle}</td>
                                 <td>${cv.name}</td>
+                                <td>${cv.dob}</td>
                                 <td>${cv.gender}</td>
                                 <td>${cv.email}</td>
                                 <td>${cv.phone}</td>
@@ -124,15 +125,12 @@
                     </tbody>
                 </table>
 
-                <!-- Pagination Section -->
                 <div class="pagination-container">
-                    <!-- Items per page -->
                     <form action="<c:url value='/cv'/>" method="get" class="items-per-page-form">
                         <label>Items per page:</label>
                         <input type="number" name="itemsPerPage" value="${itemsPerPage}" min="1" max="50" />
                         <button type="submit">Apply</button>
 
-                        <!-- Preserve filters -->
                         <input type="hidden" name="name" value="${param.name}" />
                         <input type="hidden" name="email" value="${param.email}" />
                         <input type="hidden" name="phone" value="${param.phone}" />
@@ -142,7 +140,6 @@
                         <input type="hidden" name="page" value="1" />
                     </form>
 
-                    <!-- Pagination buttons -->
                     <nav class="pagination-nav">
                         <ul class="pagination">
                             <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">

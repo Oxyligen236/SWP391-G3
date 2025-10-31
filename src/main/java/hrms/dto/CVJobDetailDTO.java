@@ -1,11 +1,14 @@
 package hrms.dto;
 
+import java.time.LocalDate;
+
 public class CVJobDetailDTO {
 
     private int cvID;
     private int jdID;
     private String jdTitle;
     private String name;
+    private LocalDate dob;
     private String gender;
     private String address;
     private String nationality;
@@ -21,13 +24,14 @@ public class CVJobDetailDTO {
     public CVJobDetailDTO() {
     }
 
-    public CVJobDetailDTO(int cvID, int jdID, String jdTitle, String name, String gender, String address,
+    public CVJobDetailDTO(int cvID, int jdID, String jdTitle, String name, LocalDate dob, String gender, String address,
             String nationality, String email, String phone, String experience, String education, String skills,
             String aboutMe, String status) {
         this.cvID = cvID;
         this.jdID = jdID;
         this.jdTitle = jdTitle;
         this.name = name;
+        this.dob = dob;
         this.gender = gender;
         this.address = address;
         this.nationality = nationality;
@@ -70,6 +74,14 @@ public class CVJobDetailDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocalDate getDob() {
+        return dob;
+    }
+
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
     }
 
     public String getGender() {

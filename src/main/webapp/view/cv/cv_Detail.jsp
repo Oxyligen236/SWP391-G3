@@ -24,6 +24,7 @@
                     <p><strong>JD ID:</strong> ${cvDetail.jdID}</p>
                     <p><strong>Job Title:</strong> ${cvDetail.jdTitle}</p>
                     <p><strong>Name:</strong> ${cvDetail.name}</p>
+                    <p><strong>Date of Birth:</strong> ${cvDetail.dob}</p>
                     <p><strong>Gender:</strong> ${cvDetail.gender}</p>
                     <p><strong>Address:</strong> ${cvDetail.address}</p>
                     <p><strong>Nationality:</strong> ${cvDetail.nationality}</p>
