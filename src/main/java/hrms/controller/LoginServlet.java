@@ -2,6 +2,7 @@ package hrms.controller;
 
 import java.io.IOException;
 
+import hrms.config.Iconstant;
 import hrms.dao.AccountDAO;
 import hrms.model.Account;
 import hrms.model.User;
@@ -15,9 +16,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/authenticate")
 public class LoginServlet extends HttpServlet {
-
-    private static final int MIN_USERNAME_LENGTH = 4;
-    private static final int MIN_PASSWORD_LENGTH = 6;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -86,14 +84,14 @@ public class LoginServlet extends HttpServlet {
         username = username != null ? username.trim() : null;
         password = password != null ? password.trim() : null;
 
-        if (username == null || username.length() < MIN_USERNAME_LENGTH) {
-            request.setAttribute("errorMessage", "Username must be at least " + MIN_USERNAME_LENGTH + " characters long.");
+        if (username == null || username.length() < Iconstant.MIN_USERNAME_LENGTH) {
+            request.setAttribute("errorMessage", "Username must be at least " + Iconstant.MIN_USERNAME_LENGTH + " characters long.");
             request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
             return;
         }
 
-        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
-            request.setAttribute("errorMessage", "Password must be at least " + MIN_PASSWORD_LENGTH + " characters long.");
+        if (password == null || password.length() < Iconstant.MIN_PASSWORD_LENGTH) {
+            request.setAttribute("errorMessage", "Password must be at least " + Iconstant.MIN_PASSWORD_LENGTH + " characters long.");
             request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
             return;
         }
