@@ -1,75 +1,144 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ page
+contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <nav id="sidebar" class="sidebar-wrapper">
-    <div class="sidebar-content" data-simplebar style="height: calc(100% - 60px);">
-        <div class="sidebar-brand">
-            <a href="<c:url value='/view/home/homePage_guest.jsp'/>">
-                <img src="<c:url value='/picture/hrms-removebg-preview.png'/>" height="24" class="logo-light-mode" alt="HRMS"> HRMS
-            </a>
-        </div>
-        
-        <ul class="sidebar-menu pt-3">
-            <li>
-                <a href="<c:url value='/admin/dashboard'/>">
-                    <i class="uil uil-dashboard me-2 d-inline-block"></i>Dashboard
-                </a>
-            </li>
-
-            <li class="sidebar-dropdown">
-                <a href="javascript:void(0)"><i class="uil uil-users-alt me-2 d-inline-block"></i>User Management</a>
-                <div class="sidebar-submenu">
-                    <ul>
-                        <li><a href="<c:url value='/userList'/>">User List</a></li>
-                        <li><a href="<c:url value='/createUser'/>">Create User</a></li>
-                        <li><a href="<c:url value='/userRoles'/>">Manage Roles</a></li>
-                    </ul>
-                </div>
-            </li>
-
-            <li class="sidebar-dropdown">
-                <a href="javascript:void(0)"><i class="uil uil-building me-2 d-inline-block"></i>Department</a>
-                <div class="sidebar-submenu">
-                    <ul>
-                        <li><a href="<c:url value='/departmentList'/>">Department List</a></li>
-                        <li><a href="<c:url value='/createDepartment'/>">Create Department</a></li>
-                    </ul>
-                </div>
-            </li>
-
-            <li class="sidebar-dropdown">
-                <a href="javascript:void(0)"><i class="uil uil-briefcase-alt me-2 d-inline-block"></i>Position</a>
-                <div class="sidebar-submenu">
-                    <ul>
-                        <li><a href="<c:url value='/positionList'/>">Position List</a></li>
-                        <li><a href="<c:url value='/createPosition'/>">Create Position</a></li>
-                    </ul>
-                </div>
-            </li>
-
-            <li class="sidebar-dropdown">
-                <a href="javascript:void(0)"><i class="uil uil-file-alt me-2 d-inline-block"></i>System</a>
-                <div class="sidebar-submenu">
-                    <ul>
-                        <li><a href="<c:url value='/systemSettings'/>">Settings</a></li>
-                        <li><a href="<c:url value='/systemLogs'/>">System Logs</a></li>
-                        <li><a href="<c:url value='/backup'/>">Backup</a></li>
-                    </ul>
-                </div>
-            </li>
-
-            <li class="sidebar-dropdown">
-                <a href="javascript:void(0)"><i class="uil uil-chart-bar me-2 d-inline-block"></i>Reports</a>
-                <div class="sidebar-submenu">
-                    <ul>
-                        <li><a href="<c:url value='/reports/users'/>">User Reports</a></li>
-                        <li><a href="<c:url value='/reports/attendance'/>">Attendance Reports</a></li>
-                        <li><a href="<c:url value='/reports/payroll'/>">Payroll Reports</a></li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-        <!-- sidebar-menu  -->
+  <div class="sidebar-content" data-simplebar style="height: calc(100% - 60px)">
+    <div class="sidebar-brand">
+      <a href="javascript:void(0)" 
+            onclick='loadInFrame("<c:url value="/view/home/content/dashboard_admin.jsp"/>")'>
+        <img
+          src="<c:url value='/picture/hrms-removebg-preview.png'/>"
+          height="24"
+          class="logo-light-mode"
+          alt="HRMS"
+        />
+        HRMS
+      </a>
     </div>
+
+    <ul class="sidebar-menu pt-3">
+      <li class="sidebar-dropdown">
+        <a href="javascript:void(0)"
+          ><i class="uil uil-user me-2 d-inline-block"></i>Profile</a
+        >
+        <div class="sidebar-submenu">
+          <ul>
+            <li>
+              <a
+                href="<c:url value='/view'/>"
+                target="mainFrame"
+                >View Profile</a
+              >
+            </li>
+            <li>
+              <a
+                href="<c:url value='/edit'/>"
+                target="mainFrame"
+                >Edit Profile</a
+              >
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- ACCOUNT -->
+       <li class="sidebar-dropdown">
+        <a href="javascript:void(0)"
+          ><i class="uil uil-user me-2 d-inline-block"></i>Account</a
+        >
+        <div class="sidebar-submenu">
+          <ul>
+            <li>
+              <a
+                href="#"
+                target="mainFrame"
+                >View Account List</a
+              >
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- CONTRACT -->
+      <li class="sidebar-dropdown">
+        <a href="javascript:void(0)"
+          ><i class="uil uil-wheelchair me-2 d-inline-block"></i>Contract</a
+        >
+        <div class="sidebar-submenu">
+          <ul>
+            <li>
+              <a
+                href="<c:url value='/myContracts'/>"
+                target="mainFrame"
+                >My Contract</a
+              >
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- CV -->
+      <li class="sidebar-dropdown">
+        <a href="javascript:void(0)"
+          ><i class="uil uil-apps me-2 d-inline-block"></i>CV</a
+        >
+        <div class="sidebar-submenu">
+          <ul>
+            <li>
+              <a
+                href="<c:url value='/view/cv/submitCV.jsp'/>"
+                target="mainFrame"
+                >Submit CV</a
+              >
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- PAYROLL -->
+      <li class="sidebar-dropdown">
+        <a href="javascript:void(0)"
+          ><i class="uil uil-shopping-cart me-2 d-inline-block"></i>Payroll</a
+        >
+        <div class="sidebar-submenu">
+          <ul>
+            <li>
+              <a
+                href="#"
+                target="mainFrame"
+                >Personal Payroll</a
+              >
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- TICKET -->
+      <li class="sidebar-dropdown">
+        <a href="javascript:void(0)"
+          ><i class="uil uil-flip-h me-2 d-inline-block"></i>Ticket</a
+        >
+        <div class="sidebar-submenu">
+          <ul>
+            <li>
+              <a
+                href="#"
+                target="mainFrame"
+                >My Ticket</a
+              >
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
 </nav>
-<!-- sidebar-wrapper  -->
+
+<!-- JS helper -->
+<script>
+  // Function giúp load trang vào iframe theo đường dẫn
+  function loadInFrame(url) {
+    const frame = document.getElementById("mainFrame");
+    if (frame) frame.src = url;
+  }
+</script>

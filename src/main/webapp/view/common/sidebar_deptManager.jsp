@@ -69,9 +69,16 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
           <ul>
             <li>
               <a
-                href="<c:url value='/view/cv/submitCV.jsp'/>"
+                href="#"
                 target="mainFrame"
                 >Submit CV</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                target="mainFrame"
+                >View CV List</a
               >
             </li>
           </ul>
@@ -105,16 +112,23 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
           <ul>
             <li>
               <a
-                href="<c:url value='/view/ticket/myTicket.jsp'/>"
+                href="#"
                 target="mainFrame"
                 >My Ticket</a
               >
             </li>
             <li>
               <a
-                href="<c:url value='/view/ticket/createTicket.jsp'/>"
+                href="#"
                 target="mainFrame"
-                >Create Ticket</a
+                >View sent tickets</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                target="mainFrame"
+                >View employee tickets</a
               >
             </li>
           </ul>
@@ -130,7 +144,7 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
           <ul>
             <li>
               <a
-                href="<c:url value='/view/attendance/myAttendance.jsp'/>"
+                href="#"
                 target="mainFrame"
                 >My Attendance</a
               >
@@ -142,9 +156,8 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
   </div>
 </nav>
 
-<!-- JS helper -->
+
 <script>
-  // Function giúp load trang vào iframe theo đường dẫn
   function loadInFrame(url) {
     const frame = document.getElementById("mainFrame");
     if (frame) frame.src = url;

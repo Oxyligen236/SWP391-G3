@@ -31,5 +31,33 @@
     <c:if test="${not empty additionalCSS}">
         ${additionalCSS}
     </c:if>
+    <style>
+  /* Topbar luôn cố định trên đầu */
+  #topnav, .topbar, .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #fff;
+    height: 80px; /* Đặt chiều cao thật sự của topbar (đo bằng F12 nếu cần) */
+  }
+
+  /* Phần main (chứa iframe) phải đẩy xuống sau topbar */
+  .page-content {
+    margin-top: 80px; /* Cùng giá trị với height của topbar */
+    overflow: hidden;
+    background: #f8f9fa;
+  }
+
+  /* Iframe hiển thị toàn màn hình bên dưới topbar */
+  #mainContentFrame {
+    width: 100%;
+    height: calc(100vh - 80px); /* Trừ đúng chiều cao topbar */
+    border: none;
+    display: block;
+  }
+</style>
+
 </head>
 <body>

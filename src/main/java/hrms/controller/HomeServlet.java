@@ -56,15 +56,15 @@ public class HomeServlet extends HttpServlet {
 
     private String getHomePageByRole(int roleID) {
         switch (roleID) {
-            case 1:
-                return "/view/home/homePage_Admin.jsp";
-            case 2:
-                return "/view/home/homePage_HRManager.jsp";
-            case 3  :
-                return "/view/home/homePage_HR.jsp";
-            case 4:
-                return "/view/home/homePage_DeptManager.jsp";
             case 5:
+                return "/view/home/homePage_Admin.jsp";
+            case 1:
+                return "/view/home/homePage_HRManager.jsp";
+            case 2:
+                return "/view/home/homePage_HR.jsp";
+            case 3:
+                return "/view/home/homePage_DeptManager.jsp";
+            case 4:
                 return "/view/home/homePage_employee.jsp";
             default:
                 return "/view/home/homePage_guest.jsp";

@@ -63,7 +63,7 @@
                                         <tr>
                                             <td class="text-center fw-semibold">${contract.contractId}</td>
                                             <td>
-                                                <i class="bi bi-file-text text-primary"></i> ${contract.typeName}
+                                                <i class="bi bi-file-text text-primary"></i> ${contract.contractTypeName}
                                             </td>
                                             <td class="text-center">
                                                 <i class="bi bi-calendar-check text-success"></i> ${contract.startDate}
@@ -113,12 +113,6 @@
             </c:otherwise>
         </c:choose>
 
-        <!-- Back to Home Button -->
-        <div class="text-center mt-4">
-            <a href="<c:url value='/home'/>" class="btn btn-outline-secondary">
-                <i class="bi bi-house"></i> Back to Home
-            </a>
-        </div>
     </div>
 
     <script src="${pageContext.request.contextPath}/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
