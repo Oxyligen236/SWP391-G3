@@ -24,7 +24,7 @@ pageEncoding="UTF-8" isELIgnored="false" %>
           editBtn.addEventListener("click", function() {
             const userRole = parseInt(this.getAttribute("data-role"));
             
-            if (userRole !== 2 && userRole !== 3) {
+            if (userRole !== 1 && userRole !== 2) {
               alert("Bạn không có quyền sửa ghi chú hợp đồng!");
               return;
             }
@@ -50,7 +50,7 @@ pageEncoding="UTF-8" isELIgnored="false" %>
             const userRole = parseInt(this.getAttribute("data-role"));
             
 
-            if (userRole !== 2 && userRole !== 3) {
+            if (userRole !== 1 && userRole !== 2) {
               e.preventDefault();
               alert("Bạn không có quyền truy cập danh sách hợp đồng!");
               return false;
@@ -101,7 +101,7 @@ pageEncoding="UTF-8" isELIgnored="false" %>
                   <i class="bi bi-person"></i> Full Name:
                 </label>
                 <div class="form-control-plaintext border rounded p-2 bg-light">
-                  ${contract.contractName}
+                  ${contract.employeeName}
                 </div>
               </div>
 
@@ -191,7 +191,7 @@ pageEncoding="UTF-8" isELIgnored="false" %>
                   <i class="bi bi-file-text"></i> Contract Type:
                 </label>
                 <div class="form-control-plaintext border rounded p-2 bg-light">
-                  ${contract.typeName}
+                  ${contract.contractTypeName}
                 </div>
               </div>
 
@@ -227,10 +227,10 @@ pageEncoding="UTF-8" isELIgnored="false" %>
 
           <!-- Action Buttons -->
           <div class="d-flex gap-2 justify-content-center mt-4 pt-3 border-top">
-            <a href="<c:url value='/home'/>" class="btn btn-outline-secondary">
-              <i class="bi bi-house"></i> Back to Home
+            <a href="<c:url value='/myContracts'/>" class="btn btn-outline-secondary">
+              <i class="bi bi-house"></i> Back 
             </a>
-            <c:if test="${sessionScope.account.role == 2 || sessionScope.account.role == 3}">
+            <c:if test="${sessionScope.account.role == 1 || sessionScope.account.role == 2}">
               <a href="<c:url value='/viewContracts'/>" id="backToListLink" class="btn btn-outline-primary" data-role="${sessionScope.account.role}">
                 <i class="bi bi-list-ul"></i> Back to Contract List
               </a>

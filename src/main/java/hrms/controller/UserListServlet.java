@@ -5,7 +5,6 @@ import java.util.List;
 import hrms.dao.TicketDAO;
 import hrms.dao.UserDAO;
 import hrms.dto.UserDTO;
-import hrms.model.Ticket;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

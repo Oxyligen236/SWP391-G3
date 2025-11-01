@@ -29,6 +29,7 @@ public class AuthorizationFilterServlet implements Filter {
 
         if (requestURI.contains("/authenticate")
                 || requestURI.contains("/forgot-password")
+                || requestURI.contains("/landing")
                 || requestURI.contains("/css/")
                 || requestURI.contains("/js/")
                 || requestURI.contains("/assets/")
