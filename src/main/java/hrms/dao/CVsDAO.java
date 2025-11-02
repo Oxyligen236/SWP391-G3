@@ -1,5 +1,6 @@
 package hrms.dao;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -76,21 +77,22 @@ public class CVsDAO extends DBContext {
     }
 
     public boolean addCV(CVs cv) {
-        String sql = "insert into CVs (jobID, name, gender, address, nationality, mail, phone_number, experience, education, skills, aboutme, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into CVs (jobID, name, birthdate, gender, address, nationality, mail, phone_number, experience, education, skills, aboutme, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, cv.getJdID());
             st.setString(2, cv.getName());
-            st.setString(3, cv.getGender());
-            st.setString(4, cv.getAddress());
-            st.setString(5, cv.getNationality());
-            st.setString(6, cv.getEmail());
-            st.setString(7, cv.getPhone());
-            st.setString(8, cv.getExperience());
-            st.setString(9, cv.getEducation());
-            st.setString(10, cv.getSkills());
-            st.setString(11, cv.getAboutMe());
-            st.setString(12, cv.getStatus());
+            st.setDate(3, Date.valueOf(cv.getDob()));
+            st.setString(4, cv.getGender());
+            st.setString(5, cv.getAddress());
+            st.setString(6, cv.getNationality());
+            st.setString(7, cv.getEmail());
+            st.setString(8, cv.getPhone());
+            st.setString(9, cv.getExperience());
+            st.setString(10, cv.getEducation());
+            st.setString(11, cv.getSkills());
+            st.setString(12, cv.getAboutMe());
+            st.setString(13, cv.getStatus());
             int row = st.executeUpdate();
             return row > 0;
         } catch (SQLException e) {

@@ -41,7 +41,7 @@ public class EmailService {
             try {
                 subject = MimeUtility.encodeText(subject, "UTF-8", "B");
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                System.out.println("Error encoding email subject: " + e.getMessage());
             }
             message.setSubject(subject);
             String htmlContent = "<h3>" + body + "</h3>";
@@ -51,7 +51,7 @@ public class EmailService {
             Transport.send(message);
             return true;
         } catch (MessagingException e) {
-            e.printStackTrace();
+            System.out.println("Error sending email: " + e.getMessage());
             return false;
         }
     }

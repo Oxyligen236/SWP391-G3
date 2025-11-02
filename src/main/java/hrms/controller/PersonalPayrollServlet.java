@@ -30,7 +30,7 @@ public class PersonalPayrollServlet extends HttpServlet {
         int userId = account.getUserID();
         List<PayrollDTO> personalPayrolls = payrollService.getAllPayrollByUserId(userId);
         if (personalPayrolls == null || personalPayrolls.isEmpty()) {
-            request.setAttribute("error", "Không có dữ liệu lương cá nhân.");
+            request.setAttribute("error", "No personal payroll data found.");
         } else {
             request.setAttribute("PersonalPayrolls", personalPayrolls);
         }
@@ -57,22 +57,20 @@ public class PersonalPayrollServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/authenticate");
             return;
         }
-        String fullName = userService.getUserById(userId).getFullname();
         PayrollService payrollService = new PayrollService();
         try {
             month = Integer.parseInt(monthParam);
             year = Integer.parseInt(yearParam);
             List<PayrollDTO> personalPayrolls = payrollService.searchPayroll(userId, month, year, "");
             if (personalPayrolls == null || personalPayrolls.isEmpty()) {
-                request.setAttribute("error", "Không có dữ liệu lương cá nhân.");
+                request.setAttribute("error", "No personal payroll data found.");
             } else {
                 request.setAttribute("PersonalPayrolls", personalPayrolls);
             }
             request.getRequestDispatcher("/view/payroll/personalPayroll.jsp").forward(request, response);
         } catch (NumberFormatException e) {
-            request.setAttribute("error", "Tháng và năm phải là số nguyên.");
+            request.setAttribute("error", "Month and year must be integers.");
             request.getRequestDispatcher("/view/payroll/personalPayroll.jsp").forward(request, response);
-            return;
         }
 
     }

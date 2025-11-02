@@ -13,7 +13,7 @@
 
             <body>
                 <div class="login-container">
-                    <h2>Quên mật khẩu</h2>
+                    <h2>Forgot Password</h2>
 
                     <c:if test="${not empty successMessage}">
                         <p class="successMessage" style="color: green;">${successMessage}</p>
@@ -24,17 +24,21 @@
                     </c:if>
 
                     <form action="<c:url value='/forgot-password'/>" method="post">
-                        <label for="email">Email đăng ký trong hệ thống:</label>
-                        <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required>
-                        <input type="text" name="subject" placeholder="Yêu cầu đặt lại mật khẩu (tùy chọn)">
-                        <textarea name="body" rows="4"
-                            placeholder="Nhập nội dung yêu cầu đặt lại mật khẩu (tùy chọn)"></textarea>
+                        <label for="email">Email registered in the system:</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                        <label for="subject">Subject:</label>
+                        <input type="text" id="subject" name="subject" placeholder="Password reset request (optional)"
+                            required>
+                        <label for="body">Content:</label>
+                        <textarea id="body" name="body" rows="4"
+                            placeholder="Enter the content of the password reset request (optional)"
+                            required></textarea>
 
-                        <button type="submit">Gửi yêu cầu đặt lại mật khẩu</button>
+                        <button type="submit">Send password reset request</button>
                     </form>
 
                     <div class="back-to-login">
-                        <a href="${pageContext.request.contextPath}/authenticate">Quay lại đăng nhập</a>
+                        <a href="<c:url value='/authenticate'/>">Back to login</a>
                     </div>
                 </div>
             </body>

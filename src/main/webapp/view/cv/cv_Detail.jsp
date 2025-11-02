@@ -30,24 +30,6 @@
                     <p><strong>Nationality:</strong> ${cvDetail.nationality}</p>
                     <p><strong>Email:</strong> ${cvDetail.email}</p>
                     <p><strong>Phone:</strong> ${cvDetail.phone}</p>
-                    <div class="status-container">
-                        <p><strong>Status:</strong></p>
-                        <form action="<c:url value='/cv/updateCvStatus'/>" method="post" class="status-update-form">
-                            <input type="hidden" name="cvID" value="${cvDetail.cvID}">
-                            <select name="status">
-                                <option value="Pending" <c:if test="${cvDetail.status eq 'Pending'}">selected</c:if>
-                                    >Pending</option>
-                                <option value="Reviewed" <c:if test="${cvDetail.status eq 'Reviewed'}">selected</c:if>
-                                    >Reviewed</option>
-                                <option value="Rejected" <c:if test="${cvDetail.status eq 'Rejected'}">selected</c:if>
-                                    >Rejected</option>
-                                <option value="Accepted" <c:if test="${cvDetail.status eq 'Accepted'}">selected</c:if>
-                                    >Accepted</option>
-                            </select>
-                            <button type="submit">Update</button>
-                        </form>
-                    </div>
-
                     <p><strong>Experience:</strong></p>
                     <textarea readonly rows="8" cols="75">${cvDetail.experience}</textarea>
                     <br />

@@ -36,12 +36,12 @@ public class CvServlet extends HttpServlet {
         status = (status != null && !status.trim().isEmpty()) ? status.trim() : null;
 
         // Phân trang
-        int itemsPerPage = 10;
+        int itemsPerPage = 5;
         if (request.getParameter("itemsPerPage") != null) {
             try {
                 itemsPerPage = Integer.parseInt(request.getParameter("itemsPerPage"));
             } catch (NumberFormatException e) {
-                itemsPerPage = 10;
+                itemsPerPage = 5;
             }
         }
 

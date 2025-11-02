@@ -38,7 +38,8 @@
                         </c:if>
                         <div class="form-group">
                             <label for="name">Full Name:</label>
-                            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                            <input type="text" id="name" name="name" placeholder="Enter your full name"
+                                pattern="[a-zA-ZÀ-ỹ\s]+" title="Tên không được chứa số hoặc ký tự đặc biệt" required>
                         </div>
                         <div class="form-group">
                             <label for="dob">Date of Birth:</label>
@@ -55,12 +56,16 @@
                         </div>
                         <div class="form-group">
                             <label for="address">Address:</label>
-                            <input type="text" id="address" name="address" placeholder="Enter your address" required>
+                            <input type="text" id="address" name="address" placeholder="Enter your address"
+                                pattern="[a-zA-Z0-9À-ỹ\s,.-]+"
+                                title="Address cannot contain special characters other than commas, periods, and hyphens"
+                                required>
                         </div>
                         <div class="form-group">
                             <label for="nationality">Nationality:</label>
                             <input type="text" id="nationality" name="nationality" placeholder="Enter your nationality"
-                                required>
+                                pattern="[a-zA-ZÀ-ỹ\s]+"
+                                title="Nationality cannot contain numbers or special characters" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Email:</label>
@@ -68,7 +73,8 @@
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number:</label>
-                            <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
+                            <input type="text" id="phone" name="phone" placeholder="Enter your phone number"
+                                pattern="\d{10}" title="Phone number must be exactly 10 digits" required>
                         </div>
 
                         <div class="form-group">
@@ -96,8 +102,8 @@
                         </div>
 
                         <div class="form-actions">
-                            <button type="submit" class="btn-submit">Gửi CV</button>
-                            <button type="reset" class="btn-reset">Xóa</button>
+                            <button type="submit" class="btn-submit">Submit CV</button>
+                            <button type="reset" class="btn-reset">Reset</button>
                         </div>
                     </form>
                 </div>

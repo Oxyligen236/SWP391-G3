@@ -15,7 +15,7 @@
                 <h1>Company Payroll</h1>
 
                 <div class="employee-list-section">
-                    <h2>Nhân viên</h2>
+                    <h2>Employee Details</h2>
                     <div class="employee-grid">
                         <div class="employee-card">
                             <div class="employee-id">ID: ${userID}</div>
@@ -24,12 +24,12 @@
                     </div>
                 </div>
 
-                <h2>Tìm kiếm bảng lương</h2>
+                <h2>Search Payroll</h2>
                 <form action="<c:url value='/payroll/company'/>" method="post" class="search-form">
                     <div class="field-group">
-                        <label>Tháng:</label>
+                        <label>Month:</label>
                         <select name="month" id="month">
-                            <option value="">Tất cả</option>
+                            <option value="">All</option>
                             <c:forEach var="m" begin="1" end="12">
                                 <option value="${m}" ${param.month==m ? 'selected' : '' }>${m}</option>
                             </c:forEach>
@@ -37,15 +37,15 @@
                     </div>
 
                     <div class="field-group">
-                        <label>Năm:</label>
+                        <label>Year:</label>
                         <input type="number" name="year" min="2000" max="2300" value="${param.year}"
                             placeholder="VD: 2025">
                     </div>
 
                     <div class="field-group">
-                        <label>Trạng thái:</label>
+                        <label>Status:</label>
                         <select name="status">
-                            <option value="">--Tất cả--</option>
+                            <option value="">--All--</option>
                             <option value="PENDING" ${param.status=='PENDING' ? 'selected' : '' }>PENDING</option>
                             <option value="CANCELLED" ${param.status=='CANCELLED' ? 'selected' : '' }>CANCELLED</option>
                             <option value="PAID" ${param.status=='PAID' ? 'selected' : '' }>PAID</option>
@@ -62,17 +62,17 @@
                 <table border="1">
                     <thead>
                         <tr>
-                            <th>Phòng ban</th>
-                            <th>Vị trí</th>
-                            <th>Tháng</th>
-                            <th>Năm</th>
-                            <th>Lương cơ bản</th>
-                            <th>Tổng giờ làm việc</th>
-                            <th>Tổng nhận thêm</th>
-                            <th>Tổng khấu trừ</th>
-                            <th>Tổng lương</th>
-                            <th>Trạng thái</th>
-                            <th>Ngày trả lương</th>
+                            <th>Department</th>
+                            <th>Position</th>
+                            <th>Month</th>
+                            <th>Year</th>
+                            <th>Base Salary</th>
+                            <th>Total Work Hours</th>
+                            <th>Total Earnings</th>
+                            <th>Total Deductions</th>
+                            <th>Net Salary</th>
+                            <th>Status</th>
+                            <th>Pay Date</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -90,16 +90,16 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${employee.totalWorkHours.toHours() >= 1}">
-                                            ${employee.totalWorkHours.toHours()} giờ
+                                            ${employee.totalWorkHours.toHours()} hours
                                             <c:if test="${employee.totalWorkHours.toMinutesPart() > 0}">
-                                                ${employee.totalWorkHours.toMinutesPart()} phút
+                                                ${employee.totalWorkHours.toMinutesPart()} minutes
                                             </c:if>
                                         </c:when>
                                         <c:when test="${employee.totalWorkHours.toMinutesPart() > 0}">
-                                            ${employee.totalWorkHours.toMinutesPart()} phút
+                                            ${employee.totalWorkHours.toMinutesPart()} minutes
                                         </c:when>
                                         <c:otherwise>
-                                            0 phút
+                                            0 minutes
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
@@ -121,7 +121,7 @@
                                     <form action="<c:url value='/payroll/company/detail'/>" method="get">
                                         <input type="hidden" name="payrollID" value="${employee.payrollID}">
                                         <input type="hidden" name="userID" value="${employee.userID}">
-                                        <button type="submit">Chi tiết</button>
+                                        <button type="submit">Details</button>
                                     </form>
                                 </td>
                             </tr>

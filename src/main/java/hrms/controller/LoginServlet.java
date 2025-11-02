@@ -26,9 +26,8 @@ public class LoginServlet extends HttpServlet {
 
         if (code != null) {
             try {
-                GoogleLogin gg = new GoogleLogin();
-                String accessToken = gg.getToken(code);
-                User googleUser = gg.getUserInfo(accessToken);
+                String accessToken = GoogleLogin.getToken(code);
+                User googleUser = GoogleLogin.getUserInfo(accessToken);
 
                 String googleEmail = googleUser.getEmail();
 
@@ -46,8 +45,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
                 return;
 
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (ServletException | IOException e) {
                 request.setAttribute("errorMessage", "Google login failed: " + e.getMessage());
                 request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
             }
@@ -132,8 +130,6 @@ public class LoginServlet extends HttpServlet {
         } else {
             request.setAttribute("errorMessage", "Invalid username or password");
             request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
-            return;
-
         }
     }
 }
