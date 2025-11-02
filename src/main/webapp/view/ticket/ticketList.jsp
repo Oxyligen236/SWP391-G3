@@ -13,10 +13,10 @@
     <div class="container mt-4">
         <h4 class="text-primary mb-4">My Tickets</h4>
 
-        <!-- Filter and Sort Section -->
+     
         <form action="${pageContext.request.contextPath}/ticketList" method="get" class="row g-3 mb-4">
             
-            <!-- Sort by Date -->
+      
             <div class="col-md-2">
                 <label class="form-label">Sort By</label>
                 <select name="sortBy" class="form-select">
@@ -33,7 +33,6 @@
                 </select>
             </div>
 
-            <!-- Filter by Status -->
             <div class="col-md-2">
                 <label class="form-label">Status</label>
                 <select name="status" class="form-select">
@@ -44,7 +43,7 @@
                 </select>
             </div>
 
-            <!-- Filter by Type -->
+        
             <div class="col-md-3">
                 <label class="form-label">Type</label>
                 <select name="type" class="form-select">
@@ -58,9 +57,9 @@
                 </select>
             </div>
 
-            <!-- Apply and Reset Buttons -->
+      
             <div class="col-md-3 d-flex align-items-end gap-2">
-                <!-- Hidden field để giữ itemsPerPage khi Apply -->
+ 
                 <input type="hidden" name="itemsPerPage" value="${itemsPerPage}" />
                 
                 <button type="submit" class="btn btn-primary flex-fill">
@@ -72,7 +71,7 @@
             </div>
         </form>
 
-        <!-- Table -->
+
         <table class="table table-bordered table-hover text-center">
             <thead class="table-primary">
                 <tr>
@@ -113,16 +112,16 @@
             </tbody>
         </table>
 
-        <!-- Pagination -->
+
         <div class="d-flex justify-content-between align-items-center mt-4">
-            <!-- Items per page -->
+ 
             <form action="${pageContext.request.contextPath}/ticketList" method="get" class="d-flex align-items-center">
                 <label class="me-2">Items per page:</label>
                 <input type="number" name="itemsPerPage" value="${itemsPerPage}" 
                        class="form-control w-auto me-2" min="1" max="50" style="width: 80px;" />
                 <button type="submit" class="btn btn-sm btn-primary">Set</button>
                 
-                <!-- Preserve filters -->
+  
                 <input type="hidden" name="status" value="${selectedStatus}" />
                 <input type="hidden" name="type" value="${selectedType}" />
                 <input type="hidden" name="sortBy" value="${sortBy}" />
@@ -130,7 +129,7 @@
                 <input type="hidden" name="page" value="1" />
             </form>
 
-            <!-- Pagination buttons -->
+
             <nav>
                 <ul class="pagination mb-0">
                     <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">

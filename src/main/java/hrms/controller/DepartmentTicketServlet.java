@@ -40,14 +40,12 @@ public class DepartmentTicketServlet extends HttpServlet {
         int userId = account.getUserID();
         UserDTO userDTO = userService.getUserById(userId);
 
-        // Lấy parameters từ request
         String statusParam = request.getParameter("status");
         String typeParam = request.getParameter("type");
         String searchSender = request.getParameter("searchSender");
         String sortByParam = request.getParameter("sortBy");
         String sortOrderParam = request.getParameter("sortOrder");
 
-        // Set default values với if-else
         String statusFilter;
         if (statusParam == null || statusParam.isEmpty()) {
             statusFilter = "Pending";
@@ -96,7 +94,6 @@ public class DepartmentTicketServlet extends HttpServlet {
 
         List<TicketDTO> tickets = ticketService.getTicketsByDepartmentId(userDTO.getDepartmentId());
 
-        // Filter by Sender Name
         if (searchSender != null && !searchSender.trim().isEmpty()) {
             String searchLower = searchSender.toLowerCase().trim();
             tickets = tickets.stream()
@@ -105,14 +102,12 @@ public class DepartmentTicketServlet extends HttpServlet {
                     .collect(Collectors.toList());
         }
 
-        // Filter by Status
         if (!statusFilter.equals("All")) {
             tickets = tickets.stream()
                     .filter(t -> t.getStatus() != null && t.getStatus().equalsIgnoreCase(statusFilter))
                     .collect(Collectors.toList());
         }
 
-        // Filter by Type
         if (!typeFilter.equals("All")) {
             try {
                 int typeId = Integer.parseInt(typeFilter);
@@ -124,7 +119,6 @@ public class DepartmentTicketServlet extends HttpServlet {
             }
         }
 
-        // Sorting
         if (sortBy != null && !sortBy.isEmpty()) {
             Comparator<TicketDTO> comparator = null;
 
@@ -144,7 +138,6 @@ public class DepartmentTicketServlet extends HttpServlet {
             }
         }
 
-        // Pagination
         int totalItems = tickets.size();
         int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
 

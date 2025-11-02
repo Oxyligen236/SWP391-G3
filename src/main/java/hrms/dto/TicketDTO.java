@@ -18,7 +18,8 @@ public class TicketDTO {
     private LocalDate approve_Date;
     private String comment;
 
-    private String leaveType;
+    private int leaveTypeID;
+    private String leaveTypeName;
     private LocalDate startDate;
     private LocalDate endDate;
 
@@ -27,6 +28,32 @@ public class TicketDTO {
     private String endTime;
 
     public TicketDTO() {
+    }
+
+    public TicketDTO(int ticketID, int userID, String userFullName, String departmentName, int ticket_Type_ID,
+            String ticketTypeName, String ticket_Content, String status, LocalDate create_Date, Integer approverID,
+            String approverName, LocalDate approve_Date, String comment, int leaveTypeID, String leaveTypeName,
+            LocalDate startDate, LocalDate endDate, LocalDate overtimeDate, String startTime, String endTime) {
+        this.ticketID = ticketID;
+        this.userID = userID;
+        this.userFullName = userFullName;
+        this.departmentName = departmentName;
+        this.ticket_Type_ID = ticket_Type_ID;
+        this.ticketTypeName = ticketTypeName;
+        this.ticket_Content = ticket_Content;
+        this.status = status;
+        this.create_Date = create_Date;
+        this.approverID = approverID;
+        this.approverName = approverName;
+        this.approve_Date = approve_Date;
+        this.comment = comment;
+        this.leaveTypeID = leaveTypeID;
+        this.leaveTypeName = leaveTypeName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.overtimeDate = overtimeDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public int getTicketID() {
@@ -53,7 +80,6 @@ public class TicketDTO {
         this.userFullName = userFullName;
     }
 
-    // Thêm getter và setter cho departmentName
     public String getDepartmentName() {
         return departmentName;
     }
@@ -134,12 +160,20 @@ public class TicketDTO {
         this.comment = comment;
     }
 
-    public String getLeaveType() {
-        return leaveType;
+    public int getLeaveTypeID() {
+        return leaveTypeID;
     }
 
-    public void setLeaveType(String leaveType) {
-        this.leaveType = leaveType;
+    public void setLeaveTypeID(int leaveTypeID) {
+        this.leaveTypeID = leaveTypeID;
+    }
+
+    public String getLeaveTypeName() {
+        return leaveTypeName;
+    }
+
+    public void setLeaveTypeName(String leaveTypeName) {
+        this.leaveTypeName = leaveTypeName;
     }
 
     public LocalDate getStartDate() {
@@ -181,4 +215,5 @@ public class TicketDTO {
     public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
+
 }

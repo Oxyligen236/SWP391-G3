@@ -6,12 +6,14 @@ import java.util.List;
 
 import hrms.dao.DepartmentDAO;
 import hrms.dao.LeaveDetailDAO;
+import hrms.dao.Leave_TypesDAO;
 import hrms.dao.OTDetailDAO;
 import hrms.dao.TicketDAO;
 import hrms.dao.Ticket_TypesDAO;
 import hrms.dao.UserDAO;
 import hrms.dto.TicketDTO;
 import hrms.model.LeaveDetail;
+import hrms.model.Leave_Types;
 import hrms.model.OTDetail;
 import hrms.model.Ticket;
 import hrms.model.Ticket_Types;
@@ -25,14 +27,11 @@ public class TicketService {
     private DepartmentDAO departmentDAO = new DepartmentDAO();
     private LeaveDetailDAO leaveDetailDAO = new LeaveDetailDAO();
     private OTDetailDAO otDetailDAO = new OTDetailDAO();
+    private Leave_TypesDAO leave_TypesDAO = new Leave_TypesDAO();
 
-    /**
-     * Helper method: Chuyển Ticket sang TicketDTO với đầy đủ thông tin
-     */
     private TicketDTO convertToDTO(Ticket t) {
         TicketDTO dto = new TicketDTO();
 
-        // Set basic ticket info
         dto.setTicketID(t.getTicketID());
         dto.setUserID(t.getUserID());
         dto.setTicket_Type_ID(t.getTicket_Type_ID());
@@ -43,46 +42,44 @@ public class TicketService {
         dto.setApprove_Date(t.getApprove_Date());
         dto.setComment(t.getComment());
 
-        // Lấy Ticket Type Name
         Ticket_Types type = ticketTypesDAO.getTicketTypeById(t.getTicket_Type_ID());
-        dto.setTicketTypeName((type != null) ? type.getName() : "Unknown");
+        dto.setTicketTypeName(type != null ? type.getName() : "Unknown");
 
-        // Lấy User Full Name và Department Name (Sender)
-        if (t.getUserID() > 0) {
-            User user = userDAO.getUserById(t.getUserID());
-            if (user != null) {
-                dto.setUserFullName(user.getFullname());
-
-                Integer deptId = user.getDepartmentId();
-                if (deptId != null && deptId > 0) {
-                    String deptName = departmentDAO.getNameById(deptId);
-                    dto.setDepartmentName((deptName != null) ? deptName : "Unknown");
-                } else {
-                    dto.setDepartmentName("N/A");
-                }
+        User user = userDAO.getUserById(t.getUserID());
+        if (user != null) {
+            dto.setUserFullName(user.getFullname());
+            Integer deptId = user.getDepartmentId();
+            if (deptId != null && deptId > 0) {
+                String deptName = departmentDAO.getNameById(deptId);
+                dto.setDepartmentName(deptName != null ? deptName : "Unknown");
             } else {
-                dto.setUserFullName("Unknown");
                 dto.setDepartmentName("N/A");
             }
+        } else {
+            dto.setUserFullName("Unknown");
+            dto.setDepartmentName("N/A");
         }
 
-        // Lấy Approver Full Name
         if (t.getApproverID() > 0) {
             User approver = userDAO.getUserById(t.getApproverID());
-            dto.setApproverName((approver != null) ? approver.getFullname() : "Unknown");
+            dto.setApproverName(approver != null ? approver.getFullname() : "Unknown");
+        } else {
+            dto.setApproverName("N/A");
         }
 
-        // Lấy thông tin chi tiết theo loại ticket
         if (t.getTicket_Type_ID() == 1) {
-            // Leave Ticket
-            LeaveDetail leaveDetail = leaveDetailDAO.getByTicketId(t.getTicketID());
-            if (leaveDetail != null) {
-                dto.setLeaveType(leaveDetail.getLeaveType());
-                dto.setStartDate(leaveDetail.getStart_Date());
-                dto.setEndDate(leaveDetail.getEnd_Date());
+
+            LeaveDetail detail = leaveDetailDAO.getByTicketId(t.getTicketID());
+            if (detail != null) {
+                dto.setLeaveTypeID(detail.getLeaveTypeID());
+                dto.setStartDate(detail.getStart_Date());
+                dto.setEndDate(detail.getEnd_Date());
+
+                Leave_Types leaveType = leave_TypesDAO.getLeaveTypeById(detail.getLeaveTypeID());
+                dto.setLeaveTypeName(leaveType != null ? leaveType.getLeaveTypeName() : "Unknown");
             }
         } else if (t.getTicket_Type_ID() == 2) {
-            // Overtime Ticket
+
             List<OTDetail> otDetails = otDetailDAO.getByTicketId(t.getTicketID());
             if (otDetails != null && !otDetails.isEmpty()) {
                 OTDetail firstOT = otDetails.get(0);
@@ -98,43 +95,32 @@ public class TicketService {
     public List<TicketDTO> getAllTicketsForDisplay() {
         List<TicketDTO> list = new ArrayList<>();
         List<Ticket> tickets = ticketDAO.getAll();
-
         for (Ticket t : tickets) {
             list.add(convertToDTO(t));
         }
-
         return list;
     }
 
     public TicketDTO getTicketById(int ticketId) {
         Ticket ticket = ticketDAO.getTicketById(ticketId);
-
-        if (ticket == null) {
-            return null;
-        }
-
-        return convertToDTO(ticket);
+        return (ticket != null) ? convertToDTO(ticket) : null;
     }
 
     public List<TicketDTO> getTicketsByUserId(int userId) {
         List<TicketDTO> list = new ArrayList<>();
         List<Ticket> tickets = ticketDAO.getTicketsByUserId(userId);
-
         for (Ticket t : tickets) {
             list.add(convertToDTO(t));
         }
-
         return list;
     }
 
     public List<TicketDTO> getTicketsByDepartmentId(int departmentId) {
         List<TicketDTO> list = new ArrayList<>();
         List<Ticket> tickets = ticketDAO.getTicketsByDepartmentId(departmentId);
-
         for (Ticket t : tickets) {
             list.add(convertToDTO(t));
         }
-
         return list;
     }
 
@@ -151,5 +137,9 @@ public class TicketService {
         ticket.setStatus("Pending");
 
         return ticketDAO.add(ticket);
+    }
+
+    public boolean updateTicket(Ticket ticket) {
+        return ticketDAO.update(ticket);
     }
 }

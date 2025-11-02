@@ -29,7 +29,6 @@ public class CompanyAttendanceServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Get filter parameters
         String userName = req.getParameter("userName");
         String department = req.getParameter("department");
         String position = req.getParameter("position");
@@ -47,7 +46,6 @@ public class CompanyAttendanceServlet extends HttpServlet {
         boolean hasEarlyLeave = "true".equals(hasEarlyLeaveParam);
         boolean hasOT = "true".equals(hasOTParam);
 
-        // Pagination parameters
         int itemsPerPage = 10;
         if (req.getParameter("itemsPerPage") != null) {
             try {
@@ -66,7 +64,6 @@ public class CompanyAttendanceServlet extends HttpServlet {
             }
         }
 
-        // Get all attendances
         List<AttendanceDTO> attendanceList;
 
         if (userName != null || department != null || position != null
@@ -77,7 +74,6 @@ public class CompanyAttendanceServlet extends HttpServlet {
             attendanceList = attendanceService.getAllAttendances();
         }
 
-        // Filter by Shift
         if (shiftIdParam != null && !shiftIdParam.isEmpty() && !shiftIdParam.equals("All")) {
             try {
                 int shiftId = Integer.parseInt(shiftIdParam);
@@ -89,7 +85,6 @@ public class CompanyAttendanceServlet extends HttpServlet {
             }
         }
 
-        // Filter by Date Range
         LocalDate fromDate = null;
         LocalDate toDate = null;
         String dateError = null;
@@ -110,14 +105,12 @@ public class CompanyAttendanceServlet extends HttpServlet {
             }
         }
 
-        // Validate date range
         if (fromDate != null && toDate != null && fromDate.isAfter(toDate)) {
             dateError = "'From Date' cannot be after 'To Date'";
             fromDate = null;
             toDate = null;
         }
 
-        // Apply date filter
         if (fromDate != null && toDate != null) {
             final LocalDate finalFromDate = fromDate;
             final LocalDate finalToDate = toDate;
@@ -131,11 +124,9 @@ public class CompanyAttendanceServlet extends HttpServlet {
                     .collect(Collectors.toList());
         }
 
-        // Sort by date descending
         attendanceList.sort(Comparator.comparing(AttendanceDTO::getDate,
                 Comparator.nullsLast(Comparator.reverseOrder())));
 
-        // Pagination
         int totalItems = attendanceList.size();
         int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
 
@@ -148,7 +139,6 @@ public class CompanyAttendanceServlet extends HttpServlet {
 
         List<AttendanceDTO> paginatedAttendances = attendanceList.subList(startIndex, endIndex);
 
-        // Set attributes
         req.setAttribute("departments", departmentDAO.getAll());
         req.setAttribute("positions", positionDAO.getAll());
         req.setAttribute("shifts", shiftDAO.getAllShifts());

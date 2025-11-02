@@ -1,89 +1,106 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %> <%@
-taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ page
+taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <%@ page
 isELIgnored="false" %>
+<style>
+  .text-primary-custom {
+    color: #4273f1 !important;
+  }
+  .border-primary-custom {
+    border-color: #4273f1 !important;
+  }
+  .btn-primary-custom {
+    background: linear-gradient(135deg, #4273f1 0%, #5a8fff 100%);
+    border: none;
+    color: white;
+  }
+  .btn-primary-custom:hover {
+    background: linear-gradient(135deg, #3a63d1 0%, #4a7fef 100%);
+  }
+</style>
 
-<form action="${pageContext.request.contextPath}/submit-ticket" method="post">
+<form
+  action="${pageContext.request.contextPath}/submit-ticket"
+  method="post"
+  class="p-4 bg-white rounded"
+>
   <input type="hidden" name="selectedTypeId" value="2" />
 
-  <div class="card shadow">
-    <div class="card-header bg-success text-white">
-      <h5>Overtime Request</h5>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label class="form-label fw-bold text-primary-custom">Employee ID</label>
+      <input
+        type="text"
+        class="form-control border-primary-custom border-2"
+        name="employeeId"
+        value="${userId}"
+        readonly
+      />
     </div>
-     <div class="">
-        <label class="form-label">Employee ID</label>
-        <input type="text" class="form-control" value="${userId}" readonly />
-      </div>
-      <div class="">
-        <label class="form-label">Employee Name</label>
-        <input type="text" class="form-control" value="${fullname}" readonly />
-      </div>
-      <!-- Date -->
-      <div class="mb-3">
-        <label for="overtimeDate" class="form-label"
-          >Overtime Date <span class="text-danger">*</span></label
-        >
-        <input
-          type="date"
-          id="overtimeDate"
-          name="overtimeDate"
-          class="form-control"
-          required
-        />
-      </div>
-
-      <!-- Time Range -->
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="startTime" class="form-label"
-            >Start Time <span class="text-danger">*</span></label
-          >
-          <input
-            type="time"
-            id="startTime"
-            name="startTime"
-            class="form-control"
-            required
-          />
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="endTime" class="form-label"
-            >End Time <span class="text-danger">*</span></label
-          >
-          <input
-            type="time"
-            id="endTime"
-            name="endTime"
-            class="form-control"
-            required
-          />
-        </div>
-      </div>
-
-      <!-- Description -->
-      <div class="mb-3">
-        <label for="description" class="form-label"
-          >Reason <span class="text-danger">*</span></label
-        >
-        <textarea
-          id="reason"
-          name="reason"
-          class="form-control"
-          rows="4"
-          required
-        ></textarea>
-      </div>
-
-      <!-- Submit Button -->
-      <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-success">
-          Submit Overtime Request
-        </button>
-        <a
-          href="${pageContext.request.contextPath}/create-ticket"
-          class="btn btn-secondary"
-          >Cancel</a
-        >
-      </div>
+    <div class="col-md-6">
+      <label class="form-label fw-bold text-primary-custom"
+        >Employee Name</label
+      >
+      <input
+        type="text"
+        class="form-control border-primary-custom border-2"
+        name="employeeName"
+        value="${fullname}"
+        readonly
+      />
     </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label class="form-label fw-bold text-primary-custom"
+        >Overtime Date <span class="text-danger">*</span></label
+      >
+      <input
+        type="date"
+        name="overtimeDate"
+        class="form-control border-primary-custom border-2"
+        required
+      />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label fw-bold text-primary-custom"
+        >Start Time <span class="text-danger">*</span></label
+      >
+      <input
+        type="time"
+        name="startTime"
+        class="form-control border-primary-custom border-2"
+        required
+      />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label fw-bold text-primary-custom"
+        >End Time <span class="text-danger">*</span></label
+      >
+      <input
+        type="time"
+        name="endTime"
+        class="form-control border-primary-custom border-2"
+        required
+      />
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label fw-bold text-primary-custom"
+      >Reason <span class="text-danger">*</span></label
+    >
+    <textarea
+      name="reason"
+      class="form-control border-primary-custom border-2"
+      rows="3"
+      placeholder="Enter your reason for overtime..."
+      required
+    ></textarea>
+  </div>
+
+  <div class="text-end">
+    <button type="reset" class="btn btn-outline-secondary me-2">Reset</button>
+    <button type="submit" class="btn btn-primary-custom px-4">Submit</button>
   </div>
 </form>

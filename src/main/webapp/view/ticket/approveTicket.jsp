@@ -15,10 +15,10 @@
     <div class="container mt-4">
         <h4 class="text-primary mb-4">Department Tickets</h4>
 
-        <!-- Filter and Sort Section -->
+
         <form action="${pageContext.request.contextPath}/department-ticket" method="get" class="row g-3 mb-4">
             
-            <!-- Search by Sender Name -->
+
             <div class="col-md-3">
                 <label class="form-label">Search Sender</label>
                 <input type="text" name="searchSender" class="form-control" 
@@ -26,7 +26,7 @@
                        value="${searchSender != null ? searchSender : ''}" />
             </div>
 
-            <!-- Sort by Date -->
+ 
             <div class="col-md-2">
                 <label class="form-label">Sort By</label>
                 <select name="sortBy" class="form-select">
@@ -43,7 +43,7 @@
                 </select>
             </div>
 
-            <!-- Filter by Status -->
+
             <div class="col-md-2">
                 <label class="form-label">Status</label>
                 <select name="status" class="form-select">
@@ -54,7 +54,7 @@
                 </select>
             </div>
 
-            <!-- Filter by Type -->
+
             <div class="col-md-3">
                 <label class="form-label">Type</label>
                 <select name="type" class="form-select">
@@ -68,9 +68,9 @@
                 </select>
             </div>
 
-            <!-- Apply and Reset Buttons -->
+
             <div class="col-md-12 d-flex gap-2">
-                <!-- Hidden field để giữ itemsPerPage khi Apply -->
+
                 <input type="hidden" name="itemsPerPage" value="${itemsPerPage}" />
                 
                 <button type="submit" class="btn btn-primary">
@@ -82,7 +82,7 @@
             </div>
         </form>
 
-        <!-- Table -->
+
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-primary">
@@ -123,7 +123,7 @@
                             <td>
                                 <a href="${pageContext.request.contextPath}/approve-ticket?ticketId=${ticket.ticketID}" 
                                    class="btn btn-primary btn-sm">
-                                    <i class="bi bi-eye"></i> View
+                                    View
                                 </a>
                             </td>
                         </tr>
@@ -132,16 +132,16 @@
             </table>
         </div>
 
-        <!-- Pagination -->
+
         <div class="d-flex justify-content-between align-items-center mt-4">
-            <!-- Items per page -->
+
             <form action="${pageContext.request.contextPath}/department-ticket" method="get" class="d-flex align-items-center">
                 <label class="me-2">Items per page:</label>
                 <input type="number" name="itemsPerPage" value="${itemsPerPage}" 
                        class="form-control w-auto me-2" min="1" max="50" style="width: 80px;" />
                 <button type="submit" class="btn btn-sm btn-primary">Set</button>
                 
-                <!-- Preserve filters -->
+
                 <input type="hidden" name="searchSender" value="${searchSender}" />
                 <input type="hidden" name="status" value="${selectedStatus}" />
                 <input type="hidden" name="type" value="${selectedType}" />
@@ -150,7 +150,6 @@
                 <input type="hidden" name="page" value="1" />
             </form>
 
-            <!-- Pagination buttons -->
             <nav>
                 <ul class="pagination mb-0">
                     <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">

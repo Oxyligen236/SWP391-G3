@@ -20,54 +20,47 @@ import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/submit-ticket")
 public class SubmitTicketServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // TODO: handle GET request
-        
-    }
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        
+
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
-        
-        
+
         if (account == null) {
             response.sendRedirect(request.getContextPath() + "/view/login/login.jsp");
             return;
         }
 
-     
         int userId = account.getUserID();
         String selectedTypeIdRaw = request.getParameter("selectedTypeId");
 
-        String leaveType = null;
-        String startDate = null;        
+        String startDate = null;
         String endDate = null;
         String reason = null;
         String overtimeDate = null;
         String startTime = null;
         String endTime = null;
-     
+        String leaveTypeIDRaw = null;
+
         try {
             int selectedTypeId = Integer.parseInt(selectedTypeIdRaw);
 
             TicketDAO ticketDAO = new TicketDAO();
-        
+
             switch (selectedTypeId) {
-                case 1: 
-                     leaveType = request.getParameter("leaveType");
-                     startDate = request.getParameter("startDate");
-                     endDate = request.getParameter("endDate");
-                     reason = request.getParameter("reason");
-                     LocalDate leaveStart = LocalDate.parse(startDate);
-                     LocalDate leaveEnd = LocalDate.parse(endDate);
-                    
+                case 1:
+                    leaveTypeIDRaw = request.getParameter("leaveTypeID");
+                    startDate = request.getParameter("startDate");
+                    endDate = request.getParameter("endDate");
+                    reason = request.getParameter("reason");
+                    LocalDate leaveStart = LocalDate.parse(startDate);
+                    LocalDate leaveEnd = LocalDate.parse(endDate);
+
                     if (leaveEnd.isBefore(leaveStart)) {
                         session.setAttribute("errorMessage", "End date cannot be before start date!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
@@ -77,34 +70,33 @@ public class SubmitTicketServlet extends HttpServlet {
 
                     break;
 
-                case 2: 
-                     overtimeDate = request.getParameter("overtimeDate");
-                     startTime = request.getParameter("startTime");
-                     endTime = request.getParameter("endTime");
-                     reason = request.getParameter("reason");
+                case 2:
+                    overtimeDate = request.getParameter("overtimeDate");
+                    startTime = request.getParameter("startTime");
+                    endTime = request.getParameter("endTime");
+                    reason = request.getParameter("reason");
 
                     LocalTime otStart = LocalTime.parse(startTime);
                     LocalTime otEnd = LocalTime.parse(endTime);
-                    
+
                     if (otStart.equals(otEnd)) {
                         session.setAttribute("errorMessage", "Start time and end time cannot be the same!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
                         response.sendRedirect(request.getContextPath() + "/create-ticket");
                         return;
                     }
-                    
+
                     if (otEnd.isBefore(otStart)) {
                         session.setAttribute("errorMessage", "End time cannot be before start time!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
                         response.sendRedirect(request.getContextPath() + "/create-ticket");
                         return;
                     }
-              
+
                     break;
 
-                case 3: 
+                case 3:
                     reason = request.getParameter("ticketContent");
-                
                     break;
                 default:
                     reason = request.getParameter("ticketContent");
@@ -128,26 +120,26 @@ public class SubmitTicketServlet extends HttpServlet {
 
             if (selectedTypeId == 1) {
                 LeaveDetailDAO leaveDetailDAO = new LeaveDetailDAO();
-        
+
                 LeaveDetail leaveDetail = new LeaveDetail();
-                leaveDetail.setLeaveType(leaveType);
+                leaveDetail.setLeaveTypeID(Integer.parseInt(leaveTypeIDRaw));
                 leaveDetail.setStart_Date(LocalDate.parse(startDate));
                 leaveDetail.setEnd_Date(LocalDate.parse(endDate));
                 leaveDetail.setTicketID(ticketId);
                 leaveDetailDAO.add(leaveDetail);
 
             } else if (selectedTypeId == 2) {
-               OTDetailDAO otDetailDAO = new OTDetailDAO();
-               OTDetail otDetail = new OTDetail();
-               otDetail.setTicketID(ticketId);
-               otDetail.setOt_Date(LocalDate.parse(overtimeDate));
-               otDetail.setStart_Time(LocalTime.parse(startTime));
-               otDetail.setEnd_Time(LocalTime.parse(endTime));
-               otDetailDAO.add(otDetail);
-            }            
-          
+                OTDetailDAO otDetailDAO = new OTDetailDAO();
+                OTDetail otDetail = new OTDetail();
+                otDetail.setTicketID(ticketId);
+                otDetail.setOt_Date(LocalDate.parse(overtimeDate));
+                otDetail.setStart_Time(LocalTime.parse(startTime));
+                otDetail.setEnd_Time(LocalTime.parse(endTime));
+                otDetailDAO.add(otDetail);
+            }
+
             response.sendRedirect(request.getContextPath() + "/view/ticket/ticketSuccess.jsp");
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/create-ticket?error=failed");

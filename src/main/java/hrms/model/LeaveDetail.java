@@ -2,20 +2,21 @@ package hrms.model;
 
 import java.time.LocalDate;
 
-
 public class LeaveDetail {
+
     private int ticketID;
     private LocalDate start_Date;
     private LocalDate end_Date;
-    private String leaveType;
+    private int leaveTypeID;
 
     public LeaveDetail() {
     }
-    public LeaveDetail(int ticketID, LocalDate start_Date, LocalDate end_Date, String leaveType) {
+
+    public LeaveDetail(int ticketID, LocalDate start_Date, LocalDate end_Date, int leaveTypeID) {
         this.ticketID = ticketID;
         this.start_Date = start_Date;
         this.end_Date = end_Date;
-        this.leaveType = leaveType;
+        this.leaveTypeID = leaveTypeID;
     }
 
     public int getTicketID() {
@@ -42,14 +43,12 @@ public class LeaveDetail {
         this.end_Date = end_Date;
     }
 
-    public String getLeaveType() {
-        return leaveType;
+    public int getLeaveTypeID() {
+        return leaveTypeID;
     }
 
-    public void setLeaveType(String leaveType) {
-        this.leaveType = leaveType;
+    public void setLeaveTypeID(int leaveTypeID) {
+        this.leaveTypeID = leaveTypeID;
     }
-
-    
 
 }

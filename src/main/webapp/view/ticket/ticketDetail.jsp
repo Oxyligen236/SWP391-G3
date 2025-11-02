@@ -1,4 +1,3 @@
-<!-- filepath: d:\FPT\Ky_5\SWP391\Project\SWP391-G3\src\main\webapp\view\ticket\ticketDetail.jsp -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %> <%@
 taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ page
 isELIgnored="false" %>
@@ -77,7 +76,7 @@ isELIgnored="false" %>
                 <div class="ticket-details ticket-details-leave">
                   <div class="detail-row">
                     <span class="detail-label">Leave Type</span>
-                    <span class="detail-value">${ticket.leaveType}</span>
+                    <span class="detail-value">${ticket.leaveTypeName}</span>
                   </div>
                   <div class="detail-row">
                     <span class="detail-label">Start Date</span>

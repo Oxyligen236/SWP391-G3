@@ -1,88 +1,115 @@
+<!-- filepath: d:\FPT\Ky_5\SWP391\Project\SWP391-G3\src\main\webapp\view\ticket\forms\leaveTicketForm.jsp -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %> <%@
-taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ page
+taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <%@ page
 isELIgnored="false" %>
 
-<form action="${pageContext.request.contextPath}/submit-ticket" method="post">
+<style>
+  .text-primary-custom {
+    color: #4273f1 !important;
+  }
+  .border-primary-custom {
+    border-color: #4273f1 !important;
+  }
+  .btn-primary-custom {
+    background: linear-gradient(135deg, #4273f1 0%, #5a8fff 100%);
+    border: none;
+    color: white;
+  }
+  .btn-primary-custom:hover {
+    background: linear-gradient(135deg, #3a63d1 0%, #4a7fef 100%);
+  }
+</style>
+
+<form
+  method="post"
+  action="${pageContext.request.contextPath}/submit-ticket"
+  class="p-4 bg-white rounded"
+>
   <input type="hidden" name="selectedTypeId" value="1" />
 
-  <div class="card shadow">
-    <div class="card-header bg-primary text-white">
-      <h5>Leave Request</h5>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label class="form-label fw-bold text-primary-custom">Employee ID</label>
+      <input
+        type="text"
+        class="form-control border-primary-custom border-2"
+        name="employeeId"
+        value="<c:out value='${userId}'/>"
+        readonly
+      />
     </div>
-     <div class="">
-        <label class="form-label">Employee ID</label>
-        <input type="text" class="form-control" value="${userId}" readonly />
-      </div>
-      <div class="">
-        <label class="form-label">Employee Name</label>
-        <input type="text" class="form-control" value="${fullname}" readonly />
-      </div>
-      <!-- Leave Type -->
-      <div class="mb-3">
-        <label for="leaveType" class="form-label"
-          >Leave Type <span class="text-danger">*</span></label
-        >
-        <select id="leaveType" name="leaveType" class="form-select" required>
-          <option value="">-- Select Leave Type --</option>
-          <option value="Sick">Sick Leave</option>
-          <option value="Annual">Annual Leave</option>
-          <option value="Personal">Personal Leave</option>
-        </select>
-      </div>
-
-      <!-- Start Date -->
-      <div class="mb-3">
-        <label for="startDate" class="form-label"
-          >Start Date <span class="text-danger">*</span></label
-        >
-        <input
-          type="date"
-          id="startDate"
-          name="startDate"
-          class="form-control"
-          required
-        />
-      </div>
-
-      <!-- End Date -->
-      <div class="mb-3">
-        <label for="endDate" class="form-label"
-          >End Date <span class="text-danger">*</span></label
-        >
-        <input
-          type="date"
-          id="endDate"
-          name="endDate"
-          class="form-control"
-          required
-        />
-      </div>
-
-      <!-- Reason -->
-      <div class="mb-3">
-        <label for="reason" class="form-label"
-          >Reason <span class="text-danger">*</span></label
-        >
-        <textarea
-          id="reason"
-          name="reason"
-          class="form-control"
-          rows="4"
-          required
-        ></textarea>
-      </div>
-
-      <!-- Submit Button -->
-      <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary">
-          Submit Leave Request
-        </button>
-        <a
-          href="${pageContext.request.contextPath}/create-ticket"
-          class="btn btn-secondary"
-          >Cancel</a
-        >
-      </div>
+    <div class="col-md-6">
+      <label class="form-label fw-bold text-primary-custom"
+        >Employee Name</label
+      >
+      <input
+        type="text"
+        class="form-control border-primary-custom border-2"
+        name="employeeName"
+        value="<c:out value='${fullname}'/>"
+        readonly
+      />
     </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label fw-bold text-primary-custom"
+      >Leave Type <span class="text-danger">*</span></label
+    >
+    <select
+      class="form-select border-primary-custom border-2"
+      name="leaveTypeID"
+      required
+    >
+      <option value="">-- Choose Leave Type --</option>
+      <c:forEach var="leaveType" items="${leaveTypes}">
+        <option value="<c:out value='${leaveType.leaveTypeID}'/>">
+          <c:out value="${leaveType.leaveTypeName}" />
+        </option>
+      </c:forEach>
+    </select>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label class="form-label fw-bold text-primary-custom"
+        >Start Date <span class="text-danger">*</span></label
+      >
+      <input
+        type="date"
+        class="form-control border-primary-custom border-2"
+        name="startDate"
+        required
+      />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label fw-bold text-primary-custom"
+        >End Date <span class="text-danger">*</span></label
+      >
+      <input
+        type="date"
+        class="form-control border-primary-custom border-2"
+        name="endDate"
+        required
+      />
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label fw-bold text-primary-custom"
+      >Reason <span class="text-danger">*</span></label
+    >
+    <textarea
+      class="form-control border-primary-custom border-2"
+      name="reason"
+      rows="3"
+      placeholder="Enter your reason for leave..."
+      required
+    ></textarea>
+  </div>
+
+  <div class="text-end">
+    <button type="reset" class="btn btn-outline-secondary me-2">Reset</button>
+    <button type="submit" class="btn btn-primary-custom px-4">Submit</button>
   </div>
 </form>
