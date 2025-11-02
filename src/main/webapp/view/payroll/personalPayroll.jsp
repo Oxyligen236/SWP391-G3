@@ -14,31 +14,31 @@
                 <h1>Personal Payroll</h1>
                 <form action="<c:url value='/payroll/personal'/>" method="post"
                     style="text-align: center; margin-bottom: 20px;">
-                    <label for="month">Tháng:</label>
+                    <label for="month">Month:</label>
                     <select name="month" id="month">
-                        <option value="">Tất cả</option>
+                        <option value="">All</option>
                         <c:forEach var="m" begin="1" end="12">
                             <option value="${m}" ${param.month==m ? 'selected' : '' }>${m}</option>
                         </c:forEach>
                     </select>
 
-                    <label for="year">Năm:</label>
+                    <label for="year">Year:</label>
                     <input type="number" name="year" id="year" min="2000" max="2200" value="${param.year}">
 
-                    <button type="submit">Tìm kiếm</button>
+                    <button type="submit">Search</button>
                 </form>
                 <c:if test="${not empty error}">
                     <p style="color: red;">${error}</p>
                 </c:if>
                 <table border="1" cellspacing="0" cellpadding="5">
                     <tr>
-                        <th>Tháng</th>
-                        <th>Năm</th>
-                        <th>Ngày trả lương</th>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th>Pay Date</th>
                         <th>Base Salary</th>
-                        <th>Tổng giờ làm</th>
-                        <th>Lương tổng</th>
-                        <th>Chi tiết</th>
+                        <th>Total Work Hours</th>
+                        <th>Total Salary</th>
+                        <th>Details</th>
                     </tr>
                     <c:forEach var="payroll" items="${PersonalPayrolls}">
                         <tr>
@@ -52,16 +52,16 @@
                             <td>
                                 <c:choose>
                                     <c:when test="${payroll.totalWorkHours.toHours() >= 1}">
-                                        ${payroll.totalWorkHours.toHours()} giờ
+                                        ${payroll.totalWorkHours.toHours()} hours
                                         <c:if test="${payroll.totalWorkHours.toMinutesPart() > 0}">
-                                            ${payroll.totalWorkHours.toMinutesPart()} phút
+                                            ${payroll.totalWorkHours.toMinutesPart()} minutes
                                         </c:if>
                                     </c:when>
                                     <c:when test="${payroll.totalWorkHours.toMinutesPart() > 0}">
-                                        ${payroll.totalWorkHours.toMinutesPart()} phút
+                                        ${payroll.totalWorkHours.toMinutesPart()} minutes
                                     </c:when>
                                     <c:otherwise>
-                                        0 phút
+                                        0 minutes
                                     </c:otherwise>
                                 </c:choose>
                             <td>
@@ -72,7 +72,7 @@
                             <td>
                                 <form action="<c:url value='/payroll/personal/detail'/>" method="get">
                                     <input type="hidden" name="payrollID" value="${payroll.payrollID}">
-                                    <button type="submit">Chi tiết</button>
+                                    <button type="submit">Details</button>
                                 </form>
                             </td>
                         </tr>

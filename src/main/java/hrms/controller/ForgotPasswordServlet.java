@@ -2,7 +2,6 @@ package hrms.controller;
 
 import java.io.IOException;
 
-import hrms.dao.AccountDAO;
 import hrms.dao.UserDAO;
 import hrms.model.User;
 import hrms.service.EmailService;
@@ -38,14 +37,14 @@ public class ForgotPasswordServlet extends HttpServlet {
         String subject = request.getParameter("subject");
         String body = request.getParameter("body");
         if (email == null || email.trim().isEmpty()) {
-            request.setAttribute("errorMessage", "Vui lòng nhập email!");
+            request.setAttribute("errorMessage", "Enter your email address!");
             request.getRequestDispatcher("/view/authenticate/forgotPassword.jsp").forward(request, response);
             return;
         }
         UserDAO userDAO = new UserDAO();
         User user = userDAO.getUserByEmail(email);
         if (user == null) {
-            request.setAttribute("errorMessage", "Email không tồn tại trong hệ thống!");
+            request.setAttribute("errorMessage", "Email does not exist in the system!");
             request.getRequestDispatcher("/view/authenticate/forgotPassword.jsp").forward(request, response);
             return;
         }
@@ -53,9 +52,9 @@ public class ForgotPasswordServlet extends HttpServlet {
         boolean sent = emailService.sendForgotPasswordEmail(email, subject, body);
 
         if (sent) {
-            request.setAttribute("successMessage", "Email đặt lại mật khẩu đã được gửi!");
+            request.setAttribute("successMessage", "Password reset email has been sent!");
         } else {
-            request.setAttribute("errorMessage", "Không thể gửi email. Vui lòng thử lại!");
+            request.setAttribute("errorMessage", "Unable to send email. Please try again!");
         }
 
         request.getRequestDispatcher("/view/authenticate/forgotPassword.jsp").forward(request, response);

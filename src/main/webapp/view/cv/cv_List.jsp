@@ -86,6 +86,7 @@
                             <th>CV ID</th>
                             <th>Job Title</th>
                             <th>Name</th>
+                            <th>Date of Birth</th>
                             <th>Gender</th>
                             <th>Email</th>
                             <th>Phone</th>

@@ -40,7 +40,7 @@ public class CvSubmitServlet extends HttpServlet {
         CvService cvService = new CvService();
         try {
             int jdIDInt = Integer.parseInt(jdID);
-            LocalDate dob = LocalDate.parse(request.getParameter("dob"));
+            LocalDate dob = LocalDate.parse(dobStr);
             if (name == null
                     || name.trim().isEmpty()
                     || dob == null
@@ -55,20 +55,20 @@ public class CvSubmitServlet extends HttpServlet {
                     || aboutMe == null || aboutMe.trim().isEmpty()
                     || jdID == null) {
 
-                request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin!");
+                request.setAttribute("errorMessage", "All fields are required.");
                 request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
                 return;
             }
             CVs newCV = new CVs(jdIDInt, name, dob, gender, address, nationality, email, phone, experience, education, skills, aboutMe, "Pending");
             boolean isAdded = cvService.addCV(newCV);
             if (isAdded) {
-                request.setAttribute("successMessage", "Nộp CV thành công!");
+                request.setAttribute("successMessage", "Submit CV successful!");
             } else {
-                request.setAttribute("errorMessage", "Nộp CV không thành công. Vui lòng thử lại!");
+                request.setAttribute("errorMessage", "Submit CV failed. Please try again!");
             }
             request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
         } catch (NumberFormatException e) {
-            request.setAttribute("errorMessage", "JD ID không hợp lệ!");
+            request.setAttribute("errorMessage", "JD ID is invalid.");
             request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
         }
 
