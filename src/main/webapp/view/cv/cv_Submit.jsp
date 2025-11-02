@@ -38,7 +38,12 @@
                         </c:if>
                         <div class="form-group">
                             <label for="name">Full Name:</label>
-                            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                            <input type="text" id="name" name="name" placeholder="Enter your full name"
+                                pattern="[a-zA-ZÀ-ỹ\s]+" title="Tên không được chứa số hoặc ký tự đặc biệt" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth:</label>
+                            <input type="date" id="dob" name="dob" required>
                         </div>
                         <div class="form-group">
                             <label for="gender">Gender:</label>
@@ -51,32 +56,54 @@
                         </div>
                         <div class="form-group">
                             <label for="address">Address:</label>
-                            <input type="text" id="address" name="address" placeholder="Nhập địa chỉ của bạn" required>
+                            <input type="text" id="address" name="address" placeholder="Enter your address"
+                                pattern="[a-zA-Z0-9À-ỹ\s,.-]+"
+                                title="Address cannot contain special characters other than commas, periods, and hyphens"
+                                required>
                         </div>
                         <div class="form-group">
                             <label for="nationality">Nationality:</label>
-                            <input type="text" id="nationality" name="nationality" placeholder="Nhập quốc tịch của bạn"
-                                required>
+                            <input type="text" id="nationality" name="nationality" placeholder="Enter your nationality"
+                                pattern="[a-zA-ZÀ-ỹ\s]+"
+                                title="Nationality cannot contain numbers or special characters" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required>
+                            <input type="email" id="email" name="email" placeholder="Enter your email" required>
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number:</label>
-                            <input type="text" id="phone" name="phone" placeholder="Nhập số điện thoại của bạn"
-                                required>
+                            <input type="text" id="phone" name="phone" placeholder="Enter your phone number"
+                                pattern="\d{10}" title="Phone number must be exactly 10 digits" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="cv_Description">CV Description:</label>
-                            <textarea id="cv_Description" name="cv_Description" rows="5"
-                                placeholder="Viết mô tả về kinh nghiệm của bạn..." required></textarea>
+                            <label for="experience">Experience:</label>
+                            <textarea id="experience" name="experience" rows="5" placeholder="Describe your experience"
+                                required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="education">Education:</label>
+                            <textarea id="education" name="education" rows="5" placeholder="Describe your education"
+                                required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="skills">Skills:</label>
+                            <textarea id="skills" name="skills" rows="5" placeholder="List your skills"
+                                required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="aboutMe">About Me:</label>
+                            <textarea id="aboutMe" name="aboutMe" rows="5" placeholder="Introduce yourself"
+                                required></textarea>
                         </div>
 
                         <div class="form-actions">
-                            <button type="submit" class="btn-submit">Gửi CV</button>
-                            <button type="reset" class="btn-reset">Xóa</button>
+                            <button type="submit" class="btn-submit">Submit CV</button>
+                            <button type="reset" class="btn-reset">Reset</button>
                         </div>
                     </form>
                 </div>

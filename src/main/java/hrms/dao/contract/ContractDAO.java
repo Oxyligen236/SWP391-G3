@@ -8,47 +8,49 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import hrms.dto.ContractDTO;
 import hrms.model.Contract;
 import hrms.utils.DBContext;
 
 public class ContractDAO extends DBContext{
 
-    public List<Contract> getAllContracts() {
-        List<Contract> contracts = new ArrayList<>();
-        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS FullName, " +
+    public List<ContractDTO> getAllContracts() {
+        List<ContractDTO> contracts = new ArrayList<>();
+        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, " +
                  "p.Name AS PositionName, s.FullName AS SignerName " +  
                  "FROM Contract c " +
                  "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
                  "LEFT JOIN Users u ON c.UserID = u.UserID " +
-                 "LEFT JOIN Positions p ON c.positionID = p.PositionID " +  
+                 "LEFT JOIN Positions p ON c.PositionID = p.PositionID " +  
                  "LEFT JOIN Users s ON c.SignerID = s.UserID " +
-                 "ORDER BY ContractID";
+                 "ORDER BY c.ContractID";
 
         try (
             PreparedStatement ps = connection.prepareStatement(sql); 
             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Contract contract = new Contract();
-                    contract.setContractId(rs.getInt("ContractID"));
-                    contract.setUserId(rs.getInt("UserID"));
-                    contract.setStartDate(rs.getDate("Start_Date").toLocalDate());
-                    contract.setEndDate(rs.getDate("End_Date").toLocalDate());
-                    contract.setSignDate(rs.getDate("Sign_Date").toLocalDate());
-                    contract.setDuration(rs.getInt("Duration"));
-                    contract.setBaseSalary(rs.getDouble("BaseSalary"));
-                    contract.setNote(rs.getString("Note"));
-                    contract.setTypeID(rs.getInt("TypeID"));
-                    contract.setTypeName(rs.getString("TypeName"));
-                    contract.setPositionId(rs.getInt("positionId"));
-                    contract.setSignerId(rs.getInt("signerId"));
-                    contract.setPositionName(rs.getString("PositionName"));
-                    contract.setSignerName(rs.getString("SignerName"));
+                ContractDTO contract = new ContractDTO();
+                contract.setContractId(rs.getInt("ContractID"));
+                contract.setUserId(rs.getInt("UserID"));
+                
+                Date startDate = rs.getDate("Start_Date");
+                contract.setStartDate(startDate != null ? startDate.toLocalDate() : null);
+                
+                Date endDate = rs.getDate("End_Date");
+                contract.setEndDate(endDate != null ? endDate.toLocalDate() : null);
+                
+                Date signDate = rs.getDate("Sign_Date");
+                contract.setSignDate(signDate != null ? signDate.toLocalDate() : null);
+                
+                contract.setBaseSalary(rs.getDouble("BaseSalary"));
+                contract.setNote(rs.getString("Note"));
+                contract.setContractTypeName(rs.getString("TypeName"));
+                contract.setPositionName(rs.getString("PositionName"));
+                contract.setSignerName(rs.getString("SignerName"));
+                contract.setEmployeeName(rs.getString("EmployeeName"));
 
-                    String full = rs.getString("FullName");
-                    contract.setContractName(full != null ? full : "");
-
-                    contracts.add(contract);
+                contracts.add(contract);
             }
             return contracts;
         } catch (SQLException e) {
@@ -58,7 +60,7 @@ public class ContractDAO extends DBContext{
     }
 
     public void addContract(Contract contract) {
-        String sql = "INSERT INTO Contract(UserID, Start_Date, End_Date, Sign_Date, Duration, BaseSalary, Note, TypeID, positionID, SignerID) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Contract(UserID, Start_Date, End_Date, Sign_Date, Duration, BaseSalary, Note, TypeID, PositionID, SignerID) VALUES (?,?,?,?,?,?,?,?,?,?)";
         try (
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, contract.getUserId());
@@ -76,14 +78,14 @@ public class ContractDAO extends DBContext{
             e.printStackTrace();
         }
     }
-    public Contract getContractById(int contractId) {
-        Contract contract = null;
-        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS FullName, " +
+    public ContractDTO getContractById(int contractId) {
+        ContractDTO contract = null;
+        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, " +
                  "p.Name AS PositionName, s.FullName AS SignerName " +
                  "FROM Contract c " +
                  "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
                  "LEFT JOIN Users u ON c.UserID = u.UserID " +
-                 "LEFT JOIN Positions p ON c.positionID = p.PositionID " +
+                 "LEFT JOIN Positions p ON c.PositionID = p.PositionID " +
                  "LEFT JOIN Users s ON c.SignerID = s.UserID " +
                  "WHERE c.ContractID = ?";
 
@@ -92,7 +94,7 @@ public class ContractDAO extends DBContext{
             ps.setInt(1, contractId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    contract = new Contract();
+                    contract = new ContractDTO();
                     contract.setContractId(rs.getInt("ContractID"));
                     contract.setUserId(rs.getInt("UserID"));
 
@@ -108,15 +110,10 @@ public class ContractDAO extends DBContext{
                     contract.setDuration(rs.getInt("Duration"));
                     contract.setBaseSalary(rs.getDouble("BaseSalary"));
                     contract.setNote(rs.getString("Note"));
-                    contract.setTypeID(rs.getInt("TypeID"));
-                    contract.setTypeName(rs.getString("TypeName"));
-                    contract.setPositionId(rs.getInt("positionId"));
-                    contract.setSignerId(rs.getInt("signerId"));
+                    contract.setContractTypeName(rs.getString("TypeName"));
                     contract.setPositionName(rs.getString("PositionName"));
                     contract.setSignerName(rs.getString("SignerName"));
-
-                    String full = rs.getString("FullName");
-                    contract.setContractName(full != null ? full : "");
+                    contract.setEmployeeName(rs.getString("EmployeeName"));
                 }
             }
         } catch (SQLException e) {
@@ -126,17 +123,18 @@ public class ContractDAO extends DBContext{
         return contract;
     }
 
-    public List<Contract> getContracts(String searchField, String searchValue, String fromDate, String toDate,
+    public List<ContractDTO> getContracts(String searchField, String searchValue, String fromDate, String toDate,
                                        String sortField, String sortOrder) throws Exception {
-        List<Contract> list = new ArrayList<>();
+        List<ContractDTO> list = new ArrayList<>();
         DBContext db = new DBContext();
         StringBuilder sql = new StringBuilder(
-        "SELECT c.*, t.Name AS TypeName, " +
+        "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, " +
         "p.Name AS PositionName, " +  
         "s.FullName AS SignerName " +  
         "FROM Contract c " +
         "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
-        "LEFT JOIN Positions p ON c.positionID = p.PositionID " +  
+        "LEFT JOIN Users u ON c.UserID = u.UserID " +
+        "LEFT JOIN Positions p ON c.PositionID = p.PositionID " +  
         "LEFT JOIN Users s ON c.SignerID = s.UserID " +            
         "WHERE 1=1"
     );
@@ -226,7 +224,7 @@ public class ContractDAO extends DBContext{
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Contract c = new Contract();
+                    ContractDTO c = new ContractDTO();
                     c.setContractId(rs.getInt("ContractID"));
                     c.setUserId(rs.getInt("UserID"));
                     Date sd = rs.getDate("Start_Date");
@@ -237,13 +235,11 @@ public class ContractDAO extends DBContext{
                     c.setSignDate(sigd != null ? sigd.toLocalDate() : null);
                     c.setDuration(rs.getInt("Duration"));
                     c.setBaseSalary(rs.getDouble("BaseSalary"));
-                    c.setTypeID(rs.getInt("TypeID"));
                     c.setNote(rs.getString("Note"));
-                    c.setTypeName(rs.getString("TypeName"));
-                    c.setPositionId(rs.getInt("positionId"));
-                    c.setSignerId(rs.getInt("signerId"));
+                    c.setContractTypeName(rs.getString("TypeName"));
                     c.setPositionName(rs.getString("PositionName"));
                     c.setSignerName(rs.getString("SignerName"));
+                    c.setEmployeeName(rs.getString("EmployeeName"));
                     list.add(c);
                 }
             }
@@ -252,46 +248,44 @@ public class ContractDAO extends DBContext{
         return list;
     }
 
-    public List<Contract> getContractsByUserId(int userId) throws SQLException {
-    List<Contract> contracts = new ArrayList<>();
-    String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS FullName, " +
-                     "p.Name AS PositionName, s.FullName AS SignerName " +
-                     "FROM Contract c " +
-                     "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
-                     "LEFT JOIN Users u ON c.UserID = u.UserID " +
-                     "LEFT JOIN Positions p ON c.PositionID = p.PositionID " +
-                     "LEFT JOIN Users s ON c.SignerID = s.UserID " +
-                     "WHERE c.UserID = ? ORDER BY c.Start_Date DESC";
-    
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setInt(1, userId);
-        try (ResultSet rs = ps.executeQuery()) {
+    public List<ContractDTO> getContractsByUserId(int userId) throws SQLException {
+        List<ContractDTO> contracts = new ArrayList<>();
+        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, " +
+                         "p.Name AS PositionName, s.FullName AS SignerName " +
+                         "FROM Contract c " +
+                         "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
+                         "LEFT JOIN Users u ON c.UserID = u.UserID " +
+                         "LEFT JOIN Positions p ON c.PositionID = p.PositionID " +
+                         "LEFT JOIN Users s ON c.SignerID = s.UserID " +
+                         "WHERE c.UserID = ? ORDER BY c.Start_Date DESC";
         
-        while (rs.next()) {
-            Contract contract = new Contract();
-            contract.setContractId(rs.getInt("ContractID"));
-            contract.setUserId(rs.getInt("UserID"));
-            Date startDate = rs.getDate("Start_Date");
-            contract.setStartDate(startDate != null ? startDate.toLocalDate() : null);
-            Date endDate = rs.getDate("End_Date");
-            contract.setEndDate(endDate != null ? endDate.toLocalDate() : null);
-            Date signDate = rs.getDate("Sign_Date");
-            contract.setSignDate(signDate != null ? signDate.toLocalDate() : null);
-            contract.setDuration(rs.getInt("Duration"));
-            contract.setBaseSalary(rs.getDouble("BaseSalary"));
-            contract.setNote(rs.getString("Note"));
-            contract.setTypeID(rs.getInt("TypeID"));
-            contract.setTypeName(rs.getString("TypeName"));
-            contract.setPositionId(rs.getInt("PositionId"));
-            contract.setSignerId(rs.getInt("SignerId"));
-            contract.setPositionName(rs.getString("PositionName"));
-            contract.setSignerName(rs.getString("SignerName"));
-            contracts.add(contract);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                ContractDTO contract = new ContractDTO();
+                contract.setContractId(rs.getInt("ContractID"));
+                contract.setUserId(rs.getInt("UserID"));
+                Date startDate = rs.getDate("Start_Date");
+                contract.setStartDate(startDate != null ? startDate.toLocalDate() : null);
+                Date endDate = rs.getDate("End_Date");
+                contract.setEndDate(endDate != null ? endDate.toLocalDate() : null);
+                Date signDate = rs.getDate("Sign_Date");
+                contract.setSignDate(signDate != null ? signDate.toLocalDate() : null);
+                contract.setDuration(rs.getInt("Duration"));
+                contract.setBaseSalary(rs.getDouble("BaseSalary"));
+                contract.setNote(rs.getString("Note"));
+                contract.setContractTypeName(rs.getString("TypeName"));
+                contract.setPositionName(rs.getString("PositionName"));
+                contract.setSignerName(rs.getString("SignerName"));
+                contract.setEmployeeName(rs.getString("EmployeeName"));
+                contracts.add(contract);
+            }
         }
-    }
-    }
-        return contracts;
-    }
+        }
+            return contracts;
+        }
 
     public boolean updateContractNote(int contractId, String note) {
         String sql = "UPDATE Contract SET Note = ? WHERE ContractID = ?";

@@ -137,9 +137,9 @@
                         </td>
                         <td>${contract.startDate}</td>
                         <td>${contract.endDate}</td>
-                        <td>${contract.duration} months</td>
+                        <td>${contract.duration}</td>
                         <td><fmt:formatNumber value="${contract.baseSalary}" type="number" groupingUsed="true" /> VNĐ</td>
-                        <td>${contract.typeName}</td>
+                        <td>${contract.contractTypeName}</td>
                         <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                             ${contract.note != null ? contract.note : '-'}
                         </td>
@@ -198,13 +198,6 @@
         </div>
 
         <p class="text-center text-muted mt-2">Showing ${contracts.size()} contracts on this page</p>
-
-        <!-- Back to Home Button -->
-        <div class="text-center mt-3">
-            <a href="${pageContext.request.contextPath}/home" class="btn btn-outline-secondary">
-                <i class="bi bi-house"></i> Back to Home
-            </a>
-        </div>
     </div>
 
     <script src="${pageContext.request.contextPath}/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>

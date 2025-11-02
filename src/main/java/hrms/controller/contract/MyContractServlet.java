@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import hrms.dao.contract.ContractDAO;
+import hrms.dto.ContractDTO;
 import hrms.model.Account;
-import hrms.model.Contract;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -31,7 +31,7 @@ public class MyContractServlet extends HttpServlet{
             int userId = account.getUserID();
             
             ContractDAO contractDAO = new ContractDAO();
-            List<Contract> contracts = contractDAO.getContractsByUserId(userId);
+            List<ContractDTO> contracts = contractDAO.getContractsByUserId(userId);
             
             request.setAttribute("contracts", contracts);
             

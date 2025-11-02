@@ -15,11 +15,6 @@ public class Contract {
     private int typeID;
     private int positionId;
     private int signerId;
-
-    private String typeName;
-    private String contractName; 
-    private String positionName; 
-    private String signerName;
     
     public Contract() {
     }
@@ -110,22 +105,6 @@ public class Contract {
         this.typeID = typeID;
     }
 
-     public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
-    
-    public String getContractName() {
-        return contractName;
-    }
-
-    public void setContractName(String contractName) {
-        this.contractName = contractName;
-    }
-
     public int getPositionId() {
         return positionId;
     }
@@ -140,21 +119,5 @@ public class Contract {
 
     public void setSignerId(int signerId) {
         this.signerId = signerId;
-    }
-
-    public String getPositionName() {
-        return positionName;
-    }
-
-    public void setPositionName(String positionName) {
-        this.positionName = positionName;
-    }
-
-    public String getSignerName() {
-        return signerName;
-    }
-
-    public void setSignerName(String signerName) {
-        this.signerName = signerName;
     }
 }

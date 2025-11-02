@@ -1,6 +1,7 @@
 package hrms.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import hrms.model.CVs;
 import hrms.service.CvService;
@@ -25,40 +26,49 @@ public class CvSubmitServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String name = request.getParameter("name");
+        String dobStr = request.getParameter("dob");
         String gender = request.getParameter("gender");
         String address = request.getParameter("address");
         String nationality = request.getParameter("nationality");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
-        String description = request.getParameter("cv_Description");
+        String experience = request.getParameter("experience");
+        String education = request.getParameter("education");
+        String skills = request.getParameter("skills");
+        String aboutMe = request.getParameter("aboutMe");
         String jdID = request.getParameter("jdID");
         CvService cvService = new CvService();
         try {
             int jdIDInt = Integer.parseInt(jdID);
+            LocalDate dob = LocalDate.parse(dobStr);
             if (name == null
                     || name.trim().isEmpty()
+                    || dob == null
                     || gender == null || gender.trim().isEmpty()
                     || address == null || address.trim().isEmpty()
                     || nationality == null || nationality.trim().isEmpty()
                     || email == null || email.trim().isEmpty()
                     || phone == null || phone.trim().isEmpty()
-                    || description == null || description.trim().isEmpty()
+                    || experience == null || experience.trim().isEmpty()
+                    || education == null || education.trim().isEmpty()
+                    || skills == null || skills.trim().isEmpty()
+                    || aboutMe == null || aboutMe.trim().isEmpty()
                     || jdID == null) {
 
-                request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin!");
+                request.setAttribute("errorMessage", "All fields are required.");
                 request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
                 return;
             }
-            CVs newCV = new CVs(jdIDInt, name, gender, address, nationality, email, phone, description, "Pending");
+            CVs newCV = new CVs(jdIDInt, name, dob, gender, address, nationality, email, phone, experience, education, skills, aboutMe, "Pending");
             boolean isAdded = cvService.addCV(newCV);
             if (isAdded) {
-                request.setAttribute("successMessage", "Nộp CV thành công!");
+                request.setAttribute("successMessage", "Submit CV successful!");
             } else {
-                request.setAttribute("errorMessage", "Nộp CV không thành công. Vui lòng thử lại!");
+                request.setAttribute("errorMessage", "Submit CV failed. Please try again!");
             }
             request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
         } catch (NumberFormatException e) {
-            request.setAttribute("errorMessage", "JD ID không hợp lệ!");
+            request.setAttribute("errorMessage", "JD ID is invalid.");
             request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
         }
 

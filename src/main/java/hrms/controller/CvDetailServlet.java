@@ -26,7 +26,7 @@ public class CvDetailServlet extends HttpServlet {
             CVJobDetailDTO cvDetail = cvService.getCvWithJobTitle(cvId);
 
             if (cvDetail == null) {
-                request.setAttribute("CV_ID_error", "CV không tồn tại");
+                request.setAttribute("CV_ID_error", "CV with ID " + cvId + " not found.");
             } else {
                 HttpSession session = request.getSession();
                 Boolean isFiltering = (Boolean) session.getAttribute("isFiltering");
@@ -59,7 +59,7 @@ public class CvDetailServlet extends HttpServlet {
             request.getRequestDispatcher("/view/cv/cv_Detail.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
-            request.setAttribute("CV_ID_error", "Định dạng CV_ID không hợp lệ");
+            request.setAttribute("CV_ID_error", "Invalid CV ID format: " + idParam);
             request.getRequestDispatcher("/view/cv/cv_Detail.jsp").forward(request, response);
         }
 

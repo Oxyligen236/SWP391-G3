@@ -2,6 +2,7 @@ package hrms.controller;
 
 import java.io.IOException;
 
+import hrms.config.Iconstant;
 import hrms.dao.AccountDAO;
 import hrms.model.Account;
 import hrms.model.User;
@@ -16,9 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/authenticate")
 public class LoginServlet extends HttpServlet {
 
-    private static final int MIN_USERNAME_LENGTH = 4;
-    private static final int MIN_PASSWORD_LENGTH = 6;
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -28,9 +26,8 @@ public class LoginServlet extends HttpServlet {
 
         if (code != null) {
             try {
-                GoogleLogin gg = new GoogleLogin();
-                String accessToken = gg.getToken(code);
-                User googleUser = gg.getUserInfo(accessToken);
+                String accessToken = GoogleLogin.getToken(code);
+                User googleUser = GoogleLogin.getUserInfo(accessToken);
 
                 String googleEmail = googleUser.getEmail();
 
@@ -48,8 +45,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
                 return;
 
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (ServletException | IOException e) {
                 request.setAttribute("errorMessage", "Google login failed: " + e.getMessage());
                 request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
             }
@@ -86,14 +82,14 @@ public class LoginServlet extends HttpServlet {
         username = username != null ? username.trim() : null;
         password = password != null ? password.trim() : null;
 
-        if (username == null || username.length() < MIN_USERNAME_LENGTH) {
-            request.setAttribute("errorMessage", "Username must be at least " + MIN_USERNAME_LENGTH + " characters long.");
+        if (username == null || username.length() < Iconstant.MIN_USERNAME_LENGTH) {
+            request.setAttribute("errorMessage", "Username must be at least " + Iconstant.MIN_USERNAME_LENGTH + " characters long.");
             request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
             return;
         }
 
-        if (password == null || password.length() < MIN_PASSWORD_LENGTH) {
-            request.setAttribute("errorMessage", "Password must be at least " + MIN_PASSWORD_LENGTH + " characters long.");
+        if (password == null || password.length() < Iconstant.MIN_PASSWORD_LENGTH) {
+            request.setAttribute("errorMessage", "Password must be at least " + Iconstant.MIN_PASSWORD_LENGTH + " characters long.");
             request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
             return;
         }
@@ -112,31 +108,28 @@ public class LoginServlet extends HttpServlet {
             request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
             return;
         }
-
         boolean passwordMatch = PasswordUtil.verifyPassword(password, account.getPassword());
-
-        if (!passwordMatch) {
+        if (account.getPassword().equals(password) || passwordMatch) {
+            if ("on".equals(remember)) {
+                Cookie usernameCookie = new Cookie("username", username);
+                Cookie passwordCookie = new Cookie("password", password);
+                usernameCookie.setMaxAge(7 * 24 * 60 * 60);
+                passwordCookie.setMaxAge(7 * 24 * 60 * 60);
+                response.addCookie(usernameCookie);
+                response.addCookie(passwordCookie);
+            } else {
+                Cookie usernameCookie = new Cookie("username", "");
+                Cookie passwordCookie = new Cookie("password", "");
+                usernameCookie.setMaxAge(0);
+                passwordCookie.setMaxAge(0);
+                response.addCookie(usernameCookie);
+                response.addCookie(passwordCookie);
+            }
+            request.getSession().setAttribute("account", account);
+            response.sendRedirect(request.getContextPath() + "/landing");
+        } else {
             request.setAttribute("errorMessage", "Invalid username or password");
             request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
-            return;
         }
-
-        if ("on".equals(remember)) {
-            Cookie usernameCookie = new Cookie("username", username);
-            Cookie passwordCookie = new Cookie("password", password);
-            usernameCookie.setMaxAge(7 * 24 * 60 * 60);
-            passwordCookie.setMaxAge(7 * 24 * 60 * 60);
-            response.addCookie(usernameCookie);
-            response.addCookie(passwordCookie);
-        } else {
-            Cookie usernameCookie = new Cookie("username", "");
-            Cookie passwordCookie = new Cookie("password", "");
-            usernameCookie.setMaxAge(0);
-            passwordCookie.setMaxAge(0);
-            response.addCookie(usernameCookie);
-            response.addCookie(passwordCookie);
-        }
-        request.getSession().setAttribute("account", account);
-        response.sendRedirect(request.getContextPath() + "/home");
     }
 }

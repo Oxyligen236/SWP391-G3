@@ -20,17 +20,30 @@
                             <meta http-equiv="refresh" content="2;url=${pageContext.request.contextPath}/cv">
                         </div>
                     </c:if>
-                    <h2>Chi tiết CV #${cvDetail.cvID}</h2>
+                    <h2>CV Detail #${cvDetail.cvID}</h2>
                     <p><strong>JD ID:</strong> ${cvDetail.jdID}</p>
-                    <p><strong>Tiêu đề công việc:</strong> ${cvDetail.jdTitle}</p>
-                    <p><strong>Họ tên:</strong> ${cvDetail.name}</p>
-                    <p><strong>Giới tính:</strong> ${cvDetail.gender}</p>
-                    <p><strong>Địa chỉ:</strong> ${cvDetail.address}</p>
-                    <p><strong>Quốc tịch:</strong> ${cvDetail.nationality}</p>
+                    <p><strong>Job Title:</strong> ${cvDetail.jdTitle}</p>
+                    <p><strong>Name:</strong> ${cvDetail.name}</p>
+                    <p><strong>Date of Birth:</strong> ${cvDetail.dob}</p>
+                    <p><strong>Gender:</strong> ${cvDetail.gender}</p>
+                    <p><strong>Address:</strong> ${cvDetail.address}</p>
+                    <p><strong>Nationality:</strong> ${cvDetail.nationality}</p>
                     <p><strong>Email:</strong> ${cvDetail.email}</p>
-                    <p><strong>Số điện thoại:</strong> ${cvDetail.phone}</p>
-                    <p><strong>Trạng thái:</strong></p>
+                    <p><strong>Phone:</strong> ${cvDetail.phone}</p>
+                    <p><strong>Experience:</strong></p>
+                    <textarea readonly rows="8" cols="75">${cvDetail.experience}</textarea>
+                    <br />
+                    <p><strong>Education:</strong></p>
+                    <textarea readonly rows="8" cols="75">${cvDetail.education}</textarea>
+                    <br />
+                    <p><strong>Skills:</strong></p>
+                    <textarea readonly rows="8" cols="75">${cvDetail.skills}</textarea>
+                    <br />
+                    <p><strong>About Me:</strong></p>
+                    <textarea readonly rows="8" cols="75">${cvDetail.aboutMe}</textarea>
+                    <br />
                     <div class="status-container">
+                        <p><strong>Status:</strong></p>
                         <form action="<c:url value='/cv/updateCvStatus'/>" method="post" class="status-update-form">
                             <input type="hidden" name="cvID" value="${cvDetail.cvID}">
                             <select name="status">
@@ -46,12 +59,6 @@
                             <button type="submit">Update</button>
                         </form>
                     </div>
-
-
-                    <p><strong>Mô tả:</strong></p>
-                    <textarea readonly rows="8" cols="75">${cvDetail.cv_Description}</textarea>
-                    <br />
-
 
                     <div class="nav-buttons">
                         <a href="<c:url value='/cv'/>">← Quay lại danh sách</a>

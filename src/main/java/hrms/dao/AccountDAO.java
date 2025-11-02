@@ -392,4 +392,19 @@ public class AccountDAO extends DBContext {
         return null;
     }
 
+    public boolean findAccountByEmail(String email) {
+        String sql = "SELECT COUNT(*) FROM Account WHERE GoogleEmail = ?";
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setString(1, email);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi kiểm tra email trong Account: " + e.getMessage());
+        }
+        return false;
+    }
+
 }

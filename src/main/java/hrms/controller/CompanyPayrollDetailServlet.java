@@ -34,7 +34,7 @@ public class CompanyPayrollDetailServlet extends HttpServlet {
             request.setAttribute("displayType", "management");
             if (payrollDetail == null) {
 
-                request.setAttribute("error", "Không tìm thấy chi tiết lương.");
+                request.setAttribute("error", "Payroll record not found.");
                 request.getRequestDispatcher("/view/payroll/personalPayroll.jsp").forward(request, response);
                 return;
             }

@@ -61,7 +61,7 @@ public class CompanyPayrollServlet extends HttpServlet {
             userId = (userID == null || userID.isEmpty()) ? 0 : Integer.parseInt(userID);
             List<PayrollDTO> payrolls = payrollService.searchPayroll(userId, month, year, status);
             if (payrolls == null || payrolls.isEmpty()) {
-                request.setAttribute("error", "không tìm thấy dữ liệu lương.");
+                request.setAttribute("error", "No payroll records found for the given criteria.");
                 request.getRequestDispatcher("/view/payroll/companyPayroll.jsp").forward(request, response);
                 return;
             }

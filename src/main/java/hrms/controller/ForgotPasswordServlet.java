@@ -1,8 +1,10 @@
 package hrms.controller;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 
+import hrms.dao.UserDAO;
+import hrms.model.User;
+import hrms.service.EmailService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,28 +17,46 @@ public class ForgotPasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+
         request.getRequestDispatcher("/view/authenticate/forgotPassword.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+
         String email = request.getParameter("email");
         String subject = request.getParameter("subject");
         String body = request.getParameter("body");
-        String type = request.getParameter("type");
+        if (email == null || email.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Enter your email address!");
+            request.getRequestDispatcher("/view/authenticate/forgotPassword.jsp").forward(request, response);
+            return;
+        }
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.getUserByEmail(email);
+        if (user == null) {
+            request.setAttribute("errorMessage", "Email does not exist in the system!");
+            request.getRequestDispatcher("/view/authenticate/forgotPassword.jsp").forward(request, response);
+            return;
+        }
+        EmailService emailService = new EmailService();
+        boolean sent = emailService.sendForgotPasswordEmail(email, subject, body);
 
-        // Encode
-        String encodedSubject = URLEncoder.encode(subject, "UTF-8");
-        String encodedBody = URLEncoder.encode(body, "UTF-8");
-
-        String redirectUrl = "";
-        if ("mailto".equals(type)) {
-            redirectUrl = "mailto:" + email + "?subject=" + encodedSubject + "&body=" + encodedBody;
-        } else if ("gmail".equals(type)) {
-            redirectUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=" + email + "&su=" + encodedSubject + "&body=" + encodedBody;
+        if (sent) {
+            request.setAttribute("successMessage", "Password reset email has been sent!");
+        } else {
+            request.setAttribute("errorMessage", "Unable to send email. Please try again!");
         }
 
-        response.sendRedirect(redirectUrl);
+        request.getRequestDispatcher("/view/authenticate/forgotPassword.jsp").forward(request, response);
     }
 }

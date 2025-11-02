@@ -8,6 +8,7 @@ import java.util.Map;
 
 import hrms.dao.UserDAO;
 import hrms.dao.contract.ContractDAO;
+import hrms.dto.ContractDTO;
 import hrms.model.Contract;
 import hrms.model.User;
 import jakarta.servlet.RequestDispatcher;
@@ -33,7 +34,7 @@ public class ViewContractServlet extends HttpServlet {
             try {
                 int id = Integer.parseInt(idStr);
                 ContractDAO dao = new ContractDAO();
-                Contract contract = dao.getContractById(id); 
+                ContractDTO contract = dao.getContractById(id); 
                 if (contract == null) {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND, "Contract not found");
                     return;
@@ -89,7 +90,7 @@ public class ViewContractServlet extends HttpServlet {
         try {
             ContractDAO dao = new ContractDAO();
 
-            List<Contract> allContracts = dao.getContracts(searchField, searchValue, fromDate, toDate, sortField, sortOrder);
+            List<ContractDTO> allContracts = dao.getContracts(searchField, searchValue, fromDate, toDate, sortField, sortOrder);
 
             int totalRecords = allContracts.size();
             int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
@@ -98,12 +99,12 @@ public class ViewContractServlet extends HttpServlet {
 
             int fromIndex = (page - 1) * pageSize;
             int toIndex = Math.min(fromIndex + pageSize, totalRecords);
-            List<Contract> contractsPage = (fromIndex < totalRecords) ? allContracts.subList(fromIndex, toIndex) : java.util.Collections.emptyList();
+            List<ContractDTO> contractsPage = (fromIndex < totalRecords) ? allContracts.subList(fromIndex, toIndex) : java.util.Collections.emptyList();
 
             // --- START: add user full name map ---
             UserDAO userDAO = new UserDAO();
             Map<Integer, String> userFullNames = new HashMap<>();
-            for (Contract c : contractsPage) {
+            for (ContractDTO c : contractsPage) {
                 int uid = c.getUserId();
                 if (!userFullNames.containsKey(uid)) {
                     User u = userDAO.getUserById(uid); // nếu tên method khác, sửa cho phù hợp
@@ -200,7 +201,8 @@ public class ViewContractServlet extends HttpServlet {
             }
             
             int userRole = account.getRole();
-            if (userRole != 3 && userRole != 2) {
+            // Only HR Manager (1) and HR Staff (2) can edit contract notes
+            if (userRole != 1 && userRole != 2) {
                 request.setAttribute("error", "Bạn không có quyền sửa ghi chú hợp đồng!");
                 String contractId = request.getParameter("contractId");
                 if (contractId != null) {
@@ -226,7 +228,7 @@ public class ViewContractServlet extends HttpServlet {
             
             if (success) {
                 // Lấy lại thông tin contract để hiển thị
-                Contract contract = dao.getContractById(contractId);
+                ContractDTO contract = dao.getContractById(contractId);
                 request.setAttribute("contract", contract);
                 request.setAttribute("successMessage", "Cập nhật ghi chú thành công!");
             } else {
