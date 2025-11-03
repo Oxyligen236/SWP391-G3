@@ -6,82 +6,94 @@
 
             <head>
                 <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <link rel="stylesheet" href="<c:url value='/css/payroll-detail.css'/>">
                 <title>Payroll Detail</title>
             </head>
 
             <body>
+                <div class="payroll-detail-container">
+                    <h1>Payroll Detail</h1>
 
-                <h1>Payroll Detail</h1>
-                <c:if test="${displayType == 'management'}">
-                    <div class="management-info">
-                        <h2>Employee: ${payrollDetail.userName} (ID: ${payrollDetail.userID})</h2>
-                        <h2>Department: ${payrollDetail.userDepartment}, Position: ${payrollDetail.userPosition}</h2>
-                    </div>
+                    <c:if test="${displayType == 'management'}">
+                        <div class="management-info">
+                            <h2>Employee: ${payrollDetail.userName} (ID: ${payrollDetail.userID})</h2>
+                            <h2>Department: ${payrollDetail.userDepartment}, Position: ${payrollDetail.userPosition}
+                            </h2>
+                        </div>
+                    </c:if>
 
-                </c:if>
-                <table border="1" cellspacing="0" cellpadding="5">
-                    <tr>
-                        <th>Month</th>
-                        <th>Year</th>
-                        <th>Base Salary</th>
-                        <th>Total Earnings</th>
-                        <th>Total Deductions</th>
-                        <th>Net Salary</th>
-                        <th>Pay Date</th>
-                    </tr>
-                    <tr>
-                        <td>${payrollDetail.month}</td>
-                        <td>${payrollDetail.year}</td>
-                        <td>
-                            <fmt:formatNumber value="${payrollDetail.baseSalary}" type="number" groupingUsed="true"
-                                maxFractionDigits="3" />
-                        </td>
-                        <td>
-                            <fmt:formatNumber value="${payrollDetail.totalEarnings}" type="number" groupingUsed="true"
-                                maxFractionDigits="3" />
-                        </td>
-                        <td>
-                            <fmt:formatNumber value="${payrollDetail.totalDeductions}" type="number" groupingUsed="true"
-                                maxFractionDigits="3" />
-                        <td>
-                            <fmt:formatNumber value="${payrollDetail.netSalary}" type="number" groupingUsed="true"
-                                maxFractionDigits="3" />
-                        </td>
-                        <td>${payrollDetail.payDate}</td>
-                    </tr>
-                </table>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Year</th>
+                                <th>Base Salary</th>
+                                <th>Total Earnings</th>
+                                <th>Total Deductions</th>
+                                <th>Net Salary</th>
+                                <th>Pay Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>${payrollDetail.month}</td>
+                                <td>${payrollDetail.year}</td>
+                                <td>
+                                    <fmt:formatNumber value="${payrollDetail.baseSalary}" type="number"
+                                        groupingUsed="true" maxFractionDigits="3" />
+                                </td>
+                                <td>
+                                    <fmt:formatNumber value="${payrollDetail.totalEarnings}" type="number"
+                                        groupingUsed="true" maxFractionDigits="3" />
+                                </td>
+                                <td>
+                                    <fmt:formatNumber value="${payrollDetail.totalDeductions}" type="number"
+                                        groupingUsed="true" maxFractionDigits="3" />
+                                </td>
+                                <td>
+                                    <fmt:formatNumber value="${payrollDetail.netSalary}" type="number"
+                                        groupingUsed="true" maxFractionDigits="3" />
+                                </td>
+                                <td>${payrollDetail.payDate}</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <h1>Payroll Items Detail:</h1>
-                <table border="1" cellspacing="0" cellpadding="5">
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Amount</th>
-                        <th>Type</th>
-                    </tr>
-                    <c:forEach var="item" items="${payrollDetail.payrollItems}">
-                        <tr>
-                            <td>
-                                ${item.typeName}
-                            </td>
-                            <td>
-                                <fmt:formatNumber value="${item.amount}" type="number" groupingUsed="true"
-                                    maxFractionDigits="3" />
-                                <c:choose>
-                                    <c:when test="${item.amountType == 'fixed'}">(₫)</c:when>
-                                    <c:when test="${item.amountType == 'percent'}">(% Base Salary)</c:when>
-                                    <c:otherwise>Unknown</c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${item.positive}">Income (+)</c:when>
-                                    <c:otherwise>Deduction (-)</c:otherwise>
-                                </c:choose>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </table>
+                    <h1>Payroll Items Detail</h1>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach var="item" items="${payrollDetail.payrollItems}">
+                                <tr>
+                                    <td>${item.typeName}</td>
+                                    <td>
+                                        <fmt:formatNumber value="${item.amount}" type="number" groupingUsed="true"
+                                            maxFractionDigits="3" />
+                                        <c:choose>
+                                            <c:when test="${item.amountType == 'fixed'}">(₫)</c:when>
+                                            <c:when test="${item.amountType == 'percent'}">(% Base Salary)</c:when>
+                                            <c:otherwise>Unknown</c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${item.positive}">Income (+)</c:when>
+                                            <c:otherwise>Deduction (-)</c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
             </body>
 
             </html>

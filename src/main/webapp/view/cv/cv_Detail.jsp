@@ -17,7 +17,13 @@
                             <p>
                                 <c:out value="${CV_ID_error}" />
                             </p>
-                            <meta http-equiv="refresh" content="2;url=${pageContext.request.contextPath}/cv">
+                        </div>
+                    </c:if>
+                    <c:if test="${not empty successMessage}">
+                        <div class="success-message">
+                            <p>
+                                <c:out value="${successMessage}" />
+                            </p>
                         </div>
                     </c:if>
                     <h2>CV Detail #${cvDetail.cvID}</h2>
@@ -47,7 +53,8 @@
                         <form action="<c:url value='/cv/updateCvStatus'/>" method="post" class="status-update-form">
                             <input type="hidden" name="cvID" value="${cvDetail.cvID}">
                             <select name="status">
-                                <option value="Pending" <c:if test="${cvDetail.status eq 'Pending'}">selected</c:if>
+                                <option value="Pending" <c:if test="${cvDetail.status eq 'Pending'}">selected
+                                    </c:if>
                                     >Pending</option>
                                 <option value="Reviewed" <c:if test="${cvDetail.status eq 'Reviewed'}">selected</c:if>
                                     >Reviewed</option>
