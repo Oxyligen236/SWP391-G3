@@ -273,4 +273,62 @@ public class PayrollDAO extends DBContext {
         }
         return 0;
     }
+
+    public boolean addPayrollItem(int payrollId, int typeId, double amount, String amountType, boolean isPositive) {
+        String sql = "INSERT INTO Payroll_Item (Payroll_ID, Type_ID, Amount, AmountType, Is_Positive) VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, payrollId);
+            st.setInt(2, typeId);
+            st.setDouble(3, amount);
+            st.setString(4, amountType);
+            st.setBoolean(5, isPositive);
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    public boolean updatePayrollItem(int itemId, double amount, String amountType) {
+        String sql = "UPDATE Payroll_Item SET Amount = ?, AmountType = ? WHERE Payroll_Item_ID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setDouble(1, amount);
+            st.setString(2, amountType);
+            st.setInt(3, itemId);
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    public boolean deletePayrollItem(int itemId) {
+        String sql = "DELETE FROM Payroll_Item WHERE Payroll_Item_ID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, itemId);
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    public PayrollItem getPayrollItemByPayrollIdAndTypeId(int payrollId, int typeId) {
+        String sql = "SELECT * FROM Payroll_Item WHERE Payroll_ID = ? AND Type_ID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, payrollId);
+            st.setInt(2, typeId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return extractPayrollItemFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
 }
