@@ -15,6 +15,7 @@ public class Contract {
     private int typeID;
     private int positionId;
     private int signerId;
+    private String status;
     
     public Contract() {
     }
@@ -31,6 +32,21 @@ public class Contract {
         this.typeID = typeID;
         this.positionId = positionId;
         this.signerId = signerId;
+    }
+
+    public Contract(int contractId, int userId, LocalDate startDate, LocalDate endDate, LocalDate signDate, int duration, double baseSalary, String note, int typeID, int positionId, int signerId, String status) {
+        this.contractId = contractId;
+        this.userId = userId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.signDate = signDate;
+        this.duration = duration;
+        this.baseSalary = baseSalary;
+        this.note = note; 
+        this.typeID = typeID;
+        this.positionId = positionId;
+        this.signerId = signerId;
+        this.status = status;
     }
 
     public int getContractId() {
@@ -119,5 +135,13 @@ public class Contract {
 
     public void setSignerId(int signerId) {
         this.signerId = signerId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
