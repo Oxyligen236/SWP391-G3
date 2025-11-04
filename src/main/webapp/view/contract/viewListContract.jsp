@@ -111,6 +111,7 @@
                     <th>Duration</th>
                     <th>Salary</th>
                     <th>Type</th>
+                    <th>Status</th>
                     <th>Note</th>
                     <th>Action</th>
                 </tr>
@@ -118,7 +119,7 @@
             <tbody>
                 <c:if test="${empty contracts}">
                     <tr>
-                        <td colspan="9" class="text-danger fw-bold">No contracts found</td>
+                        <td colspan="10" class="text-danger fw-bold">No contracts found</td>
                     </tr>
                 </c:if>
 
@@ -140,6 +141,31 @@
                         <td>${contract.duration}</td>
                         <td><fmt:formatNumber value="${contract.baseSalary}" type="number" groupingUsed="true" /> VNĐ</td>
                         <td>${contract.contractTypeName}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${contract.status == 'Pending'}">
+                                    <span class="badge bg-warning text-dark">${contract.status}</span>
+                                </c:when>
+                                <c:when test="${contract.status == 'Approved'}">
+                                    <span class="badge bg-info">${contract.status}</span>
+                                </c:when>
+                                <c:when test="${contract.status == 'Active'}">
+                                    <span class="badge bg-success">${contract.status}</span>
+                                </c:when>
+                                <c:when test="${contract.status == 'Expired'}">
+                                    <span class="badge bg-secondary">${contract.status}</span>
+                                </c:when>
+                                <c:when test="${contract.status == 'Archived'}">
+                                    <span class="badge bg-dark">${contract.status}</span>
+                                </c:when>
+                                <c:when test="${contract.status == 'Cancelled'}">
+                                    <span class="badge bg-danger">${contract.status}</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="badge bg-secondary">${contract.status != null ? contract.status : 'N/A'}</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                         <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                             ${contract.note != null ? contract.note : '-'}
                         </td>

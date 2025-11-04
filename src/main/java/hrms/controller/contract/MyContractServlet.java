@@ -31,6 +31,10 @@ public class MyContractServlet extends HttpServlet{
             int userId = account.getUserID();
             
             ContractDAO contractDAO = new ContractDAO();
+            
+            // Auto-update contract status based on dates
+            contractDAO.autoUpdateContractStatus();
+            
             List<ContractDTO> contracts = contractDAO.getContractsByUserId(userId);
             
             request.setAttribute("contracts", contracts);

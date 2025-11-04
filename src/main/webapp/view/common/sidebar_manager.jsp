@@ -33,7 +33,7 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
             </li>
             <li>
               <a
-                href="#"
+                href="<c:url value='/user/create'/>"
                 target="mainFrame"
                 >Create Profile</a
               >
@@ -186,7 +186,7 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
             </li>
             <li>
               <a
-                href="#"
+                href="<c:url value='/company-attendance'/>"
                 target="mainFrame"
                 >Company Attendance</a
               >

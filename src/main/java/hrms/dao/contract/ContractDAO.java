@@ -45,6 +45,7 @@ public class ContractDAO extends DBContext{
                 
                 contract.setBaseSalary(rs.getDouble("BaseSalary"));
                 contract.setNote(rs.getString("Note"));
+                contract.setStatus(rs.getString("Status"));
                 contract.setContractTypeName(rs.getString("TypeName"));
                 contract.setPositionName(rs.getString("PositionName"));
                 contract.setSignerName(rs.getString("SignerName"));
@@ -110,6 +111,7 @@ public class ContractDAO extends DBContext{
                     contract.setDuration(rs.getInt("Duration"));
                     contract.setBaseSalary(rs.getDouble("BaseSalary"));
                     contract.setNote(rs.getString("Note"));
+                    contract.setStatus(rs.getString("Status"));
                     contract.setContractTypeName(rs.getString("TypeName"));
                     contract.setPositionName(rs.getString("PositionName"));
                     contract.setSignerName(rs.getString("SignerName"));
@@ -236,6 +238,7 @@ public class ContractDAO extends DBContext{
                     c.setDuration(rs.getInt("Duration"));
                     c.setBaseSalary(rs.getDouble("BaseSalary"));
                     c.setNote(rs.getString("Note"));
+                    c.setStatus(rs.getString("Status"));
                     c.setContractTypeName(rs.getString("TypeName"));
                     c.setPositionName(rs.getString("PositionName"));
                     c.setSignerName(rs.getString("SignerName"));
@@ -276,6 +279,7 @@ public class ContractDAO extends DBContext{
                 contract.setDuration(rs.getInt("Duration"));
                 contract.setBaseSalary(rs.getDouble("BaseSalary"));
                 contract.setNote(rs.getString("Note"));
+                contract.setStatus(rs.getString("Status"));
                 contract.setContractTypeName(rs.getString("TypeName"));
                 contract.setPositionName(rs.getString("PositionName"));
                 contract.setSignerName(rs.getString("SignerName"));
@@ -297,6 +301,44 @@ public class ContractDAO extends DBContext{
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public boolean updateContractStatus(int contractId, String status) {
+        String sql = "UPDATE Contract SET Status = ? WHERE ContractID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, contractId);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Automatically update contract status based on dates:
+     * - Status 'Pending' or 'Approved' changes to 'Active' when current date >= start date
+     * - Status 'Active' changes to 'Expired' when current date >= end date
+     * Only updates contracts that are not 'Cancelled' or 'Archived'
+     */
+    public void autoUpdateContractStatus() {
+        String sql = "UPDATE Contract " +
+                     "SET Status = CASE " +
+                     "  WHEN Status IN ('Pending', 'Approved') AND Start_Date <= CURDATE() THEN 'Active' " +
+                     "  WHEN Status = 'Active' AND End_Date IS NOT NULL AND End_Date <= CURDATE() THEN 'Expired' " +
+                     "  ELSE Status " +
+                     "END " +
+                     "WHERE Status NOT IN ('Cancelled', 'Archived')";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Auto-updated " + rowsAffected + " contract(s) status based on dates");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

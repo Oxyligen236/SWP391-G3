@@ -38,6 +38,15 @@
             </div>
         </c:if>
 
+        <!-- Error message for empty export -->
+        <c:if test="${not empty sessionScope.errorMessage}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>${sessionScope.errorMessage}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <c:remove var="errorMessage" scope="session" />
+        </c:if>
+
      
         <form action="${pageContext.request.contextPath}/company-attendance" method="get" class="row g-3 mb-4">
            
@@ -122,6 +131,29 @@
                     <i class="bi bi-arrow-clockwise me-1"></i>Reset
                 </a>
             </div>
+        </form>
+
+        <!-- Export to Excel Form -->
+        <form action="${pageContext.request.contextPath}/preview-attendance-export" method="get" id="exportForm" class="mb-3">
+            <!-- Hidden inputs to pass all current filter values -->
+            <input type="hidden" name="userName" value="${searchUserName}">
+            <input type="hidden" name="department" value="${searchDepartment}">
+            <input type="hidden" name="position" value="${searchPosition}">
+            <input type="hidden" name="shiftId" value="${selectedShift}">
+            <input type="hidden" name="fromDate" value="${fromDate}">
+            <input type="hidden" name="toDate" value="${toDate}">
+            <input type="hidden" name="hasCheckout3" value="${hasCheckout3}">
+            <input type="hidden" name="hasLate" value="${hasLate}">
+            <input type="hidden" name="hasEarlyLeave" value="${hasEarlyLeave}">
+            <input type="hidden" name="hasOT" value="${hasOT}">
+            
+            <button type="submit" class="btn btn-success" id="exportButton">
+                <i class="bi bi-file-earmark-excel me-1"></i>Preview Export
+            </button>
+            <span id="exportLoadingMessage" style="display: none; margin-left: 10px;">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Generating Excel file...
+            </span>
         </form>
 
    
@@ -252,5 +284,24 @@
         <p class="text-center text-muted mt-2">Showing ${attendances.size()} of ${totalItems} records</p>
     </div>
     <script src="${pageContext.request.contextPath}/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Export button loading indicator
+        document.getElementById('exportForm').addEventListener('submit', function(e) {
+            var exportButton = document.getElementById('exportButton');
+            var loadingMessage = document.getElementById('exportLoadingMessage');
+            
+            // Disable button to prevent double-clicks
+            exportButton.disabled = true;
+            
+            // Show loading message
+            loadingMessage.style.display = 'inline';
+            
+            // Re-enable button after 5 seconds (in case of error or completion)
+            setTimeout(function() {
+                exportButton.disabled = false;
+                loadingMessage.style.display = 'none';
+            }, 5000);
+        });
+    </script>
 </body>
 </html>
