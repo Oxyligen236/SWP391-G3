@@ -7,7 +7,7 @@
 
             <head>
                 <meta charset="UTF-8">
-                <title>Quên mật khẩu</title>
+                <title>Forgot Password</title>
                 <link rel="stylesheet" href="<c:url value='/css/forgotPassword.css'/>">
             </head>
 
