@@ -12,11 +12,6 @@
         <div class="container">
             <h3>Users List</h3>
 
-            <div class="action-buttons">
-                <a href="${pageContext.request.contextPath}/updateDepartment" class="btn-edit">Edit Department</a>
-                <a href="${pageContext.request.contextPath}/updatePosition" class="btn-edit">Edit Position</a>
-            </div>
-
             <c:if test="${empty users}">
                 <p>Không có dữ liệu để hiển thị.</p>
             </c:if>
@@ -37,6 +32,7 @@
                         <th>Department</th>
                         <th>Degree</th>
                         <th>Position</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,11 +51,17 @@
                             <td>${u.departmentName}</td>
                             <td>${u.degreeName}</td>
                             <td>${u.positionName}</td>
+                            <td class="action-buttons">
+                                <a href="${pageContext.request.contextPath}/updateDepartment?userID=${u.userId}" class="btn-edit">Department</a>
+                                <a href="${pageContext.request.contextPath}/updatePosition?userID=${u.userId}" class="btn-edit">Position</a>
+                                <a href="${pageContext.request.contextPath}/updateRole?accountID=${u.userId}" class="btn-edit">Role</a>
+
+
+                            </td>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
-
         </div>
     </body>
 </html>

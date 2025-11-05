@@ -88,6 +88,9 @@
                 <th>End</th>
                 <th>Department</th>
                 <th>Vacancies</th>
+                <th>Responsibilities</th>
+                <th>Requirements</th>
+                <th>Compensation</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -101,6 +104,9 @@
                     <td>${jd.endDate}</td>
                     <td>${jd.department}</td>
                     <td>${jd.vacancies}</td>
+                    <td>${jd.responsibilities}</td>
+                    <td>${jd.requirements}</td>
+                    <td>${jd.compensation}</td>
                     <td class="status ${jd.status}">${jd.status}</td>
                     <td>
                         <a href="viewjd?id=${jd.jobID}" class="btn btn-sm btn-primary">View</a>

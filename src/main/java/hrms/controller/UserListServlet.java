@@ -20,7 +20,7 @@ public class UserListServlet extends HttpServlet {
     UserDAO userDAO = new UserDAO();
       List<UserDTO> users = userDAO.getAllWithJoin();
 
-    request.setAttribute ("users", userDAO.getAll());
+        request.setAttribute("users", users);
 
     request.getRequestDispatcher ("/view/users/userlist.jsp").forward(request, response);
     }
