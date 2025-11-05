@@ -1,0 +1,71 @@
+package hrms.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import hrms.model.Holiday;
+import hrms.utils.DBContext;
+
+public class HolidayDAO extends DBContext {
+
+    public List<Holiday> getHolidaysByCalendar(int calendarID) {
+        List<Holiday> list = new ArrayList<>();
+        String sql = "SELECT * FROM holidays WHERE CalendarID = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, calendarID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Holiday(
+                        rs.getInt("HolidayID"),
+                        rs.getInt("CalendarID"),
+                        rs.getDate("Date_Holiday"),
+                        rs.getString("Name"),
+                        rs.getBoolean("Is_Substitute"),
+                        rs.getString("Description")
+                ));
+            }
+        } catch (SQLException ex) {
+            System.err.println("Lỗi khi lấy danh sách holidays: " + ex.getMessage());
+        }
+
+        return list;
+    }
+
+    public void insert(Holiday h) {
+        String sql = "INSERT INTO holidays (CalendarID, Date_Holiday, Name, Is_Substitute, Description) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, h.getCalendarID());
+            ps.setDate(2, h.getDateHoliday());
+            ps.setString(3, h.getName());
+            ps.setBoolean(4, h.isSubstitute());
+            ps.setString(5, h.getDescription());
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            System.err.println("Lỗi khi thêm holiday: " + ex.getMessage());
+        }
+    }
+
+    public List<Holiday> getAllHolidays() {
+        List<Holiday> list = new ArrayList<>();
+        String sql = "SELECT * FROM holidays ORDER BY Date_Holiday ASC";
+        try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(new Holiday(
+                        rs.getInt("HolidayID"),
+                        rs.getInt("CalendarID"),
+                        rs.getDate("Date_Holiday"),
+                        rs.getString("Name"),
+                        rs.getBoolean("Is_Substitute"),
+                        rs.getString("Description")
+                ));
+            }
+        } catch (SQLException ex) {
+            System.err.println("Lỗi khi lấy tất cả holidays: " + ex.getMessage());
+        }
+        return list;
+    }
+}
