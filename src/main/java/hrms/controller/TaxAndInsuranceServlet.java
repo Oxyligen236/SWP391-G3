@@ -31,30 +31,22 @@ public class TaxAndInsuranceServlet extends HttpServlet {
             return;
         }
 
-        String payrollIdStr = request.getParameter("payrollId");
-        if (payrollIdStr == null || payrollIdStr.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/payroll-list");
-            return;
-        }
-
-        int payrollId = Integer.parseInt(payrollIdStr);
         PayrollDAO payrollDAO = new PayrollDAO();
 
-        // Lấy tất cả payroll types có category là Insurance hoặc Tax
+        // Lấy tất cả Payroll Types (Insurance và Tax)
         List<PayrollType> allTypes = payrollDAO.getAllPayrollTypes();
-        List<PayrollType> insuranceAndTaxTypes = new ArrayList<>();
+        List<PayrollType> taxAndInsuranceTypes = new ArrayList<>();
+
         for (PayrollType type : allTypes) {
             if ("Insurance".equals(type.getCategory()) || "Tax".equals(type.getCategory())) {
-                insuranceAndTaxTypes.add(type);
+                taxAndInsuranceTypes.add(type);
             }
         }
 
-        // Lấy các payroll items hiện tại
-        List<PayrollItem> currentItems = payrollDAO.getPayrollItemsByPayrollId(payrollId);
+        List<PayrollItem> defaultItems = payrollDAO.getPayrollItemsByPayrollId(1);
 
-        request.setAttribute("payrollId", payrollId);
-        request.setAttribute("payrollTypes", insuranceAndTaxTypes);
-        request.setAttribute("currentItems", currentItems);
+        request.setAttribute("payrollTypes", taxAndInsuranceTypes);
+        request.setAttribute("payrollItems", defaultItems);
 
         request.getRequestDispatcher("/view/payroll/taxAndInsurance.jsp").forward(request, response);
     }
@@ -70,47 +62,33 @@ public class TaxAndInsuranceServlet extends HttpServlet {
             return;
         }
 
-        String payrollIdStr = request.getParameter("payrollId");
-        if (payrollIdStr == null || payrollIdStr.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/payroll-list");
-            return;
-        }
+        try {
+            int typeId = Integer.parseInt(request.getParameter("typeId"));
+            double amount = Double.parseDouble(request.getParameter("amount"));
+            String amountType = request.getParameter("amountType");
 
-        int payrollId = Integer.parseInt(payrollIdStr);
-        PayrollDAO payrollDAO = new PayrollDAO();
+            PayrollDAO payrollDAO = new PayrollDAO();
 
-        // Lấy danh sách các type IDs được submit
-        String[] typeIds = request.getParameterValues("typeId");
-        String[] amounts = request.getParameterValues("amount");
-        String[] amountTypes = request.getParameterValues("amountType");
-        String[] itemIds = request.getParameterValues("itemId");
+            PayrollItem existingItem = payrollDAO.getPayrollItemByPayrollIdAndTypeId(1, typeId);
 
-        boolean success = true;
+            boolean success;
+            if (existingItem != null) {
+                success = payrollDAO.updatePayrollItem(existingItem.getPayrollItemID(), amount, amountType);
+            } else {
 
-        if (typeIds != null && amounts != null && amountTypes != null) {
-            for (int i = 0; i < typeIds.length; i++) {
-                int typeId = Integer.parseInt(typeIds[i]);
-                double amount = Double.parseDouble(amounts[i]);
-                String amountType = amountTypes[i];
-                boolean isPositive = false; // Insurance và Tax luôn là deduction
-
-                if (itemIds != null && i < itemIds.length && !itemIds[i].isEmpty()) {
-                    // Update existing item
-                    int itemId = Integer.parseInt(itemIds[i]);
-                    success = success && payrollDAO.updatePayrollItem(itemId, amount, amountType);
-                } else {
-                    // Add new item
-                    success = success && payrollDAO.addPayrollItem(payrollId, typeId, amount, amountType, isPositive);
-                }
+                success = payrollDAO.addPayrollItem(1, typeId, amount, amountType, false);
             }
+
+            if (success) {
+                session.setAttribute("successMessage", "Cập nhật thành công!");
+            } else {
+                session.setAttribute("errorMessage", "Cập nhật thất bại!");
+            }
+
+        } catch (Exception e) {
+            session.setAttribute("errorMessage", "Lỗi: " + e.getMessage());
         }
 
-        if (success) {
-            session.setAttribute("successMessage", "Cập nhật bảo hiểm và thuế thành công!");
-        } else {
-            session.setAttribute("errorMessage", "Có lỗi xảy ra khi cập nhật!");
-        }
-
-        response.sendRedirect(request.getContextPath() + "/tax-and-insurance?payrollId=" + payrollId);
+        response.sendRedirect(request.getContextPath() + "/tax-and-insurance");
     }
 }
