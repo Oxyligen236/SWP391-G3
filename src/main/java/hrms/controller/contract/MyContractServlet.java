@@ -42,7 +42,7 @@ public class MyContractServlet extends HttpServlet{
             request.getRequestDispatcher("/view/contract/myContract.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Không thể tải danh sách hợp đồng: " + e.getMessage());
+            request.setAttribute("error", "Cannot load contract list: " + e.getMessage());
             request.getRequestDispatcher("/view/profile/error.jsp").forward(request, response);
         }
     }

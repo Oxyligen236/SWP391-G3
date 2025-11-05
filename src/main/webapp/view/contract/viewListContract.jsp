@@ -8,87 +8,65 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contract List</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/webjars/bootstrap/5.3.3/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="<c:url value='/css/contract-list.css'/>" />
 </head>
 <body>
-    <div class="container mt-4">
-        <h4 class="text-primary mb-4">Contract List</h4>
+    <div class="contract-container">
+        <h1>Contract List</h1>
 
         <!-- Filter and Sort Section -->
-        <form action="${pageContext.request.contextPath}/viewContracts" method="get" class="row g-3 mb-4">
-            
+        <form action="${pageContext.request.contextPath}/viewContracts" method="get" id="searchForm">
             <!-- Search Field -->
-            <div class="col-md-2">
-                <label class="form-label">Search By</label>
-                <select id="searchField" name="searchField" class="form-select" onchange="onFieldChange()">
-                    <option value="">All</option>
-                    <option value="userId" ${searchField == 'userId' ? 'selected' : ''}>User ID</option>
-                    <option value="duration" ${searchField == 'duration' ? 'selected' : ''}>Duration</option>
-                    <option value="baseSalary" ${searchField == 'baseSalary' ? 'selected' : ''}>Salary</option>
-                    <option value="startDate" ${searchField == 'startDate' ? 'selected' : ''}>Start Date</option>
-                    <option value="endDate" ${searchField == 'endDate' ? 'selected' : ''}>End Date</option>
-                    <option value="signDate" ${searchField == 'signDate' ? 'selected' : ''}>Sign Date</option>
-                </select>
-            </div>
+            <select id="searchField" name="searchField" onchange="onFieldChange()">
+                <option value="">All</option>
+                <option value="userId" ${searchField == 'userId' ? 'selected' : ''}>User ID</option>
+                <option value="duration" ${searchField == 'duration' ? 'selected' : ''}>Duration</option>
+                <option value="baseSalary" ${searchField == 'baseSalary' ? 'selected' : ''}>Salary</option>
+                <option value="startDate" ${searchField == 'startDate' ? 'selected' : ''}>Start Date</option>
+                <option value="endDate" ${searchField == 'endDate' ? 'selected' : ''}>End Date</option>
+                <option value="signDate" ${searchField == 'signDate' ? 'selected' : ''}>Sign Date</option>
+            </select>
 
             <!-- Text Input for non-date fields -->
-            <div class="col-md-3" id="textInputWrapper">
-                <label class="form-label">Search Value</label>
-                <input type="text" id="searchValue" name="searchValue" 
-                       value="${fn:escapeXml(searchValue)}" 
-                       class="form-control" placeholder="Enter search value" />
-            </div>
+            <input type="text" id="searchValue" name="searchValue" 
+                   value="${fn:escapeXml(searchValue)}" 
+                   placeholder="Enter search value"
+                   style="flex: 1; min-width: 180px;" />
 
             <!-- Date Range Input for date fields -->
-            <div class="col-md-4" id="dateInputWrapper" style="display:none">
-                <label class="form-label">Date Range</label>
-                <div class="d-flex gap-2">
-                    <input type="date" id="fromDate" name="fromDate" 
-                           value="${fromDate}" class="form-control" placeholder="From" />
-                    <input type="date" id="toDate" name="toDate" 
-                           value="${toDate}" class="form-control" placeholder="To" />
-                </div>
+            <div id="dateInputWrapper" style="display:none; flex: 1;">
+                <input type="date" id="fromDate" name="fromDate" 
+                       value="${fromDate}" placeholder="From" />
+                <input type="date" id="toDate" name="toDate" 
+                       value="${toDate}" placeholder="To" />
             </div>
 
             <!-- Sort Field -->
-            <div class="col-md-2">
-                <label class="form-label">Sort By</label>
-                <select id="sortField" name="sortField" class="form-select">
-                    <option value="">None</option>
-                    <option value="baseSalary" ${sortField == 'baseSalary' ? 'selected' : ''}>Salary</option>
-                    <option value="duration" ${sortField == 'duration' ? 'selected' : ''}>Duration</option>
-                </select>
-            </div>
+            <select id="sortField" name="sortField">
+                <option value="">Sort: None</option>
+                <option value="baseSalary" ${sortField == 'baseSalary' ? 'selected' : ''}>Sort: Salary</option>
+                <option value="duration" ${sortField == 'duration' ? 'selected' : ''}>Sort: Duration</option>
+            </select>
 
             <!-- Sort Order -->
-            <div class="col-md-2">
-                <label class="form-label">Order</label>
-                <select id="sortOrder" name="sortOrder" class="form-select">
-                    <option value="asc" ${sortOrder == 'asc' ? 'selected' : ''}>Ascending</option>
-                    <option value="desc" ${sortOrder == 'desc' ? 'selected' : ''}>Descending</option>
-                </select>
-            </div>
+            <select id="sortOrder" name="sortOrder">
+                <option value="asc" ${sortOrder == 'asc' ? 'selected' : ''}>Ascending</option>
+                <option value="desc" ${sortOrder == 'desc' ? 'selected' : ''}>Descending</option>
+            </select>
 
             <!-- Apply and Reset Buttons -->
-            <div class="col-md-3 d-flex align-items-end gap-2">
-                <button type="submit" class="btn btn-primary flex-fill">
-                    Apply
-                </button>
-                <a href="${pageContext.request.contextPath}/viewContracts" class="btn btn-secondary flex-fill">
-                    Reset
-                </a>
-            </div>
+            <button type="submit">Apply</button>
+            <a href="${pageContext.request.contextPath}/viewContracts" class="btn">Reset</a>
         </form>
 
         <script>
             function onFieldChange() {
                 var field = document.getElementById('searchField').value;
-                var textInput = document.getElementById('textInputWrapper');
+                var textInput = document.getElementById('searchValue');
                 var dateInput = document.getElementById('dateInputWrapper');
                 if (field === 'startDate' || field === 'endDate' || field === 'signDate') {
                     textInput.style.display = 'none';
-                    dateInput.style.display = 'block';
+                    dateInput.style.display = 'flex';
                 } else {
                     textInput.style.display = 'block';
                     dateInput.style.display = 'none';
@@ -101,8 +79,8 @@
         </script>
 
         <!-- Table -->
-        <table class="table table-bordered table-hover text-center">
-            <thead class="table-primary">
+        <table>
+            <thead>
                 <tr>
                     <th>No</th>
                     <th>Full Name</th>
@@ -144,7 +122,8 @@
                         <td>
                             <c:choose>
                                 <c:when test="${contract.status == 'Pending'}">
-                                    <span class="badge bg-warning text-dark">${contract.status}</span>
+                                    <span cl
+                                    ass="badge bg-warning text-dark">${contract.status}</span>
                                 </c:when>
                                 <c:when test="${contract.status == 'Approved'}">
                                     <span class="badge bg-info">${contract.status}</span>
@@ -170,10 +149,7 @@
                             ${contract.note != null ? contract.note : '-'}
                         </td>
                         <td>
-                            <a href="${pageContext.request.contextPath}/viewContracts?action=detail&id=${contract.contractId}" 
-                               class="btn btn-sm btn-info">
-                                <i class="bi bi-eye"></i> View
-                            </a>
+                            <a href="${pageContext.request.contextPath}/viewContracts?action=detail&id=${contract.contractId}">View</a>
                         </td>
                     </tr>
                 </c:forEach>
@@ -181,51 +157,54 @@
         </table>
 
         <!-- Pagination -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <!-- Page info -->
-            <div>
-                <span class="text-muted">Page ${currentPage} of ${totalPages > 0 ? totalPages : 1}</span>
+        <div class="bottom-bar">
+            <div class="muted">Showing ${contracts.size()} contracts | Page ${currentPage} of ${totalPages > 0 ? totalPages : 1}</div>
+
+            <div class="pagination">
+                <c:url var="prevUrl" value="/viewContracts">
+                    <c:param name="page" value="${currentPage - 1}" />
+                    <c:if test="${not empty searchField}"><c:param name="searchField" value="${searchField}" /></c:if>
+                    <c:if test="${not empty searchValue}"><c:param name="searchValue" value="${searchValue}" /></c:if>
+                    <c:if test="${not empty fromDate}"><c:param name="fromDate" value="${fromDate}" /></c:if>
+                    <c:if test="${not empty toDate}"><c:param name="toDate" value="${toDate}" /></c:if>
+                    <c:if test="${not empty sortField}"><c:param name="sortField" value="${sortField}" /></c:if>
+                    <c:if test="${not empty sortOrder}"><c:param name="sortOrder" value="${sortOrder}" /></c:if>
+                </c:url>
+                
+                <c:url var="nextUrl" value="/viewContracts">
+                    <c:param name="page" value="${currentPage + 1}" />
+                    <c:if test="${not empty searchField}"><c:param name="searchField" value="${searchField}" /></c:if>
+                    <c:if test="${not empty searchValue}"><c:param name="searchValue" value="${searchValue}" /></c:if>
+                    <c:if test="${not empty fromDate}"><c:param name="fromDate" value="${fromDate}" /></c:if>
+                    <c:if test="${not empty toDate}"><c:param name="toDate" value="${toDate}" /></c:if>
+                    <c:if test="${not empty sortField}"><c:param name="sortField" value="${sortField}" /></c:if>
+                    <c:if test="${not empty sortOrder}"><c:param name="sortOrder" value="${sortOrder}" /></c:if>
+                </c:url>
+
+                <c:if test="${currentPage > 1}">
+                    <a href="${prevUrl}">Previous</a>
+                </c:if>
+                
+                <c:if test="${totalPages > 0}">
+                    <c:forEach var="i" begin="1" end="${totalPages}">
+                        <c:url var="pageUrl" value="/viewContracts">
+                            <c:param name="page" value="${i}" />
+                            <c:if test="${not empty searchField}"><c:param name="searchField" value="${searchField}" /></c:if>
+                            <c:if test="${not empty searchValue}"><c:param name="searchValue" value="${searchValue}" /></c:if>
+                            <c:if test="${not empty fromDate}"><c:param name="fromDate" value="${fromDate}" /></c:if>
+                            <c:if test="${not empty toDate}"><c:param name="toDate" value="${toDate}" /></c:if>
+                            <c:if test="${not empty sortField}"><c:param name="sortField" value="${sortField}" /></c:if>
+                            <c:if test="${not empty sortOrder}"><c:param name="sortOrder" value="${sortOrder}" /></c:if>
+                        </c:url>
+                        <a href="${pageUrl}" class="${i == currentPage ? 'active' : ''}">${i}</a>
+                    </c:forEach>
+                </c:if>
+
+                <c:if test="${currentPage < totalPages && totalPages > 0}">
+                    <a href="${nextUrl}">Next</a>
+                </c:if>
             </div>
-
-            <!-- Pagination buttons -->
-            <nav>
-                <ul class="pagination mb-0">
-                    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
-                        <c:url var="prevUrl" value="/viewContracts">
-                            <c:param name="page" value="${currentPage - 1}" />
-                            <c:if test="${not empty searchField}"><c:param name="searchField" value="${searchField}" /></c:if>
-                            <c:if test="${not empty searchValue}"><c:param name="searchValue" value="${searchValue}" /></c:if>
-                            <c:if test="${not empty fromDate}"><c:param name="fromDate" value="${fromDate}" /></c:if>
-                            <c:if test="${not empty toDate}"><c:param name="toDate" value="${toDate}" /></c:if>
-                            <c:if test="${not empty sortField}"><c:param name="sortField" value="${sortField}" /></c:if>
-                            <c:if test="${not empty sortOrder}"><c:param name="sortOrder" value="${sortOrder}" /></c:if>
-                        </c:url>
-                        <a class="page-link" href="${prevUrl}">Previous</a>
-                    </li>
-
-                    <li class="page-item disabled">
-                        <span class="page-link">Page ${currentPage} of ${totalPages > 0 ? totalPages : 1}</span>
-                    </li>
-
-                    <li class="page-item ${currentPage == totalPages || totalPages == 0 ? 'disabled' : ''}">
-                        <c:url var="nextUrl" value="/viewContracts">
-                            <c:param name="page" value="${currentPage + 1}" />
-                            <c:if test="${not empty searchField}"><c:param name="searchField" value="${searchField}" /></c:if>
-                            <c:if test="${not empty searchValue}"><c:param name="searchValue" value="${searchValue}" /></c:if>
-                            <c:if test="${not empty fromDate}"><c:param name="fromDate" value="${fromDate}" /></c:if>
-                            <c:if test="${not empty toDate}"><c:param name="toDate" value="${toDate}" /></c:if>
-                            <c:if test="${not empty sortField}"><c:param name="sortField" value="${sortField}" /></c:if>
-                            <c:if test="${not empty sortOrder}"><c:param name="sortOrder" value="${sortOrder}" /></c:if>
-                        </c:url>
-                        <a class="page-link" href="${nextUrl}">Next</a>
-                    </li>
-                </ul>
-            </nav>
         </div>
-
-        <p class="text-center text-muted mt-2">Showing ${contracts.size()} contracts on this page</p>
     </div>
-
-    <script src="${pageContext.request.contextPath}/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

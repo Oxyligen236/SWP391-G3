@@ -47,7 +47,7 @@ public class ViewContractServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid contract id");
                 return;
             } catch (Exception e) {
-                throw new ServletException("Lỗi khi lấy chi tiết hợp đồng", e);
+                throw new ServletException("Error retrieving contract details", e);
             }
         }
         // Auto-update contract status based on dates
@@ -133,7 +133,7 @@ public class ViewContractServlet extends HttpServlet {
             RequestDispatcher rd = request.getRequestDispatcher("/view/contract/viewListContract.jsp");
             rd.forward(request, response);
         } catch (Exception e) {
-            throw new ServletException("Lỗi khi tìm kiếm và sắp xếp hợp đồng", e);
+            throw new ServletException("Error searching and sorting contracts", e);
         }
     }
 
@@ -169,7 +169,7 @@ public class ViewContractServlet extends HttpServlet {
 
             if (userID == null || startDate == null || signDate == null || duration == null || baseSalary == null || typeID == null
                     || userID.isEmpty() || startDate.isEmpty() || signDate.isEmpty() || duration.isEmpty() || baseSalary.isEmpty() || typeID.isEmpty()) {
-                throw new IllegalArgumentException("Các trường bắt buộc bị thiếu");
+                throw new IllegalArgumentException("Missing required fields");
             }
 
             contract.setUserId(Integer.parseInt(userID));
@@ -190,7 +190,7 @@ public class ViewContractServlet extends HttpServlet {
             request.getRequestDispatcher("/view/contract/createContract.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Đã xảy ra lỗi khi thêm hợp đồng");
+            request.setAttribute("error", "error occurred while creating contract: " + e.getMessage());
             request.getRequestDispatcher("/view/contract/createContract.jsp").forward(request, response);
         }
     }
@@ -209,9 +209,11 @@ public class ViewContractServlet extends HttpServlet {
             }
             
             int userRole = account.getRole();
+            int currentUserId = account.getUserID();
+            
             // Only HR Manager (1) and HR Staff (2) can edit contract notes
             if (userRole != 1 && userRole != 2) {
-                request.setAttribute("error", "Bạn không có quyền sửa ghi chú hợp đồng!");
+                request.setAttribute("error", "You do not have permission to edit contract notes!");
                 String contractId = request.getParameter("contractId");
                 if (contractId != null) {
                     response.sendRedirect("viewContracts?action=detail&id=" + contractId);
@@ -225,11 +227,20 @@ public class ViewContractServlet extends HttpServlet {
             String note = request.getParameter("note");
 
             if (contractIdStr == null || contractIdStr.trim().isEmpty()) {
-                throw new IllegalArgumentException("Contract ID không hợp lệ");
+                throw new IllegalArgumentException("Contract ID is invalid");
             }
 
             int contractId = Integer.parseInt(contractIdStr);
             ContractDAO dao = new ContractDAO();
+            
+            // Check if HR/HR Manager is trying to edit their own contract
+            ContractDTO existingContract = dao.getContractById(contractId);
+            if (existingContract != null && existingContract.getUserId() == currentUserId) {
+                request.setAttribute("error", "You can not change your own contract!");
+                request.setAttribute("contract", existingContract);
+                request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
+                return;
+            }
             
             // Cập nhật note
             boolean success = dao.updateContractNote(contractId, note);
@@ -238,19 +249,19 @@ public class ViewContractServlet extends HttpServlet {
                 // Lấy lại thông tin contract để hiển thị
                 ContractDTO contract = dao.getContractById(contractId);
                 request.setAttribute("contract", contract);
-                request.setAttribute("successMessage", "Cập nhật ghi chú thành công!");
+                request.setAttribute("successMessage", "Update note successfully!");
             } else {
-                request.setAttribute("error", "Không thể cập nhật ghi chú!");
+                request.setAttribute("error", "Unable to update note!");
             }
             
             request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
-            request.setAttribute("error", "Contract ID không hợp lệ!");
+            request.setAttribute("error", "Contract ID is invalid!");
             request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Đã xảy ra lỗi khi cập nhật ghi chú: " + e.getMessage());
+            request.setAttribute("error", "An error occurred while updating the note: " + e.getMessage());
             request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
         }
     }
@@ -267,9 +278,11 @@ public class ViewContractServlet extends HttpServlet {
             }
             
             int userRole = account.getRole();
+            int currentUserId = account.getUserID();
+            
             // Only HR Manager (1) and HR Staff (2) can edit contract status
             if (userRole != 1 && userRole != 2) {
-                request.setAttribute("error", "Bạn không có quyền sửa trạng thái hợp đồng!");
+                request.setAttribute("error", "You do not have permission to edit contract status!");
                 String contractId = request.getParameter("contractId");
                 if (contractId != null) {
                     response.sendRedirect("viewContracts?action=detail&id=" + contractId);
@@ -283,15 +296,24 @@ public class ViewContractServlet extends HttpServlet {
             String status = request.getParameter("status");
 
             if (contractIdStr == null || contractIdStr.trim().isEmpty()) {
-                throw new IllegalArgumentException("Contract ID không hợp lệ");
+                throw new IllegalArgumentException("Contract ID is invalid");
             }
 
             if (status == null || status.trim().isEmpty()) {
-                throw new IllegalArgumentException("Status không hợp lệ");
+                throw new IllegalArgumentException("Status is invalid");
             }
 
             int contractId = Integer.parseInt(contractIdStr);
             ContractDAO dao = new ContractDAO();
+            
+            // Check if HR/HR Manager is trying to edit their own contract
+            ContractDTO existingContract = dao.getContractById(contractId);
+            if (existingContract != null && existingContract.getUserId() == currentUserId) {
+                request.setAttribute("error", "You can not change your own contract!");
+                request.setAttribute("contract", existingContract);
+                request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
+                return;
+            }
             
             // Cập nhật status
             boolean success = dao.updateContractStatus(contractId, status);
@@ -300,19 +322,19 @@ public class ViewContractServlet extends HttpServlet {
                 // Lấy lại thông tin contract để hiển thị
                 ContractDTO contract = dao.getContractById(contractId);
                 request.setAttribute("contract", contract);
-                request.setAttribute("successMessage", "Cập nhật trạng thái thành công!");
+                request.setAttribute("successMessage", "Update status successfully!");
             } else {
-                request.setAttribute("error", "Không thể cập nhật trạng thái!");
+                request.setAttribute("error", "Unable to update status!");
             }
             
             request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
-            request.setAttribute("error", "Contract ID không hợp lệ!");
+            request.setAttribute("error", "Contract ID is invalid!");
             request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Đã xảy ra lỗi khi cập nhật trạng thái: " + e.getMessage());
+            request.setAttribute("error", "An error occurred while updating the status: " + e.getMessage());
             request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
         }
     }
