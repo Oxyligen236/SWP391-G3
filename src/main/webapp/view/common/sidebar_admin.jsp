@@ -44,7 +44,7 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
       <!-- ACCOUNT -->
        <li class="sidebar-dropdown">
         <a href="javascript:void(0)"
-          ><i class="uil uil-user me-2 d-inline-block"></i>Account</a
+          ><i class="uil uil-users-alt me-2 d-inline-block"></i>Account</a
         >
         <div class="sidebar-submenu">
           <ul>
@@ -55,6 +55,13 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
                 >View Account List</a
               >
             </li>
+            <li>
+              <a
+                href="<c:url value='/account/create'/>"
+                target="mainFrame"
+                >Create Account</a
+              >
+            </li>
           </ul>
         </div>
       </li>
@@ -62,7 +69,7 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
       <!-- CONTRACT -->
       <li class="sidebar-dropdown">
         <a href="javascript:void(0)"
-          ><i class="uil uil-wheelchair me-2 d-inline-block"></i>Contract</a
+          ><i class="uil uil-file-contract me-2 d-inline-block"></i>Contract</a
         >
         <div class="sidebar-submenu">
           <ul>
@@ -80,13 +87,13 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
       <!-- PAYROLL -->
       <li class="sidebar-dropdown">
         <a href="javascript:void(0)"
-          ><i class="uil uil-shopping-cart me-2 d-inline-block"></i>Payroll</a
+          ><i class="uil uil-money-bill me-2 d-inline-block"></i>Payroll</a
         >
         <div class="sidebar-submenu">
           <ul>
             <li>
               <a
-                href="#"
+                href="<c:url value='/payroll/personal'/>"
                 target="mainFrame"
                 >Personal Payroll</a
               >
@@ -98,15 +105,36 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
       <!-- TICKET -->
       <li class="sidebar-dropdown">
         <a href="javascript:void(0)"
-          ><i class="uil uil-flip-h me-2 d-inline-block"></i>Ticket</a
+          ><i class="uil uil-ticket me-2 d-inline-block"></i>Ticket</a
         >
         <div class="sidebar-submenu">
           <ul>
             <li>
               <a
-                href="#"
+                href="<c:url value='/ticketList'/>"
                 target="mainFrame"
                 >My Ticket</a
+              >
+            </li>
+            <li>
+              <a href="<c:url value='/create-ticket'/>" target="mainFrame">Create Ticket</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- ATTENDANCE -->
+      <li class="sidebar-dropdown">
+        <a href="javascript:void(0)"
+          ><i class="uil uil-calendar-alt me-2 d-inline-block"></i>Attendance</a
+        >
+        <div class="sidebar-submenu">
+          <ul>
+            <li>
+              <a
+                href="<c:url value='/myattendance'/>"
+                target="mainFrame"
+                >My Attendance</a
               >
             </li>
           </ul>

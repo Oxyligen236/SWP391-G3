@@ -22,7 +22,7 @@ public class EditUserDepartmentServlet extends HttpServlet {
         String userIDParam = request.getParameter("userID");
         
         if (userIDParam == null || userIDParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/account/view");
+            response.sendRedirect(request.getContextPath() + "/userlist");
             return;
         }
         
@@ -37,7 +37,7 @@ public class EditUserDepartmentServlet extends HttpServlet {
             if (userDetail == null) {
                 HttpSession session = request.getSession();
                 session.setAttribute("errorMessage", "Không tìm thấy người dùng!");
-                response.sendRedirect(request.getContextPath() + "/account/view");
+                response.sendRedirect(request.getContextPath() + "/userlist");
                 return;
             }
             
@@ -53,7 +53,7 @@ public class EditUserDepartmentServlet extends HttpServlet {
             request.getRequestDispatcher("/view/users/changeUserDepartment.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "");
+            response.sendRedirect(request.getContextPath() + "/userlist");
         }
     }
 
@@ -80,6 +80,6 @@ public class EditUserDepartmentServlet extends HttpServlet {
         }
 
 
-        response.sendRedirect(request.getContextPath() + "");
+        response.sendRedirect(request.getContextPath() + "/userlist");
     }
 }

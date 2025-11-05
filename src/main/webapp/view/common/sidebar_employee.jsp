@@ -30,7 +30,7 @@
 
           <!-- CONTRACT -->
           <li class="sidebar-dropdown">
-            <a href="javascript:void(0)"><i class="uil uil-wheelchair me-2 d-inline-block"></i>Contract</a>
+            <a href="javascript:void(0)"><i class="uil uil-file-contract me-2 d-inline-block"></i>Contract</a>
             <div class="sidebar-submenu">
               <ul>
                 <li>
@@ -42,7 +42,7 @@
 
           <!-- PAYROLL -->
           <li class="sidebar-dropdown">
-            <a href="javascript:void(0)"><i class="uil uil-shopping-cart me-2 d-inline-block"></i>Payroll</a>
+            <a href="javascript:void(0)"><i class="uil uil-money-bill me-2 d-inline-block"></i>Payroll</a>
             <div class="sidebar-submenu">
               <ul>
                 <li>
@@ -54,14 +54,14 @@
 
           <!-- TICKET -->
           <li class="sidebar-dropdown">
-            <a href="javascript:void(0)"><i class="uil uil-flip-h me-2 d-inline-block"></i>Ticket</a>
+            <a href="javascript:void(0)"><i class="uil uil-ticket me-2 d-inline-block"></i>Ticket</a>
             <div class="sidebar-submenu">
               <ul>
                 <li>
-                  <a href="<c:url value='/view/ticket/myTicket.jsp'/>" target="mainFrame">My Ticket</a>
+                  <a href="<c:url value='/ticketList'/>" target="mainFrame">My Ticket</a>
                 </li>
                 <li>
-                  <a href="<c:url value='/view/ticket/createTicket.jsp'/>" target="mainFrame">Create Ticket</a>
+                  <a href="<c:url value='/create-ticket'/>" target="mainFrame">Create Ticket</a>
                 </li>
               </ul>
             </div>
@@ -69,11 +69,11 @@
 
           <!-- ATTENDANCE -->
           <li class="sidebar-dropdown">
-            <a href="javascript:void(0)"><i class="uil uil-file me-2 d-inline-block"></i>Attendance</a>
+            <a href="javascript:void(0)"><i class="uil uil-calendar-alt me-2 d-inline-block"></i>Attendance</a>
             <div class="sidebar-submenu">
               <ul>
                 <li>
-                  <a href="<c:url value='/view/attendance/myAttendance.jsp'/>" target="mainFrame">My Attendance</a>
+                  <a href="<c:url value='/myattendance'/>" target="mainFrame">My Attendance</a>
                 </li>
               </ul>
             </div>
