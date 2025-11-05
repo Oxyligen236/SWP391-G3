@@ -156,13 +156,24 @@
               </ul>
             </div>
           </li>
+          <!-- ADD OPTION -->
+          <li class="sidebar-dropdown">
+            <a href="javascript:void(0)"><i class="uil uil-history me-2 d-inline-block"></i>Add Option</a>
+            <div class="sidebar-submenu">
+              <ul>
+                <li>
+                  <a href="<c:url value='option/add'/>" target="mainFrame">Add Department</a>
+                </li>
+              </ul>
+            </div>
+          </li>
           <!-- EDIT INSURANCE OR TAX -->
           <li class="sidebar-dropdown">
             <a href="javascript:void(0)"><i class="uil uil-history me-2 d-inline-block"></i>Edit tax percent</a>
             <div class="sidebar-submenu">
               <ul>
                 <li>
-                  <a href="<c:url value='#'/>" target="mainFrame">Edit Tax</a>
+                  <a href="<c:url value='/tax-and-insurance'/>" target="mainFrame">Edit Tax</a>
                 </li>
               </ul>
             </div>
