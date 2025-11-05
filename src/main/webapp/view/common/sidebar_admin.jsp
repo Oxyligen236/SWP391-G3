@@ -50,7 +50,7 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
           <ul>
             <li>
               <a
-                href="#"
+                href="<c:url value='/account/view'/>"
                 target="mainFrame"
                 >View Account List</a
               >

@@ -22,7 +22,7 @@ public class CreateAccountServlet extends HttpServlet {
             throws ServletException, IOException {
 
         Account currentUser = (Account) req.getSession().getAttribute("account");
-        if (currentUser == null || currentUser.getRole() != 1) {
+        if (currentUser == null || currentUser.getRole() != 5) {
             resp.sendRedirect(req.getContextPath() + "/view/profile/accessDenied.jsp");
             return;
         }

@@ -1,5 +1,6 @@
 package hrms.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,4 +44,30 @@ public class DepartmentDAO extends DBContext {
         }
         return list;
     }
+
+ public boolean exists(String name) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM Department WHERE name = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    // 🔹 Thêm mới nếu chưa có
+    public int insertIfNotExists(String name) throws SQLException {
+        if (exists(name)) return 0;
+        String sql = "INSERT INTO Department (name) VALUES (?)";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            return ps.executeUpdate();
+        }
+    }
+
 }
