@@ -104,7 +104,7 @@
                     <td>${jd.endDate}</td>
                     <td>${jd.department}</td>
                     <td>${jd.vacancies}</td>
-                    <td>${jd.responsibilities}</td>
+                    <td >${jd.responsibilities}</td>
                     <td>${jd.requirements}</td>
                     <td>${jd.compensation}</td>
                     <td class="status ${jd.status}">${jd.status}</td>
