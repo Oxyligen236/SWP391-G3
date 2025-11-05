@@ -24,15 +24,15 @@ public class ToggleAccountStatusServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Account currentUser = (Account) session.getAttribute("account");
 
-        if (currentUser == null || currentUser.getRole() != 5) {
-            session.setAttribute("errorMessage", " Bạn không có quyền thực hiện hành động này!");
+        if (currentUser == null || currentUser.getRole() != ADMIN_ROLE) {
+            session.setAttribute("errorMessage", "You do not have permission to perform this action!");
             response.sendRedirect(request.getContextPath() + "/account/view");
             return;
         }
 
         String idStr = request.getParameter("accountID");
         if (idStr == null || idStr.trim().isEmpty()) {
-            session.setAttribute("errorMessage", " Account ID không hợp lệ!");
+            session.setAttribute("errorMessage", "Invalid Account ID!");
             response.sendRedirect(request.getContextPath() + "/account/view");
             return;
         }
@@ -41,30 +41,30 @@ public class ToggleAccountStatusServlet extends HttpServlet {
         Account target = accountDAO.getAccountById(accountId);
 
         if (target == null) {
-            session.setAttribute("errorMessage", " Tài khoản không tồn tại!");
+            session.setAttribute("errorMessage", "Account does not exist!");
             response.sendRedirect(request.getContextPath() + "/account/view");
             return;
         }
 
-        // Không thể tự disable chính mình
+        // Cannot deactivate self
         if (target.getAccountID() == currentUser.getAccountID()) {
-            session.setAttribute("errorMessage", " Bạn không thể vô hiệu hóa chính mình!");
+            session.setAttribute("errorMessage", "You cannot deactivate your own account!");
             response.sendRedirect(request.getContextPath() + "/account/view");
             return;
         }
 
-        // ⚠️ Nếu đang vô hiệu hóa một admin khác
+        // If deactivating another admin
         if (target.getRole() == ADMIN_ROLE && target.isIsActive()) {
             try {
                 int activeAdmins = accountDAO.countActiveAdmins();
                 if (activeAdmins <= 1) {
-                    session.setAttribute("errorMessage", " Không thể vô hiệu hóa admin cuối cùng trong hệ thống!");
+                    session.setAttribute("errorMessage", "Cannot deactivate the last active admin in the system!");
                     response.sendRedirect(request.getContextPath() + "/account/view");
                     return;
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                session.setAttribute("errorMessage", " Lỗi khi kiểm tra số lượng admin: " + e.getMessage());
+                session.setAttribute("errorMessage", "Error checking active admin count: " + e.getMessage());
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
@@ -76,14 +76,14 @@ public class ToggleAccountStatusServlet extends HttpServlet {
             success = accountDAO.updateStatus(accountId, newStatus);
         } catch (SQLException e) {
             e.printStackTrace();
-            session.setAttribute("errorMessage", " Database error: " + e.getMessage());
+            session.setAttribute("errorMessage", "Database error: " + e.getMessage());
         }
 
         if (success) {
             session.setAttribute("successMessage",
-                    "✅ " + (newStatus ? "Đã kích hoạt" : "Đã vô hiệu hóa") + " tài khoản: " + target.getUsername());
+                    "✅ Account " + target.getUsername() + " has been " + (newStatus ? "activated" : "deactivated") + ".");
         } else if (session.getAttribute("errorMessage") == null) {
-            session.setAttribute("errorMessage", "Cập nhật trạng thái thất bại!");
+            session.setAttribute("errorMessage", "Failed to update account status!");
         }
 
         response.sendRedirect(request.getContextPath() + "/account/view");

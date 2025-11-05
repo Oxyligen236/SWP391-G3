@@ -6,216 +6,133 @@
 <c:url value="/userlist" var="userListUrl" />
 
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Tạo User Mới - HRMS</title>
+    <title>Create New User</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     <style>
-        body {
-            background-color: #f0f5ff;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        }
+        /* ==== BASE CSS ==== */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color:#f5f5f5; }
+        .container { max-width: 900px; margin: 20px auto; padding: 20px; }
 
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-            padding: 35px;
-            background-color: #ffffff;
-        }
+        h1 { color:#2c3e50; margin-bottom:20px; font-size:28px; font-weight:700; border-bottom:3px solid #3498db; padding-bottom:10px; }
 
-        h3 {
-            font-weight: 600;
-            color: #0d3b66;
-            margin-bottom: 30px;
-            text-align: center;
-        }
+        .form-card { background:#fff; padding:25px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
 
-        .form-label {
-            font-weight: 500;
-            color: #0d3b66;
+        .form-group { display:flex; flex-direction:column; margin-bottom:15px; }
+        .form-group label { font-weight:600; color:#2c3e50; margin-bottom:5px; }
+        .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="date"], .form-group select {
+            padding:10px 12px; border:1px solid #dee2e6; border-radius:6px; font-size:14px; transition:all 0.2s ease;
+            background-color:#fff;
         }
+        .form-group input:focus, .form-group select:focus { border-color:#3498db; outline:none; box-shadow:0 0 0 0.2rem rgba(52,152,219,0.25); }
 
-        .add-option-input {
-            margin-top: 5px;
-            font-style: italic;
-            background-color: #e6f0ff;
-        }
+        .form-actions { display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin-top:20px; }
+        .form-actions button, .form-actions a { padding:10px 25px; border:none; border-radius:6px; font-weight:600; font-size:14px; cursor:pointer; text-decoration:none; transition:all 0.2s ease; }
+        .btn-primary { background:#3498db; color:#fff; }
+        .btn-primary:hover { background:#2980b9; transform:translateY(-1px); box-shadow:0 4px 8px rgba(52,152,219,0.3); }
+        .btn-outline { background:#6c757d; color:#fff; }
+        .btn-outline:hover { background:#5a6268; transform:translateY(-1px); box-shadow:0 4px 8px rgba(108,117,125,0.3); }
 
-        .message {
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-        }
+        .message { padding:12px; border-radius:10px; margin-bottom:20px; font-size:0.95rem; }
+        .message.success { background:#d1e7dd; color:#0f5132; }
+        .message.error { background:#f8d7da; color:#842029; }
 
-        .message.success {
-            background-color: #d1e7dd;
-            color: #0f5132;
-        }
-
-        .message.error {
-            background-color: #f8d7da;
-            color: #842029;
-        }
-
-        .btn-primary {
-            background-color: #0d6efd;
-            border: none;
-            font-weight: 500;
-        }
-
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-        }
-
-        .btn-outline-primary {
-            color: #0d3b66;
-            border-color: #0d3b66;
-            font-weight: 500;
-        }
-
-        .btn-outline-primary:hover {
-            background-color: #0d6efd;
-            color: #fff;
-        }
-
-        .row.g-3 > .col-md-4, .row.g-3 > .col-md-6 {
-            margin-bottom: 15px;
-        }
-
-        .form-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 25px;
-        }
-
-        @media (max-width: 768px) {
-            .card {
-                padding: 25px;
-            }
-            .form-actions {
-                flex-direction: column;
-            }
-        }
+        @media (max-width:768px) { .form-actions { flex-direction:column; } }
     </style>
 </head>
 <body>
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10 col-xl-8">
-            <div class="card">
-                <h3><i class="fas fa-user-plus"></i> Tạo User Mới</h3>
 
-                <!-- Thông báo -->
-                <c:if test="${not empty success}">
-                    <div class="message success">${success}</div>
-                </c:if>
-                <c:if test="${not empty error}">
-                    <div class="message error">${error}</div>
-                </c:if>
+<div class="container">
+    <h1><i class="fas fa-user-plus"></i> Create New User</h1>
 
-                <form action="${createUserUrl}" method="post">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Họ và Tên:</label>
-                            <input type="text" name="fullname" class="form-control" required value="<c:out value='${formFullname}'/>">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Email:</label>
-                            <input type="email" name="email" class="form-control" required value="<c:out value='${formEmail}'/>">
-                        </div>
+    <div class="form-card">
+        <!-- Messages -->
+        <c:if test="${not empty success}"><div class="message success">${success}</div></c:if>
+        <c:if test="${not empty error}"><div class="message error">${error}</div></c:if>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Số điện thoại:</label>
-                            <input type="text" name="phoneNumber" class="form-control" value="<c:out value='${formPhoneNumber}'/>">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Ngày sinh:</label>
-                            <input type="date" name="birthDate" class="form-control" value="<c:out value='${formBirthDate}'/>">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Giới tính:</label>
-                            <select name="gender" class="form-select" required>
-                                <option value="">--Chọn giới tính--</option>
-                                <option value="Male" <c:if test="${formGender == 'Male'}">selected</c:if>>Nam</option>
-                                <option value="Female" <c:if test="${formGender == 'Female'}">selected</c:if>>Nữ</option>
-                                <option value="Other" <c:if test="${formGender == 'Other'}">selected</c:if>>Khác</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Địa chỉ:</label>
-                            <input type="text" name="address" class="form-control" value="<c:out value='${formAddress}'/>">
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Dân tộc:</label>
-                            <input type="text" name="ethnicity" class="form-control" value="<c:out value='${formEthnicity}'/>">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Quốc tịch:</label>
-                            <input type="text" name="nation" class="form-control" value="<c:out value='${formNation}'/>">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">CCCD/CMND:</label>
-                            <input type="text" name="cccd" class="form-control" value="<c:out value='${formCccd}'/>">
-                        </div>
-
-                        <!-- Department -->
-                        <div class="col-md-4">
-                            <label class="form-label">Phòng ban:</label>
-                            <select name="departmentId" class="form-select">
-                                <option value="">--Chọn phòng ban--</option>
-                                <c:forEach var="d" items="${departments}">
-                                    <option value="${d.departmentId}" <c:if test="${formDepartmentId == d.departmentId}">selected</c:if>>${d.name}</option>
-                                </c:forEach>
-                            </select>
-                            <input type="text" name="newDepartment" class="form-control add-option-input" placeholder="Thêm phòng ban mới nếu cần">
-                        </div>
-
-                        <!-- Position -->
-                        <div class="col-md-4">
-                            <label class="form-label">Chức vụ:</label>
-                            <select name="positionId" class="form-select">
-                                <option value="">--Chọn chức vụ--</option>
-                                <c:forEach var="p" items="${positions}">
-                                    <option value="${p.positionId}" <c:if test="${formPositionId == p.positionId}">selected</c:if>>${p.name}</option>
-                                </c:forEach>
-                            </select>
-                            <input type="text" name="newPosition" class="form-control add-option-input" placeholder="Thêm chức vụ mới nếu cần">
-                        </div>
-
-                        <!-- Degree -->
-                        <div class="col-md-4">
-                            <label class="form-label">Bằng cấp:</label>
-                            <select name="degreeId" class="form-select">
-                                <option value="">--Chọn bằng cấp--</option>
-                                <c:forEach var="deg" items="${degrees}">
-                                    <option value="${deg.degreeId}" <c:if test="${formDegreeId == deg.degreeId}">selected</c:if>>${deg.name}</option>
-                                </c:forEach>
-                            </select>
-                            <input type="text" name="newDegree" class="form-control add-option-input" placeholder="Thêm bằng cấp mới nếu cần">
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-user-plus"></i> Tạo User
-                        </button>
-                        <button type="reset" class="btn btn-outline-primary">
-                            <i class="fas fa-times"></i> Hủy
-                        </button>
-                        <a href="${userListUrl}" class="btn btn-outline-primary">
-                            <i class="fas fa-list"></i> Danh sách User
-                        </a>
-                    </div>
-                </form>
+        <form action="${createUserUrl}" method="post">
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label>Full Name:</label>
+                    <input type="text" name="fullname" value="<c:out value='${formFullname}'/>" required>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Email:</label>
+                    <input type="email" name="email" value="<c:out value='${formEmail}'/>" required>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Phone Number:</label>
+                    <input type="text" name="phoneNumber" value="<c:out value='${formPhoneNumber}'/>">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Birth Date:</label>
+                    <input type="date" name="birthDate" value="<c:out value='${formBirthDate}'/>">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Gender:</label>
+                    <select name="gender" required>
+                        <option value="">--Select Gender--</option>
+                        <c:forEach var="g" items="${genders}">
+                            <option value="${g}" <c:if test="${formGender == g}">selected</c:if>>${g}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Address:</label>
+                    <input type="text" name="address" value="<c:out value='${formAddress}'/>">
+                </div>
+                <div class="col-md-4 form-group">
+                    <label>Ethnicity:</label>
+                    <input type="text" name="ethnicity" value="<c:out value='${formEthnicity}'/>">
+                </div>
+                <div class="col-md-4 form-group">
+                    <label>Nationality:</label>
+                    <input type="text" name="nation" value="<c:out value='${formNation}'/>">
+                </div>
+                <div class="col-md-4 form-group">
+                    <label>ID Number:</label>
+                    <input type="text" name="cccd" value="<c:out value='${formCccd}'/>">
+                </div>
+                <div class="col-md-4 form-group">
+                    <label>Department:</label>
+                    <select name="departmentId" required>
+                        <option value="">--Select Department--</option>
+                        <c:forEach var="d" items="${departments}">
+                            <option value="${d.departmentId}" <c:if test="${formDepartmentId == d.departmentId}">selected</c:if>>${d.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label>Position:</label>
+                    <select name="positionId" required>
+                        <option value="">--Select Position--</option>
+                        <c:forEach var="p" items="${positions}">
+                            <option value="${p.positionId}" <c:if test="${formPositionId == p.positionId}">selected</c:if>>${p.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label>Degree:</label>
+                    <select name="degreeId" required>
+                        <option value="">--Select Degree--</option>
+                        <c:forEach var="deg" items="${degrees}">
+                            <option value="${deg.degreeId}" <c:if test="${formDegreeId == deg.degreeId}">selected</c:if>>${deg.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
             </div>
-        </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-user-plus"></i> Create User</button>
+                <button type="reset" class="btn btn-outline"><i class="fas fa-times"></i> Reset</button>
+                <a href="${userListUrl}" class="btn btn-outline"><i class="fas fa-list"></i> User List</a>
+            </div>
+        </form>
     </div>
 </div>
 
