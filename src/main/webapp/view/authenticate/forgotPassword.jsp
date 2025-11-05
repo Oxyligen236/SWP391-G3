@@ -24,17 +24,17 @@
                     </c:if>
 
                     <form action="<c:url value='/forgot-password'/>" method="post">
-                        <label for="email">Email registered in the system:</label>
+                        <label for="email">Your registered email:</label>
                         <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
                         <label for="subject">Subject:</label>
-                        <input type="text" id="subject" name="subject" placeholder="Password reset request (optional)"
-                            required>
-                        <label for="body">Content:</label>
-                        <textarea id="body" name="body" rows="4"
-                            placeholder="Enter the content of the password reset request (optional)"
+                        <input type="text" id="subject" name="subject" placeholder="Password reset request" required>
+
+                        <label for="body">Additional message:</label>
+                        <textarea id="body" name="body" rows="4" placeholder="Provide additional details for admin"
                             required></textarea>
 
-                        <button type="submit">Send password reset request</button>
+                        <button type="submit">Send request to admin</button>
                     </form>
 
                     <div class="back-to-login">
