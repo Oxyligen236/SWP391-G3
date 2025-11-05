@@ -177,4 +177,15 @@ public class PayrollService {
         return dtos;
     }
 
+    public List<PayrollType> getAllPayrollTypes() {
+        return payrollDao.getAllPayrollTypes();
+    }
+
+    public List<PayrollType> getAdjustmentTypes() {
+        return payrollDao.getAllPayrollTypes()
+            .stream()
+            .filter(type -> "Adjustment".equals(type.getCategory()))
+            .toList();
+    }
+
 }

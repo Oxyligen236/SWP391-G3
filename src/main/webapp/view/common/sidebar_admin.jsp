@@ -77,24 +77,6 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
         </div>
       </li>
 
-      <!-- CV -->
-      <li class="sidebar-dropdown">
-        <a href="javascript:void(0)"
-          ><i class="uil uil-apps me-2 d-inline-block"></i>CV</a
-        >
-        <div class="sidebar-submenu">
-          <ul>
-            <li>
-              <a
-                href="<c:url value='/view/cv/submitCV.jsp'/>"
-                target="mainFrame"
-                >Submit CV</a
-              >
-            </li>
-          </ul>
-        </div>
-      </li>
-
       <!-- PAYROLL -->
       <li class="sidebar-dropdown">
         <a href="javascript:void(0)"

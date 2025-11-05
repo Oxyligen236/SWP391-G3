@@ -336,4 +336,61 @@ public class PayrollDAO extends DBContext {
         return null;
     }
 
+    public boolean recalculateNetSalary(int payrollId) {
+        String sql = """
+            UPDATE Payroll p
+            SET NetSalary = (
+                SELECT 
+                    p.BaseSalary +
+                    COALESCE(SUM(
+                        CASE 
+                            WHEN pi.Is_Positive = 1 THEN
+                                CASE 
+                                    WHEN pi.AmountType = 'fixed' THEN pi.Amount
+                                    WHEN pi.AmountType = 'percent' THEN (p.BaseSalary * pi.Amount / 100)
+                                END
+                            ELSE 0
+                        END
+                    ), 0) -
+                    COALESCE(SUM(
+                        CASE 
+                            WHEN pi.Is_Positive = 0 THEN
+                                CASE 
+                                    WHEN pi.AmountType = 'fixed' THEN pi.Amount
+                                    WHEN pi.AmountType = 'percent' THEN (p.BaseSalary * pi.Amount / 100)
+                                END
+                            ELSE 0
+                        END
+                    ), 0)
+                FROM Payroll_Item pi
+                WHERE pi.Payroll_ID = p.Payroll_ID
+            )
+            WHERE p.Payroll_ID = ?
+        """;
+        
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, payrollId);
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    public Payroll getPayrollById(int payrollId) {
+        String sql = "SELECT * FROM Payroll WHERE Payroll_ID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, payrollId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return extractPayrollFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
 }

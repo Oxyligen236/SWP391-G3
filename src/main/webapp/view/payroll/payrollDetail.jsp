@@ -62,6 +62,24 @@
 
                     <h1>Payroll Items Detail</h1>
 
+                    <!-- Edit Button for Management -->
+                    <c:if test="${displayType == 'management' && payrollDetail.status != 'Paid'}">
+                        <div style="margin-bottom: 15px;">
+                            <a href="${pageContext.request.contextPath}/payroll/edit?payrollID=${payrollDetail.payrollID}&userID=${payrollDetail.userID}" 
+                               style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; 
+                                      border-radius: 4px; display: inline-block; font-weight: 500;">
+                                Edit Bonuses & Deductions
+                            </a>
+                        </div>
+                    </c:if>
+
+                    <c:if test="${payrollDetail.status == 'Paid'}">
+                        <div style="padding: 10px; background-color: #fff3cd; border: 1px solid #ffc107; 
+                                    border-radius: 4px; margin-bottom: 15px; color: #856404;">
+                            <strong>Note:</strong> This payroll has been paid and cannot be edited.
+                        </div>
+                    </c:if>
+
                     <table>
                         <thead>
                             <tr>
