@@ -7,10 +7,27 @@
         <meta charset="UTF-8">
         <title>Users List</title>
         <link rel="stylesheet" href="css/userlist.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     </head>
     <body>
         <div class="container">
             <h3>Users List</h3>
+
+            <!-- Success Message -->
+            <c:if test="${not empty successMessage}">
+                <div class="alert alert-success" id="successAlert">
+                    <i class="fas fa-check-circle"></i> ${successMessage}
+                </div>
+                <c:remove var="successMessage" scope="session"/>
+            </c:if>
+
+            <!-- Error Message -->
+            <c:if test="${not empty errorMessage}">
+                <div class="alert alert-error" id="errorAlert">
+                    <i class="fas fa-exclamation-circle"></i> ${errorMessage}
+                </div>
+                <c:remove var="errorMessage" scope="session"/>
+            </c:if>
 
             <c:if test="${empty users}">
                 <p>Không có dữ liệu để hiển thị.</p>
@@ -63,5 +80,24 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Auto hide alerts after 5 seconds -->
+        <script>
+            // Tự động ẩn thông báo sau 5 giây
+            setTimeout(function() {
+                var successAlert = document.getElementById('successAlert');
+                var errorAlert = document.getElementById('errorAlert');
+                if (successAlert) {
+                    successAlert.style.transition = 'opacity 0.5s';
+                    successAlert.style.opacity = '0';
+                    setTimeout(function() { successAlert.remove(); }, 500);
+                }
+                if (errorAlert) {
+                    errorAlert.style.transition = 'opacity 0.5s';
+                    errorAlert.style.opacity = '0';
+                    setTimeout(function() { errorAlert.remove(); }, 500);
+                }
+            }, 5000);
+        </script>
     </body>
 </html>

@@ -21,7 +21,7 @@ public class EditUserRoleServlet extends HttpServlet {
         String accountIDParam = request.getParameter("accountID");
         
         if (accountIDParam == null || accountIDParam.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/account/view");
+            response.sendRedirect(request.getContextPath() + "/userlist");
             return;
         }
         
@@ -35,7 +35,7 @@ public class EditUserRoleServlet extends HttpServlet {
             if (accountDetail == null) {
                 HttpSession session = request.getSession();
                 session.setAttribute("errorMessage", "Không tìm thấy tài khoản!");
-                response.sendRedirect(request.getContextPath() + "/account/view");
+                response.sendRedirect(request.getContextPath() + "/userlist");
                 return;
             }
             
@@ -51,7 +51,7 @@ public class EditUserRoleServlet extends HttpServlet {
             request.getRequestDispatcher("/view/account/updateAccountRole.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
-            response.sendRedirect(request.getContextPath() + "/account/view");
+            response.sendRedirect(request.getContextPath() + "/userlist");
         }
     }
 
@@ -78,6 +78,6 @@ public class EditUserRoleServlet extends HttpServlet {
         }
 
 
-        response.sendRedirect(request.getContextPath() + "/account/view");
+        response.sendRedirect(request.getContextPath() + "/userlist");
     }
 }

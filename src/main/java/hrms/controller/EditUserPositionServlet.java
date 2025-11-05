@@ -22,7 +22,7 @@ public class EditUserPositionServlet extends HttpServlet {
 
         String userIDParam = request.getParameter("userID");
         if (userIDParam == null || userIDParam.trim().isEmpty()) {
-            response.sendRedirect("account/view");
+            response.sendRedirect(request.getContextPath() + "/userlist");
             return;
         }
 
@@ -33,7 +33,7 @@ public class EditUserPositionServlet extends HttpServlet {
 
         UserDTO user = changePositionDAO.getUserDetailById(userID);
         if (user == null) {
-            response.sendRedirect("account/view");
+            response.sendRedirect(request.getContextPath() + "/userlist");
             return;
         }
 
@@ -59,11 +59,11 @@ public class EditUserPositionServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         if(success) {
-            session.setAttribute("message", "User position updated successfully!");
+            session.setAttribute("successMessage", "Cập nhật chức vụ thành công!");
         }   else {
-            session.setAttribute("message", "Failed to update user position.");
+            session.setAttribute("errorMessage", "Cập nhật chức vụ thất bại!");
         }
 
-        response.sendRedirect("account/view");
+        response.sendRedirect(request.getContextPath() + "/userlist");
     }
 }

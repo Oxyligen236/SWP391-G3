@@ -52,9 +52,9 @@
           </div>
 
           <div class="button-group">
-            <a href="account/view" class="btn-cancel">
+            <button type="button" class="btn-cancel" onclick="window.location.href='<c:url value='/userlist'/>'">
               <i class="fas fa-times"></i> Hủy
-            </a>
+            </button>
             <button type="submit" class="btn-submit">
               <i class="fas fa-check"></i> Cập Nhật
             </button>

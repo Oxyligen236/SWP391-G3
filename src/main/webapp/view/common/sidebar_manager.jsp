@@ -22,10 +22,19 @@
                   <a href="<c:url value='/view'/>" target="mainFrame">View Profile</a>
                 </li>
                 <li>
-                  <a href="#" target="mainFrame">Create Profile</a>
-                </li>
-                <li>
                   <a href="<c:url value='/edit'/>" target="mainFrame">Edit Profile</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- USER MANAGEMENT -->
+          <li class="sidebar-dropdown">
+            <a href="javascript:void(0)"><i class="uil uil-users-alt me-2 d-inline-block"></i>User Management</a>
+            <div class="sidebar-submenu">
+              <ul>
+                <li>
+                  <a href="<c:url value='/userlist'/>" target="mainFrame">User List</a>
                 </li>
               </ul>
             </div>
@@ -33,7 +42,7 @@
 
           <!-- CONTRACT -->
           <li class="sidebar-dropdown">
-            <a href="javascript:void(0)"><i class="uil uil-wheelchair me-2 d-inline-block"></i>Contract</a>
+            <a href="javascript:void(0)"><i class="uil uil-file-contract me-2 d-inline-block"></i>Contract</a>
             <div class="sidebar-submenu">
               <ul>
                 <li>
@@ -51,7 +60,7 @@
 
           <!-- CV -->
           <li class="sidebar-dropdown">
-            <a href="javascript:void(0)"><i class="uil uil-apps me-2 d-inline-block"></i>CV</a>
+            <a href="javascript:void(0)"><i class="uil uil-file-alt me-2 d-inline-block"></i>CV</a>
             <div class="sidebar-submenu">
               <ul>
                 <li>
@@ -61,9 +70,21 @@
             </div>
           </li>
 
+          <!-- JOB DESCRIPTION -->
+          <li class="sidebar-dropdown">
+            <a href="javascript:void(0)"><i class="uil uil-briefcase me-2 d-inline-block"></i>Job Description</a>
+            <div class="sidebar-submenu">
+              <ul>
+                <li>
+                  <a href="<c:url value='/jdlist'/>" target="mainFrame">JD List</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
           <!-- PAYROLL -->
           <li class="sidebar-dropdown">
-            <a href="javascript:void(0)"><i class="uil uil-shopping-cart me-2 d-inline-block"></i>Payroll</a>
+            <a href="javascript:void(0)"><i class="uil uil-money-bill me-2 d-inline-block"></i>Payroll</a>
             <div class="sidebar-submenu">
               <ul>
                 <li>
@@ -78,17 +99,17 @@
 
           <!-- TICKET -->
           <li class="sidebar-dropdown">
-            <a href="javascript:void(0)"><i class="uil uil-flip-h me-2 d-inline-block"></i>Ticket</a>
+            <a href="javascript:void(0)"><i class="uil uil-ticket me-2 d-inline-block"></i>Ticket</a>
             <div class="sidebar-submenu">
               <ul>
                 <li>
-                  <a href="#" target="mainFrame">My Ticket</a>
+                  <a href="<c:url value='/ticketList'/>" target="mainFrame">My Ticket</a>
                 </li>
                 <li>
-                  <a href="#" target="mainFrame">View sent Ticket</a>
+                  <a href="<c:url value='/create-ticket'/>" target="mainFrame">Create Ticket</a>
                 </li>
                 <li>
-                  <a href="#" target="mainFrame">View employee Ticket</a>
+                  <a href="<c:url value='/department-ticket'/>" target="mainFrame">View employee Ticket</a>
                 </li>
               </ul>
             </div>
@@ -96,14 +117,49 @@
 
           <!-- ATTENDANCE -->
           <li class="sidebar-dropdown">
-            <a href="javascript:void(0)"><i class="uil uil-file me-2 d-inline-block"></i>Attendance</a>
+            <a href="javascript:void(0)"><i class="uil uil-calendar-alt me-2 d-inline-block"></i>Attendance</a>
             <div class="sidebar-submenu">
               <ul>
                 <li>
-                  <a href="#" target="mainFrame">My Attendance</a>
+                  <a href="<c:url value='/myattendance'/>" target="mainFrame">My Attendance</a>
                 </li>
                 <li>
-                  <a href="#" target="mainFrame">Company Attendance</a>
+                  <a href="<c:url value='/company-attendance'/>" target="mainFrame">Company Attendance</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- SHIFT -->
+          <li class="sidebar-dropdown">
+            <a href="javascript:void(0)"><i class="uil uil-clock me-2 d-inline-block"></i>Shift</a>
+            <div class="sidebar-submenu">
+              <ul>
+                <li>
+                  <a href="<c:url value='/shift'/>" target="mainFrame">Shift Management</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- WORK HISTORY -->
+          <li class="sidebar-dropdown">
+            <a href="javascript:void(0)"><i class="uil uil-history me-2 d-inline-block"></i>Work History</a>
+            <div class="sidebar-submenu">
+              <ul>
+                <li>
+                  <a href="<c:url value='/workhistory'/>" target="mainFrame">Work History</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <!-- EDIT INSURANCE OR TAX -->
+          <li class="sidebar-dropdown">
+            <a href="javascript:void(0)"><i class="uil uil-history me-2 d-inline-block"></i>Edit tax percent</a>
+            <div class="sidebar-submenu">
+              <ul>
+                <li>
+                  <a href="<c:url value='#'/>" target="mainFrame">Edit Tax</a>
                 </li>
               </ul>
             </div>
