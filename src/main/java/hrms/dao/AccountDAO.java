@@ -21,8 +21,7 @@ public class AccountDAO extends DBContext {
                 rs.getString(4),
                 rs.getInt(5),
                 rs.getBoolean(6),
-                rs.getString(7)
-        );
+                rs.getString(7));
     }
 
     public List<Account> getAllAccounts() {
@@ -127,14 +126,14 @@ public class AccountDAO extends DBContext {
 
     public AccountDTO getAccountDTOByID(int accountID) {
         String sql = """
-        SELECT a.AccountID, a.Username, a.Is_active,
-               u.Fullname AS fullName,
-               r.Name AS roleName
-        FROM Account a
-        LEFT JOIN Users u ON a.UserID = u.UserID
-        LEFT JOIN Role r ON a.RoleID = r.RoleID
-        WHERE a.AccountID = ?
-    """;
+                    SELECT a.AccountID, a.Username, a.Is_active,
+                           u.Fullname AS fullName,
+                           r.Name AS roleName
+                    FROM Account a
+                    LEFT JOIN Users u ON a.UserID = u.UserID
+                    LEFT JOIN Role r ON a.RoleID = r.RoleID
+                    WHERE a.AccountID = ?
+                """;
 
         try (PreparedStatement st = connection.prepareStatement(sql)) {
             st.setInt(1, accountID);
@@ -170,7 +169,8 @@ public class AccountDAO extends DBContext {
         String selectSql = "SELECT UserID, Password FROM Account";
         String updateSql = "UPDATE Account SET Password = ? WHERE UserID = ?";
         int count = 0;
-        try (PreparedStatement selectStmt = connection.prepareStatement(selectSql); PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
+        try (PreparedStatement selectStmt = connection.prepareStatement(selectSql);
+                PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
             ResultSet rs = selectStmt.executeQuery();
             while (rs.next()) {
                 int userId = rs.getInt("UserID");
@@ -195,7 +195,8 @@ public class AccountDAO extends DBContext {
     public boolean areAllPasswordsHashed() {
         String sql = "SELECT COUNT(*) as total FROM Account";
         String hashedSql = "SELECT COUNT(*) as hashed FROM Account WHERE Password LIKE '%:%'";
-        try (PreparedStatement st1 = connection.prepareStatement(sql); PreparedStatement st2 = connection.prepareStatement(hashedSql)) {
+        try (PreparedStatement st1 = connection.prepareStatement(sql);
+                PreparedStatement st2 = connection.prepareStatement(hashedSql)) {
             ResultSet rs1 = st1.executeQuery();
             ResultSet rs2 = st2.executeQuery();
             if (rs1.next() && rs2.next()) {
@@ -277,10 +278,9 @@ public class AccountDAO extends DBContext {
 
         StringBuilder sql = new StringBuilder(
                 "SELECT a.AccountID, a.Username, u.FullName, a.Is_active, r.Name AS RoleName "
-                + "FROM Account a "
-                + "JOIN Users u ON a.UserID = u.UserID "
-                + "JOIN Role r ON a.RoleID = r.RoleID WHERE 1=1 "
-        );
+                        + "FROM Account a "
+                        + "JOIN Users u ON a.UserID = u.UserID "
+                        + "JOIN Role r ON a.RoleID = r.RoleID WHERE 1=1 ");
 
         if (search != null && !search.trim().isEmpty()) {
             sql.append("AND (u.FullName LIKE ? OR a.Username LIKE ?) ");
@@ -342,9 +342,8 @@ public class AccountDAO extends DBContext {
     public int countFilteredAccounts(String search, String roleFilter, String statusFilter) throws SQLException {
         StringBuilder sql = new StringBuilder(
                 "SELECT COUNT(*) FROM Account a "
-                + "JOIN Users u ON a.UserID = u.UserID "
-                + "JOIN Role r ON a.RoleID = r.RoleID WHERE 1=1 "
-        );
+                        + "JOIN Users u ON a.UserID = u.UserID "
+                        + "JOIN Role r ON a.RoleID = r.RoleID WHERE 1=1 ");
 
         if (search != null && !search.trim().isEmpty()) {
             sql.append("AND (u.FullName LIKE ? OR a.Username LIKE ?) ");
@@ -406,5 +405,63 @@ public class AccountDAO extends DBContext {
         }
         return false;
     }
+
+   public Account getAccountById(int accountId) {
+    String sql = "SELECT AccountID, Username, Password, RoleID, Is_active FROM Account WHERE AccountID = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, accountId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            Account account = new Account();
+            account.setAccountID(rs.getInt("AccountID"));
+            account.setUsername(rs.getString("Username"));
+            account.setPassword(rs.getString("Password"));
+            account.setRole(rs.getInt("RoleID"));
+            account.setIsActive(rs.getBoolean("Is_active"));
+            return account;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+
+    /**
+     * Reset mật khẩu của account
+     */
+    public boolean resetPassword(int accountId, String hashedPassword) {
+        String sql = "UPDATE Account SET Password = ? WHERE AccountID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, hashedPassword);
+            ps.setInt(2, accountId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+public boolean updateStatus(int accountId, boolean active) throws SQLException {
+    String sql = "UPDATE Account SET Is_active = ? WHERE AccountID = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setBoolean(1, active);
+        ps.setInt(2, accountId);
+        return ps.executeUpdate() > 0;
+    }
+}
+
+
+public int countActiveAdmins() throws SQLException {
+    String sql = "SELECT COUNT(*) FROM Account WHERE RoleID = 5 AND Is_active = 1";
+    try (PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+    }
+    return 0;
+}
+
+
 
 }

@@ -7,6 +7,8 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Danh Sách Tài Khoản - HRMS</title>
+
+            <!-- Bootstrap & Icons -->
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
             <link rel="stylesheet" href="<c:url value='/css/view-accountlist.css'/>">
@@ -17,14 +19,15 @@
                 <!-- Header -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2><i class="fas fa-users"></i> Quản Lý Tài Khoản</h2>
-                    <a href="<c:url value='/account/create'/>" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Add New Account
-                    </a>
-                    <a href="<c:url value='/home'/>" class="btn btn-secondary">
-                        <i class="fas fa-home"></i> Back to Home
-                    </a>
+                    <div class="d-flex gap-2">
+                        <a href="<c:url value='/account/create'/>" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add New Account
+                        </a>
+                        <a href="<c:url value='/home'/>" class="btn btn-secondary">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                    </div>
                 </div>
-
 
                 <!-- Alerts -->
                 <c:if test="${not empty successMessage}">
@@ -40,7 +43,7 @@
                     </div>
                 </c:if>
 
-                <!-- Filter & Search Form -->
+                <!-- Filter Form -->
                 <form class="row g-2 mb-3 align-items-end" method="get" action="<c:url value='/account/view'/>">
                     <div class="col-md-3">
                         <label class="form-label">Search</label>
@@ -52,7 +55,6 @@
                         <label class="form-label">Role</label>
                         <select name="role" class="form-select">
                             <option value="">All</option>
-                            <!-- Lặp qua danh sách role từ server -->
                             <c:forEach var="role" items="${roleList}">
                                 <option value="${role.roleID}" ${roleFilter==role.roleID ? 'selected' : '' }>
                                     ${role.name}
@@ -108,7 +110,7 @@
                                 <th>Full Name</th>
                                 <th>Role</th>
                                 <th>Status</th>
-                                <th style="width: 250px;">Actions</th>
+                                <th style="width: 300px;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -131,9 +133,13 @@
                                         </c:choose>
                                     </td>
                                     <td>
-
+                                        <!-- Edit -->
                                         <a href="<c:url value='/updateRole?accountID=${account.accountID}'/>"
-                                            class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                                            class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+
+                                        <!-- Activate / Disable -->
                                         <form action="<c:url value='/account/toggle-status'/>" method="post"
                                             style="display:inline;">
                                             <input type="hidden" name="accountID" value="${account.accountID}">
@@ -143,6 +149,13 @@
                                                 ${account.active ? 'Disable' : 'Activate'}
                                             </button>
                                         </form>
+
+                                        <!-- 🔹 Reset Password -->
+                                        <a href="<c:url value='/account/reset-password?accountID=${account.accountID}'/>"
+                                            class="btn btn-sm btn-info text-white">
+                                            <i class="fas fa-key"></i> Reset
+                                        </a>
+
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -150,9 +163,8 @@
                     </table>
                 </div>
 
-                <!-- Items per page + Pagination -->
+                <!-- Pagination + Items per page -->
                 <div class="d-flex justify-content-between align-items-center mt-3">
-                    <!-- Items per page -->
                     <form method="get" action="<c:url value='/account/view'/>" class="d-flex align-items-center gap-2">
                         <label for="pageSize" class="form-label mb-0">Items per page:</label>
                         <select id="pageSize" name="pageSize" class="form-select" style="width: 80px;"
@@ -163,7 +175,6 @@
                         </select>
                     </form>
 
-                    <!-- Pagination -->
                     <c:if test="${totalPages > 1}">
                         <nav>
                             <ul class="pagination justify-content-center mb-0">
@@ -180,11 +191,13 @@
                     </c:if>
                 </div>
 
+                <!-- No results -->
                 <c:if test="${empty accounts}">
                     <div class="alert alert-info text-center mt-3">
                         <i class="fas fa-info-circle"></i> No accounts found.
                     </div>
                 </c:if>
+
             </div>
 
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

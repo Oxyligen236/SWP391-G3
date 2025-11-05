@@ -46,7 +46,7 @@ public class ViewAccountServlet extends HttpServlet {
             List<Role> roleList = roleDAO.getAllRoles();
             request.setAttribute("roleList", roleList); // <--- đồng bộ với JSP
 
-            if (currentUser.getRole() == 1) { // Admin
+            if (currentUser.getRole() == 5) { // Admin
                 // Lấy danh sách tài khoản theo các điều kiện lọc, tìm kiếm, phân trang
                 List<AccountDTO> accounts = accountDAO.getFilteredAccounts(
                         search, roleFilter, statusFilter, sortBy, sortOrder, page, pageSize);
