@@ -1,11 +1,16 @@
 package hrms.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import hrms.dao.DegreeDAO;
 import hrms.dao.DepartmentDAO;
 import hrms.dao.PositionDAO;
+import hrms.model.Account;
+import hrms.model.Degree;
+import hrms.model.Department;
+import hrms.model.Position;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,35 +26,78 @@ public class AddOptionServlet extends HttpServlet {
 
     private static final Pattern VALID_NAME = Pattern.compile("^[A-Za-zÀ-ỹ\\s]{2,50}$");
 
+    private boolean hasHRPermission(HttpSession session) {
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) return false;
+        return account.getRole() == 1 || account.getRole() == 2; // 1=HR, 2=HR Manager
+    }
+
+    private boolean isValidType(String type) {
+        return type != null && (type.equals("position") || type.equals("department") || type.equals("degree"));
+    }
+
+    private void loadOptions(HttpServletRequest request) {
+        try {
+            List<Position> positions = positionDAO.getAll();
+            List<Department> departments = departmentDAO.getAll();
+            List<Degree> degrees = degreeDAO.getAll();
+
+            request.setAttribute("positions", positions);
+            request.setAttribute("departments", departments);
+            request.setAttribute("degrees", degrees);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "💥 Lỗi khi tải danh sách: " + e.getMessage());
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        if (!hasHRPermission(request.getSession())) {
+            response.sendRedirect(request.getContextPath() + "/view/profile/accessDenied.jsp");
+            return;
+        }
+
+        // Nếu chưa có type, để trống để dropdown JSP hiển thị
+        String type = request.getParameter("type");
+        if (!isValidType(type)) {
+            type = "";
+        }
+
+        request.setAttribute("type", type);
+        loadOptions(request);
+        request.getRequestDispatcher("/view/profile/addOption.jsp").forward(request, response);
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
+        if (!hasHRPermission(request.getSession())) {
+            response.sendRedirect(request.getContextPath() + "/view/profile/accessDenied.jsp");
+            return;
+        }
 
         String type = request.getParameter("type");
         String name = request.getParameter("name");
 
-        // 🧩 Validate cơ bản
-        if (type == null || name == null || name.trim().isEmpty()) {
-            session.setAttribute("errorMessage", "⚠️ Please enter all required fields!");
-            response.sendRedirect(request.getContextPath() + "/view/option/add_option.jsp");
+        // Validate type và tên
+        if (!isValidType(type) || name == null || name.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "⚠️ Vui lòng chọn type và nhập tên!");
+            request.setAttribute("type", type);
+            loadOptions(request);
+            request.getRequestDispatcher("/view/profile/addOption.jsp").forward(request, response);
             return;
         }
 
         name = name.trim();
-
-        // 🧩 Validate độ dài
-        if (name.length() < 2) {
-            session.setAttribute("errorMessage", "⚠️ Name is too short (minimum 2 characters).");
-            response.sendRedirect(request.getContextPath() + "/view/option/add_option.jsp");
-            return;
-        }
-
-        // 🧩 Validate ký tự
         if (!VALID_NAME.matcher(name).matches()) {
-            session.setAttribute("errorMessage", "⚠️ Name contains invalid characters!");
-            response.sendRedirect(request.getContextPath() + "/view/option/add_option.jsp");
+            request.setAttribute("errorMessage", "⚠️ Tên không hợp lệ (2-50 ký tự, chỉ chữ và khoảng trắng)!");
+            request.setAttribute("type", type);
+            loadOptions(request);
+            request.getRequestDispatcher("/view/profile/addOption.jsp").forward(request, response);
             return;
         }
 
@@ -57,46 +105,32 @@ public class AddOptionServlet extends HttpServlet {
         try {
             switch (type) {
                 case "position":
-                    if (positionDAO.exists(name)) {
-                        session.setAttribute("errorMessage", "❌ Position '" + name + "' already exists!");
-                    } else {
-                        success = positionDAO.insertIfNotExists(name) > 0;
-                    }
+                    if (!positionDAO.exists(name)) success = positionDAO.insertIfNotExists(name) > 0;
                     break;
-
                 case "department":
-                    if (departmentDAO.exists(name)) {
-                        session.setAttribute("errorMessage", "❌ Department '" + name + "' already exists!");
-                    } else {
-                        success = departmentDAO.insertIfNotExists(name) > 0;
-                    }
+                    if (!departmentDAO.exists(name)) success = departmentDAO.insertIfNotExists(name) > 0;
                     break;
-
                 case "degree":
-                    if (degreeDAO.exists(name)) {
-                        session.setAttribute("errorMessage", "❌ Degree '" + name + "' already exists!");
-                    } else {
-                        success = degreeDAO.insertIfNotExists(name) > 0;
-                    }
+                    if (!degreeDAO.exists(name)) success = degreeDAO.insertIfNotExists(name) > 0;
                     break;
-
-                default:
-                    session.setAttribute("errorMessage", "❌ Invalid type!");
-                    response.sendRedirect(request.getContextPath() + "/view/option/add_option.jsp");
-                    return;
             }
-
-            if (success) {
-                session.setAttribute("successMessage", "✅ Successfully added new " + type + ": " + name);
-            } else if (session.getAttribute("errorMessage") == null) {
-                session.setAttribute("errorMessage", "❌ Failed to add new " + type + ".");
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("errorMessage", "💥 Database error: " + e.getMessage());
+            request.setAttribute("errorMessage", "💥 Lỗi cơ sở dữ liệu: " + e.getMessage());
+            request.setAttribute("type", type);
+            loadOptions(request);
+            request.getRequestDispatcher("/view/profile/addOption.jsp").forward(request, response);
+            return;
         }
 
-        response.sendRedirect(request.getContextPath() + "/view/option/add_option.jsp");
+        if (success) {
+            request.setAttribute("successMessage", "✅ Thêm thành công " + type + ": " + name);
+        } else {
+            request.setAttribute("errorMessage", "⚠️ " + type + " đã tồn tại hoặc lỗi!");
+        }
+
+        request.setAttribute("type", type);
+        loadOptions(request);
+        request.getRequestDispatcher("/view/profile/addOption.jsp").forward(request, response);
     }
 }
