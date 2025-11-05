@@ -39,6 +39,7 @@ public class CreateUserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         request.setCharacterEncoding("UTF-8");
 
         if (!hasHRPermission(request.getSession())) {
@@ -46,6 +47,7 @@ public class CreateUserServlet extends HttpServlet {
             return;
         }
 
+        // --- Lấy dữ liệu form ---
         String fullname = request.getParameter("fullname");
         String email = request.getParameter("email");
         String phoneNumber = request.getParameter("phoneNumber");
@@ -57,15 +59,7 @@ public class CreateUserServlet extends HttpServlet {
                 birthDate = java.sql.Date.valueOf(birthStr);
             }
         } catch (IllegalArgumentException e) {
-            request.setAttribute("error", "Ngày sinh không hợp lệ!");
-            preserveFormData(request, fullname, email, phoneNumber, birthDate,
-                    request.getParameter("gender"), request.getParameter("address"),
-                    request.getParameter("nation"), request.getParameter("ethnicity"),
-                    request.getParameter("cccd"), request.getParameter("departmentId"),
-                    request.getParameter("positionId"), request.getParameter("degreeId"));
-            loadDropdownData(request);
-            request.getRequestDispatcher("/view/profile/createUser.jsp").forward(request, response);
-            return;
+            birthDate = null;
         }
 
         String gender = request.getParameter("gender");
@@ -74,13 +68,22 @@ public class CreateUserServlet extends HttpServlet {
         String ethnicity = request.getParameter("ethnicity");
         String cccd = request.getParameter("cccd");
 
-        Integer departmentId = parseInteger(request.getParameter("departmentId"));
-        Integer positionId = parseInteger(request.getParameter("positionId"));
-        Integer degreeId = parseInteger(request.getParameter("degreeId"));
+        String depParam = request.getParameter("departmentId");
+        String posParam = request.getParameter("positionId");
+        String degParam = request.getParameter("degreeId");
+
+        String newDepartment = request.getParameter("newDepartment");
+        String newPosition = request.getParameter("newPosition");
+        String newDegree = request.getParameter("newDegree");
+
+        Integer departmentId = parseInteger(depParam);
+        Integer positionId = parseInteger(posParam);
+        Integer degreeId = parseInteger(degParam);
 
         boolean hasError = false;
         StringBuilder errorMsg = new StringBuilder();
 
+        // --- Validate thông tin cơ bản ---
         if (fullname == null || fullname.trim().isEmpty()) {
             hasError = true;
             errorMsg.append("Họ & tên là bắt buộc!<br>");
@@ -144,6 +147,60 @@ public class CreateUserServlet extends HttpServlet {
             errorMsg.append("Dân tộc chỉ chứa chữ và tối đa 50 ký tự!<br>");
         }
 
+        DepartmentDAO deptDao = new DepartmentDAO();
+        PositionDAO posDao = new PositionDAO();
+        DegreeDAO degDao = new DegreeDAO();
+        UserDAO userDao = new UserDAO();
+
+        // --- Xử lý nhập tay Department mới ---
+        if (newDepartment != null && !newDepartment.trim().isEmpty()) {
+            String depTrim = newDepartment.trim();
+            if (!depTrim.matches("^[a-zA-ZÀ-ỹ\\s]{2,100}$")) {
+                hasError = true;
+                errorMsg.append("Phòng ban mới không hợp lệ (2-100 ký tự, chỉ chữ và khoảng trắng)!<br>");
+            } else {
+                Department d = deptDao.getByName(depTrim);
+                if (d != null) {
+                    departmentId = d.getDepartmentId();
+                } else {
+                    departmentId = deptDao.createReturnId(depTrim);
+                }
+            }
+        }
+
+        // --- Xử lý nhập tay Position mới ---
+        if (newPosition != null && !newPosition.trim().isEmpty()) {
+            String posTrim = newPosition.trim();
+            if (!posTrim.matches("^[a-zA-ZÀ-ỹ\\s]{2,100}$")) {
+                hasError = true;
+                errorMsg.append("Chức vụ mới không hợp lệ (2-100 ký tự, chỉ chữ và khoảng trắng)!<br>");
+            } else {
+                Position p = posDao.getByName(posTrim);
+                if (p != null) {
+                    positionId = p.getPositionId();
+                } else {
+                    positionId = posDao.createReturnId(posTrim);
+                }
+            }
+        }
+
+        // --- Xử lý nhập tay Degree mới ---
+        if (newDegree != null && !newDegree.trim().isEmpty()) {
+            String degTrim = newDegree.trim();
+            if (!degTrim.matches("^[a-zA-ZÀ-ỹ\\s]{2,100}$")) {
+                hasError = true;
+                errorMsg.append("Bằng cấp mới không hợp lệ (2-100 ký tự, chỉ chữ và khoảng trắng)!<br>");
+            } else {
+                Degree deg = degDao.getByName(degTrim);
+                if (deg != null) {
+                    degreeId = deg.getDegreeId();
+                } else {
+                    degreeId = degDao.createReturnId(degTrim);
+                }
+            }
+        }
+
+        // --- Validate tồn tại ---
         if (departmentId == null) {
             hasError = true;
             errorMsg.append("Phòng ban là bắt buộc!<br>");
@@ -157,30 +214,30 @@ public class CreateUserServlet extends HttpServlet {
             errorMsg.append("Bằng cấp là bắt buộc!<br>");
         }
 
-        UserDAO dao = new UserDAO();
-        if (!hasError && dao.existsCccd(cccd)) {
+        // --- Validate trùng CCCD / Email / Phone ---
+        if (!hasError && userDao.existsCccd(cccd)) {
             hasError = true;
             errorMsg.append("CCCD/CMND đã tồn tại!<br>");
         }
-        if (!hasError && dao.existsEmail(email)) {
+        if (!hasError && userDao.existsEmail(email)) {
             hasError = true;
             errorMsg.append("Email đã tồn tại!<br>");
         }
-        if (!hasError && phoneNumber != null && !phoneNumber.isEmpty() && dao.existsPhoneNumber(phoneNumber)) {
+        if (!hasError && phoneNumber != null && !phoneNumber.isEmpty() && userDao.existsPhoneNumber(phoneNumber)) {
             hasError = true;
             errorMsg.append("Số điện thoại đã tồn tại!<br>");
         }
 
         if (hasError) {
             request.setAttribute("error", errorMsg.toString());
-            preserveFormData(request, fullname, email, phoneNumber, birthDate, gender, address, nation, ethnicity,
-                    cccd, request.getParameter("departmentId"), request.getParameter("positionId"),
-                    request.getParameter("degreeId"));
+            preserveFormData(request, fullname, email, phoneNumber, birthDate, gender, address,
+                    nation, ethnicity, cccd, depParam, posParam, degParam);
             loadDropdownData(request);
             request.getRequestDispatcher("/view/profile/createUser.jsp").forward(request, response);
             return;
         }
 
+        // --- Tạo User ---
         UserDTO user = new UserDTO();
         user.setFullname(fullname);
         user.setEmail(email);
@@ -195,7 +252,7 @@ public class CreateUserServlet extends HttpServlet {
         user.setPositionId(positionId);
         user.setDegreeId(degreeId);
 
-        Integer userId = dao.createUserReturnId(user);
+        Integer userId = userDao.createUserReturnId(user);
 
         if (userId != null) {
             request.setAttribute("success", "Tạo user thành công! User ID: " + userId);
@@ -203,9 +260,8 @@ public class CreateUserServlet extends HttpServlet {
             request.setAttribute("error", "Tạo user thất bại!");
         }
 
-        preserveFormData(request, fullname, email, phoneNumber, birthDate, gender, address, nation, ethnicity,
-                cccd, request.getParameter("departmentId"), request.getParameter("positionId"),
-                request.getParameter("degreeId"));
+        preserveFormData(request, fullname, email, phoneNumber, birthDate, gender, address,
+                nation, ethnicity, cccd, depParam, posParam, degParam);
         loadDropdownData(request);
         request.getRequestDispatcher("/view/profile/createUser.jsp").forward(request, response);
     }

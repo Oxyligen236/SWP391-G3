@@ -8,8 +8,61 @@
     <title>Chi Tiết Tài Khoản - HRMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        
-        <link rel="stylesheet" href="<c:url value='/css/view-account.css'/>">
+    <style>
+        body {
+            background-color: #f8faff;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .detail-card {
+            border-radius: 12px;
+            padding: 25px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-top: 40px;
+        }
+        h2 {
+            color: #0d6efd;
+            font-weight: 600;
+        }
+        .info-row {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .info-label {
+            width: 150px;
+            font-weight: 600;
+            color: #0d3b66;
+        }
+        .info-value {
+            flex: 1;
+            color: #1f2a44;
+        }
+        .status-active {
+            color: #0d6efd;
+            font-weight: 500;
+        }
+        .status-inactive {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        .badge-role {
+            background-color: #bde0fe;
+            color: #0353a4;
+            font-size: 0.95rem;
+            padding: 0.4em 0.7em;
+            border-radius: 0.5rem;
+        }
+        .btn-primary {
+            background-color: #a2d2ff;
+            border-color: #a2d2ff;
+            color: #0d3b66;
+        }
+        .btn-primary:hover {
+            background-color: #7bb8ff;
+            border-color: #7bb8ff;
+            color: #0d3b66;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -18,7 +71,7 @@
             <div class="detail-card">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2><i class="fas fa-user-circle"></i> Chi Tiết Tài Khoản</h2>
-                    <a href="<c:url value='/home'/>" class="btn btn-secondary">
+                    <a href="<c:url value='/home'/>" class="btn btn-primary">
                         <i class="fas fa-arrow-left"></i> Quay lại
                     </a>
                 </div>
@@ -41,7 +94,7 @@
                 <div class="info-row">
                     <div class="info-label">Vai Trò:</div>
                     <div class="info-value">
-                        <span class="badge bg-info fs-6">${account.roleName}</span>
+                        <span class="badge-role">${account.roleName}</span>
                     </div>
                 </div>
 
@@ -65,7 +118,7 @@
 
                 <div class="mt-4 text-center">
                     <a href="<c:url value='/account/change-password'/>" 
-                       class="btn btn-warning">
+                       class="btn btn-primary">
                         <i class="fas fa-edit"></i> Đổi mật khẩu
                     </a>
                 </div>

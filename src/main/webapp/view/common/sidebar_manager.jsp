@@ -24,6 +24,9 @@
                 <li>
                   <a href="<c:url value='/edit'/>" target="mainFrame">Edit Profile</a>
                 </li>
+                 <li>
+                  <a href="<c:url value='/option/add'/>" target="mainFrame">Add Option</a>
+                </li>
               </ul>
             </div>
           </li>

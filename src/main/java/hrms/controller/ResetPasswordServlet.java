@@ -100,21 +100,20 @@ public class ResetPasswordServlet extends HttpServlet {
                 return;
             }
 
-            // 🔐 Sinh mật khẩu ngẫu nhiên
+           
             String newPassword = generateRandomPassword();
             String hashedPassword = PasswordUtil.hashPassword(newPassword);
 
-            // 💾 Cập nhật DB
+          
             boolean success = accountDAO.resetPassword(accountID, hashedPassword);
 
             if (success) {
-                // Gửi dữ liệu sang JSP
                 request.setAttribute("account", targetAccount);
-                request.setAttribute("tempPassword", newPassword); // mật khẩu tạm thời
+                request.setAttribute("tempPassword", newPassword); 
                 request.setAttribute("successMessage",
                         "✅ Reset mật khẩu thành công cho tài khoản: " + targetAccount.getUsername());
 
-                // Forward về popup JSP, không redirect
+         
                 request.getRequestDispatcher("/view/account/resetPassword.jsp").forward(request, response);
             } else {
                 session.setAttribute("errorMessage", "❌ Reset mật khẩu thất bại!");

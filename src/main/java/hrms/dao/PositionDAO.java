@@ -68,4 +68,36 @@ public class PositionDAO extends DBContext {
             return ps.executeUpdate();
         }
     }
+public Position getByName(String name) {
+        String sql = "SELECT PositionID, Name FROM Positions WHERE Name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Position p = new Position();
+                p.setPositionId(rs.getInt("PositionID"));
+                p.setName(rs.getString("Name"));
+                return p;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public int createReturnId(String name) {
+        String sql = "INSERT INTO Positions (Name) VALUES (?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, name);
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 }

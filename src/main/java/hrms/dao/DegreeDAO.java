@@ -68,4 +68,37 @@ public class DegreeDAO extends DBContext {
             return ps.executeUpdate();
         }
     }
+     // Lấy Degree theo tên
+    public Degree getByName(String name) {
+        String sql = "SELECT DegreeID, Name FROM Degrees WHERE Name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Degree d = new Degree();
+                d.setDegreeId(rs.getInt("DegreeID"));
+                d.setName(rs.getString("Name"));
+                return d;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Chèn mới và trả về ID vừa tạo
+    public int createReturnId(String name) {
+        String sql = "INSERT INTO Degrees (Name) VALUES (?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, name);
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

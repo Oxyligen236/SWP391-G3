@@ -39,6 +39,9 @@
                 <li>
                   <a href="<c:url value='/user/create'/>" target="mainFrame">Create User</a>
                 </li>
+                <li>
+                  <a href="<c:url value='/option/add'/>" target="mainFrame">Add Option</a>
+                </li>
               </ul>
             </div>
           </li>

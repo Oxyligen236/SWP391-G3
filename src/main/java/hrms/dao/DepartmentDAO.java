@@ -70,4 +70,36 @@ public class DepartmentDAO extends DBContext {
         }
     }
 
+     public Department getByName(String name) {
+        String sql = "SELECT DepartmentID, Name FROM Departments WHERE Name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Department d = new Department();
+                d.setDepartmentId(rs.getInt("DepartmentID"));
+                d.setName(rs.getString("Name"));
+                return d;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public int createReturnId(String name) {
+        String sql = "INSERT INTO Departments (Name) VALUES (?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, name);
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 }
