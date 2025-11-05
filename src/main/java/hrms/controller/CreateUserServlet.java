@@ -213,7 +213,7 @@ public class CreateUserServlet extends HttpServlet {
     private boolean hasHRPermission(HttpSession session) {
         Account account = (Account) session.getAttribute("account");
         if (account == null) return false;
-        return account.getRole() == 2 || account.getRole() == 3;
+        return account.getRole() == 1 || account.getRole() == 2;
     }
 
     private Integer parseInteger(String param) {

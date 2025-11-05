@@ -35,7 +35,9 @@ public class AuthorizationFilterServlet implements Filter {
                 || requestURI.contains("/assets/")
                 || requestURI.contains("/picture/")
                 || requestURI.contains("/view/home/homePage_guest.jsp")
+                || requestURI.contains("/view/cv/cv_Submit.jsp")
                 || requestURI.contains("/view/landing.jsp")
+                || requestURI.contains("/cv/submit")
                 || requestURI.endsWith("/")
                 || requestURI.equals(contextPath)) {
             chain.doFilter(request, response);
@@ -58,12 +60,22 @@ public class AuthorizationFilterServlet implements Filter {
     }
 
     private boolean hasPermission(String requestURI, int roleID) {
+        // Admin (roleID 1) has access to everything
         if (roleID == 1) {
             return true;
         }
+        
+        // HR Manager (roleID 2) has access to everything including export-attendance
         if (roleID == 2) {
             return true;
         }
+        
+        // Restrict export-attendance to only Admin and HR Manager
+        if (requestURI.contains("/export-attendance")) {
+            return false; // Only roleID 1 and 2 can access (already returned true above)
+        }
+        
+        // Other roles (3, 4, 5) have access to other URLs
         if (roleID == 3) {
             return true;
         }

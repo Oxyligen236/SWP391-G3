@@ -55,6 +55,7 @@
                                         <th class="text-end">Base Salary</th>
                                         <th>Position</th>
                                         <th>Signer</th>
+                                        <th class="text-center">Status</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -89,6 +90,45 @@
                                             <td>
                                                 <i class="bi bi-pen text-secondary"></i> 
                                                 ${contract.signerName != null ? contract.signerName : 'N/A'}
+                                            </td>
+                                            <td class="text-center">
+                                                <c:choose>
+                                                    <c:when test="${contract.status == 'Pending'}">
+                                                        <span class="badge bg-warning text-dark">
+                                                            <i class="bi bi-hourglass-split"></i> ${contract.status}
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${contract.status == 'Approved'}">
+                                                        <span class="badge bg-info">
+                                                            <i class="bi bi-check-circle"></i> ${contract.status}
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${contract.status == 'Active'}">
+                                                        <span class="badge bg-success">
+                                                            <i class="bi bi-check-circle-fill"></i> ${contract.status}
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${contract.status == 'Expired'}">
+                                                        <span class="badge bg-secondary">
+                                                            <i class="bi bi-clock-history"></i> ${contract.status}
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${contract.status == 'Archived'}">
+                                                        <span class="badge bg-dark">
+                                                            <i class="bi bi-archive"></i> ${contract.status}
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${contract.status == 'Cancelled'}">
+                                                        <span class="badge bg-danger">
+                                                            <i class="bi bi-x-circle"></i> ${contract.status}
+                                                        </span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-secondary">
+                                                            ${contract.status != null ? contract.status : 'N/A'}
+                                                        </span>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                             <td class="text-center">
                                                 <a href="<c:url value='/viewContracts?action=detail&id=${contract.contractId}'/>" 

@@ -1,75 +1,114 @@
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #74ebd5, #ACB6E5);
-    height: 100vh;
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.login-container input,
-.login-container button {
-    box-sizing: border-box;
+    padding: 20px;
 }
 
 .login-container {
     background: #fff;
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-    width: 350px;
-    text-align: center;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 420px;
 }
 
 .login-container h2 {
-    margin-bottom: 20px;
-    color: #333;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 700;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #3498db;
+    text-align: center;
 }
 
 .login-container label {
     display: block;
-    text-align: left;
-    margin: 10px 0 5px;
-    color: #555;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
     font-size: 14px;
 }
 
-.login-container input {
+.login-container input[type="text"],
+.login-container input[type="password"],
+.login-container input[type="email"] {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 10px 14px;
+    border: 1px solid #dee2e6;
     border-radius: 6px;
-    outline: none;
     font-size: 14px;
+    transition: all 0.2s ease;
+    background-color: #fff;
+    margin-bottom: 15px;
 }
 
 .login-container input:focus {
-    border-color: #74ebd5;
-    box-shadow: 0px 0px 4px rgba(116, 235, 213, 0.8);
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
 }
 
-.login-container button {
-    margin-top: 20px;
+.show-password {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #495057;
+    cursor: pointer;
+}
+
+.show-password input[type="checkbox"] {
+    width: auto;
+    margin: 0 8px 0 0;
+    cursor: pointer;
+}
+
+.show-password label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.login-container button[type="submit"] {
     width: 100%;
-    padding: 12px;
-    background: #74ebd5;
+    padding: 10px 30px;
+    background-color: #3498db;
+    color: white;
     border: none;
     border-radius: 6px;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    margin-bottom: 15px;
 }
 
-.login-container button:hover {
-    background: #5cd0c0;
+.login-container button[type="submit"]:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
 }
 
 .errorMessage {
-    color: red;
-    margin-bottom: 15px;
+    background-color: #f8d7da;
+    border-left: 4px solid #dc3545;
+    color: #721c24;
+    padding: 15px 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-weight: 500;
     font-size: 14px;
 }
 
@@ -77,7 +116,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .remember-me {
@@ -87,42 +128,33 @@ body {
 
 .remember-me input[type="checkbox"] {
     width: auto;
-    margin-right: 5px;
+    margin: 0 8px 0 0;
+    cursor: pointer;
 }
 
 .remember-me label {
     margin: 0;
-    font-size: 13px;
-    color: #555;
+    font-size: 14px;
+    color: #495057;
+    font-weight: 400;
+    cursor: pointer;
 }
 
 .forgot-password a {
-    font-size: 13px;
-    color: #74ebd5;
+    font-size: 14px;
+    color: #3498db;
     text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
 }
 
 .forgot-password a:hover {
+    color: #2980b9;
     text-decoration: underline;
 }
 
-.show-password {
-    display: flex;
-    align-items: center;
-    margin: 5px 0 15px 0;
-    font-size: 13px;
-    color: #555;
-    cursor: pointer;
-}
-
-.show-password input[type="checkbox"] {
-    margin-right: 5px;
-    width: auto;
-    cursor: pointer;
-}
-
 .divider {
-    margin: 20px 0;
+    margin: 25px 0;
     text-align: center;
     position: relative;
 }
@@ -134,15 +166,16 @@ body {
     left: 0;
     width: 100%;
     height: 1px;
-    background: #ddd;
+    background: #e9ecef;
 }
 
 .divider span {
     background: #fff;
-    padding: 0 10px;
+    padding: 0 15px;
     position: relative;
-    color: #999;
-    font-size: 13px;
+    color: #6c757d;
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .google-btn {
@@ -150,26 +183,42 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 12px;
+    padding: 10px 30px;
     background: #fff;
-    border: 1px solid #ddd;
+    border: 2px solid #dee2e6;
     border-radius: 6px;
-    color: #555;
+    color: #495057;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     text-decoration: none;
-    transition: 0.3s;
-    box-sizing: border-box;
+    transition: all 0.2s ease;
 }
 
 .google-btn:hover {
     background: #f8f9fa;
-    border-color: #74ebd5;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    border-color: #3498db;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .google-btn i {
     margin-right: 10px;
     font-size: 18px;
     color: #4285f4;
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .login-container {
+        padding: 30px 20px;
+    }
+
+    .login-container h2 {
+        font-size: 24px;
+    }
+
+    .options {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

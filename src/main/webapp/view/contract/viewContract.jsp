@@ -20,6 +20,14 @@ pageEncoding="UTF-8" isELIgnored="false" %>
         const noteTextarea = document.getElementById("noteTextarea");
         const backToListLink = document.getElementById("backToListLink");
 
+        // Status edit elements
+        const editStatusBtn = document.getElementById("editStatusBtn");
+        const statusValue = document.getElementById("statusValue");
+        const statusEditForm = document.getElementById("statusEditForm");
+        const cancelStatusBtn = document.getElementById("cancelStatusBtn");
+        const saveStatusBtn = document.getElementById("saveStatusBtn");
+        const statusSelect = document.getElementById("statusSelect");
+
         if (editBtn) {
           editBtn.addEventListener("click", function() {
             const userRole = parseInt(this.getAttribute("data-role"));
@@ -44,6 +52,29 @@ pageEncoding="UTF-8" isELIgnored="false" %>
           });
         }
 
+        // Status edit handlers
+        if (editStatusBtn) {
+          editStatusBtn.addEventListener("click", function() {
+            const userRole = parseInt(this.getAttribute("data-role"));
+            
+            if (userRole !== 1 && userRole !== 2) {
+              alert("Bạn không có quyền sửa trạng thái hợp đồng!");
+              return;
+            }
+
+            statusValue.style.display = "none";
+            statusEditForm.style.display = "block";
+            editStatusBtn.style.display = "none";
+          });
+        }
+
+        if (cancelStatusBtn) {
+          cancelStatusBtn.addEventListener("click", function() {
+            statusValue.style.display = "block";
+            statusEditForm.style.display = "none";
+            editStatusBtn.style.display = "inline-block";
+          });
+        }
 
         if (backToListLink) {
           backToListLink.addEventListener("click", function(e) {
@@ -192,6 +223,65 @@ pageEncoding="UTF-8" isELIgnored="false" %>
                 </label>
                 <div class="form-control-plaintext border rounded p-2 bg-light">
                   ${contract.contractTypeName}
+                </div>
+              </div>
+
+              <!-- Status Section -->
+              <div class="col-12">
+                <label class="form-label fw-bold text-secondary">
+                  <i class="bi bi-check-circle"></i> Status:
+                  <c:if test="${sessionScope.account.role == 1 || sessionScope.account.role == 2}">
+                    <button type="button" id="editStatusBtn" class="btn btn-sm btn-outline-primary ms-2" data-role="${sessionScope.account.role}">
+                      <i class="bi bi-pencil"></i> Edit
+                    </button>
+                  </c:if>
+                </label>
+                <div id="statusValue" class="form-control-plaintext border rounded p-2 bg-light">
+                  <c:choose>
+                    <c:when test="${contract.status == 'Pending'}">
+                      <span class="badge bg-warning text-dark fs-6">${contract.status}</span>
+                    </c:when>
+                    <c:when test="${contract.status == 'Approved'}">
+                      <span class="badge bg-info fs-6">${contract.status}</span>
+                    </c:when>
+                    <c:when test="${contract.status == 'Active'}">
+                      <span class="badge bg-success fs-6">${contract.status}</span>
+                    </c:when>
+                    <c:when test="${contract.status == 'Expired'}">
+                      <span class="badge bg-secondary fs-6">${contract.status}</span>
+                    </c:when>
+                    <c:when test="${contract.status == 'Archived'}">
+                      <span class="badge bg-dark fs-6">${contract.status}</span>
+                    </c:when>
+                    <c:when test="${contract.status == 'Cancelled'}">
+                      <span class="badge bg-danger fs-6">${contract.status}</span>
+                    </c:when>
+                    <c:otherwise>
+                      <span class="badge bg-secondary fs-6">${contract.status != null ? contract.status : 'N/A'}</span>
+                    </c:otherwise>
+                  </c:choose>
+                </div>
+                <div id="statusEditForm" style="display: none;">
+                  <form method="post" action="<c:url value='/viewContracts'/>" accept-charset="UTF-8">
+                    <input type="hidden" name="action" value="updateStatus" />
+                    <input type="hidden" name="contractId" value="${contract.contractId}" />
+                    <select id="statusSelect" name="status" class="form-select">
+                      <option value="Pending" ${contract.status == 'Pending' ? 'selected' : ''}>Pending</option>
+                      <option value="Approved" ${contract.status == 'Approved' ? 'selected' : ''}>Approved</option>
+                      <option value="Active" ${contract.status == 'Active' ? 'selected' : ''}>Active</option>
+                      <option value="Expired" ${contract.status == 'Expired' ? 'selected' : ''}>Expired</option>
+                      <option value="Archived" ${contract.status == 'Archived' ? 'selected' : ''}>Archived</option>
+                      <option value="Cancelled" ${contract.status == 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                    </select>
+                    <div class="mt-2">
+                      <button type="submit" id="saveStatusBtn" class="btn btn-sm btn-success">
+                        <i class="bi bi-check-lg"></i> Save
+                      </button>
+                      <button type="button" id="cancelStatusBtn" class="btn btn-sm btn-secondary">
+                        <i class="bi bi-x-lg"></i> Cancel
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
 

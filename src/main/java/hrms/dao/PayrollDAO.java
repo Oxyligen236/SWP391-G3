@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,10 @@ public class PayrollDAO extends DBContext {
     private Payroll extractPayrollFromResultSet(ResultSet rs) throws SQLException {
         String totalWorkStr = rs.getString("TotalWorkHours");
         Duration workingHours = getTotalWorkHour(totalWorkStr);
-
+        LocalDate payDate = null;
+        if (rs.getDate(8) != null) {
+            payDate = rs.getDate(8).toLocalDate();
+        }
         return new Payroll(
                 rs.getInt(1),
                 rs.getInt(2),
@@ -37,7 +41,7 @@ public class PayrollDAO extends DBContext {
                 rs.getInt(5),
                 workingHours,
                 rs.getDouble(7),
-                rs.getDate(8).toLocalDate() != null ? rs.getDate(8).toLocalDate() : null,
+                payDate,
                 rs.getString(9)
         );
     }
@@ -273,7 +277,6 @@ public class PayrollDAO extends DBContext {
         }
         return 0;
     }
-    //New
 
     public boolean addPayrollItem(int payrollId, int typeId, double amount, String amountType, boolean isPositive) {
         String sql = "INSERT INTO Payroll_Item (Payroll_ID, Type_ID, Amount, AmountType, Is_Positive) VALUES (?, ?, ?, ?, ?)";
@@ -332,4 +335,5 @@ public class PayrollDAO extends DBContext {
         }
         return null;
     }
+
 }

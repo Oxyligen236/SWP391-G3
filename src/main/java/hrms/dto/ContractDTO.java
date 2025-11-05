@@ -16,6 +16,7 @@ public class ContractDTO {
     private int duration;
     private double baseSalary;
     private String note;
+    private String status;
 
     public ContractDTO() {
     }
@@ -33,6 +34,22 @@ public class ContractDTO {
         this.duration = duration;
         this.baseSalary = baseSalary;
         this.note = note;
+    }
+
+    public ContractDTO(int contractId, int userId, String employeeName, String contractTypeName, String positionName, String signerName, LocalDate startDate, LocalDate endDate, LocalDate signDate, int duration, double baseSalary, String note, String status) {
+        this.contractId = contractId;
+        this.userId = userId;
+        this.employeeName = employeeName;
+        this.contractTypeName = contractTypeName;
+        this.positionName = positionName;
+        this.signerName = signerName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.signDate = signDate;
+        this.duration = duration;
+        this.baseSalary = baseSalary;
+        this.note = note;
+        this.status = status;
     }
 
     public int getContractId() {
@@ -106,6 +123,12 @@ public class ContractDTO {
     }
     public void setNote(String note) {
         this.note = note;
+    }
+    public String getStatus() {
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
     }
     
 }

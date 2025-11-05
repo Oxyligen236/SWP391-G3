@@ -15,7 +15,7 @@ public class CvUpdateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/view/cv/cv_Update.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/cv/cv_Detail.jsp").forward(request, response);
     }
 
     @Override
@@ -29,7 +29,8 @@ public class CvUpdateServlet extends HttpServlet {
             int cvId = Integer.parseInt(cvIdRaw);
             boolean isUpdated = cvService.updateCvStatus(cvId, status);
             if (isUpdated) {
-                response.sendRedirect(request.getContextPath() + "/cv/detail?id=" + cvId);
+                request.setAttribute("successMessage", "CV status updated successfully.");
+                request.getRequestDispatcher("/view/cv/cv_Detail.jsp").forward(request, response);
             } else {
                 request.setAttribute("errorMessage", "Failed to update CV status.");
                 request.getRequestDispatcher("/view/cv/cv_Detail.jsp").forward(request, response);

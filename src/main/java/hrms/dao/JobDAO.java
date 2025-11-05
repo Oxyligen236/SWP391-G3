@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-
 public class JobDAO extends DBContext {
 
     private JobDescription extractJobFromResultSet(ResultSet rs) throws SQLException {
@@ -103,21 +102,21 @@ public class JobDAO extends DBContext {
         }
         return null;
     }
-    
+
     public JobDescription getJobByJobId(int jobId) {
-    String sql = "SELECT * FROM Job_Description WHERE jobID = ?";
-    try {
-        PreparedStatement st = connection.prepareStatement(sql);
-        st.setInt(1, jobId);
-        ResultSet rs = st.executeQuery();
-        if (rs.next()) {
-            return extractJobFromResultSet(rs);
+        String sql = "SELECT * FROM Job_Description WHERE jobID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, jobId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return extractJobFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
         }
-    } catch (SQLException e) {
-        System.out.println(e);
+        return null;
     }
-    return null;
-}
 
     public List<JobDescription> getFilteredJD(
             String search, String departmentFilter, String statusFilter,
@@ -162,6 +161,9 @@ public class JobDAO extends DBContext {
                 jd.setEndDate(rs.getDate("endDate").toLocalDate());
                 jd.setDepartment(rs.getString("department"));
                 jd.setVacancies(rs.getInt("vacancies"));
+                jd.setResponsibilities(rs.getString("responsibilities"));
+                jd.setRequirements(rs.getString("requirements"));
+                jd.setCompensation(rs.getString("compensation"));
                 jd.setStatus(rs.getString("status"));
                 list.add(jd);
             }
@@ -172,8 +174,5 @@ public class JobDAO extends DBContext {
 
         return list;
     }
-    
-    
-    
 
 }

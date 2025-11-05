@@ -24,15 +24,13 @@ public class CompanyPayrollServlet extends HttpServlet {
             return;
         }
         PayrollService payrollService = new PayrollService();
-        List<PayrollDTO> payrolls = payrollService.getAllPayrollByUserId(1);//Integer.parseInt(request.getParameter("userID"))
+        List<PayrollDTO> payrolls = payrollService.getAllCompanyPayrollDetails();
         if (payrolls == null || payrolls.isEmpty()) {
             request.setAttribute("error", "No payroll records found.");
             request.getRequestDispatcher("/view/payroll/companyPayroll.jsp").forward(request, response);
             return;
         }
         request.setAttribute("payrolls", payrolls);
-        request.setAttribute("userID", payrolls.get(0).getUserID());
-        request.setAttribute("userName", payrolls.get(0).getUserName());
         request.getRequestDispatcher("/view/payroll/companyPayroll.jsp").forward(request, response);
     }
 
@@ -66,8 +64,6 @@ public class CompanyPayrollServlet extends HttpServlet {
                 return;
             }
             request.setAttribute("payrolls", payrolls);
-            request.setAttribute("userID", payrolls.get(0).getUserID());
-            request.setAttribute("userName", payrolls.get(0).getUserName());
             request.getRequestDispatcher("/view/payroll/companyPayroll.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             request.setAttribute("error", "Invalid month or year format.");

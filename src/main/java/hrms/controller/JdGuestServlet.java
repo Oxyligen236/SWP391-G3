@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebServlet("/jdlist")
-public class JdListServlet extends HttpServlet {
+@WebServlet("/jd_guest")
+public class JdGuestServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,7 +40,7 @@ public class JdListServlet extends HttpServlet {
             request.setAttribute("departmentFilter", departmentFilter);
             request.setAttribute("statusFilter", statusFilter);
 
-            request.getRequestDispatcher("/view/jd/jdlist.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/jd/jd_guest.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
