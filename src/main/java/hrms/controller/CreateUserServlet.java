@@ -32,6 +32,46 @@ public class CreateUserServlet extends HttpServlet {
             return;
         }
 
+        // Nhận dữ liệu từ CV nếu có
+        String fullname = request.getParameter("fullname");
+        String email = request.getParameter("email");
+        String phoneNumber = request.getParameter("phoneNumber");
+        String birthDate = request.getParameter("birthDate");
+        String gender = request.getParameter("gender");
+        String address = request.getParameter("address");
+        String nation = request.getParameter("nation");
+        String cccd = request.getParameter("cccd");
+        String degreeId = request.getParameter("degreeId");
+
+        // Set vào request để hiển thị trên form
+        if (fullname != null) {
+            request.setAttribute("formFullname", fullname);
+        }
+        if (email != null) {
+            request.setAttribute("formEmail", email);
+        }
+        if (phoneNumber != null) {
+            request.setAttribute("formPhoneNumber", phoneNumber);
+        }
+        if (birthDate != null) {
+            request.setAttribute("formBirthDate", birthDate);
+        }
+        if (gender != null) {
+            request.setAttribute("formGender", gender);
+        }
+        if (address != null) {
+            request.setAttribute("formAddress", address);
+        }
+        if (nation != null) {
+            request.setAttribute("formNation", nation);
+        }
+        if (cccd != null) {
+            request.setAttribute("formCccd", cccd);
+        }
+        if (degreeId != null) {
+            request.setAttribute("formDegreeId", degreeId);
+        }
+
         loadDropdownData(request);
         request.getRequestDispatcher("/view/profile/createUser.jsp").forward(request, response);
     }
@@ -216,14 +256,16 @@ public class CreateUserServlet extends HttpServlet {
 
     private boolean hasHRPermission(HttpSession session) {
         Account account = (Account) session.getAttribute("account");
-        if (account == null)
+        if (account == null) {
             return false;
+        }
         return account.getRole() == 1 || account.getRole() == 2; // HR / HR Manager
     }
 
     private Integer parseInteger(String param) {
-        if (param == null || param.isEmpty())
+        if (param == null || param.isEmpty()) {
             return null;
+        }
         try {
             return Integer.parseInt(param);
         } catch (NumberFormatException e) {
