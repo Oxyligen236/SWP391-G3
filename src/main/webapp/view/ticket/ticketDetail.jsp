@@ -1,3 +1,4 @@
+<!-- filepath: d:\FPT\Ky_5\SWP391\Project\SWP391-G3\src\main\webapp\view\ticket\ticketDetail.jsp -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %> <%@
 taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ page
 isELIgnored="false" %>
@@ -16,6 +17,35 @@ isELIgnored="false" %>
       rel="stylesheet"
       href="${pageContext.request.contextPath}/css/ticketDetail.css"
     />
+
+    <style>
+      .ot-info-box {
+        background: linear-gradient(135deg, #e8f0fe 0%, #f0f7ff 100%);
+        border-left: 4px solid #4273f1;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+      }
+
+      .badge-Holiday {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      .badge-Weekend {
+        background-color: #ffc107;
+        color: #000;
+      }
+
+      .badge-Weekday {
+        background-color: #28a745;
+        color: white;
+      }
+
+      .text-primary-custom {
+        color: #4273f1 !important;
+      }
+    </style>
   </head>
   <body>
     <div class="ticket-detail-container">
@@ -95,6 +125,25 @@ isELIgnored="false" %>
 
               <%-- Overtime Ticket --%>
               <c:when test="${ticket.ticket_Type_ID == 2}">
+                <c:if test="${not empty dayType}">
+                  <div class="ot-info-box">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <strong>Day Type:</strong>
+                        <span class="badge ms-2 badge-${dayType}"
+                          >${dayType}</span
+                        >
+                      </div>
+                      <div class="col-md-6">
+                        <strong>OT Salary Rate:</strong>
+                        <span class="text-primary-custom fw-bold"
+                          >${otSalaryPer}%</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </c:if>
+
                 <div class="ticket-details ticket-details-overtime">
                   <div class="detail-row">
                     <span class="detail-label">Overtime Date</span>
@@ -142,16 +191,21 @@ isELIgnored="false" %>
                 />
 
                 <div class="form-group">
-                  <label class="form-label" for="comment"
-                    >Comment (Optional)</label
-                  >
+                  <label class="form-label" for="comment">
+                    Comment <span class="text-danger">*</span>
+                  </label>
                   <textarea
                     id="comment"
                     name="comment"
                     class="form-textarea"
                     rows="4"
-                    placeholder="Add your feedback here..."
+                    placeholder="Add your feedback here (minimum 10 characters)..."
+                    required
+                    minlength="1"
                   ></textarea>
+                  <small class="text-muted"
+                    >Minimum 1 characters required</small
+                  >
                 </div>
 
                 <div class="action-buttons">
@@ -161,7 +215,7 @@ isELIgnored="false" %>
                     value="approve"
                     class="btn btn-approve"
                   >
-                    <span class="btn-icon">✓</span>
+                    <span class="btn-icon"></span>
                     <span class="btn-text">Approve</span>
                   </button>
                   <button
@@ -170,7 +224,7 @@ isELIgnored="false" %>
                     value="reject"
                     class="btn btn-reject"
                   >
-                    <span class="btn-icon">✗</span>
+                    <span class="btn-icon"></span>
                     <span class="btn-text">Reject</span>
                   </button>
                   <a
@@ -205,7 +259,7 @@ isELIgnored="false" %>
                 href="${pageContext.request.contextPath}/department-ticket"
                 class="btn btn-secondary"
               >
-                ← Back to List
+                Back to List
               </a>
             </div>
           </c:if>

@@ -7,6 +7,7 @@ import hrms.dao.TicketDAO;
 import hrms.dto.TicketDTO;
 import hrms.model.Account;
 import hrms.model.Ticket;
+import hrms.service.CalendarCheck;
 import hrms.service.TicketService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,9 +22,11 @@ public class ApproveTicketServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private TicketService ticketService = new TicketService();
     private TicketDAO ticketDAO = new TicketDAO();
+    private CalendarCheck calendarCheck = new CalendarCheck();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String ticketIdRaw = request.getParameter("ticketId");
 
         if (ticketIdRaw == null || ticketIdRaw.isEmpty()) {
@@ -45,6 +48,15 @@ public class ApproveTicketServlet extends HttpServlet {
             boolean isPending = "Pending".equalsIgnoreCase(ticket.getStatus());
             request.setAttribute("isPending", isPending);
 
+            // Tính toán OT Info nếu là Overtime Ticket
+            if (ticket.getTicket_Type_ID() == 2 && ticket.getOvertimeDate() != null) {
+                LocalDate overtimeDate = ticket.getOvertimeDate();
+                String dayType = calendarCheck.getDayType(overtimeDate);
+                double otSalaryPer = calendarCheck.getOTSalaryPercentage(dayType);
+
+                request.setAttribute("dayType", dayType);
+                request.setAttribute("otSalaryPer", otSalaryPer);
+            }
 
             request.getRequestDispatcher("/view/ticket/ticketDetail.jsp").forward(request, response);
 
@@ -53,11 +65,12 @@ public class ApproveTicketServlet extends HttpServlet {
         }
     }
 
- 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
+
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
 
@@ -72,13 +85,32 @@ public class ApproveTicketServlet extends HttpServlet {
             String comment = request.getParameter("comment");
 
             if (action == null || (!action.equals("approve") && !action.equals("reject"))) {
+                session.setAttribute("errorMessage", "Invalid action!");
+                response.sendRedirect(request.getContextPath() + "/approve-ticket?ticketId=" + ticketId);
+                return;
+            }
+
+            if (comment == null || comment.trim().isEmpty()) {
+                session.setAttribute("errorMessage", "Comment is required!");
+                response.sendRedirect(request.getContextPath() + "/approve-ticket?ticketId=" + ticketId);
+                return;
+            }
+
+            if (comment.trim().length() < 1) {
+                session.setAttribute("errorMessage", "Comment must be at least 1 character!");
                 response.sendRedirect(request.getContextPath() + "/approve-ticket?ticketId=" + ticketId);
                 return;
             }
 
             Ticket ticket = ticketDAO.getTicketById(ticketId);
 
-            if (ticket == null || !"Pending".equalsIgnoreCase(ticket.getStatus())) {
+            if (ticket == null) {
+                session.setAttribute("errorMessage", "Ticket not found!");
+                response.sendRedirect(request.getContextPath() + "/department-ticket");
+                return;
+            }
+
+            if (!"Pending".equalsIgnoreCase(ticket.getStatus())) {
                 session.setAttribute("errorMessage", "Ticket is not available for approval!");
                 response.sendRedirect(request.getContextPath() + "/department-ticket");
                 return;
@@ -88,7 +120,7 @@ public class ApproveTicketServlet extends HttpServlet {
             ticket.setStatus(newStatus);
             ticket.setApproverID(account.getUserID());
             ticket.setApprove_Date(LocalDate.now());
-            ticket.setComment(comment != null && !comment.trim().isEmpty() ? comment : null);
+            ticket.setComment(comment.trim());
 
             boolean success = ticketDAO.update(ticket);
 
@@ -102,10 +134,12 @@ public class ApproveTicketServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/department-ticket");
 
         } catch (NumberFormatException e) {
-            System.out.println(e);
+            session.setAttribute("errorMessage", "Invalid ticket ID!");
             response.sendRedirect(request.getContextPath() + "/department-ticket");
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
+            session.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/department-ticket");
         }
     }
 }
