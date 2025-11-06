@@ -271,73 +271,85 @@ public class AccountDAO extends DBContext {
     }
 
     public List<AccountDTO> getFilteredAccounts(
-            String search, String roleFilter, String statusFilter,
-            String sortBy, String sortOrder, int page, int pageSize) throws SQLException {
+        String search, String roleFilter, String statusFilter,
+        String sortBy, String sortOrder, int page, int pageSize) throws SQLException {
 
-        List<AccountDTO> list = new ArrayList<>();
+    List<AccountDTO> list = new ArrayList<>();
 
-        StringBuilder sql = new StringBuilder(
-                "SELECT a.AccountID, a.Username, u.FullName, a.Is_active, r.Name AS RoleName "
-                        + "FROM Account a "
-                        + "JOIN Users u ON a.UserID = u.UserID "
-                        + "JOIN Role r ON a.RoleID = r.RoleID WHERE 1=1 ");
+    StringBuilder sql = new StringBuilder(
+            "SELECT a.AccountID, a.Username, u.FullName, a.Is_active, r.Name AS RoleName "
+            + "FROM Account a "
+            + "JOIN Users u ON a.UserID = u.UserID "
+            + "JOIN Role r ON a.RoleID = r.RoleID WHERE 1=1 ");
+
+    // Filter search
+    if (search != null && !search.trim().isEmpty()) {
+        sql.append("AND (u.FullName LIKE ? OR a.Username LIKE ?) ");
+    }
+
+    // Filter role
+    if (roleFilter != null && !roleFilter.equalsIgnoreCase("all") && !roleFilter.isEmpty()) {
+        sql.append("AND r.RoleID = ? ");
+    }
+
+    // Filter status
+    if (statusFilter != null && !statusFilter.equalsIgnoreCase("all") && !statusFilter.isEmpty()) {
+        sql.append("AND a.Is_active = ? ");
+    }
+
+    // Sort
+    if ("full_name".equalsIgnoreCase(sortBy)) {
+        // Sort theo họ (từ đầu tiên trong FullName)
+        sql.append("ORDER BY SUBSTRING_INDEX(u.FullName, ' ', 1) ");
+    } else if ("role_id".equalsIgnoreCase(sortBy)) {
+        sql.append("ORDER BY r.RoleID ");
+    } else if ("active".equalsIgnoreCase(sortBy)) {
+        sql.append("ORDER BY a.Is_active ");
+    } else {
+        // Default: sắp xếp theo AccountID
+        sql.append("ORDER BY a.AccountID ");
+    }
+
+    // Sort order
+    sql.append(" ").append("DESC".equalsIgnoreCase(sortOrder) ? "DESC " : "ASC ");
+
+    // Pagination
+    sql.append("LIMIT ? OFFSET ?");
+
+    try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+        int index = 1;
 
         if (search != null && !search.trim().isEmpty()) {
-            sql.append("AND (u.FullName LIKE ? OR a.Username LIKE ?) ");
+            ps.setString(index++, "%" + search + "%");
+            ps.setString(index++, "%" + search + "%");
         }
 
         if (roleFilter != null && !roleFilter.equalsIgnoreCase("all") && !roleFilter.isEmpty()) {
-            sql.append("AND r.RoleID = ? ");
+            ps.setInt(index++, Integer.parseInt(roleFilter));
         }
 
         if (statusFilter != null && !statusFilter.equalsIgnoreCase("all") && !statusFilter.isEmpty()) {
-            sql.append("AND a.Is_active = ? ");
+            ps.setBoolean(index++, "active".equalsIgnoreCase(statusFilter));
         }
 
-        if ("role".equalsIgnoreCase(sortBy)) {
-            sql.append("ORDER BY r.Name ");
-        } else if ("name".equalsIgnoreCase(sortBy)) {
-            sql.append("ORDER BY u.FullName ");
-        } else {
-            sql.append("ORDER BY a.AccountID ");
+        ps.setInt(index++, pageSize);
+        ps.setInt(index, (page - 1) * pageSize);
+
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            AccountDTO dto = new AccountDTO();
+            dto.setAccountID(rs.getInt("AccountID"));
+            dto.setUsername(rs.getString("Username"));
+            dto.setFullName(rs.getString("FullName"));
+            dto.setActive(rs.getBoolean("Is_active"));
+            dto.setRoleName(rs.getString("RoleName"));
+            list.add(dto);
         }
-
-        sql.append(" ").append("desc".equalsIgnoreCase(sortOrder) ? "DESC " : "ASC ");
-        sql.append("LIMIT ? OFFSET ?");
-
-        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-            int index = 1;
-
-            if (search != null && !search.trim().isEmpty()) {
-                ps.setString(index++, "%" + search + "%");
-                ps.setString(index++, "%" + search + "%");
-            }
-
-            if (roleFilter != null && !roleFilter.equalsIgnoreCase("all") && !roleFilter.isEmpty()) {
-                ps.setInt(index++, Integer.parseInt(roleFilter));
-            }
-
-            if (statusFilter != null && !statusFilter.equalsIgnoreCase("all") && !statusFilter.isEmpty()) {
-                ps.setBoolean(index++, "active".equalsIgnoreCase(statusFilter));
-            }
-
-            ps.setInt(index++, pageSize);
-            ps.setInt(index, (page - 1) * pageSize);
-
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                AccountDTO dto = new AccountDTO();
-                dto.setAccountID(rs.getInt("AccountID"));
-                dto.setUsername(rs.getString("Username"));
-                dto.setFullName(rs.getString("FullName"));
-                dto.setActive(rs.getBoolean("Is_active"));
-                dto.setRoleName(rs.getString("RoleName"));
-                list.add(dto);
-            }
-        }
-
-        return list;
     }
+
+    return list;
+}
+
 
     public int countFilteredAccounts(String search, String roleFilter, String statusFilter) throws SQLException {
         StringBuilder sql = new StringBuilder(

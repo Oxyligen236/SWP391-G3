@@ -1,319 +1,224 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html lang="vi">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Sách Tài Khoản - HRMS</title>
-
-    <!-- Bootstrap & Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Custom CSS -->
+    <title>Account Management</title>
+    <link rel="stylesheet" href="<c:url value='/css/cv-list.css'/>">
     <style>
-        body {
-            background-color: #f8faff;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        /* Success message */
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
         }
 
-        h2 {
-            color: #0d6efd;
-            font-weight: 600;
+        /* Error message */
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
         }
 
-        .btn-primary {
-            background-color: #a2d2ff;
-            border-color: #a2d2ff;
-            color: #0d3b66;
-        }
-
-        .btn-primary:hover {
-            background-color: #7bb8ff;
-            border-color: #7bb8ff;
-            color: #0d3b66;
-        }
-
-        .btn-secondary {
-            background-color: #d3e0ff;
-            border-color: #d3e0ff;
-            color: #0d3b66;
-        }
-
-        .btn-secondary:hover {
-            background-color: #aebfff;
-            border-color: #aebfff;
-            color: #0d3b66;
-        }
-
-        .btn-warning {
-            background-color: #ffe5b4;
-            border-color: #ffe5b4;
-            color: #6b4f00;
-        }
-
-        .btn-warning:hover {
-            background-color: #ffd580;
-            border-color: #ffd580;
-            color: #6b4f00;
-        }
-
-        .btn-success {
-            background-color: #c6f7d0;
-            border-color: #c6f7d0;
-            color: #0b5f2c;
-        }
-
-        .btn-success:hover {
-            background-color: #a0e6b8;
-            border-color: #a0e6b8;
-            color: #0b5f2c;
-        }
-
-        .btn-danger {
-            background-color: #ffc6c6;
-            border-color: #ffc6c6;
-            color: #6b0000;
-        }
-
-        .btn-danger:hover {
-            background-color: #ff9999;
-            border-color: #ff9999;
-            color: #6b0000;
-        }
-
-        .btn-info {
-            background-color: #bde0fe;
-            border-color: #bde0fe;
-            color: #0353a4;
-        }
-
-        .btn-info:hover {
-            background-color: #9ecbfc;
-            border-color: #9ecbfc;
-            color: #0353a4;
-        }
-
+        /* Optional: table styling */
         table {
-            background-color: #ffffff;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
-
-        thead {
-            background-color: #e0f0ff;
+        table, th, td {
+            border: 1px solid #ddd;
         }
-
-        .badge-success {
-            background-color: #c6f7d0;
-            color: #0b5f2c;
+        th, td {
+            padding: 8px 12px;
+            text-align: left;
         }
-
-        .badge-danger {
-            background-color: #ffc6c6;
-            color: #6b0000;
+        .status-badge.status-accepted {
+            color: #155724;
+            font-weight: bold;
         }
-
-        .badge-info {
-            background-color: #bde0fe;
-            color: #0353a4;
-        }
-
-        .table-hover tbody tr:hover {
-            background-color: #f0f8ff;
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: #0d3b66;
-        }
-
-        .form-control, .form-select {
-            border-radius: 0.375rem;
-        }
-
-        .page-link {
-            color: #0d6efd;
-        }
-
-        .page-item.active .page-link {
-            background-color: #a2d2ff;
-            border-color: #a2d2ff;
-            color: #0d3b66;
+        .status-badge.status-rejected {
+            color: #721c24;
+            font-weight: bold;
         }
     </style>
+    <script>
+        function confirmToggle(button, message) {
+            if(confirm(message)) {
+                button.closest('form').submit();
+            }
+            return false;
+        }
+    </script>
 </head>
-
 <body>
-    <div class="container py-4">
+<div class="cv-list-container">
+    <h1>Account Management</h1>
 
-        <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="fas fa-users"></i> Quản Lý Tài Khoản</h2>
-            <div class="d-flex gap-2">
-                <a href="<c:url value='/account/create'/>" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Add New Account
-                </a>
-                <a href="<c:url value='/home'/>" class="btn btn-secondary">
-                    <i class="fas fa-home"></i> Back to Home
-                </a>
-            </div>
+    <!-- Notification Messages -->
+    <c:if test="${not empty sessionScope.successMessage}">
+        <div class="alert-success">
+            ${sessionScope.successMessage}
         </div>
+        <c:remove var="successMessage" scope="session"/>
+    </c:if>
 
-        <!-- Alerts -->
-        <c:if test="${not empty successMessage}">
-            <div class="alert alert-success alert-dismissible fade show">
-                ${successMessage}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </c:if>
-        <c:if test="${not empty errorMessage}">
-            <div class="alert alert-danger alert-dismissible fade show">
-                ${errorMessage}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </c:if>
+    <c:if test="${not empty sessionScope.errorMessage}">
+        <div class="alert-error">
+            ${sessionScope.errorMessage}
+        </div>
+        <c:remove var="errorMessage" scope="session"/>
+    </c:if>
 
-        <!-- Filter Form -->
-        <form class="row g-2 mb-3 align-items-end" method="get" action="<c:url value='/account/view'/>">
-            <div class="col-md-3">
-                <label class="form-label">Search</label>
-                <input type="text" name="search" value="${search}" class="form-control"
-                    placeholder="Enter name or username...">
+    <!-- Filter Form -->
+    <form action="<c:url value='/account/view'/>" method="get" class="search-form">
+        <div class="form-row text-inputs">
+            <div class="form-group">
+                <p>Search:</p>
+                <input type="text" name="search" placeholder="Enter name or username..." value="${search}">
             </div>
-
-            <div class="col-md-2">
-                <label class="form-label">Role</label>
-                <select name="role" class="form-select">
+            <div class="form-group">
+                <p>Role:</p>
+                <select name="role">
                     <option value="">All</option>
                     <c:forEach var="role" items="${roleList}">
-                        <option value="${role.roleID}" ${roleFilter==role.roleID ? 'selected' : '' }>
+                        <option value="${role.roleID}" <c:if test="${roleFilter==role.roleID}">selected</c:if>>
                             ${role.name}
                         </option>
                     </c:forEach>
                 </select>
             </div>
-
-            <div class="col-md-2">
-                <label class="form-label">Status</label>
-                <select name="status" class="form-select">
+            <div class="form-group">
+                <p>Status:</p>
+                <select name="status">
                     <option value="">All</option>
-                    <option value="active" ${statusFilter=='active' ? 'selected' : '' }>Active</option>
-                    <option value="inactive" ${statusFilter=='inactive' ? 'selected' : '' }>Inactive</option>
+                    <option value="active" <c:if test="${statusFilter=='active'}">selected</c:if>>Active</option>
+                    <option value="inactive" <c:if test="${statusFilter=='inactive'}">selected</c:if>>Inactive</option>
                 </select>
             </div>
+        </div>
 
-            <div class="col-md-2">
-                <label class="form-label">Sort by</label>
-                <select name="sortBy" class="form-select">
+        <div class="form-row select-inputs">
+            <div class="form-group">
+                <p>Sort by:</p>
+                <select name="sortBy">
                     <option value="">Default</option>
-                    <option value="fullName" ${sortBy=='fullName' ? 'selected' : '' }>Full Name</option>
-                    <option value="role" ${sortBy=='role' ? 'selected' : '' }>Role</option>
-                    <option value="status" ${sortBy=='status' ? 'selected' : '' }>Status</option>
+                    <option value="full_name" <c:if test="${sortBy=='full_name'}">selected</c:if>>Full Name</option>
+                    <option value="role_id" <c:if test="${sortBy=='role_id'}">selected</c:if>>Role</option>
+                    <option value="active" <c:if test="${sortBy=='active'}">selected</c:if>>Status</option>
                 </select>
             </div>
-
-            <div class="col-md-1">
-                <label class="form-label">Order</label>
-                <select name="sortOrder" class="form-select">
-                    <option value="ASC" ${sortOrder=='ASC' ? 'selected' : '' }>↑ Asc</option>
-                    <option value="DESC" ${sortOrder=='DESC' ? 'selected' : '' }>↓ Desc</option>
+            <div class="form-group">
+                <p>Order:</p>
+                <select name="sortOrder">
+                    <option value="ASC" <c:if test="${sortOrder=='ASC'}">selected</c:if>>↑ Asc</option>
+                    <option value="DESC" <c:if test="${sortOrder=='DESC'}">selected</c:if>>↓ Desc</option>
                 </select>
             </div>
+        </div>
 
-            <div class="col-md-2 d-flex gap-2">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="fas fa-search"></i> Filter
-                </button>
-                <a href="<c:url value='/account/view'/>" class="btn btn-secondary w-100" title="Reset">
-                    <i class="fas fa-rotate-right"></i> Reset
-                </a>
-            </div>
+        <div class="button-row">
+            <button type="submit">Filter</button>
+            <a href="<c:url value='/account/view'/>">Reset</a>
+        </div>
+    </form>
+
+    <!-- Account Table -->
+    <table>
+        <thead>
+        <tr>
+            <th>No</th>
+            <th>Account ID</th>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:if test="${empty accounts}">
+            <tr>
+                <td colspan="7" class="no-data">No accounts found</td>
+            </tr>
+        </c:if>
+        <c:forEach var="account" items="${accounts}" varStatus="status">
+            <tr>
+                <td>${(currentPage - 1) * pageSize + status.index + 1}</td>
+                <td>${account.accountID}</td>
+                <td>${account.username}</td>
+                <td>${account.fullName}</td>
+                <td>${account.roleName}</td>
+                <td>
+                    <span class="status-badge ${account.active ? 'status-accepted' : 'status-rejected'}">
+                        ${account.active ? 'Active' : 'Inactive'}
+                    </span>
+                </td>
+                <td>
+                    <a href="<c:url value='/updateRole?accountID=${account.accountID}'/>" class="action-link" title="Edit role">Edit</a>
+
+                    <form action="<c:url value='/account/toggle-status'/>" method="post" style="display:inline;">
+                        <input type="hidden" name="accountID" value="${account.accountID}">
+                        <button type="button" class="action-link"
+                                onclick="return confirmToggle(this, '${account.active ? "Are you sure you want to deactivate this account?" : "Are you sure you want to activate this account?"}')"
+                                title="${account.active ? 'Deactivate this account' : 'Activate this account'}">
+                            ${account.active ? 'Deactivate' : 'Activate'}
+                        </button>
+                    </form>
+
+                    <a href="<c:url value='/account/reset-password?accountID=${account.accountID}'/>" class="action-link" title="Reset password">Reset</a>
+                </td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination-container">
+        <form action="<c:url value='/account/view'/>" method="get" class="items-per-page-form">
+            <label>Items per page:</label>
+            <input type="number" name="pageSize" value="${pageSize}" min="1" max="50"/>
+            <button type="submit">Apply</button>
+
+            <!-- Keep filter and sort -->
+            <input type="hidden" name="search" value="${search}"/>
+            <input type="hidden" name="role" value="${roleFilter}"/>
+            <input type="hidden" name="status" value="${statusFilter}"/>
+            <input type="hidden" name="sortBy" value="${sortBy}"/>
+            <input type="hidden" name="sortOrder" value="${sortOrder}"/>
+            <input type="hidden" name="page" value="1"/>
         </form>
 
-        <!-- Table -->
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered align-middle">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Username</th>
-                        <th>Full Name</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th style="width: 300px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="account" items="${accounts}">
-                        <tr>
-                            <td>${account.accountID}</td>
-                            <td><strong>${account.username}</strong></td>
-                            <td>${account.fullName}</td>
-                            <td><span class="badge badge-info">${account.roleName}</span></td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${account.active}">
-                                        <span class="badge badge-success"><i class="fas fa-check"></i> Active</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="badge badge-danger"><i class="fas fa-times"></i> Inactive</span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td>
-                                <a href="<c:url value='/updateRole?accountID=${account.accountID}'/>" class="btn btn-warning btn-sm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <form action="<c:url value='/account/toggle-status'/>" method="post" style="display:inline;">
-                                    <input type="hidden" name="accountID" value="${account.accountID}">
-                                    <button type="submit" class="btn btn-sm ${account.active ? 'btn-danger' : 'btn-success'}">
-                                        <i class="fas ${account.active ? 'fa-ban' : 'fa-check'}"></i> ${account.active ? 'Disable' : 'Activate'}
-                                    </button>
-                                </form>
-                                <a href="<c:url value='/account/reset-password?accountID=${account.accountID}'/>" class="btn btn-info btn-sm text-white">
-                                    <i class="fas fa-key"></i> Reset
-                                </a>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </div>
+        <nav class="pagination-nav">
+            <ul class="pagination">
+                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                    <a class="page-link"
+                       href="<c:url value='/account/view?page=${currentPage - 1}&pageSize=${pageSize}&search=${search}&role=${roleFilter}&status=${statusFilter}&sortBy=${sortBy}&sortOrder=${sortOrder}'/>">
+                        Previous
+                    </a>
+                </li>
 
-        <!-- Pagination + Items per page -->
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <form method="get" action="<c:url value='/account/view'/>" class="d-flex align-items-center gap-2">
-                <label for="pageSize" class="form-label mb-0">Items per page:</label>
-                <select id="pageSize" name="pageSize" class="form-select" style="width: 80px;" onchange="this.form.submit()">
-                    <option value="5" ${pageSize==5 ? 'selected' : '' }>5</option>
-                    <option value="10" ${pageSize==10 ? 'selected' : '' }>10</option>
-                    <option value="20" ${pageSize==20 ? 'selected' : '' }>20</option>
-                </select>
-            </form>
+                <li class="page-item disabled">
+                    <span class="page-link">Page ${currentPage} / ${totalPages}</span>
+                </li>
 
-            <c:if test="${totalPages > 1}">
-                <nav>
-                    <ul class="pagination justify-content-center mb-0">
-                        <c:forEach begin="1" end="${totalPages}" var="i">
-                            <li class="page-item ${i == currentPage ? 'active' : ''}">
-                                <a class="page-link" href="?page=${i}&search=${search}&role=${roleFilter}&status=${statusFilter}&sortBy=${sortBy}&sortOrder=${sortOrder}&pageSize=${pageSize}">${i}</a>
-                            </li>
-                        </c:forEach>
-                    </ul>
-                </nav>
-            </c:if>
-        </div>
-
-        <!-- No results -->
-        <c:if test="${empty accounts}">
-            <div class="alert alert-info text-center mt-3">
-                <i class="fas fa-info-circle"></i> No accounts found.
-            </div>
-        </c:if>
-
+                <li class="page-item ${currentPage == totalPages || totalPages == 0 ? 'disabled' : ''}">
+                    <a class="page-link"
+                       href="<c:url value='/account/view?page=${currentPage + 1}&pageSize=${pageSize}&search=${search}&role=${roleFilter}&status=${statusFilter}&sortBy=${sortBy}&sortOrder=${sortOrder}'/>">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</div>
 </body>
 </html>

@@ -40,7 +40,13 @@
                   <a href="<c:url value='/user/create'/>" target="mainFrame">Create User</a>
                 </li>
                 <li>
-                  <a href="<c:url value='/option/add'/>" target="mainFrame">Add Option</a>
+                  <a href="<c:url value='/option/position'/>" target="mainFrame">Add Position</a>
+                </li>
+                <li>
+                  <a href="<c:url value='/option/department'/>" target="mainFrame">Add Department</a>
+                </li>
+                <li>
+                  <a href="<c:url value='/option/degree'/>" target="mainFrame">Add Degree</a>
                 </li>
               </ul>
             </div>

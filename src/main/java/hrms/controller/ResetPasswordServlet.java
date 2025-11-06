@@ -25,16 +25,16 @@ public class ResetPasswordServlet extends HttpServlet {
         Account currentUser = (Account) session.getAttribute("account");
 
         try {
-            // 🔒 Kiểm tra quyền admin
+            // 🔒 Check admin permission
             if (!isAdmin(currentUser)) {
-                session.setAttribute("errorMessage", "❌ Bạn không có quyền truy cập!");
+                session.setAttribute("errorMessage", "❌ You do not have permission to access this page!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
 
             String accountIDParam = request.getParameter("accountID");
             if (accountIDParam == null || accountIDParam.isEmpty()) {
-                session.setAttribute("errorMessage", "❌ Account ID không hợp lệ!");
+                session.setAttribute("errorMessage", "❌ Invalid Account ID!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
@@ -43,13 +43,13 @@ public class ResetPasswordServlet extends HttpServlet {
 
             AccountDTO accountDetail = accountDAO.getAccountDTOByID(accountID);
             if (accountDetail == null) {
-                session.setAttribute("errorMessage", "❌ Không tìm thấy tài khoản!");
+                session.setAttribute("errorMessage", "❌ Account not found!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
 
             if (accountDetail.getAccountID() == currentUser.getAccountID()) {
-                session.setAttribute("errorMessage", "❌ Bạn không thể reset mật khẩu của chính mình!");
+                session.setAttribute("errorMessage", "❌ You cannot reset your own password!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
@@ -59,7 +59,7 @@ public class ResetPasswordServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("errorMessage", "💥 Lỗi hệ thống: " + e.getMessage());
+            session.setAttribute("errorMessage", "💥 System error: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/account/view");
         }
     }
@@ -73,14 +73,14 @@ public class ResetPasswordServlet extends HttpServlet {
 
         try {
             if (!isAdmin(currentUser)) {
-                session.setAttribute("errorMessage", "❌ Bạn không có quyền!");
+                session.setAttribute("errorMessage", "❌ You do not have permission to perform this action!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
 
             String accountIDParam = request.getParameter("accountID");
             if (accountIDParam == null || accountIDParam.isEmpty()) {
-                session.setAttribute("errorMessage", "❌ Account ID không hợp lệ!");
+                session.setAttribute("errorMessage", "❌ Invalid Account ID!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
@@ -89,40 +89,38 @@ public class ResetPasswordServlet extends HttpServlet {
             AccountDTO targetAccount = accountDAO.getAccountDTOByID(accountID);
 
             if (targetAccount == null) {
-                session.setAttribute("errorMessage", "❌ Tài khoản không tồn tại!");
+                session.setAttribute("errorMessage", "❌ Account does not exist!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
 
             if (targetAccount.getAccountID() == currentUser.getAccountID()) {
-                session.setAttribute("errorMessage", "❌ Không thể reset mật khẩu của chính mình!");
+                session.setAttribute("errorMessage", "❌ You cannot reset your own password!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
 
-           
+            // Generate new temporary password
             String newPassword = generateRandomPassword();
             String hashedPassword = PasswordUtil.hashPassword(newPassword);
 
-          
             boolean success = accountDAO.resetPassword(accountID, hashedPassword);
 
             if (success) {
                 request.setAttribute("account", targetAccount);
                 request.setAttribute("tempPassword", newPassword); 
                 request.setAttribute("successMessage",
-                        "✅ Reset mật khẩu thành công cho tài khoản: " + targetAccount.getUsername());
+                        "✅ Password has been successfully reset for account: " + targetAccount.getUsername());
 
-         
                 request.getRequestDispatcher("/view/account/resetPassword.jsp").forward(request, response);
             } else {
-                session.setAttribute("errorMessage", "❌ Reset mật khẩu thất bại!");
+                session.setAttribute("errorMessage", "❌ Password reset failed!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("errorMessage", "💥 Lỗi hệ thống: " + e.getMessage());
+            session.setAttribute("errorMessage", "💥 System error: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/account/view");
         }
     }

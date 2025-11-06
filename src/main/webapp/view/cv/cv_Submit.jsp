@@ -55,6 +55,11 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="CCCD">CCCD:</label>
+                            <input type="text" id="CCCD" name="CCCD" placeholder="Enter your CCCD"
+                                pattern="\d{9}|\d{12}" title="CCCD must be exactly 9 or 12 digits" required>
+                        </div>
+                        <div class="form-group">
                             <label for="address">Address:</label>
                             <input type="text" id="address" name="address" placeholder="Enter your address"
                                 pattern="[a-zA-Z0-9À-ỹ\s,.-]+"
@@ -76,7 +81,15 @@
                             <input type="text" id="phone" name="phone" placeholder="Enter your phone number"
                                 pattern="\d{10}" title="Phone number must be exactly 10 digits" required>
                         </div>
-
+                        <div class="form-group">
+                            <label for="Degree">Degree:</label>
+                            <select id="degree" name="degree" required>
+                                <option value="" disabled selected>Select your degree</option>
+                                <c:forEach var="degree" items="${degrees}">
+                                    <option value="${degree.degreeId}">${degree.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label for="experience">Experience:</label>
                             <textarea id="experience" name="experience" rows="5" placeholder="Describe your experience"

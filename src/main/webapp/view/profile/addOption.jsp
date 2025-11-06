@@ -30,28 +30,22 @@
 
     <!-- Alerts -->
     <c:if test="${not empty successMessage}">
-        <div class="alert alert-success alert-dismissible fade show">${successMessage}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+        <div class="alert alert-success">${successMessage}</div>
     </c:if>
     <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger alert-dismissible fade show">${errorMessage}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+        <div class="alert alert-danger">${errorMessage}</div>
     </c:if>
 
     <!-- Add Form -->
     <form method="post" action="<c:url value='/option/add'/>" class="row g-3 mb-4">
-        <c:if test="${empty type}">
-            <div class="col-md-3">
-                <label class="form-label">Type</label>
-                <select name="type" class="form-select">
-                    <option value="position">Position</option>
-                    <option value="department">Department</option>
-                    <option value="degree">Degree</option>
-                </select>
-            </div>
-        </c:if>
+        <div class="col-md-3">
+            <label class="form-label">Type</label>
+            <select name="type" class="form-select">
+                <option value="position" <c:if test="${type=='position'}">selected</c:if>>Position</option>
+                <option value="department" <c:if test="${type=='department'}">selected</c:if>>Department</option>
+                <option value="degree" <c:if test="${type=='degree'}">selected</c:if>>Degree</option>
+            </select>
+        </div>
         <div class="col-md-6">
             <label class="form-label">Name</label>
             <input type="text" name="name" value="" class="form-control" placeholder="Nhập tên...">
@@ -90,7 +84,5 @@
     </div>
 
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

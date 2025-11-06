@@ -1,119 +1,169 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Tài Khoản - HRMS</title>
+    <title>Create Account - HRMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a2e0e6ad53.js" crossorigin="anonymous"></script>
     <style>
+        /* Reset & global */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            background-color: #e9f2ff;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .cv-list-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 700;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
         }
         .form-container {
-            max-width: 550px;
-            margin: 60px auto;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .form-header h2 {
-            text-align: center;
-            color: #0d6efd;
+        .form-group {
+            display: flex;
+            flex-direction: column;
             margin-bottom: 15px;
         }
-        .btn-create {
-            background-color: #0d6efd;
-            color: #fff;
-            border-radius: 8px;
+        .form-group p {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
         }
-        .btn-create:hover {
-            background-color: #0b5ed7;
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="password"],
+        .form-group select {
+            padding: 10px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s ease;
         }
-        .btn-back {
-            background-color: #cfe2ff;
-            color: #084298;
-            border-radius: 8px;
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        }
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .button-row button,
+        .button-row a {
+            padding: 10px 25px;
+            font-weight: 600;
+            border-radius: 6px;
             text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s ease;
         }
-        .btn-back:hover {
-            background-color: #0d6efd;
-            color: #fff;
+        .button-row button {
+            background-color: #3498db;
+            color: white;
+            border: none;
         }
-        input, select {
+        .button-row button:hover {
+            background-color: #2980b9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(52,152,219,0.3);
+        }
+        .button-row a {
+            background-color: #6c757d;
+            color: white;
+        }
+        .button-row a:hover {
+            background-color: #5a6268;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(108,117,125,0.3);
+        }
+        .alert {
+            margin-bottom: 20px;
             border-radius: 6px;
         }
     </style>
 </head>
 <body>
 
-<div class="form-container">
-    <div class="form-header">
-        <h2><i class="fas fa-user-plus"></i> Tạo Tài Khoản Mới</h2>
-        <hr>
-    </div>
+<div class="cv-list-container">
+    <h1><i class="fas fa-user-plus"></i> Create New Account</h1>
 
-    <c:if test="${not empty successMessage}">
-        <div class="alert alert-success">${successMessage}</div>
-    </c:if>
-    <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger">${errorMessage}</div>
-    </c:if>
+    <div class="form-container">
+        <c:if test="${not empty successMessage}">
+            <div class="alert alert-success">${successMessage}</div>
+        </c:if>
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger">${errorMessage}</div>
+        </c:if>
 
-    <form action="<c:url value='/account/create'/>" method="post" id="createAccountForm">
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label">User ID:</label>
-                <input type="number" class="form-control" name="userID" required>
+        <form action="<c:url value='/account/create'/>" method="post" id="createAccountForm">
+            <div class="form-group">
+                <p>User ID:</p>
+                <input type="number" name="userID" required>
             </div>
-            <div class="col-md-6">
-                <label class="form-label">Username:</label>
-                <input type="text" class="form-control" name="username" required>
+            <div class="form-group">
+                <p>Username:</p>
+                <input type="text" name="username" required>
             </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label">Password:</label>
-                <input type="password" class="form-control" name="password" required minlength="6">
+            <div class="form-group">
+                <p>Password:</p>
+                <input type="password" name="password" required minlength="6">
             </div>
-            <div class="col-md-6">
-                <label class="form-label">Xác nhận mật khẩu:</label>
-                <input type="password" class="form-control" name="confirmPassword" required minlength="6">
+            <div class="form-group">
+                <p>Confirm Password:</p>
+                <input type="password" name="confirmPassword" required minlength="6">
             </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label">Role:</label>
-                <select class="form-select" name="roleID" required>
-                    <option value="">-- Chọn vai trò --</option>
+            <div class="form-group">
+                <p>Role:</p>
+                <select name="roleID" required>
+                    <option value="">-- Select Role --</option>
                     <c:forEach var="role" items="${roleList}">
                         <option value="${role.roleID}">${role.name}</option>
                     </c:forEach>
                 </select>
             </div>
-            <div class="col-md-6">
-                <label class="form-label">Trạng thái:</label>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="isActive" value="true" checked>
-                    <label class="form-check-label">Active</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="isActive" value="false">
-                    <label class="form-check-label">Inactive</label>
+            <div class="form-group">
+                <p>Status:</p>
+                <div class="d-flex gap-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="isActive" value="true" checked>
+                        <label class="form-check-label">Active</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="isActive" value="false">
+                        <label class="form-check-label">Inactive</label>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="text-center mt-4 d-flex justify-content-center gap-3">
-            <button type="submit" class="btn-create btn-custom"><i class="fas fa-user-plus me-2"></i>Tạo tài khoản</button>
-            <a href="<c:url value='/account/view'/>" class="btn-back btn-custom"><i class="fas fa-arrow-left me-2"></i>Quay lại</a>
-        </div>
-    </form>
+            <div class="button-row">
+                <button type="submit"><i class="fas fa-user-plus me-2"></i>Create Account</button>
+                <a href="<c:url value='/account/view'/>"><i class="fas fa-arrow-left me-2"></i>Back</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -124,12 +174,12 @@
 
         if(password !== confirmPassword){
             e.preventDefault();
-            alert('Mật khẩu và xác nhận mật khẩu không khớp!');
+            alert('Password and Confirm Password do not match!');
             return false;
         }
         if(password.length < 6){
             e.preventDefault();
-            alert('Mật khẩu phải có ít nhất 6 ký tự!');
+            alert('Password must be at least 6 characters!');
             return false;
         }
     });
