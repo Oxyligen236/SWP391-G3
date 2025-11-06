@@ -36,7 +36,7 @@ public class ProfileServlet extends HttpServlet {
             req.setAttribute("user", user);
             req.getRequestDispatcher("/view/profile/viewProfile.jsp").forward(req, resp);
         } else {
-            req.setAttribute("error", "Không tìm thấy thông tin người dùng.");
+            req.setAttribute("error", "Can not find user information.");
             req.getRequestDispatcher("/view/profile/error.jsp").forward(req, resp);
         }
     }

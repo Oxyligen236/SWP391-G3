@@ -38,7 +38,7 @@ public class CreateAccountServlet extends HttpServlet {
 
         Account currentUser = (Account) req.getSession().getAttribute("account");
         if (currentUser == null || currentUser.getRole() != 5) {
-            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "❌ Bạn không có quyền thực hiện hành động này!");
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "❌ You do not have permission to perform this action!");
             return;
         }
 
@@ -54,71 +54,71 @@ public class CreateAccountServlet extends HttpServlet {
 
             // Validate input
             if (username == null || username.trim().isEmpty()) {
-                req.setAttribute("errorMessage", "❌ Username không được để trống!");
+                req.setAttribute("errorMessage", "❌ Username cannot be empty!");
                 req.setAttribute("roleList", roleDAO.getAllRoles());
                 req.getRequestDispatcher("/view/account/createAccount.jsp").forward(req, resp);
                 return;
             }
 
             if (password == null || password.trim().isEmpty()) {
-                req.setAttribute("errorMessage", "❌ Mật khẩu không được để trống!");
+                req.setAttribute("errorMessage", "❌ Password cannot be empty!");
                 req.setAttribute("roleList", roleDAO.getAllRoles());
                 req.getRequestDispatcher("/view/account/createAccount.jsp").forward(req, resp);
                 return;
             }
 
             if (password.length() < 6) {
-                req.setAttribute("errorMessage", "❌ Mật khẩu phải có ít nhất 6 ký tự!");
+                req.setAttribute("errorMessage", "❌ Password must be at least 6 characters!");
                 req.setAttribute("roleList", roleDAO.getAllRoles());
                 req.getRequestDispatcher("/view/account/createAccount.jsp").forward(req, resp);
                 return;
             }
 
             if (!password.equals(confirmPassword)) {
-                req.setAttribute("errorMessage", "❌ Mật khẩu xác nhận không khớp!");
+                req.setAttribute("errorMessage", "❌ Password confirmation does not match!");
                 req.setAttribute("roleList", roleDAO.getAllRoles());
                 req.getRequestDispatcher("/view/account/createAccount.jsp").forward(req, resp);
                 return;
             }
 
             if (accountDAO.getAccountByUsername(username) != null) {
-                req.setAttribute("errorMessage", "❌ Username đã tồn tại!");
+                req.setAttribute("errorMessage", "❌ Username already exists!");
                 req.setAttribute("roleList", roleDAO.getAllRoles());
                 req.getRequestDispatcher("/view/account/createAccount.jsp").forward(req, resp);
                 return;
             }
 
             if (accountDAO.getAccountByUserID(userID) != null) {
-                req.setAttribute("errorMessage", "❌ Người dùng này đã có tài khoản!");
+                req.setAttribute("errorMessage", "❌ This user already has an account!");
                 req.setAttribute("roleList", roleDAO.getAllRoles());
                 req.getRequestDispatcher("/view/account/createAccount.jsp").forward(req, resp);
                 return;
             }
 
-          
+            // Hash password
             String hashedPassword = PasswordUtil.hashPassword(password);
 
             Account account = new Account();
             account.setUserID(userID);
             account.setUsername(username);
-            account.setPassword(hashedPassword);  
+            account.setPassword(hashedPassword);
             account.setRole(roleID);
             account.setIsActive(isActive);
 
             boolean created = accountDAO.createAccount(account);
 
             if (created) {
-                req.setAttribute("successMessage", "✅ Tạo tài khoản thành công!");
+                req.setAttribute("successMessage", "✅ Account created successfully!");
                 req.setAttribute("resetForm", true);
             } else {
-                req.setAttribute("errorMessage", "❌ Tạo tài khoản thất bại!");
+                req.setAttribute("errorMessage", "❌ Failed to create account!");
             }
 
         } catch (NumberFormatException e) {
-            req.setAttribute("errorMessage", "❌ Dữ liệu không hợp lệ!");
+            req.setAttribute("errorMessage", "❌ Invalid input data!");
             e.printStackTrace();
         } catch (Exception e) {
-            req.setAttribute("errorMessage", "💥 Lỗi hệ thống: " + e.getMessage());
+            req.setAttribute("errorMessage", "💥 System error: " + e.getMessage());
             e.printStackTrace();
         }
 

@@ -10,11 +10,12 @@ public class CVJobDetailDTO {
     private String name;
     private LocalDate dob;
     private String gender;
+    private String CCCD;
     private String address;
     private String nationality;
     private String email;
     private String phone;
-
+    private String degree;
     private String experience;
     private String education;
     private String skills;
@@ -24,8 +25,8 @@ public class CVJobDetailDTO {
     public CVJobDetailDTO() {
     }
 
-    public CVJobDetailDTO(int cvID, int jdID, String jdTitle, String name, LocalDate dob, String gender, String address,
-            String nationality, String email, String phone, String experience, String education, String skills,
+    public CVJobDetailDTO(int cvID, int jdID, String jdTitle, String name, LocalDate dob, String gender, String CCCD, String address,
+            String nationality, String email, String phone, String degree, String experience, String education, String skills,
             String aboutMe, String status) {
         this.cvID = cvID;
         this.jdID = jdID;
@@ -33,10 +34,12 @@ public class CVJobDetailDTO {
         this.name = name;
         this.dob = dob;
         this.gender = gender;
+        this.CCCD = CCCD;
         this.address = address;
         this.nationality = nationality;
         this.email = email;
         this.phone = phone;
+        this.degree = degree;
         this.experience = experience;
         this.education = education;
         this.skills = skills;
@@ -162,6 +165,22 @@ public class CVJobDetailDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getCCCD() {
+        return CCCD;
+    }
+
+    public void setCCCD(String CCCD) {
+        this.CCCD = CCCD;
+    }
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
     }
 
 }
