@@ -1,12 +1,17 @@
 package hrms.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import hrms.dao.HolidayCalendarDAO;
+import hrms.dao.HolidayDAO;
 import hrms.dao.PayrollDAO;
 import hrms.dto.PayrollDTO;
 import hrms.dto.PayrollItemDetailDTO;
 import hrms.dto.UserDTO;
+import hrms.model.Holiday;
+import hrms.model.HolidayCalendar;
 import hrms.model.Payroll;
 import hrms.model.PayrollItem;
 import hrms.model.PayrollType;
@@ -183,9 +188,29 @@ public class PayrollService {
 
     public List<PayrollType> getAdjustmentTypes() {
         return payrollDao.getAllPayrollTypes()
-            .stream()
-            .filter(type -> "Adjustment".equals(type.getCategory()))
-            .toList();
+                .stream()
+                .filter(type -> "Adjustment".equals(type.getCategory()))
+                .toList();
+    }
+
+    public int checkHolidayAndWeekend(int day, int month, int year) {
+        HolidayDAO holidayDao = new HolidayDAO();
+        HolidayCalendarDAO calendarDao = new HolidayCalendarDAO();
+        HolidayCalendar calendar = calendarDao.getByYear(year);
+        if (calendar == null) {
+            return 0;
+        }
+        List<Holiday> holidays = holidayDao.getHolidaysByCalendar(calendar.getCalendarID());
+        for (Holiday holiday : holidays) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(holiday.getDateHoliday());
+            int holidayDay = cal.get(Calendar.DAY_OF_MONTH);
+            int holidayMonth = cal.get(Calendar.MONTH) + 1;
+            if (holidayDay == day && holidayMonth == month) {
+                return 1;
+            }
+        }
+        return 0;
     }
 
 }

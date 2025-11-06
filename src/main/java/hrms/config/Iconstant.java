@@ -11,4 +11,7 @@ public class Iconstant {
 
     public static final int MIN_USERNAME_LENGTH = 4;
     public static final int MIN_PASSWORD_LENGTH = 6;
+
+    public static double SALARY_MULTIPLY_FOR_OVERTIME = 1.5;
+    public static double SALARY_MULTIPLY_FOR_HOLIDAY = 3.0;
 }
