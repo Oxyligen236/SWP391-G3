@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="hrms.model.Department, hrms.model.Position, hrms.model.Degree, java.util.List" %>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+        <%@ page import="hrms.model.Department, hrms.model.Position, hrms.model.Degree, java.util.List" %>
 
 <c:url value="/user/create" var="createUserUrl" />
 <c:url value="/userlist" var="userListUrl" />
@@ -174,6 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </c:if>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+            </body>
+
+            </html>

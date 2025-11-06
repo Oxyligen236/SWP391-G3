@@ -54,7 +54,7 @@ public class CreateUserServlet extends HttpServlet {
             return;
         }
 
-        // --- Lấy dữ liệu form ---
+        // --- Get form data ---
         String fullname = request.getParameter("fullname");
         String email = request.getParameter("email");
         String phoneNumber = request.getParameter("phoneNumber");
@@ -120,7 +120,9 @@ public class CreateUserServlet extends HttpServlet {
         Integer userId = userDao.createUserReturnId(user);
         if (userId != null) {
             request.setAttribute("success", "User created successfully! User ID: " + userId);
+            request.setAttribute("success", "User created successfully! User ID: " + userId);
         } else {
+            request.setAttribute("error", "User creation failed!");
             request.setAttribute("error", "User creation failed!");
         }
 

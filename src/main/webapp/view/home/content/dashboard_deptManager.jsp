@@ -13,7 +13,7 @@
             <div class="col-xl-12 col-lg-12 mt-4">
                 <div class="card border-0 shadow rounded">
                     <div class="card-body">
-                        <h5 class="card-title">Welcome to HRMS Employee Dashboard</h5>
+                        <h5 class="card-title">Welcome to HRMS Dept Dashboard</h5>
                         <p class="text-muted">Have a nice day!!!</p>
                     </div>
                 </div>

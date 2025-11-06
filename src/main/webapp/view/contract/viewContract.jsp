@@ -1,7 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8" isELIgnored="false" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<% 
+    // Create DateTimeFormatter for dd/MM/yyyy format
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    pageContext.setAttribute("dateFormatter", formatter);
+%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -34,12 +40,12 @@ pageEncoding="UTF-8" isELIgnored="false" %>
             const contractUserId = parseInt(this.getAttribute("data-contract-user-id"));
             
             if (userRole !== 1 && userRole !== 2) {
-              alert("Bạn không có quyền sửa ghi chú hợp đồng!");
+              alert("You do not have permission to edit contract notes!");
               return;
             }
 
             if (currentUserId === contractUserId) {
-              alert("Bạn không thể sửa hợp đồng của chính mình!");
+              alert("You cannot edit your own contract!");
               return;
             }
 
@@ -66,12 +72,12 @@ pageEncoding="UTF-8" isELIgnored="false" %>
             const contractUserId = parseInt(this.getAttribute("data-contract-user-id"));
             
             if (userRole !== 1 && userRole !== 2) {
-              alert("Bạn không có quyền sửa trạng thái hợp đồng!");
+              alert("You do not have permission to edit contract status!");
               return;
             }
 
             if (currentUserId === contractUserId) {
-              alert("Bạn không thể sửa hợp đồng của chính mình!");
+              alert("You cannot edit your own contract!");
               return;
             }
 
@@ -96,7 +102,7 @@ pageEncoding="UTF-8" isELIgnored="false" %>
 
             if (userRole !== 1 && userRole !== 2) {
               e.preventDefault();
-              alert("Bạn không có quyền truy cập danh sách hợp đồng!");
+              alert("You do not have permission to access the contract list!");
               return false;
             }
           });
@@ -147,19 +153,26 @@ pageEncoding="UTF-8" isELIgnored="false" %>
             <!-- Start Date -->
             <div class="detail-item">
               <label class="detail-label">Start Date:</label>
-              <div class="detail-value">${contract.startDate}</div>
+              <div class="detail-value">${contract.startDate.format(dateFormatter)}</div>
             </div>
 
             <!-- End Date -->
             <div class="detail-item">
               <label class="detail-label">End Date:</label>
-              <div class="detail-value">${contract.endDate}</div>
+              <div class="detail-value">
+                <c:choose>
+                  <c:when test="${not empty contract.endDate}">
+                    ${contract.endDate.format(dateFormatter)}
+                  </c:when>
+                  <c:otherwise>-</c:otherwise>
+                </c:choose>
+              </div>
             </div>
 
             <!-- Sign Date -->
             <div class="detail-item">
               <label class="detail-label">Sign Date:</label>
-              <div class="detail-value">${contract.signDate}</div>
+              <div class="detail-value">${contract.signDate.format(dateFormatter)}</div>
             </div>
 
             <!-- Duration -->
@@ -192,10 +205,10 @@ pageEncoding="UTF-8" isELIgnored="false" %>
             <div class="detail-item-full">
               <label class="detail-label">
                 Status:
-                <c:if test="${(sessionScope.account.role == 1 || sessionScope.account.role == 2) && sessionScope.account.userId != contract.userId}">
+                <c:if test="${(sessionScope.account.role == 1 || sessionScope.account.role == 2) && sessionScope.account.userID != contract.userId}">
                   <button type="button" id="editStatusBtn" class="btn-edit" 
                           data-role="${sessionScope.account.role}"
-                          data-user-id="${sessionScope.account.userId}"
+                          data-user-id="${sessionScope.account.userID}"
                           data-contract-user-id="${contract.userId}">
                     Edit
                   </button>
@@ -250,10 +263,10 @@ pageEncoding="UTF-8" isELIgnored="false" %>
             <div class="detail-item-full">
               <label class="detail-label">
                 Note:
-                <c:if test="${(sessionScope.account.role == 1 || sessionScope.account.role == 2) && sessionScope.account.userId != contract.userId}">
+                <c:if test="${(sessionScope.account.role == 1 || sessionScope.account.role == 2) && sessionScope.account.userID != contract.userId}">
                   <button type="button" id="editNoteBtn" class="btn-edit" 
                           data-role="${sessionScope.account.role}"
-                          data-user-id="${sessionScope.account.userId}"
+                          data-user-id="${sessionScope.account.userID}"
                           data-contract-user-id="${contract.userId}">
                     Edit
                   </button>

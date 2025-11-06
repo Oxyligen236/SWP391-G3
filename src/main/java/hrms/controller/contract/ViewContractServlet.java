@@ -56,8 +56,16 @@ public class ViewContractServlet extends HttpServlet {
         
         String searchField = request.getParameter("searchField");
         String searchValue = request.getParameter("searchValue");
-        String fromDate = request.getParameter("fromDate");
-        String toDate = request.getParameter("toDate");
+        // Get dates from ISO hidden fields when searching by date
+        String fromDate = request.getParameter("fromDateISO");
+        String toDate = request.getParameter("toDateISO");
+        // If ISO fields are empty, fallback to regular fields (for backward compatibility)
+        if (fromDate == null || fromDate.isEmpty()) {
+            fromDate = request.getParameter("fromDate");
+        }
+        if (toDate == null || toDate.isEmpty()) {
+            toDate = request.getParameter("toDate");
+        }
 
         String sortField = request.getParameter("sortField");
         String sortOrder = request.getParameter("sortOrder");
@@ -130,6 +138,14 @@ public class ViewContractServlet extends HttpServlet {
             request.setAttribute("sortField", sortField);
             request.setAttribute("sortOrder", sortOrder);
 
+            // Check for success message in session
+            String successMessage = (String) request.getSession().getAttribute("successMessage");
+            if (successMessage != null) {
+                request.setAttribute("successMessage", successMessage);
+                // Remove from session after displaying once
+                request.getSession().removeAttribute("successMessage");
+            }
+
             RequestDispatcher rd = request.getRequestDispatcher("/view/contract/viewListContract.jsp");
             rd.forward(request, response);
         } catch (Exception e) {
@@ -157,9 +173,10 @@ public class ViewContractServlet extends HttpServlet {
         try {
             Contract contract = new Contract();
             String userID = request.getParameter("userID");
-            String startDate = request.getParameter("startDate");
-            String endDate = request.getParameter("endDate");
-            String signDate = request.getParameter("signDate");
+            // Get dates from ISO hidden fields (format: yyyy-MM-dd)
+            String startDate = request.getParameter("startDateISO");
+            String endDate = request.getParameter("endDateISO");
+            String signDate = request.getParameter("signDateISO");
             String duration = request.getParameter("duration");
             String baseSalary = request.getParameter("baseSalary");
             String typeID = request.getParameter("typeID");
@@ -184,6 +201,9 @@ public class ViewContractServlet extends HttpServlet {
             contract.setSignerId(Integer.parseInt(signerID));
 
             dao.addContract(contract);
+            
+            // Set success message in session
+            request.getSession().setAttribute("successMessage", "Contract created successfully!");
             response.sendRedirect("viewContracts?action=list");
         } catch (IllegalArgumentException e) {
             request.setAttribute("error", e.getMessage());
