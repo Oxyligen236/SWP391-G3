@@ -3,9 +3,8 @@
         <%@ page import="hrms.model.Department, hrms.model.Position, hrms.model.Degree, java.util.List" %>
 
 <c:url value="/user/create" var="createUserUrl" />
-<c:url value="/userlist" var="userListUrl" />
+<c:url value="/cv" var="cvListUrl" />
 <c:url value="/contract/create" var="createContractUrl" />
-<c:url value="/cv/detail" var="cvDetailUrl" />
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,22 +15,22 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color:#f5f5f5; }
+        body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color:#f8faff; }
         .container { max-width:900px; margin:20px auto; padding:20px; }
-        h1 { color:#2c3e50; margin-bottom:20px; font-size:28px; font-weight:700; border-bottom:3px solid #3498db; padding-bottom:10px; }
+        h1 { color:#0d6efd; margin-bottom:20px; font-size:28px; font-weight:700; border-bottom:3px solid #0d6efd; padding-bottom:10px; }
         .form-card { background:#fff; padding:25px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
         .form-group { display:flex; flex-direction:column; margin-bottom:15px; }
-        .form-group label { font-weight:600; color:#2c3e50; margin-bottom:5px; }
+        .form-group label { font-weight:600; color:#0d3b66; margin-bottom:5px; }
         .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="date"], .form-group select {
             padding:10px 12px; border:1px solid #dee2e6; border-radius:6px; font-size:14px; background-color:#fff;
         }
-        .form-group input:focus, .form-group select:focus { border-color:#3498db; outline:none; box-shadow:0 0 0 0.2rem rgba(52,152,219,0.25); }
+        .form-group input:focus, .form-group select:focus { border-color:#0d6efd; outline:none; box-shadow:0 0 0 0.2rem rgba(13,110,253,0.25); }
         .form-actions { display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin-top:20px; }
         .form-actions button, .form-actions a { padding:10px 25px; border:none; border-radius:6px; font-weight:600; font-size:14px; cursor:pointer; text-decoration:none; }
-        .btn-primary { background:#3498db; color:#fff; }
-        .btn-primary:hover { background:#2980b9; transform:translateY(-1px); box-shadow:0 4px 8px rgba(52,152,219,0.3); }
-        .btn-outline { background:#6c757d; color:#fff; }
-        .btn-outline:hover { background:#5a6268; transform:translateY(-1px); box-shadow:0 4px 8px rgba(108,117,125,0.3); }
+        .btn-primary { background:#a2d2ff; color:#0d3b66; }
+        .btn-primary:hover { background:#7bb8ff; color:#0d3b66; transform:translateY(-1px); box-shadow:0 4px 8px rgba(162,210,255,0.3); }
+        .btn-outline { background:#d3e0ff; color:#0d3b66; }
+        .btn-outline:hover { background:#aebfff; color:#0d3b66; transform:translateY(-1px); box-shadow:0 4px 8px rgba(174,191,255,0.3); }
         .message { padding:12px; border-radius:10px; margin-bottom:20px; font-size:0.95rem; }
         .message.success { background:#d1e7dd; color:#0f5132; }
         .message.error { background:#f8d7da; color:#842029; }
@@ -43,14 +42,12 @@
     <h1><i class="fas fa-user-plus"></i> Create New User</h1>
     <div class="form-card">
 
-        <!-- Error Message -->
         <c:if test="${not empty error}">
             <div class="message error">${error}</div>
         </c:if>
 
         <form action="${createUserUrl}" method="post">
             <div class="row">
-                <!-- Fullname & Email -->
                 <div class="col-md-6 form-group">
                     <label>Full Name:</label>
                     <input type="text" name="fullname" value="<c:out value='${formFullname}'/>" required>
@@ -60,7 +57,6 @@
                     <input type="email" name="email" value="<c:out value='${formEmail}'/>" required>
                 </div>
 
-                <!-- Phone & Birth Date -->
                 <div class="col-md-6 form-group">
                     <label>Phone Number:</label>
                     <input type="text" name="phoneNumber" value="<c:out value='${formPhoneNumber}'/>">
@@ -70,7 +66,6 @@
                     <input type="date" name="birthDate" value="<c:out value='${formBirthDate}'/>">
                 </div>
 
-                <!-- Gender & Address -->
                 <div class="col-md-6 form-group">
                     <label>Gender:</label>
                     <select name="gender" required>
@@ -85,7 +80,6 @@
                     <input type="text" name="address" value="<c:out value='${formAddress}'/>">
                 </div>
 
-                <!-- Ethnicity, Nation, ID -->
                 <div class="col-md-4 form-group">
                     <label>Ethnicity:</label>
                     <input type="text" name="ethnicity" value="<c:out value='${formEthnicity}'/>">
@@ -96,10 +90,9 @@
                 </div>
                 <div class="col-md-4 form-group">
                     <label>ID Number:</label>
-                    <input type="text" name="cccd" value="<c:out value='${formCccd}'/>">
+                    <input type="text" name="cccd" value="<c:out value='${formCccd}'/>" required>
                 </div>
 
-                <!-- Department, Position, Degree -->
                 <div class="col-md-4 form-group">
                     <label>Department:</label>
                     <select name="departmentId" required>
@@ -129,31 +122,37 @@
                 </div>
             </div>
 
-            <!-- Form Buttons -->
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary"><i class="fas fa-user-plus"></i> Create User</button>
                 <button type="reset" class="btn btn-outline"><i class="fas fa-times"></i> Reset</button>
-                <a href="${cvDetailUrl}?cvId=${cvId}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
+                <a href="${cvListUrl}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back to CV List</a>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Popup Modal nếu tạo user thành công -->
+<!-- SUCCESS MODAL -->
 <c:if test="${not empty success}">
-<div class="modal fade" id="userCreatedModal" tabindex="-1" aria-labelledby="userCreatedModalLabel" aria-hidden="true">
+<div class="modal fade" id="userCreatedModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Success</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-check-circle"></i> Success
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                ${success}
+                <p><strong>${success}</strong></p>
+                <p>User ID: <code>${newUserId}</code></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" id="createContractBtn">Create Contract</button>
+                <a href="${cvListUrl}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to CV List
+                </a>
+                <a href="${createContractUrl}?userId=${newUserId}" class="btn btn-success">
+                    <i class="fas fa-file-contract"></i> Create Contract
+                </a>
             </div>
         </div>
     </div>
@@ -161,20 +160,12 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var myModal = new bootstrap.Modal(document.getElementById('userCreatedModal'));
-    myModal.show();
-
-    document.getElementById('createContractBtn').addEventListener('click', function() {
-        var userId = "${newUserId}";
-        
-        window.location.href = "${pageContext.request.contextPath}/addContracts?userId=" + userId;
-    });
+    const modal = new bootstrap.Modal(document.getElementById('userCreatedModal'));
+    modal.show();
 });
 </script>
 </c:if>
 
-
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-            </body>
-
-            </html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
