@@ -1,12 +1,12 @@
 package hrms.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class Holiday {
 
     private int holidayID;
     private int calendarID;
-    private Date dateHoliday;
+    private LocalDate dateHoliday;
     private String name;
     private boolean isSubstitute;
     private String description;
@@ -14,7 +14,7 @@ public class Holiday {
     public Holiday() {
     }
 
-    public Holiday(int holidayID, int calendarID, Date dateHoliday, String name, boolean isSubstitute, String description) {
+    public Holiday(int holidayID, int calendarID, LocalDate dateHoliday, String name, boolean isSubstitute, String description) {
         this.holidayID = holidayID;
         this.calendarID = calendarID;
         this.dateHoliday = dateHoliday;
@@ -40,11 +40,11 @@ public class Holiday {
         this.calendarID = calendarID;
     }
 
-    public Date getDateHoliday() {
+    public LocalDate getDateHoliday() {
         return dateHoliday;
     }
 
-    public void setDateHoliday(Date dateHoliday) {
+    public void setDateHoliday(LocalDate dateHoliday) {
         this.dateHoliday = dateHoliday;
     }
 
