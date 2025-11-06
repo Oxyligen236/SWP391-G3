@@ -380,4 +380,43 @@ public class UserDAO extends DBContext {
         return list;
     }
 
+    public UserDTO getUserDetailById(int userId) {
+    String sql = """
+        SELECT 
+            u.*, 
+            d.Name AS departmentName, 
+            p.Name AS positionName, 
+            deg.Name AS degreeName
+        FROM Users u
+        LEFT JOIN Department d ON u.DepartmentID = d.DepartmentID
+        LEFT JOIN Positions p ON u.PositionID = p.PositionID
+        LEFT JOIN Degree deg ON u.DegreeID = deg.DegreeID
+        WHERE u.UserID = ?
+    """;
+
+    try (PreparedStatement st = connection.prepareStatement(sql)) {
+        st.setInt(1, userId);
+        ResultSet rs = st.executeQuery();
+        if (rs.next()) {
+            UserDTO u = new UserDTO();
+            u.setUserId(rs.getInt("UserID"));
+            u.setFullname(rs.getString("FullName"));
+            u.setEmail(rs.getString("Email"));
+            u.setPhoneNumber(rs.getString("PhoneNumber"));
+            u.setBirthDate(rs.getDate("BirthDate"));
+            u.setGender(rs.getString("Gender"));
+            u.setAddress(rs.getString("Address"));
+            u.setCccd(rs.getString("CCCD"));
+            u.setEthnicity(rs.getString("Ethnicity"));
+            u.setNation(rs.getString("Nation"));
+            u.setDepartmentName(rs.getString("departmentName"));
+            u.setPositionName(rs.getString("positionName"));
+            u.setDegreeName(rs.getString("degreeName"));
+            return u; 
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
 }
