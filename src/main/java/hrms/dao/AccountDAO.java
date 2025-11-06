@@ -299,8 +299,8 @@ public class AccountDAO extends DBContext {
 
     // Sort
     if ("full_name".equalsIgnoreCase(sortBy)) {
-        // Sort theo họ (từ đầu tiên trong FullName)
-        sql.append("ORDER BY SUBSTRING_INDEX(u.FullName, ' ', 1) ");
+      
+        sql.append("ORDER BY SUBSTRING_INDEX(u.FullName, ' ', -1) ");
     } else if ("role_id".equalsIgnoreCase(sortBy)) {
         sql.append("ORDER BY r.RoleID ");
     } else if ("active".equalsIgnoreCase(sortBy)) {

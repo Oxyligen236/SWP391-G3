@@ -32,7 +32,6 @@ public class CreateUserServlet extends HttpServlet {
             return;
         }
 
-        // --- Pre-fill form nếu có dữ liệu từ CV ---
         String[] fields = {"fullname","email","phoneNumber","birthDate","gender","address","nation","cccd","degreeId"};
         for (String f : fields) {
             String val = request.getParameter(f);
@@ -54,7 +53,6 @@ public class CreateUserServlet extends HttpServlet {
             return;
         }
 
-        // --- Lấy dữ liệu form ---
         String fullname = request.getParameter("fullname");
         String email = request.getParameter("email");
         String phoneNumber = request.getParameter("phoneNumber");
@@ -85,7 +83,6 @@ public class CreateUserServlet extends HttpServlet {
         boolean hasError = false;
         StringBuilder errorMsg = new StringBuilder();
 
-        // --- Validation ---
         if (fullname == null || fullname.trim().isEmpty()) { hasError = true; errorMsg.append("Full name is required!<br>"); }
         if (email == null || email.trim().isEmpty()) { hasError = true; errorMsg.append("Email is required!<br>"); }
         if (cccd == null || cccd.trim().isEmpty()) { hasError = true; errorMsg.append("CCCD/ID card is required!<br>"); }
@@ -110,22 +107,35 @@ public class CreateUserServlet extends HttpServlet {
             return;
         }
 
-        // --- Tạo User mới ---
         UserDTO user = new UserDTO();
-        user.setFullname(fullname); user.setEmail(email); user.setPhoneNumber(phoneNumber);
-        user.setBirthDate(birthDate); user.setGender(gender); user.setAddress(address);
-        user.setNation(nation); user.setEthnicity(ethnicity); user.setCccd(cccd);
-        user.setDepartmentId(departmentId); user.setPositionId(positionId); user.setDegreeId(degreeId);
+        user.setFullname(fullname); 
+        user.setEmail(email); 
+        user.setPhoneNumber(phoneNumber);
+        user.setBirthDate(birthDate); 
+        user.setGender(gender); 
+        user.setAddress(address);
+        user.setNation(nation); 
+        user.setEthnicity(ethnicity); 
+        user.setCccd(cccd);
+        user.setDepartmentId(departmentId); 
+        user.setPositionId(positionId); 
+        user.setDegreeId(degreeId);
 
         Integer userId = userDao.createUserReturnId(user);
         if (userId != null) {
-            request.setAttribute("success", "User created successfully! User ID: " + userId);
+            request.setAttribute("success", "User created successfully!");
+            request.setAttribute("newUserId", userId);
+            System.out.println("User created: " + userId);
         } else {
-            request.setAttribute("error", "User creation failed!");
+            request.setAttribute("error", " User creation failed!");
+            System.out.println(" User creation failed");
+            preserveFormData(request, fullname, email, phoneNumber, birthDate, gender,
+                    address, nation, ethnicity, cccd, depParam, posParam, degParam);
+            loadDropdownData(request);
+            request.getRequestDispatcher("/view/profile/createUser.jsp").forward(request, response);
+            return;
         }
 
-        preserveFormData(request, fullname, email, phoneNumber, birthDate, gender,
-                address, nation, ethnicity, cccd, depParam, posParam, degParam);
         loadDropdownData(request);
         request.getRequestDispatcher("/view/profile/createUser.jsp").forward(request, response);
     }
@@ -137,7 +147,11 @@ public class CreateUserServlet extends HttpServlet {
 
     private Integer parseInteger(String param) {
         if (param == null || param.isEmpty()) return null;
-        try { return Integer.parseInt(param); } catch (NumberFormatException e) { return null; }
+        try { 
+            return Integer.parseInt(param); 
+        } catch (NumberFormatException e) { 
+            return null; 
+        }
     }
 
     private void preserveFormData(HttpServletRequest request, String fullname, String email, String phoneNumber,
