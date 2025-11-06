@@ -1,7 +1,8 @@
 package hrms.service;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import hrms.dao.HolidayCalendarDAO;
@@ -11,16 +12,14 @@ import hrms.model.HolidayCalendar;
 
 public class CalendarCheck {
 
-    public boolean checkHoliday(Date date) {
+    public boolean checkHoliday(LocalDate date) {
         if (date == null) {
             return false;
         }
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int year = cal.get(Calendar.YEAR);
+        int day = date.getDayOfMonth();
+        int month = date.getMonthValue();
+        int year = date.getYear();
 
         HolidayDAO holidayDao = new HolidayDAO();
         HolidayCalendarDAO calendarDao = new HolidayCalendarDAO();
@@ -33,12 +32,11 @@ public class CalendarCheck {
         List<Holiday> holidays = holidayDao.getHolidaysByCalendar(calendar.getCalendarID());
 
         for (Holiday holiday : holidays) {
-            Calendar holidayCal = Calendar.getInstance();
-            holidayCal.setTime(holiday.getDateHoliday());
-            int holidayDay = holidayCal.get(Calendar.DAY_OF_MONTH);
-            int holidayMonth = holidayCal.get(Calendar.MONTH) + 1;
+            LocalDate holidayDate = holiday.getDateHoliday().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
 
-            if (holidayDay == day && holidayMonth == month) {
+            if (holidayDate.getDayOfMonth() == day && holidayDate.getMonthValue() == month) {
                 return true;
             }
         }
@@ -46,19 +44,16 @@ public class CalendarCheck {
         return false;
     }
 
-    public boolean checkWeekend(Date date) {
+    public boolean checkWeekend(LocalDate date) {
         if (date == null) {
             return false;
         }
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-
-        return (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY);
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        return (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY);
     }
 
-    public boolean checkHolidayOverlapWeekend(Date date) {
+    public boolean checkHolidayOverlapWeekend(LocalDate date) {
         if (date == null) {
             return false;
         }
@@ -68,16 +63,14 @@ public class CalendarCheck {
         return checkWeekend(date);
     }
 
-    public boolean checkSubstituteHoliday(Date date) {
+    public boolean checkSubstituteHoliday(LocalDate date) {
         if (date == null) {
             return false;
         }
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int year = cal.get(Calendar.YEAR);
+        int day = date.getDayOfMonth();
+        int month = date.getMonthValue();
+        int year = date.getYear();
 
         HolidayDAO holidayDao = new HolidayDAO();
         HolidayCalendarDAO calendarDao = new HolidayCalendarDAO();
@@ -90,12 +83,11 @@ public class CalendarCheck {
         List<Holiday> holidays = holidayDao.getHolidaysByCalendar(calendar.getCalendarID());
 
         for (Holiday holiday : holidays) {
-            Calendar holidayCal = Calendar.getInstance();
-            holidayCal.setTime(holiday.getDateHoliday());
-            int holidayDay = holidayCal.get(Calendar.DAY_OF_MONTH);
-            int holidayMonth = holidayCal.get(Calendar.MONTH) + 1;
+            LocalDate holidayDate = holiday.getDateHoliday().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
 
-            if (holidayDay == day && holidayMonth == month) {
+            if (holidayDate.getDayOfMonth() == day && holidayDate.getMonthValue() == month) {
                 return holiday.isSubstitute();
             }
         }
