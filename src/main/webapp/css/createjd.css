@@ -1,123 +1,155 @@
+/* Sử dụng Font-Family và nền chung */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(to right, #7DE2FC, #B9B6E5);
+    font-family: 'Arial', sans-serif;
+    background-color: #e9ecef; /* Nền xám nhạt */
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: flex-start; /* Căn trên cùng */
+    padding: 40px 20px;
+    min-height: 100vh;
+    margin: 0;
 }
 
+/* Container chính cho form */
 .container {
     background-color: #ffffff;
-    padding: 40px 50px;
-    border-radius: 12px;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
-    max-width: 420px;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Bóng đổ mềm mại */
     width: 100%;
-    text-align: center;
+    max-width: 650px; /* Giới hạn chiều rộng của form */
 }
 
+/* Tiêu đề */
 h2 {
-    color: #333333;
-    margin-bottom: 25px;
+    text-align: center;
+    color: #0d6efd; /* Màu xanh primary */
+    margin-bottom: 30px;
+    font-weight: 700;
+    border-bottom: 2px solid #f8f9fa;
+    padding-bottom: 15px;
+}
+
+/* Form Styling */
+form {
+    display: grid;
+    /* Chia lưới thành 2 cột: 1 cho label, 1 cho input */
+    grid-template-columns: 150px 1fr;
+    gap: 15px 20px;
+    align-items: center;
+}
+
+/* Label Styling */
+label {
     font-weight: 600;
+    color: #495057;
+    text-align: right;
+    padding-right: 10px;
 }
 
-form label {
-    display: block;
-    text-align: left;
-    color: #444;
-    font-weight: 500;
-    margin-bottom: 5px;
-}
-
-form input[type="text"],
-form input[type="password"],
-form input[type="number"],
-form input[type="date"],
-form textarea,
-form select {
+/* Input, Textarea, và SELECT Styling MỚI */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea,
+select /* THÊM SELECT VÀO ĐÂY */
+{
     width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    background-color: #fdfdfd;
-    transition: border-color 0.3s ease;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box; 
+    /* Đảm bảo chiều cao của select khớp với input */
+    height: 42px; 
+    appearance: none; /* Tắt giao diện mặc định của trình duyệt cho select */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"); /* Thêm mũi tên tùy chỉnh */
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
 }
 
-form input:focus,
-form textarea:focus,
-form select:focus {
-    border-color: #00c4cc;
+input:focus,
+textarea:focus,
+select:focus /* THÊM SELECT VÀO ĐÂY */
+{
+    border-color: #0d6efd; /* Highlight khi focus */
     outline: none;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
-.btn-primary {
-    background-color: #7DE2FC;
+/* Textarea (cho Responsibilities, Requirements, Working Conditions) */
+textarea {
+    resize: vertical; /* Chỉ cho phép kéo dãn theo chiều dọc */
+    min-height: 80px;
+    height: auto; /* Loại bỏ chiều cao cố định để dùng min-height */
+}
+
+/* --- Button Group --- */
+.button-group {
+    /* Đặt button-group chiếm toàn bộ chiều rộng hàng (2 cột) */
+    grid-column: 1 / span 2;
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #f8f9fa;
+}
+
+.button-group button {
+    padding: 10px 25px;
     border: none;
-    color: #fff;
-    padding: 12px 0;
-    border-radius: 6px;
-    font-size: 1rem;
+    border-radius: 5px;
     font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.2s ease;
     cursor: pointer;
+    transition: background-color 0.3s, opacity 0.3s;
+    margin: 0 10px;
+    min-width: 120px;
+}
+
+/* Nút Save (Primary) */
+.btn-primary {
+    background-color: #0d6efd;
+    color: #ffffff;
 }
 
 .btn-primary:hover {
-    background-color: #57c7e0;
-    transform: scale(1.02);
+    background-color: #0b5ed7;
 }
 
+/* Nút Cancel (Secondary) */
 .btn-secondary {
     background-color: #6c757d;
-    color: #fff;
-    border: none;
-    padding: 12px 0;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    cursor: pointer;
+    color: #ffffff;
 }
 
 .btn-secondary:hover {
-    background-color: #5a6268;
-    transform: scale(1.02);
+    background-color: #5c636a;
 }
 
-/* 👉 Căn 2 nút nằm ngang */
-.button-group {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    margin-top: 10px;
-}
-
-.button-group .btn-primary,
-.button-group .btn-secondary {
-    flex: 1;
-}
-
-/* Thông báo */
-.alert-info {
-    background-color: #eaf9ff;
-    color: #0b5c8e;
-    border-left: 5px solid #7DE2FC;
-    padding: 10px 15px;
-    border-radius: 6px;
-    margin-bottom: 20px;
-}
-
-textarea {
-    resize: vertical;
-}
-
-@media (max-width: 768px) {
+/* Responsive adjustments for smaller screens */
+@media (max-width: 700px) {
     .container {
-        padding: 25px;
+        padding: 20px;
     }
-    h2 {
-        font-size: 1.4rem;
+
+    form {
+        /* Chuyển sang bố cục 1 cột trên màn hình nhỏ */
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    label {
+        text-align: left; /* Căn trái label */
+        padding-right: 0;
+    }
+
+    .button-group {
+        grid-column: 1 / span 1; /* Chiếm 1 cột */
+    }
+
+    .button-group button {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
     }
 }

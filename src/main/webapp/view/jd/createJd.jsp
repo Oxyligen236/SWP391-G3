@@ -1,6 +1,9 @@
 <%@ page import="java.sql.*, java.time.LocalDate" %>
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -12,6 +15,11 @@
 
         <div class="container">
             <h2>Create Job Description</h2>
+
+            <c:if test="${not empty error}">
+                <p style="color:red;">${error}</p>
+            </c:if>
+
             <form action="<%= request.getContextPath() %>/createjd" method="post">
 
 <!--                <input type="hidden" name="ticketID" value="${param.ticketID}">-->
@@ -28,7 +36,14 @@
                 <input type="date" id="endDate" name="endDate" required>
 
                 <label for="department">Department:</label>
-                <input type="text" id="department" name="department" required>
+                <select name="departmentName" id="department">
+                    <c:forEach var="d" items="${departments}">
+                        <option value="${d.name}">${d.name}</option>
+                    </c:forEach>
+                </select>
+
+
+
 
                 <label for="vacancies">Vacancies:</label>
                 <input type="number" id="vacancies" name="vacancies" required>

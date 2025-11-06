@@ -24,7 +24,7 @@ public class GetUserServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         if (userID == null || userID.trim().isEmpty()) {
-            out.print("{\"found\":false,\"message\":\"Mã nhân viên trống\"}");
+            out.print("{\"found\":false,\"message\":\"User ID is required\"}");
             return;
         }
 
@@ -37,11 +37,11 @@ public class GetUserServlet extends HttpServlet {
                 String nameEscaped = user.getFullname() != null ? user.getFullname().replace("\"", "\\\"") : "";
                 out.print("{\"found\":true,\"name\":\"" + nameEscaped + "\"}");
             } else {
-                out.print("{\"found\":false,\"message\":\"Không tìm thấy mã nhân viên\"}");
+                out.print("{\"found\":false,\"message\":\"User not found\"}");
             }
         } catch (Exception e) {
             response.setStatus(500);
-            out.print("{\"found\":false,\"message\":\"Lỗi server: " + e.getMessage().replace("\"","\\\"") + "\"}");
+            out.print("{\"found\":false,\"message\":\"Server error: " + e.getMessage().replace("\"","\\\"") + "\"}");
         }
     }
 }

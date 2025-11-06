@@ -1,7 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<% 
+    // Create DateTimeFormatter for dd/MM/yyyy format
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    pageContext.setAttribute("dateFormatter", formatter);
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +15,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contract List</title>
     <link rel="stylesheet" href="<c:url value='/css/contract-list.css'/>" />
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
     <div class="contract-container">
         <h1>Contract List</h1>
+
+        <!-- Success Message -->
+        <c:if test="${not empty successMessage}">
+            <div style="padding: 15px; margin-bottom: 20px; background-color: #d4edda; 
+                        border: 1px solid #c3e6cb; border-radius: 4px; color: #155724;">
+                <strong>Success!</strong> ${successMessage}
+            </div>
+        </c:if>
 
         <!-- Filter and Sort Section -->
         <form action="${pageContext.request.contextPath}/viewContracts" method="get" id="searchForm">
@@ -35,10 +53,12 @@
 
             <!-- Date Range Input for date fields -->
             <div id="dateInputWrapper" style="display:none; flex: 1;">
-                <input type="date" id="fromDate" name="fromDate" 
-                       value="${fromDate}" placeholder="From" />
-                <input type="date" id="toDate" name="toDate" 
-                       value="${toDate}" placeholder="To" />
+                <input type="text" id="fromDate" name="fromDate" 
+                       value="${fromDate}" placeholder="From (dd/mm/yyyy)" />
+                <input type="hidden" id="fromDateISO" name="fromDateISO" />
+                <input type="text" id="toDate" name="toDate" 
+                       value="${toDate}" placeholder="To (dd/mm/yyyy)" />
+                <input type="hidden" id="toDateISO" name="toDateISO" />
             </div>
 
             <!-- Sort Field -->
@@ -60,6 +80,8 @@
         </form>
 
         <script>
+            let fromDatePicker, toDatePicker;
+            
             function onFieldChange() {
                 var field = document.getElementById('searchField').value;
                 var textInput = document.getElementById('searchValue');
@@ -74,6 +96,29 @@
             }
 
             window.addEventListener('DOMContentLoaded', function () {
+                // Initialize Flatpickr for date inputs
+                fromDatePicker = flatpickr('#fromDate', {
+                    dateFormat: 'd/m/Y',
+                    onChange: function(selectedDates, dateStr, instance) {
+                        if (selectedDates.length > 0) {
+                            document.getElementById('fromDateISO').value = selectedDates[0].toISOString().split('T')[0];
+                        } else {
+                            document.getElementById('fromDateISO').value = '';
+                        }
+                    }
+                });
+
+                toDatePicker = flatpickr('#toDate', {
+                    dateFormat: 'd/m/Y',
+                    onChange: function(selectedDates, dateStr, instance) {
+                        if (selectedDates.length > 0) {
+                            document.getElementById('toDateISO').value = selectedDates[0].toISOString().split('T')[0];
+                        } else {
+                            document.getElementById('toDateISO').value = '';
+                        }
+                    }
+                });
+
                 onFieldChange();
             });
         </script>
@@ -114,8 +159,15 @@
                                 </c:otherwise>
                             </c:choose>
                         </td>
-                        <td>${contract.startDate}</td>
-                        <td>${contract.endDate}</td>
+                        <td>${contract.startDate.format(dateFormatter)}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${not empty contract.endDate}">
+                                    ${contract.endDate.format(dateFormatter)}
+                                </c:when>
+                                <c:otherwise>-</c:otherwise>
+                            </c:choose>
+                        </td>
                         <td>${contract.duration}</td>
                         <td><fmt:formatNumber value="${contract.baseSalary}" type="number" groupingUsed="true" /> VNĐ</td>
                         <td>${contract.contractTypeName}</td>

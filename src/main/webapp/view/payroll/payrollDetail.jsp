@@ -73,13 +73,6 @@
                         </div>
                     </c:if>
 
-                    <c:if test="${payrollDetail.status == 'Paid'}">
-                        <div style="padding: 10px; background-color: #fff3cd; border: 1px solid #ffc107; 
-                                    border-radius: 4px; margin-bottom: 15px; color: #856404;">
-                            <strong>Note:</strong> This payroll has been paid and cannot be edited.
-                        </div>
-                    </c:if>
-
                     <table>
                         <thead>
                             <tr>

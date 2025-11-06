@@ -1,12 +1,16 @@
 package hrms.controller.contract;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import hrms.dao.AccountDAO;
 import hrms.dao.PositionDAO;
 import hrms.dao.UserDAO;
 import hrms.dao.contract.ContractDAO;
 import hrms.dao.contract.ContractTypeDAO;
+import hrms.model.Account;
 import hrms.model.Contract;
 import hrms.model.ContractType;
 import jakarta.servlet.ServletException;
@@ -30,6 +34,19 @@ public class CreateContractServlet extends HttpServlet {
         UserDAO userDAO = new UserDAO();
         List<hrms.model.User> users = userDAO.getAll();
         request.setAttribute("signers", users);
+
+        // Get all accounts to check roles
+        AccountDAO accountDAO = new AccountDAO();
+        List<Account> accounts = accountDAO.getAllAccounts();
+        
+        // Create a map of userID -> role for easy lookup in JSP
+        Map<Integer, Integer> userRoles = new HashMap<>();
+        for (Account acc : accounts) {
+            if (acc.isIsActive()) { // Only include active accounts
+                userRoles.put(acc.getUserID(), acc.getRole());
+            }
+        }
+        request.setAttribute("userRoles", userRoles);
 
         request.getRequestDispatcher("/view/contract/createContract.jsp").forward(request, response);
     }
