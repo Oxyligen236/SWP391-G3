@@ -4,8 +4,7 @@
     <nav id="sidebar" class="sidebar-wrapper">
       <div class="sidebar-content" data-simplebar style="height: calc(100% - 60px)">
         <div class="sidebar-brand">
-          <a href="javascript:void(0)"
-            onclick='loadInFrame("<c:url value="/view/home/content/dashboard_employee.jsp"/>")'>
+          <a href="<c:url value='/landing'/>">
             <img src="<c:url value='/picture/hrms-removebg-preview.png'/>" height="24" class="logo-light-mode"
               alt="HRMS" />
             HRMS

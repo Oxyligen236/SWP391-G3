@@ -48,6 +48,22 @@ public class CreateContractServlet extends HttpServlet {
         }
         request.setAttribute("userRoles", userRoles);
 
+        // Nhận userId từ URL parameter (nếu có)
+        String userIdParam = request.getParameter("userId");
+        if (userIdParam != null && !userIdParam.trim().isEmpty()) {
+            request.setAttribute("prefilledUserId", userIdParam);
+            // Tự động tìm thông tin user để hiển thị tên
+            try {
+                int userId = Integer.parseInt(userIdParam);
+                hrms.model.User user = userDAO.getUserById(userId);
+                if (user != null) {
+                    request.setAttribute("prefilledUserName", user.getFullname());
+                }
+            } catch (NumberFormatException e) {
+                // Ignore invalid userId
+            }
+        }
+
         request.getRequestDispatcher("/view/contract/createContract.jsp").forward(request, response);
     }
     @Override

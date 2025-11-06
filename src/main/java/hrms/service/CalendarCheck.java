@@ -40,15 +40,15 @@ public class CalendarCheck {
 
         List<Holiday> holidays = holidayDao.getHolidaysByCalendar(calendar.getCalendarID());
 
-        for (Holiday holiday : holidays) {
-            LocalDate holidayDate = holiday.getDateHoliday();
-            int holidayDay = holidayDate.getDayOfMonth();
-            int holidayMonth = holidayDate.getMonthValue();
+        // for (Holiday holiday : holidays) {
+        //     LocalDate holidayDate = holiday.getDateHoliday();
+        //     int holidayDay = holidayDate.getDayOfMonth();
+        //     int holidayMonth = holidayDate.getMonthValue();
 
-            if (holidayDay == day && holidayMonth == month) {
-                return true;
-            }
-        }
+        //     if (holidayDay == day && holidayMonth == month) {
+        //         return true;
+        //     }
+        // }
 
         return false;
     }
@@ -90,15 +90,15 @@ public class CalendarCheck {
 
         List<Holiday> holidays = holidayDao.getHolidaysByCalendar(calendar.getCalendarID());
 
-        for (Holiday holiday : holidays) {
-            LocalDate holidayDate = holiday.getDateHoliday();
-            int holidayDay = holidayDate.getDayOfMonth();
-            int holidayMonth = holidayDate.getMonthValue();
+        // for (Holiday holiday : holidays) {
+        //     LocalDate holidayDate = holiday.getDateHoliday();
+        //     int holidayDay = holidayDate.getDayOfMonth();
+        //     int holidayMonth = holidayDate.getMonthValue();
 
-            if (holidayDay == day && holidayMonth == month) {
-                return holiday.isSubstitute();
-            }
-        }
+        //     if (holidayDay == day && holidayMonth == month) {
+        //         return holiday.isSubstitute();
+        //     }
+        // }
 
         return false;
     }

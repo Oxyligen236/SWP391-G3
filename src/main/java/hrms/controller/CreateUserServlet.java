@@ -120,9 +120,8 @@ public class CreateUserServlet extends HttpServlet {
         Integer userId = userDao.createUserReturnId(user);
         if (userId != null) {
             request.setAttribute("success", "User created successfully! User ID: " + userId);
-            request.setAttribute("success", "User created successfully! User ID: " + userId);
+            request.setAttribute("newUserId", userId); // Thêm userId để truyền sang popup
         } else {
-            request.setAttribute("error", "User creation failed!");
             request.setAttribute("error", "User creation failed!");
         }
 
