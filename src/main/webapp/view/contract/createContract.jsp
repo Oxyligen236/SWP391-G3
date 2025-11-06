@@ -266,7 +266,7 @@
             <div class="field-group">
               <label for="userID">User ID <span class="required">*</span></label>
               <div class="search-group">
-                <input type="text" id="userID" name="userID" required placeholder="Enter User ID" />
+                <input type="text" id="userID" name="userID" required placeholder="Enter User ID" value="${prefilledUserId}" />
                 <button type="button" id="findUserBtn" class="btn-search">Search</button>
               </div>
               <div id="userError" class="invalid-feedback"></div>
@@ -275,7 +275,7 @@
             <!-- Full Name (readonly) -->
             <div class="field-group">
               <label for="name">Full Name</label>
-              <input type="text" id="name" name="name" required readonly placeholder="Auto-filled after search" />
+              <input type="text" id="name" name="name" required readonly placeholder="Auto-filled after search" value="${prefilledUserName}" />
             </div>
 
             <!-- Position -->
