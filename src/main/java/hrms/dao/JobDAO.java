@@ -174,5 +174,21 @@ public class JobDAO extends DBContext {
 
         return list;
     }
+    
+public void autoCancelExpiredJobs() {
+    String sql = "UPDATE Job_Description " +
+                 "SET status = 'Cancelled' " +
+                 "WHERE JobID >= 1 AND endDate < CURDATE() AND status != 'Cancelled'";
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        int rows = ps.executeUpdate();
+        System.out.println("Auto cancelled jobs: " + rows);
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+
+
 
 }

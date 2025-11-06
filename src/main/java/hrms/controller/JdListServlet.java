@@ -29,6 +29,7 @@ public class JdListServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         try {
+            dao.autoCancelExpiredJobs();
             String search = request.getParameter("search");
             String departmentFilter = request.getParameter("department");
             String statusFilter = request.getParameter("status");
@@ -41,7 +42,7 @@ public class JdListServlet extends HttpServlet {
             request.setAttribute("search", search);
             request.setAttribute("departmentFilter", departmentFilter);
             request.setAttribute("statusFilter", statusFilter);
-            
+
             DepartmentDAO d = new DepartmentDAO();
             List<Department> departments = d.getAll();
             request.setAttribute("departments", departments);
