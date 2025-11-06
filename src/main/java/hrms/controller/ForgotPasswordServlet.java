@@ -14,8 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/forgot-password")
 public class ForgotPasswordServlet extends HttpServlet {
 
-    // Email admin nhận yêu cầu reset password
-    private static final String ADMIN_EMAIL = "admin@yourcompany.com";
+    private static final String ADMIN_EMAIL = "pqm1290@gmail.com";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -41,7 +40,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         String body = request.getParameter("body");
 
         if (userEmail == null || userEmail.trim().isEmpty()) {
-            request.setAttribute("errorMessage", "Enter your email address!");
+            request.setAttribute("errorMessage", "Please enter your email address!");
             request.getRequestDispatcher("/view/authenticate/forgotPassword.jsp").forward(request, response);
             return;
         }
@@ -56,27 +55,27 @@ public class ForgotPasswordServlet extends HttpServlet {
 
         String adminSubject = (subject != null && !subject.trim().isEmpty())
                 ? subject
-                : "Password Reset Request";
+                : "Password Reset Request from " + user.getFullname();
 
-        String adminBody = String.format(
-                "<h3>Password Reset Request</h3>"
-                + "<p><strong>User Email:</strong> %s</p>"
-                + "<p><strong>User Name:</strong> %s</p>"
-                + "<p><strong>Message:</strong></p>"
-                + "<p>%s</p>",
-                userEmail,
-                user.getFullname() != null ? user.getFullname() : "N/A",
-                body != null && !body.trim().isEmpty() ? body : "User requested password reset."
-        );
+        String adminBody = (body != null && !body.trim().isEmpty())
+                ? body
+                : "I forgot my password. Please help me reset it.";
 
         EmailService emailService = new EmailService();
-        // Gửi email ĐẾN admin, không phải đến user
-        boolean sent = emailService.sendForgotPasswordEmail(ADMIN_EMAIL, adminSubject, adminBody);
+        boolean sent = emailService.sendForgotPasswordEmail(
+                ADMIN_EMAIL,
+                userEmail,
+                user.getFullname(),
+                adminSubject,
+                adminBody
+        );
 
         if (sent) {
-            request.setAttribute("successMessage", "Your password reset request has been sent to admin!");
+            request.setAttribute("successMessage",
+                    "Your password reset request has been sent successfully! Admin will contact you via email.");
         } else {
-            request.setAttribute("errorMessage", "Unable to send request. Please try again!");
+            request.setAttribute("errorMessage",
+                    "Unable to send request. Please try again later!");
         }
 
         request.getRequestDispatcher("/view/authenticate/forgotPassword.jsp").forward(request, response);

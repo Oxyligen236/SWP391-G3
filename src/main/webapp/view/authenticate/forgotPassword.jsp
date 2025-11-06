@@ -31,8 +31,8 @@
                         <input type="text" id="subject" name="subject" placeholder="Password reset request" required>
 
                         <label for="body">Additional message:</label>
-                        <textarea id="body" name="body" rows="4" placeholder="Provide additional details for admin"
-                            required></textarea>
+                        <textarea id="body" name="body" rows="4"
+                            placeholder="Please provide additional details for admin" required></textarea>
 
                         <button type="submit">Send request to admin</button>
                     </form>
