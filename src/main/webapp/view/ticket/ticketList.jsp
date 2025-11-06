@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isELIgnored="false" %>
@@ -13,10 +14,9 @@
     <div class="container mt-4">
         <h4 class="text-primary mb-4">My Tickets</h4>
 
-     
+   
         <form action="${pageContext.request.contextPath}/ticketList" method="get" class="row g-3 mb-4">
             
-      
             <div class="col-md-2">
                 <label class="form-label">Sort By</label>
                 <select name="sortBy" class="form-select">
@@ -43,7 +43,6 @@
                 </select>
             </div>
 
-        
             <div class="col-md-3">
                 <label class="form-label">Type</label>
                 <select name="type" class="form-select">
@@ -57,9 +56,7 @@
                 </select>
             </div>
 
-      
             <div class="col-md-3 d-flex align-items-end gap-2">
- 
                 <input type="hidden" name="itemsPerPage" value="${itemsPerPage}" />
                 
                 <button type="submit" class="btn btn-primary flex-fill">
@@ -71,64 +68,82 @@
             </div>
         </form>
 
-
-        <table class="table table-bordered table-hover text-center">
-            <thead class="table-primary">
-                <tr>
-                    <th>No</th>
-                    <th>Type</th>
-                    <th>Content</th>
-                    <th>Create Date</th>
-                    <th>Status</th>
-                    <th>Approve Date</th>
-                    <th>Comment</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:if test="${empty ticketList}">
+     
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-center align-middle">
+                <thead class="table-primary">
                     <tr>
-                        <td colspan="7" class="text-danger fw-bold">No tickets found</td>
+                        <th>No</th>
+                        <th>Type</th>
+                        <th>Content</th>
+                        <th>Create Date</th>
+                        <th>Status</th>
+                        <th>Approve Date</th>
+                        <th>Comment</th>
+                        <th>Action</th> 
                     </tr>
-                </c:if>
+                </thead>
+                <tbody>
+                    <c:if test="${empty ticketList}">
+                        <tr>
+                            <td colspan="8" class="text-danger fw-bold">No tickets found</td>
+                        </tr>
+                    </c:if>
 
-                <c:forEach var="t" items="${ticketList}" varStatus="status">
-                    <tr>
-                        <td>${(currentPage - 1) * itemsPerPage + status.index + 1}</td>
-                        <td>${t.ticketTypeName}</td>
-                        <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            ${t.ticket_Content}
-                        </td>
-                        <td>${t.create_Date}</td>
-                        <td>
-                            <span class="badge ${t.status == 'Approved' ? 'bg-success' : 
-                                               t.status == 'Rejected' ? 'bg-danger' : 'bg-warning'}">
-                                ${t.status}
-                            </span>
-                        </td>
-                        <td>${t.approve_Date != null ? t.approve_Date : '-'}</td>
-                        <td>${t.comment != null ? t.comment : '-'}</td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                    <c:forEach var="t" items="${ticketList}" varStatus="status">
+                        <tr>
+                            <td>${(currentPage - 1) * itemsPerPage + status.index + 1}</td>
+                            <td>${t.ticketTypeName}</td>
+                            <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                ${t.ticket_Content}
+                            </td>
+                            <td>${t.create_Date}</td>
+                            <td>
+                                <span class="badge ${t.status == 'Approved' ? 'bg-success' : 
+                                                   t.status == 'Rejected' ? 'bg-danger' : 'bg-warning'}">
+                                    ${t.status}
+                                </span>
+                            </td>
+                            <td>${t.approve_Date != null ? t.approve_Date : '-'}</td>
+                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                ${t.comment != null ? t.comment : '-'}
+                            </td>
+                            
+                       
+                            <td>
+                                <c:choose>
+                                    <%-- Kiểm tra: Type = Recruitment (3) AND Status = Approved --%>
+                                    <c:when test="${t.ticket_Type_ID == 3 && t.status == 'Approved'}">
+                                        <a href="${pageContext.request.contextPath}/createjd?ticketID=${t.ticketID}" 
+                                           class="btn btn-sm btn-success">
+                                            <i class="bi"></i> Create JD
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="text-muted">-</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
 
-
+        <!-- Pagination -->
         <div class="d-flex justify-content-between align-items-center mt-4">
- 
             <form action="${pageContext.request.contextPath}/ticketList" method="get" class="d-flex align-items-center">
                 <label class="me-2">Items per page:</label>
                 <input type="number" name="itemsPerPage" value="${itemsPerPage}" 
                        class="form-control w-auto me-2" min="1" max="50" style="width: 80px;" />
                 <button type="submit" class="btn btn-sm btn-primary">Set</button>
                 
-  
                 <input type="hidden" name="status" value="${selectedStatus}" />
                 <input type="hidden" name="type" value="${selectedType}" />
                 <input type="hidden" name="sortBy" value="${sortBy}" />
                 <input type="hidden" name="sortOrder" value="${sortOrder}" />
                 <input type="hidden" name="page" value="1" />
             </form>
-
 
             <nav>
                 <ul class="pagination mb-0">
