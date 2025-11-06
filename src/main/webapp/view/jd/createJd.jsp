@@ -22,9 +22,9 @@
 
             <form action="<%= request.getContextPath() %>/createjd" method="post">
 
-<!--                <input type="hidden" name="ticketID" value="${param.ticketID}">-->
-                <label for="TicketId">TicketId:</label>
-                <input type="number" id="ticketid" name="ticketID" required>
+               <input type="hidden" name="ticketID" value="${not empty ticketID ? ticketID : param.ticketID}">
+
+
 
                 <label for="jobTitle">Job Title:</label>
                 <input type="text" id="jobTitle" name="jobTitle" required>
