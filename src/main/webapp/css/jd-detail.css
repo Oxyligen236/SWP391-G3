@@ -1,0 +1,142 @@
+/*
+ * File: jd-detail.css
+ * Mô tả: CSS tùy chỉnh cho trang Chi tiết Mô tả Công việc (Job Description Detail)
+ */
+
+body {
+    background-color: #f8f9fa; /* Màu nền nhẹ nhàng cho toàn trang */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.container {
+    max-width: 1100px; /* Giới hạn độ rộng container */
+}
+
+/* Tiêu đề chính */
+.display-6 {
+    font-weight: 700;
+    color: #007bff !important; /* Đảm bảo màu xanh primary của Bootstrap */
+}
+
+/* Thẻ Card */
+.card {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-3px); /* Hiệu ứng nhấc nhẹ khi di chuột */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+}
+
+/* Header của Card chính (Job Title) */
+.card-header.bg-primary {
+    background-color: #007bff !important;
+    color: white !important;
+}
+
+/* Description List (dl) - Dùng cho thông tin cơ bản */
+.row dt {
+    font-weight: 600;
+    color: #555;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.row dd {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+/* Nội dung dài (Responsibilities, Requirements) */
+.card-body p {
+    line-height: 1.8; /* Tăng khoảng cách dòng cho dễ đọc */
+    white-space: pre-wrap; /* Giữ định dạng xuống dòng nếu có */
+}
+
+/* List Group (Thông tin bổ sung) */
+.list-group-item {
+    border-color: #eee;
+}
+
+.list-group-item h6 {
+    font-size: 0.95rem;
+    color: #007bff;
+}
+
+/* Nút Hành động */
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.btn-success {
+    background-color: #28a745; /* Màu xanh lá nổi bật cho nút chính */
+    border-color: #28a745;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Cảnh báo (khi không tìm thấy JD) */
+.alert-warning {
+    border-radius: 8px;
+    font-size: 1.1rem;
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+/* Khu vực nút hành động */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Style chung cho nút */
+.action-buttons .btn {
+    border-radius: 10px;
+    padding: 0.7rem 1.4rem;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.25s ease;
+}
+
+/* Hiệu ứng hover */
+.action-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* Màu riêng cho từng nút */
+.action-buttons .btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.action-buttons .btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.action-buttons .btn-success {
+    background-color: #28a745;
+    border: none;
+}
+
+.action-buttons .btn-success:hover {
+    background-color: #218838;
+}

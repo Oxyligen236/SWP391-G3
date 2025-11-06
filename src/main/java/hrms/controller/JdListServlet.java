@@ -1,10 +1,12 @@
 package hrms.controller;
 
+import hrms.dao.DepartmentDAO;
 import java.io.IOException;
 import java.util.List;
 
 import hrms.dao.JobDAO;
 import hrms.model.Account;
+import hrms.model.Department;
 import hrms.model.JobDescription;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -39,6 +41,10 @@ public class JdListServlet extends HttpServlet {
             request.setAttribute("search", search);
             request.setAttribute("departmentFilter", departmentFilter);
             request.setAttribute("statusFilter", statusFilter);
+            
+            DepartmentDAO d = new DepartmentDAO();
+            List<Department> departments = d.getAll();
+            request.setAttribute("departments", departments);
 
             request.getRequestDispatcher("/view/jd/jdlist.jsp").forward(request, response);
 
@@ -48,5 +54,5 @@ public class JdListServlet extends HttpServlet {
         }
 
     }
-    
+
 }

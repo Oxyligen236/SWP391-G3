@@ -1,91 +1,143 @@
+/* ================================================= */
+/* GLOBAL STYLES */
+/* ================================================= */
+
 body {
-    font-family: "Segoe UI", sans-serif;
-    background-color: #f5f7fb;
+    background-color: #f8f9fa; /* Nền nhẹ */
+    font-family: 'Arial', sans-serif;
 }
 
-/* Container */
 .container {
-    background: #fff;
-    border-radius: 14px;
-    padding: 24px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    max-width: 1400px; /* Tận dụng không gian màn hình rộng */
 }
 
-/* Tiêu đề */
 h2 {
+    color: #0d6efd; /* Màu xanh primary */
     font-weight: 700;
-    color: #2c3e50;
 }
 
-/* Bảng */
+/* --- Form Search + Filter --- */
+.form-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+/* ================================================= */
+/* TABLE STYLES (JOB DESCRIPTION LIST) */
+/* ================================================= */
+
 .table {
-    border-radius: 10px;
-    overflow: hidden;
-    background: white;
+    margin-top: 20px;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+    width: 100%;
+    /* QUAN TRỌNG: Buộc bảng tôn trọng chiều rộng đã đặt cho các cột */
+    table-layout: fixed; 
 }
 
-.table thead th {
-    background-color: #f0f3f7;
-    color: #333;
+/* Header của bảng */
+.table-dark th {
+    background-color: #343a40;
+    color: #ffffff;
     font-weight: 600;
-    border-bottom: 2px solid #dee2e6;
-}
-
-.table-hover tbody tr:hover {
-    background-color: #fafafa;
-}
-
-/* Cột mô tả dài */
-td:nth-child(7),
-td:nth-child(8),
-td:nth-child(9) {
-    max-width: 240px;
-    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap; 
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-td:nth-child(7):hover,
-td:nth-child(8):hover,
-td:nth-child(9):hover {
-    white-space: normal;
-    background-color: #f9f9f9;
-    position: relative;
-    z-index: 2;
+/* Hover effect */
+.table-hover tbody tr:hover {
+    background-color: #e9ecef;
 }
 
-/* Trạng thái */
-.status {
-    font-weight: 600;
+/* ------------------------------------------------- */
+/* I. COLUMN WIDTHS OPTIMIZATION (Đã Tối Ưu) */
+/* ------------------------------------------------- */
+/* Thiết lập chiều rộng cố định cho từng cột để tránh cuộn ngang */
+.table th:nth-child(1), .table td:nth-child(1) { width: 50px; }  /* 1. ID */
+.table th:nth-child(2), .table td:nth-child(2) { width: 140px; } /* 2. Title */
+.table th:nth-child(3), .table td:nth-child(3) { width: 100px; } /* 3. Start Date (FIXED: Tăng lên 100px) */
+.table th:nth-child(4), .table td:nth-child(4) { width: 100px; } /* 4. End Date (FIXED: Tăng lên 100px) */
+.table th:nth-child(5), .table td:nth-child(5) { width: 100px; } /* 5. Department */
+.table th:nth-child(6), .table td:nth-child(6) { width: 80px; }  /* 6. Vacancies */
+
+.table th:nth-child(7), .table td:nth-child(7) { width: 160px; } /* 7. Responsibilities (Giảm nhẹ để bù không gian) */
+.table th:nth-child(8), .table td:nth-child(8) { width: 160px; } /* 8. Requirements (Giảm nhẹ để bù không gian) */
+.table th:nth-child(9), .table td:nth-child(9) { width: 120px; } /* 9. Compensation */
+
+.table th:nth-child(10), .table td:nth-child(10) { width: 100px; } /* 10. Status */
+.table th:nth-child(11), .table td:nth-child(11) { width: 180px; } /* 11. Actions */
+
+
+/* ------------------------------------------------- */
+/* II. CONTENT TRUNCATION (Xử lý dấu '...') */
+/* ------------------------------------------------- */
+.table tbody td:nth-child(2), /* Title */
+.table tbody td:nth-child(5), /* Department */
+.table tbody td:nth-child(7), /* Responsibilities */
+.table tbody td:nth-child(8), /* Requirements */
+.table tbody td:nth-child(9)  /* Compensation */
+{
+    white-space: nowrap;        /* Ngăn nội dung xuống dòng */
+    overflow: hidden;           /* Ẩn phần bị tràn */
+    text-overflow: ellipsis;    /* Hiển thị dấu ba chấm */
+    text-align: left;
+    /* Giảm padding ngang để tối ưu không gian hiển thị text */
+    padding-right: 5px;
+    padding-left: 5px;
 }
-.status.Pending { color: #e67e22; }
-.status.InProgress { color: #2980b9; }
-.status.Completed { color: #27ae60; }
-.status.Cancelled { color: #e74c3c; }
 
-/* Nút */
-.btn {
-    border-radius: 6px;
-    transition: all 0.2s ease;
+/* ------------------------------------------------- */
+/* III. TEXT ALIGNMENT */
+/* ------------------------------------------------- */
+.table tbody td:nth-child(1), /* ID */
+.table tbody td:nth-child(3), /* Start Date */
+.table tbody td:nth-child(4), /* End Date */
+.table tbody td:nth-child(6), /* Vacancies */
+.table tbody td:nth-child(10), /* Status */
+.table tbody td:nth-child(11) /* Actions */
+{
+    text-align: center;
 }
 
-.btn-primary { background-color: #3498db; border: none; }
-.btn-primary:hover { background-color: #2d80b6; }
+/* ------------------------------------------------- */
+/* IV. STATUS BADGES (Đã FIX: Thêm Background Color và tăng Priority) */
+/* ------------------------------------------------- */
 
-.btn-warning { background-color: #f39c12; border: none; color: white; }
-.btn-warning:hover { background-color: #d68910; }
 
-.btn-danger { background-color: #e74c3c; border: none; }
-.btn-danger:hover { background-color: #c0392b; }
+/* Tăng độ ưu tiên bằng cách thêm .table */
+.table .Pending {
+color: #ffc107; /* Vàng */
 
-.btn-secondary { background-color: #95a5a6; border: none; }
-.btn-secondary:hover { background-color: #7f8c8d; }
+}
 
-/* Responsive */
-@media (max-width: 992px) {
-    .table td:nth-child(7),
-    .table td:nth-child(8),
-    .table td:nth-child(9) {
-        max-width: 150px;
-    }
+.table .InProgress {
+color: #0dcaf0; /* Xanh Cyan/Nhạt */
+
+}
+
+
+.table .Cancelled {
+color: #dc3545; /* Đỏ */
+
+}
+
+/* ------------------------------------------------- */
+/* V. ACTION BUTTONS */
+/* ------------------------------------------------- */
+.table tbody td:last-child {
+    white-space: nowrap; /* Đảm bảo các nút trên cùng dòng */
+}
+
+.table .btn-sm {
+    padding: 0.2rem 0.4rem; /* Giảm padding */
+    font-size: 0.75rem; /* Giảm cỡ chữ */
+    margin: 1px;
+    display: inline-block;
+}
+
+.alert {
+    border-radius: 0.5rem;
 }

@@ -10,6 +10,8 @@ import java.util.List;
 
 import hrms.model.Attendance;
 import hrms.utils.DBContext;
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class AttendanceDAO extends DBContext {
 
@@ -181,4 +183,31 @@ public class AttendanceDAO extends DBContext {
 
         return false;
     }
+    
+    public List<Attendance> getAttendanceByDateRange(LocalDate startDate, LocalDate endDate) {
+    List<Attendance> list = new ArrayList<>();
+    String sql = """
+        SELECT * 
+        FROM Attendance 
+        WHERE Date >= ? AND Date < ? 
+        ORDER BY UserID, Date
+    """;
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setDate(1, Date.valueOf(startDate));
+        ps.setDate(2, Date.valueOf(endDate));
+        
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            list.add(extractAttendance(rs));
+        }
+
+    } catch (SQLException e) {
+        System.err.println("Error in getAttendanceByDateRange: " + e.getMessage());
+        e.printStackTrace();
+    }
+
+    return list;
+}
 }
