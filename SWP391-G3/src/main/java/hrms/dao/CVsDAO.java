@@ -27,7 +27,9 @@ public class CVsDAO extends DBContext {
                 rs.getString(11),
                 rs.getString(12),
                 rs.getString(13),
-                rs.getString(14)
+                rs.getString(14),
+                rs.getString(15),
+                rs.getString(16)
         );
     }
 
@@ -77,22 +79,25 @@ public class CVsDAO extends DBContext {
     }
 
     public boolean addCV(CVs cv) {
-        String sql = "insert into CVs (jobID, name, birthdate, gender, address, nationality, mail, phone_number, experience, education, skills, aboutme, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into CVs (jobID, name, birth_date, gender, CCCD, address, nationality, mail, phone_number, degree, experience, education, skills, aboutme, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, cv.getJdID());
             st.setString(2, cv.getName());
             st.setDate(3, Date.valueOf(cv.getDob()));
             st.setString(4, cv.getGender());
-            st.setString(5, cv.getAddress());
-            st.setString(6, cv.getNationality());
-            st.setString(7, cv.getEmail());
-            st.setString(8, cv.getPhone());
-            st.setString(9, cv.getExperience());
-            st.setString(10, cv.getEducation());
-            st.setString(11, cv.getSkills());
-            st.setString(12, cv.getAboutMe());
-            st.setString(13, cv.getStatus());
+            st.setString(5, cv.getCCCD());
+            st.setString(6, cv.getAddress());
+            st.setString(7, cv.getNationality());
+            st.setString(8, cv.getEmail());
+            st.setString(9, cv.getPhone());
+            st.setString(10, cv.getDegree());
+            st.setString(11, cv.getExperience());
+            st.setString(12, cv.getEducation());
+            st.setString(13, cv.getSkills());
+            st.setString(14, cv.getAboutMe());
+            st.setString(15, cv.getStatus());
+
             int row = st.executeUpdate();
             return row > 0;
         } catch (SQLException e) {

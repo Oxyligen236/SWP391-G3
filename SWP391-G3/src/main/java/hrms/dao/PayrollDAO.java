@@ -367,7 +367,7 @@ public class PayrollDAO extends DBContext {
             )
             WHERE p.Payroll_ID = ?
         """;
-        
+
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, payrollId);
