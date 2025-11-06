@@ -19,16 +19,23 @@ public class CreateJdServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        DepartmentDAO dao = new DepartmentDAO();
-        List<Department> departments = dao.getAll();
-        request.setAttribute("departments", departments);
+@Override
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
 
-        request.getRequestDispatcher("/view/jd/createJd.jsp").forward(request, response);
 
+    String ticketIdParam = request.getParameter("ticketID");
+    if (ticketIdParam != null && !ticketIdParam.isEmpty()) {
+        request.setAttribute("ticketID", ticketIdParam);
     }
+
+    DepartmentDAO dao = new DepartmentDAO();
+    List<Department> departments = dao.getAll();
+    request.setAttribute("departments", departments);
+
+    request.getRequestDispatcher("/view/jd/createJd.jsp").forward(request, response);
+}
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
