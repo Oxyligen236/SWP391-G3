@@ -1,6 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<% 
+    // Create DateTimeFormatter for dd/MM/yyyy format
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    pageContext.setAttribute("dateFormatter", formatter);
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +20,7 @@
         <h1>My Contracts</h1>
         
         <div class="info-box">
-            <p>Danh sách tất cả các hợp đồng của bạn</p>
+            <p>List of all your contracts</p>
         </div>
 
         <!-- Error Message -->
@@ -25,7 +31,7 @@
         <c:choose>
             <c:when test="${empty contracts or contracts.size() == 0}">
                 <div class="no-data-msg">
-                    Bạn chưa có hợp đồng nào.
+                    You do not have any contracts.
                 </div>
             </c:when>
             <c:otherwise>
@@ -49,14 +55,14 @@
                             <tr>
                                 <td>${contract.contractId}</td>
                                 <td>${contract.contractTypeName}</td>
-                                <td>${contract.startDate}</td>
+                                <td>${contract.startDate.format(dateFormatter)}</td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${contract.endDate != null}">
-                                            ${contract.endDate}
+                                            ${contract.endDate.format(dateFormatter)}
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="muted">Không xác định</span>
+                                            <span class="muted">Unknown</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
@@ -102,7 +108,7 @@
 
                 <!-- Contract Count -->
                 <div class="bottom-bar">
-                    <div class="muted">Tổng số: <strong>${contracts.size()}</strong> hợp đồng</div>
+                    <div class="muted">Total: <strong>${contracts.size()}</strong> contracts</div>
                 </div>
             </c:otherwise>
         </c:choose>
