@@ -45,8 +45,8 @@
         <form action="<c:url value='/account/create'/>" method="post" id="createAccountForm">
             <div class="form-group">
                 <p>User ID:</p>
-                <input type="number" name="userID" required readonly
-                       value="<c:out value='${userID}'/>">
+                <input type="number" name="userId" required readonly
+                       value="<c:out value='${userId}'/>">
             </div>
 
             <div class="form-group">

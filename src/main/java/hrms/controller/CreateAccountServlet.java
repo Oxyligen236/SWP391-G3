@@ -22,22 +22,25 @@ public class CreateAccountServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Kiểm tra quyền admin (role = 5)
         Account currentUser = (Account) req.getSession().getAttribute("account");
         if (currentUser == null || currentUser.getRole() != 5) {
             resp.sendRedirect(req.getContextPath() + "/view/profile/accessDenied.jsp");
             return;
         }
 
-        // Lấy userID từ query parameter (nếu có)
-        String userIDParam = req.getParameter("userID");
+        String userIDParam = req.getParameter("userId");
         if (userIDParam != null && !userIDParam.isEmpty()) {
             try {
                 int userID = Integer.parseInt(userIDParam);
-                req.setAttribute("userID", userID);
+                req.setAttribute("userId", userID);
+                System.out.println("Received userID from URL: " + userID);
             } catch (NumberFormatException e) {
                 req.setAttribute("errorMessage", "❌ Invalid userID!");
+                System.out.println("Invalid userID format: " + userIDParam);
             }
+        } else {
+            req.setAttribute("errorMessage", "⚠️ User ID is required!");
+            System.out.println("No userID parameter provided");
         }
 
         req.setAttribute("roleList", roleDAO.getAllRoles());
@@ -48,7 +51,6 @@ public class CreateAccountServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Kiểm tra quyền admin (role = 5)
         Account currentUser = (Account) req.getSession().getAttribute("account");
         if (currentUser == null || currentUser.getRole() != 5) {
             resp.sendError(HttpServletResponse.SC_FORBIDDEN, "❌ You do not have permission to perform this action!");
@@ -65,39 +67,44 @@ public class CreateAccountServlet extends HttpServlet {
             int roleID = Integer.parseInt(req.getParameter("roleID"));
             boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
 
-            // VALIDATE
             if (username == null || username.trim().isEmpty()) {
                 req.setAttribute("errorMessage", "❌ Username cannot be empty!");
+                req.setAttribute("userID", userID);
                 forwardWithRoles(req, resp);
                 return;
             }
 
             if (password == null || password.trim().isEmpty()) {
                 req.setAttribute("errorMessage", "❌ Password cannot be empty!");
+                req.setAttribute("userID", userID);
                 forwardWithRoles(req, resp);
                 return;
             }
 
             if (password.length() < 6) {
                 req.setAttribute("errorMessage", "❌ Password must be at least 6 characters!");
+                req.setAttribute("userID", userID);
                 forwardWithRoles(req, resp);
                 return;
             }
 
             if (!password.equals(confirmPassword)) {
                 req.setAttribute("errorMessage", "❌ Password confirmation does not match!");
+                req.setAttribute("userID", userID);
                 forwardWithRoles(req, resp);
                 return;
             }
 
             if (accountDAO.getAccountByUsername(username) != null) {
                 req.setAttribute("errorMessage", "❌ Username already exists!");
+                req.setAttribute("userID", userID);
                 forwardWithRoles(req, resp);
                 return;
             }
 
             if (accountDAO.getAccountByUserID(userID) != null) {
                 req.setAttribute("errorMessage", "❌ This user already has an account!");
+                req.setAttribute("userID", userID);
                 forwardWithRoles(req, resp);
                 return;
             }
@@ -116,24 +123,28 @@ public class CreateAccountServlet extends HttpServlet {
             boolean created = accountDAO.createAccount(account);
 
             if (created) {
-                req.setAttribute("successMessage", "✅ Account created successfully!");
+                req.setAttribute("successMessage", "✅ Account created successfully for userID: " + userID);
                 req.setAttribute("resetForm", true);
+                req.setAttribute("userID", userID);
+                System.out.println("Account created for userID: " + userID + " with username: " + username);
             } else {
                 req.setAttribute("errorMessage", "❌ Failed to create account!");
+                req.setAttribute("userID", userID);
             }
 
         } catch (NumberFormatException e) {
             req.setAttribute("errorMessage", "❌ Invalid input data!");
+            System.out.println("NumberFormatException: " + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
             req.setAttribute("errorMessage", "💥 System error: " + e.getMessage());
+            System.out.println("Exception: " + e.getMessage());
             e.printStackTrace();
         }
 
         forwardWithRoles(req, resp);
     }
 
-    // Helper method để forward kèm danh sách role
     private void forwardWithRoles(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         req.setAttribute("roleList", roleDAO.getAllRoles());

@@ -56,7 +56,7 @@ contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
             </li>
             <li>
               <a
-                href="<c:url value='/account/create'/>"
+                href="<c:url value='/userlist'/>"
                 target="mainFrame"
                 >Create Account</a
               >
