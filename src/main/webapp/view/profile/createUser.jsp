@@ -4,7 +4,6 @@
 
 <c:url value="/user/create" var="createUserUrl" />
 <c:url value="/cv" var="cvListUrl" />
-<c:url value="/contract/create" var="createContractUrl" />
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,10 +35,10 @@
         .form-control:focus, .form-select:focus { border-color:#3498db; box-shadow:0 0 0 0.15rem rgba(52,152,219,0.2); }
 
         .form-actions { display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin-top:20px; }
-        .btn-custom { padding:8px 20px; font-weight:500; border-radius:8px; font-size:14px; cursor:pointer; transition:all 0.2s ease; text-decoration:none; }
-        .btn-save { background:#3498db; color:#fff; border:none; }
+        .btn-custom { padding:8px 20px; font-weight:500; border-radius:8px; font-size:14px; cursor:pointer; transition:all 0.2s ease; text-decoration:none; border:none; }
+        .btn-save { background:#3498db; color:#fff; }
         .btn-save:hover { background:#2980b9; transform:translateY(-1px); box-shadow:0 4px 8px rgba(52,152,219,0.3); }
-        .btn-reset { background:#6c757d; color:#fff; border:none; }
+        .btn-reset { background:#6c757d; color:#fff; }
         .btn-reset:hover { background:#5a6268; transform:translateY(-1px); }
 
         .message { padding:12px; border-radius:10px; margin-bottom:20px; font-size:0.95rem; }
@@ -53,11 +52,13 @@
     <div class="profile-container">
         <h2 class="page-title"><i class="fas fa-user-plus"></i> Create New User</h2>
 
+        <!-- ERROR MESSAGE -->
         <c:if test="${not empty error}">
             <div class="message error">${error}</div>
         </c:if>
 
         <form action="${createUserUrl}" method="post" id="createUserForm">
+            <!-- BASIC INFORMATION -->
             <div class="info-card">
                 <div class="section-title"><i class="fas fa-user"></i> Basic Information</div>
                 <div class="row">
@@ -93,6 +94,7 @@
                 </div>
             </div>
 
+            <!-- ADDITIONAL INFORMATION -->
             <div class="info-card">
                 <div class="section-title"><i class="fas fa-info-circle"></i> Additional Information</div>
                 <div class="row">
@@ -111,6 +113,7 @@
                 </div>
             </div>
 
+            <!-- JOB INFORMATION -->
             <div class="info-card">
                 <div class="section-title"><i class="fas fa-briefcase"></i> Job Information</div>
                 <div class="row">
@@ -147,6 +150,7 @@
                 </div>
             </div>
 
+            <!-- FORM ACTIONS -->
             <div class="form-actions">
                 <button type="submit" class="btn-save btn-custom"><i class="fas fa-user-plus"></i> Create User</button>
                 <button type="reset" class="btn-reset btn-custom"><i class="fas fa-times"></i> Reset</button>
@@ -156,57 +160,85 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- SUCCESS MODAL -->
+<c:if test="${not empty success}">
+<div class="modal fade" id="userCreatedModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="fas fa-check-circle"></i> Success</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>${success}</strong></p>
+                <p>User ID: <code>${newUserId}</code></p>
+            </div>
+            <div class="modal-footer">
+                <a href="${cvListUrl}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to CV List</a>
+                <a href="<c:url value='/addContracts' />?userId=${newUserId}" class="btn btn-success">
+                    <i class="fas fa-file-contract"></i> Create Contract
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</c:if>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// ===== POSITIONS DATA =====
+// POSITIONS DATA
 const allPositions = [
     <c:forEach var="p" items="${positions}" varStatus="status">
-    { positionId: ${p.positionId}, name: "${p.name}", departmentId: ${p.departmentId} }<c:if test="${!status.last}">,</c:if>
+        { positionId: ${p.positionId}, name: "${p.name}", departmentId: ${p.departmentId} }<c:if test="${!status.last}">,</c:if>
     </c:forEach>
 ];
 
 const selectedPositionId = "${formPositionId}";
 
 function filterPositions() {
-    const deptSelect = document.getElementById('departmentId');
-    const posSelect = document.getElementById('positionId');
-    const selectedDeptId = deptSelect.value;
+    const departmentSelect = document.getElementById('departmentId');
+    const positionSelect = document.getElementById('positionId');
+    const selectedDepartmentId = departmentSelect.value;
 
-    posSelect.innerHTML = '<option value="">--Select Position--</option>';
+    positionSelect.innerHTML = '<option value="">--Select Position--</option>';
+    if (!selectedDepartmentId) {
+        positionSelect.disabled = true;
+        return;
+    }
 
-    if (!selectedDeptId) { posSelect.disabled = true; return; }
-
-    const filtered = allPositions.filter(p => p.departmentId == selectedDeptId);
-
-    if (filtered.length > 0) {
-        posSelect.disabled = false;
-        filtered.forEach(p => {
+    const filteredPositions = allPositions.filter(pos => pos.departmentId == selectedDepartmentId);
+    if (filteredPositions.length > 0) {
+        positionSelect.disabled = false;
+        filteredPositions.forEach(pos => {
             const option = document.createElement('option');
-            option.value = p.positionId;
-            option.textContent = p.name;
-            if (selectedPositionId && p.positionId == selectedPositionId) option.selected = true;
-            posSelect.appendChild(option);
+            option.value = pos.positionId;
+            option.textContent = pos.name;
+            if (selectedPositionId && pos.positionId == selectedPositionId) option.selected = true;
+            positionSelect.appendChild(option);
         });
     } else {
-        posSelect.disabled = true;
+        positionSelect.disabled = true;
         const option = document.createElement('option');
         option.value = '';
-        option.textContent = 'No positions available';
-        posSelect.appendChild(option);
+        option.textContent = 'No positions available for this department';
+        positionSelect.appendChild(option);
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const deptSelect = document.getElementById('departmentId');
-    if (deptSelect.value) filterPositions();
+document.addEventListener('DOMContentLoaded', () => {
+    const departmentSelect = document.getElementById('departmentId');
+    if (departmentSelect.value) filterPositions();
     else document.getElementById('positionId').disabled = true;
+
+    const successModal = document.getElementById('userCreatedModal');
+    if (successModal) new bootstrap.Modal(successModal).show();
 });
 
-document.getElementById('createUserForm').addEventListener('reset', function() {
+document.getElementById('createUserForm').addEventListener('reset', () => {
     setTimeout(() => {
-        document.getElementById('positionId').disabled = true;
-        document.getElementById('positionId').innerHTML = '<option value="">--Select Position--</option>';
+        const positionSelect = document.getElementById('positionId');
+        positionSelect.disabled = true;
+        positionSelect.innerHTML = '<option value="">--Select Position--</option>';
     }, 10);
 });
 </script>
