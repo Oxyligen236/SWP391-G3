@@ -2,6 +2,7 @@ package hrms.dao.contract;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,6 +14,24 @@ import hrms.model.Contract;
 import hrms.utils.DBContext;
 
 public class ContractDAO extends DBContext{
+
+    /**
+     * Ensure database connection is open and valid
+     * Reconnects if connection is closed
+     */
+    private void ensureConnection() throws SQLException {
+        try {
+            if (connection == null || connection.isClosed()) {
+                String url = "jdbc:mysql://localhost:3306/HRMS?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+                String username = "root";
+                String password = "123456";
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                connection = DriverManager.getConnection(url, username, password);
+            }
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("Failed to load MySQL driver", e);
+        }
+    }
 
     public List<ContractDTO> getAllContracts() {
         List<ContractDTO> contracts = new ArrayList<>();
@@ -293,6 +312,13 @@ public class ContractDAO extends DBContext{
 
     public boolean updateContractNote(int contractId, String note) {
         String sql = "UPDATE Contract SET Note = ? WHERE ContractID = ?";
+        
+        try {
+            ensureConnection();
+        } catch (SQLException e) {
+            return false;
+        }
+        
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, note);
             ps.setInt(2, contractId);
@@ -306,6 +332,13 @@ public class ContractDAO extends DBContext{
 
     public boolean updateContractStatus(int contractId, String status) {
         String sql = "UPDATE Contract SET Status = ? WHERE ContractID = ?";
+        
+        try {
+            ensureConnection();
+        } catch (SQLException e) {
+            return false;
+        }
+        
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, status);
             ps.setInt(2, contractId);

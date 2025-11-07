@@ -262,6 +262,17 @@ public class ViewContractServlet extends HttpServlet {
                 return;
             }
             
+            // Check if contract is Cancelled or Archived - cannot edit these contracts
+            if (existingContract != null) {
+                String currentStatus = existingContract.getStatus();
+                if ("Cancelled".equals(currentStatus) || "Archived".equals(currentStatus)) {
+                    request.setAttribute("error", "Cannot change note of " + currentStatus + " contracts!");
+                    request.setAttribute("contract", existingContract);
+                    request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
+                    return;
+                }
+            }
+            
             // Cập nhật note
             boolean success = dao.updateContractNote(contractId, note);
             
@@ -335,6 +346,34 @@ public class ViewContractServlet extends HttpServlet {
                 return;
             }
             
+            // Check if contract is Cancelled or Archived - cannot edit these statuses
+            if (existingContract != null) {
+                String currentStatus = existingContract.getStatus();
+                if ("Cancelled".equals(currentStatus) || "Archived".equals(currentStatus)) {
+                    request.setAttribute("error", "Cannot change status of " + currentStatus + " contracts!");
+                    request.setAttribute("contract", existingContract);
+                    request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
+                    return;
+                }
+            }
+            
+            // Validate status value
+            String[] validStatuses = {"Pending", "Approved", "Active", "Expired", "Cancelled", "Archived"};
+            boolean isValidStatus = false;
+            for (String validStatus : validStatuses) {
+                if (validStatus.equals(status)) {
+                    isValidStatus = true;
+                    break;
+                }
+            }
+            
+            if (!isValidStatus) {
+                request.setAttribute("error", "Invalid status value: " + status);
+                request.setAttribute("contract", existingContract);
+                request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
+                return;
+            }
+            
             // Cập nhật status
             boolean success = dao.updateContractStatus(contractId, status);
             
@@ -345,6 +384,7 @@ public class ViewContractServlet extends HttpServlet {
                 request.setAttribute("successMessage", "Update status successfully!");
             } else {
                 request.setAttribute("error", "Unable to update status!");
+                request.setAttribute("contract", existingContract);
             }
             
             request.getRequestDispatcher("/view/contract/viewContract.jsp").forward(request, response);
