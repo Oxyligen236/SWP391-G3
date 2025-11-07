@@ -6,49 +6,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import hrms.dto.PositionDTO;
 import hrms.model.Position;
 import hrms.utils.DBContext;
 
 public class PositionDAO extends DBContext {
+    
 
     /**
-     * Lấy tên Position theo ID
-     * @param id - PositionID
-     * @return Position name hoặc null
+     * Lấy tất cả Position kèm tên Department
      */
-    public String getNameById(Integer id) {
-        if (id == null) return null;
-        
-        String sql = "SELECT Name FROM Positions WHERE PositionID = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString("Name");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * ✅ Lấy tất cả Position
-     * @return List<Position>
-     */
-    public List<Position> getAll() {
-        List<Position> list = new ArrayList<>();
-        String sql = "SELECT PositionID, Name FROM Positions ORDER BY Name ASC";
-        
+    public List<PositionDTO> getAllWithDepartmentName() {
+        List<PositionDTO> list = new ArrayList<>();
+        String sql = "SELECT p.PositionID, p.Name AS PositionName, p.DepartmentID, d.Name AS DepartmentName " +
+                     "FROM Positions p LEFT JOIN Department d ON p.DepartmentID = d.DepartmentID " +
+                     "ORDER BY p.Name ASC";
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            
             while (rs.next()) {
-                Position p = new Position();
-                p.setPositionId(rs.getInt("PositionID"));
-                p.setName(rs.getString("Name"));
-                list.add(p);
+                PositionDTO dto = new PositionDTO();
+                dto.setPositionId(rs.getInt("PositionID"));
+                dto.setName(rs.getString("PositionName"));
+                dto.setDepartmentId(rs.getInt("DepartmentID"));
+                dto.setDepartmentName(rs.getString("DepartmentName"));
+                list.add(dto);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,87 +38,106 @@ public class PositionDAO extends DBContext {
     }
 
     /**
-     * ✅ Kiểm tra Position tồn tại
-     * @param name - Position name
-     * @return true nếu tồn tại
+     * Kiểm tra Position tồn tại trong Department
      */
-    public boolean exists(String name) throws SQLException {
+    public boolean exists(String name, int departmentId) throws SQLException {
         if (name == null || name.trim().isEmpty()) return false;
-        
-        String sql = "SELECT COUNT(*) FROM Positions WHERE Name = ?";
+
+        String sql = "SELECT COUNT(*) FROM Positions WHERE Name = ? AND DepartmentID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, name.trim());
+            ps.setInt(2, departmentId);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
+                if (rs.next()) return rs.getInt(1) > 0;
             }
         }
         return false;
     }
 
     /**
-     * ✅ Thêm mới Position nếu chưa tồn tại
-     * @param name - Position name
-     * @return số dòng được thêm (1 = thành công, 0 = tồn tại)
+     * Thêm Position mới nếu chưa tồn tại trong Department
      */
-    public int insertIfNotExists(String name) throws SQLException {
+    public int insertIfNotExists(String name, int departmentId) throws SQLException {
         if (name == null || name.trim().isEmpty()) return 0;
-        if (exists(name)) return 0;
-        
-        String sql = "INSERT INTO Positions (Name) VALUES (?)";
+        if (exists(name, departmentId)) return 0;
+
+        String sql = "INSERT INTO Positions (Name, DepartmentID) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, name.trim());
+            ps.setInt(2, departmentId);
             return ps.executeUpdate();
         }
     }
 
     /**
-     * ✅ Lấy Position theo Name
-     * @param name - Position name
-     * @return Position object hoặc null
+     * Tạo Position mới và trả về ID
      */
-    public Position getByName(String name) {
-        if (name == null || name.trim().isEmpty()) return null;
-        
-        String sql = "SELECT PositionID, Name FROM Positions WHERE Name = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, name.trim());
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    Position p = new Position();
-                    p.setPositionId(rs.getInt("PositionID"));
-                    p.setName(rs.getString("Name"));
-                    return p;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * ✅ Tạo Position mới và trả về ID
-     * @param name - Position name
-     * @return ID của Position mới, hoặc 0 nếu thất bại
-     */
-    public int createReturnId(String name) {
+    public int createReturnId(String name, int departmentId) {
         if (name == null || name.trim().isEmpty()) return 0;
-        
-        String sql = "INSERT INTO Positions (Name) VALUES (?)";
+
+        String sql = "INSERT INTO Positions (Name, DepartmentID) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, name.trim());
+            ps.setInt(2, departmentId);
             ps.executeUpdate();
-            
             try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
+                if (rs.next()) return rs.getInt(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
     }
+    // Trả về List<Position> như trước
+public List<Position> getAll() {
+    List<Position> list = new ArrayList<>();
+    String sql = "SELECT PositionID, Name, DepartmentID FROM Positions ORDER BY Name ASC";
+    try (PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+            Position p = new Position();
+            p.setPositionId(rs.getInt("PositionID"));
+            p.setName(rs.getString("Name"));
+            p.setDepartmentId(rs.getInt("DepartmentID"));
+            list.add(p);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+
+// Lấy tên Position theo id
+public String getNameById(Integer id) {
+    if (id == null) return null;
+    String sql = "SELECT Name FROM Positions WHERE PositionID = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, id);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getString("Name");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+public List<Position> getByDepartmentId(int departmentId) {
+    List<Position> list = new ArrayList<>();
+    String sql = "SELECT * FROM Position WHERE departmentId = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, departmentId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Position p = new Position();
+            p.setPositionId(rs.getInt("positionId"));
+            p.setName(rs.getString("name"));
+            p.setDepartmentId(rs.getInt("departmentId"));
+            list.add(p);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return list;
+}
+
 }

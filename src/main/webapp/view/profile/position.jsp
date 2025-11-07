@@ -36,11 +36,23 @@
     <div class="card mb-4">
         <div class="card-body">
             <form method="post" action="<c:url value='/option/position'/>" class="row g-3 align-items-end">
-                <div class="col-md-8">
+                
+                <div class="col-md-5">
                     <label class="form-label" for="name">Position Name *</label>
                     <input type="text" name="name" id="name" class="form-control" placeholder="e.g., Senior Developer" maxlength="100" required>
                 </div>
-                <div class="col-md-4">
+                
+                <div class="col-md-5">
+                    <label class="form-label" for="departmentId">Department *</label>
+                    <select name="departmentId" id="departmentId" class="form-select" required>
+                        <option value="">-- Select Department --</option>
+                        <c:forEach var="dept" items="${departments}">
+                            <option value="${dept.departmentId}">${dept.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                
+                <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100">Add Position</button>
                 </div>
             </form>
@@ -55,7 +67,9 @@
                 <c:when test="${not empty positions}">
                     <c:forEach var="pos" items="${positions}">
                         <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>${pos.name}</span>
+                            <span>${pos.name} 
+                                <small class="text-muted">(${pos.departmentName})</small>
+                            </span>
                             <span class="badge bg-info rounded-pill">${pos.positionId}</span>
                         </div>
                     </c:forEach>
