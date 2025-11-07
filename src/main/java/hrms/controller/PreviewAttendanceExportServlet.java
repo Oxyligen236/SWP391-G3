@@ -17,10 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-/**
- * Servlet to handle attendance export preview
- * Displays filtered attendance data before Excel export
- */
+
 @WebServlet("/preview-attendance-export")
 public class PreviewAttendanceExportServlet extends HttpServlet {
 
@@ -60,7 +57,7 @@ public class PreviewAttendanceExportServlet extends HttpServlet {
             boolean hasEarlyLeave = "true".equals(hasEarlyLeaveParam);
             boolean hasOT = "true".equals(hasOTParam);
             
-            // Call AttendanceService.searchAttendances() or getAllAttendances() based on filter presence
+
             List<AttendanceDTO> attendanceList;
             
             // Check if any text filter is provided (not null and not empty)
@@ -179,12 +176,7 @@ public class PreviewAttendanceExportServlet extends HttpServlet {
         doGet(request, response);
     }
     
-    /**
-     * Extract all filter parameters into Map for display in summary section
-     * 
-     * @param request HTTP request containing filter parameters
-     * @return Map of filter names to values
-     */
+
     private Map<String, String> extractFilters(HttpServletRequest request) {
         Map<String, String> filters = new HashMap<>();
         
