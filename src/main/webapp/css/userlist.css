@@ -1,50 +1,136 @@
 /*
  * File: userlist.css
- * Tinh chỉnh để khắc phục lỗi tên cột bị ép và tràn bảng.
+ * Phong cách: Hiện đại, Sạch sẽ (Clean) và Dễ đọc.
+ * Màu Chủ Đạo (Primary Color): #00a884 (Modern Teal/Green)
  */
 
 body {
-    background-color: #f8f9fa; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #343a40;
-    padding: 20px;
+    /* Màu nền nhẹ nhàng */
+    background-color: #f1f5f9;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #334155;
+    padding: 30px;
 }
 
 .container {
-    width: 100%; 
-    max-width: 100%; 
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     background-color: #ffffff;
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+    border-radius: 10px;
+    /* Hiệu ứng đổ bóng nhẹ, hiện đại */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 h3 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #495057; 
-    margin-bottom: 25px;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1e293b; 
+    margin-bottom: 30px;
+    border-left: 5px solid #00a884; /* Điểm nhấn màu chủ đạo */
+    padding-left: 15px;
 }
+
+/* --- Alerts --- */
+.alert { 
+    padding: 15px; 
+    border-radius: 6px; 
+    margin-bottom: 20px; 
+    font-weight: 500; 
+    display: flex; 
+    align-items: center; 
+}
+.alert i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+.alert-success { 
+    background-color: #ecfdf5; /* Nền xanh lá rất nhạt */
+    color: #059669; /* Chữ xanh lá đậm */
+    border: 1px solid #a7f3d0; 
+}
+.alert-error { 
+    background-color: #fef2f2; 
+    color: #ef4444; 
+    border: 1px solid #fecaca; 
+}
+
+/* --- Search & Filter Styling (Tập trung điều chỉnh ở đây) --- */
+form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px !important;
+}
+form input[type="text"], form select {
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+form input[type="text"] {
+    width: 250px; /* Điều chỉnh chiều rộng ô tìm kiếm */
+}
+
+form input[type="text"]:focus, form select:focus {
+    border-color: #00a884;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 168, 132, 0.2);
+}
+
+form label {
+    font-weight: 500;
+    color: #475569;
+}
+
+form button[type="submit"] {
+    background-color: #00a884; /* Màu chủ đạo */
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+form button[type="submit"]:hover {
+    background-color: #008f71;
+}
+
+/* Nút Reset - Đã được làm cho nổi bật hơn (gần giống một nút bấm thông thường) */
+.btn-reset {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #e2e8f0; /* Màu xám nhạt */
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.btn-reset:hover {
+    background-color: #cbd5e1;
+}
+
 
 /* --- Bảng Dữ liệu (table-custom) --- */
 .table-custom {
-    width: 100%; 
-    border-collapse: collapse;
-    margin-top: 20px;
-    font-size: 0.85rem;
-    
-    /* QUAN TRỌNG: Kiểm soát nghiêm ngặt chiều rộng */
+    width: 100%;
+    border-collapse: separate; 
+    border-spacing: 0 8px; /* Khoảng cách giữa các hàng */
+    margin-top: 15px;
+    font-size: 0.9rem;
     table-layout: fixed; 
-    
-    border: 1px solid #e9ecef; 
-    border-radius: 6px;
-    overflow: hidden; 
 }
 
 /* Header Bảng */
 .table-custom thead {
-    background-color: #007bff; 
+    background-color: #00a884; 
     color: white;
 }
 
@@ -53,114 +139,89 @@ h3 {
     text-align: left;
     font-weight: 600;
     border: none;
-    /* NGĂN KHÔNG CHO TÊN CỘT BỊ XUỐNG DÒNG */
     white-space: nowrap; 
-    /* Giảm font size một chút để tên cột dễ vừa hơn */
-    font-size: 0.8em; 
+    font-size: 0.8em;
     text-transform: uppercase;
-    overflow: hidden; /* Cắt bớt nếu tên cột vẫn quá dài */
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
+/* Bo góc cho header */
+.table-custom th:first-child { border-top-left-radius: 6px; }
+.table-custom th:last-child { border-top-right-radius: 6px; }
+
+/* Thân bảng */
+.table-custom tbody tr {
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    transition: box-shadow 0.2s;
+}
+
+.table-custom tbody tr:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
 .table-custom td {
-    padding: 10px 8px;
+    padding: 12px 10px;
     vertical-align: middle;
-    /* Dữ liệu trong ô bị cắt */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; 
-    border-right: 1px solid #f8f9fa;
-    height: 48px; 
+    border: none; /* Loại bỏ border giữa các ô để dùng border-spacing */
+    height: 48px;
+    /* Thêm bo góc cho các ô đầu và cuối */
 }
+.table-custom td:first-child { border-top-left-radius: 6px; border-bottom-left-radius: 6px; }
+.table-custom td:last-child { border-top-right-radius: 6px; border-bottom-right-radius: 6px; }
 
-/* --- Phân bổ Chiều Rộng Cột (Tổng ~100%) --- */
-
-/* Cột 1: ID - 3% */
-.table-custom th:nth-child(1), .table-custom td:nth-child(1) { width: 3%; } 
-
-/* Cột 2: NAME - 10% (Hiển thị đầy đủ) */
-.table-custom th:nth-child(2) { width: 10%; } 
-.table-custom td:nth-child(2) { 
-    width: 10%; 
-    white-space: normal; /* Cho phép xuống dòng */
-    overflow: visible;
-    text-overflow: clip; 
-    font-weight: 600;
-    color: #333;
+/* --- Phân bổ Chiều Rộng Cột (Tổng 100%) --- (Giữ nguyên phần này) */
+.table-custom th:nth-child(1), .table-custom td:nth-child(1) { width: 3%; }
+.table-custom th:nth-child(2), .table-custom td:nth-child(2) {
+    width: 10%; white-space: normal; overflow: visible; text-overflow: clip; font-weight: 600; color: #333;
 }
-
-/* Cột 3: EMAIL - 10% */
-.table-custom th:nth-child(3), .table-custom td:nth-child(3) { width: 10%; } 
-
-/* Cột 4: PHONE NUMBER - 8% */
-.table-custom th:nth-child(4), .table-custom td:nth-child(4) { width: 8%; } 
-
-/* Cột 5: BIRTH DATE - 7% */
-.table-custom th:nth-child(5), .table-custom td:nth-child(5) { width: 7%; } 
-
-/* Cột 6: GENDER - 5% */
-.table-custom th:nth-child(6), .table-custom td:nth-child(6) { width: 5%; } 
-
-/* Cột 7: ADDRESS - 8% */
-.table-custom th:nth-child(7), .table-custom td:nth-child(7) { width: 8%; } 
-
-/* Cột 8: CCCD - 8% */
-.table-custom th:nth-child(8), .table-custom td:nth-child(8) { width: 8%; } 
-
-/* Cột 9: ETHNICITY - 5% */
-.table-custom th:nth-child(9), .table-custom td:nth-child(9) { width: 5%; } 
-
-/* Cột 10: NATIONALITY - 7% */
-.table-custom th:nth-child(10), .table-custom td:nth-child(10) { width: 7%; } 
-
-/* Cột 11: DEPARTMENT - 8% */
-.table-custom th:nth-child(11), .table-custom td:nth-child(11) { width: 8%; } 
-
-/* Cột 12: DEGREE - 5% */
-.table-custom th:nth-child(12), .table-custom td:nth-child(12) { width: 5%; } 
-
-/* Cột 13: POSITION - 7% */
-.table-custom th:nth-child(13), .table-custom td:nth-child(13) { width: 7%; } 
-
-/* Cột 14: ACCOUNT (STATUS) - 5% */
-.table-custom th:nth-child(14), .table-custom td:nth-child(14) { width: 5%; text-align: center; } 
-
-/* Cột 15: ACTIONS (VIEW) - 5% */
-.table-custom th:nth-child(15), .table-custom td:nth-child(15) { 
-    width: 5%; 
-    text-align: center;
-    overflow: visible;
-    white-space: nowrap;
+.table-custom th:nth-child(3), .table-custom td:nth-child(3) { width: 9%; }
+.table-custom th:nth-child(4), .table-custom td:nth-child(4) { width: 7%; }
+.table-custom th:nth-child(5), .table-custom td:nth-child(5) { width: 6%; }
+.table-custom th:nth-child(6), .table-custom td:nth-child(6) { width: 4%; }
+.table-custom th:nth-child(7), .table-custom td:nth-child(7) { width: 8%; }
+.table-custom th:nth-child(8), .table-custom td:nth-child(8) { width: 7%; }
+.table-custom th:nth-child(9), .table-custom td:nth-child(9) { width: 5%; }
+.table-custom th:nth-child(10), .table-custom td:nth-child(10) { width: 6%; }
+.table-custom th:nth-child(11), .table-custom td:nth-child(11) { 
+    width: 8%; white-space: normal; overflow: visible; text-overflow: clip;
 }
-
-/* Lưu ý: Tổng cộng 104% (do làm tròn). Với table-layout: fixed, trình duyệt sẽ tự động chia đều phần chênh lệch (thường là làm tròn xuống) để vừa 100%. */
+.table-custom th:nth-child(12), .table-custom td:nth-child(12) { width: 5%; }
+.table-custom th:nth-child(13), .table-custom td:nth-child(13) { width: 7%; }
+.table-custom th:nth-child(14), .table-custom td:nth-child(14) { width: 5%; text-align: center; }
+.table-custom th:nth-child(15), .table-custom td:nth-child(15) {
+    width: 5%; text-align: center; overflow: visible; white-space: nowrap;
+}
 
 
 /* --- Cột Account Styling --- */
 .account-status {
-    padding: 3px 6px;
-    border-radius: 4px;
+    padding: 3px 8px;
+    border-radius: 12px; /* Bo góc tròn hơn */
     display: inline-block;
     font-size: 0.8em;
     font-weight: 600;
 }
 
 .account-status.active {
-    color: #155724;
-    background-color: #c3e6cb; 
-    border: 1px solid #c3e6cb;
+    color: #059669;
+    background-color: #d1fae5;
 }
 .account-status.inactive {
-    color: #721c24;
-    background-color: #f8d7da; 
-    border: 1px solid #f5c6cb;
+    color: #ef4444;
+    background-color: #fee2e2;
 }
 
 
 /* --- Nút Actions --- */
 .action-buttons {
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
 }
 
@@ -171,17 +232,92 @@ h3 {
     text-decoration: none;
     font-size: 0.85rem;
     font-weight: 500;
-    background-color: #28a745; 
+    background-color: #10b981; /* Màu xanh lá hiện đại */
     color: white;
     border: none;
     transition: background-color 0.2s;
 }
 
 .btn-edit:hover {
-    background-color: #218838;
+    background-color: #059669;
 }
 
-/* --- Alerts --- (Giữ nguyên) */
-.alert { padding: 15px; border-radius: 5px; margin-bottom: 20px; font-weight: 500; display: flex; align-items: center; }
-.alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-.alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+/* --- Form Search & Filter --- */
+form {
+    display: flex;
+    flex-wrap: wrap; /* nếu quá dài sẽ xuống dòng */
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Input search */
+form input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    width: 220px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+form input[type="text"]:focus {
+    border-color: #00a884;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 168, 132, 0.2);
+}
+
+/* Label */
+form label {
+    font-weight: 500;
+    color: #475569;
+}
+
+/* Select filter */
+form select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+form select:focus {
+    border-color: #00a884;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 168, 132, 0.2);
+}
+
+/* Button Search */
+form button[type="submit"] {
+    padding: 8px 16px;
+    border-radius: 6px;
+    background-color: #00a884;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+form button[type="submit"]:hover {
+    background-color: #008f71;
+}
+
+/* Link Reset như button */
+.btn-reset {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background-color: #e2e8f0;
+    color: #475569;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-reset:hover {
+    background-color: #cbd5e1;
+    border-color: #94a3b8;
+}
