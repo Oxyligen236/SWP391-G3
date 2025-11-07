@@ -1,0 +1,116 @@
+/*
+ * File: user_detail.css
+ * Chứa style cho trang User Details
+ */
+
+/* Định nghĩa màu sắc cơ bản */
+:root {
+    --primary-color: #2b5ca8; /* Màu xanh dương chủ đạo */
+    --primary-hover-color: #1e4787;
+    --success-color: #28a745; /* Màu xanh lá cho Create Account */
+    --edit-dept-color: #ffc107; /* Màu vàng cho Edit Department */
+    --edit-dept-hover-color: #e0a800;
+    --edit-pos-color: #17a2b8; /* Màu xanh ngọc cho Edit Position */
+    --edit-pos-hover-color: #138496;
+    --text-color-dark: #333;
+    --bg-color-light: #fff;
+    --border-color: #eee;
+}
+
+/* Container chính */
+.container {
+    width: 70%;
+    margin: 30px auto;
+    background: var(--bg-color-light);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* Tiêu đề */
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: var(--primary-color);
+}
+
+/* Bảng thông tin */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+td:first-child {
+    font-weight: bold;
+    width: 30%;
+    color: var(--text-color-dark);
+}
+
+/* Nhóm nút hành động */
+.button-group {
+    margin-top: 25px;
+    display: flex;
+    gap: 10px;
+}
+
+/* Định dạng chung cho tất cả các nút */
+.btn-back, .btn-create, .btn-edit-dept, .btn-edit-pos {
+    display: inline-flex; /* Dùng flex để căn giữa icon và text */
+    align-items: center;
+    gap: 5px; /* Khoảng cách giữa icon và text */
+    margin-top: 0; /* Đặt margin-top ở .button-group thay vì từng nút */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+/* Nút Back (và nút mặc định) */
+.btn-back {
+    background: var(--primary-color);
+}
+.btn-back:hover {
+    background: var(--primary-hover-color);
+}
+
+/* Nút Create Account (màu xanh lá) */
+.btn-create {
+    background: var(--success-color);
+}
+.btn-create:hover {
+    background: #1e7e34; /* Hover tối hơn */
+}
+
+/* Nút Edit Department (màu vàng) */
+.btn-edit-dept {
+    background: var(--edit-dept-color);
+    color: var(--text-color-dark); /* Đổi màu chữ cho dễ đọc trên nền vàng */
+}
+.btn-edit-dept:hover {
+    background: var(--edit-dept-hover-color);
+}
+
+/* Nút Edit Position (màu xanh ngọc) */
+.btn-edit-pos {
+    background: var(--edit-pos-color);
+}
+.btn-edit-pos:hover {
+    background: var(--edit-pos-hover-color);
+}
+
+/* Trạng thái tài khoản */
+.status-yes {
+    color: green;
+    font-weight: bold;
+}
+.status-no {
+    color: red;
+    font-weight: bold;
+}

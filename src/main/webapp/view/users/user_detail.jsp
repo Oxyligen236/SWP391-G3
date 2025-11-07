@@ -8,58 +8,6 @@
     <title>User Details</title>
     <link rel="stylesheet" href="<c:url value='/css/user_detail.css'/>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .container {
-            width: 70%;
-            margin: 30px auto;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            padding: 30px;
-            font-family: "Segoe UI", sans-serif;
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #2b5ca8;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        td:first-child {
-            font-weight: bold;
-            width: 30%;
-            color: #333;
-        }
-        .btn-back, .btn-create {
-            display: inline-block;
-            margin-top: 20px;
-            background: #2b5ca8;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-        }
-        .btn-back:hover, .btn-create:hover {
-            background: #1e4787;
-        }
-        .status-yes {
-            color: green;
-            font-weight: bold;
-        }
-        .status-no {
-            color: red;
-            font-weight: bold;
-        }
-        .button-group {
-            margin-top: 25px;
-        }
-    </style>
 </head>
 <body>
 <div class="container">
@@ -81,31 +29,36 @@
             <tr><td>Degree:</td><td>${user.degreeName}</td></tr>
             <tr><td>Position:</td><td>${user.positionName}</td></tr>
 
-            <<tr>
-    <td>System Account:</td>
-    <td>
-        <c:choose>
-            <c:when test="${hasAccount}">
-                <strong>${account.username}</strong>
-                <br>(Role: ${account.role},
-                Active:
-                <c:out value="${account.isIsActive() ? 'Yes' : 'No'}"/>)
-            </c:when>
-            <c:otherwise>
-                <em>This user has no system account.</em><br>
-                <a href="${pageContext.request.contextPath}/account/create" 
-                   class="btn-back" 
-                   style="background:#28a745;">+ Create Account</a>
-            </c:otherwise>
-        </c:choose>
-    </td>
-</tr>
+            <tr>
+                <td>System Account:</td>
+                <td>
+                    <c:choose>
+                        <c:when test="${hasAccount}">
+                            <strong>${account.username}</strong>
+                            <br>(Role: ${account.role},
+                            Active:
+                            <c:out value="${account.isIsActive() ? 'Yes' : 'No'}"/>)
+                        </c:when>
+                        <c:otherwise>
+                            <em>This user has no system account.</em><br>
+                            <a href="${pageContext.request.contextPath}/account/create?userId=${user.userId}"
+                               class="btn-create">+ Create Account</a>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+            </tr>
 
         </table>
 
         <div class="button-group">
             <a href="${pageContext.request.contextPath}/userlist" class="btn-back">
-                ← Back to List
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+            <a href="${pageContext.request.contextPath}/updateDepartment?userID=${user.userId}" class="btn-edit-dept">
+                <i class="fas fa-building"></i> Edit Department
+            </a>
+            <a href="${pageContext.request.contextPath}/updatePosition?userID=${user.userId}" class="btn-edit-pos">
+                <i class="fas fa-briefcase"></i> Edit Position
             </a>
         </div>
     </c:if>

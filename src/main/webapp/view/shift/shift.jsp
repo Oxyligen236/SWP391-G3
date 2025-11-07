@@ -9,12 +9,12 @@
 </head>
 <body>
 <div class="shift-container">
-    <h2>Danh sách ca làm việc</h2>
+    <h2>Shift List</h2>
     <table class="shift-table">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Tên ca</th>
+                <th>Shift Name</th>
                 <th>Checkin 1</th>
                 <th>Checkout 1</th>
                 <th>Checkin 2</th>

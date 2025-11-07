@@ -76,6 +76,8 @@ public class WorkHistoryDAO extends DBContext {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 WorkHistory wh = new WorkHistory();
+                wh.setHistoryID(rs.getInt("HistoryID"));
+                wh.setUserID(rs.getInt("UserID"));
                 wh.setType(rs.getString("type"));
                 wh.setDescription(rs.getString("description"));
                 wh.setOldValue(rs.getString("old_Value"));

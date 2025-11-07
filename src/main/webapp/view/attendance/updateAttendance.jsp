@@ -63,7 +63,7 @@
 
         <div class="actions">
             <button type="submit">Update</button>
-            <a href="${pageContext.request.contextPath}/attendanceList">Cancel</a>
+            <a href="${pageContext.request.contextPath}/company-attendance">Cancel</a>
         </div>
     </form>
 </div>

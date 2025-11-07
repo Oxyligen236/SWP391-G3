@@ -1,93 +1,134 @@
-
-:root{
-    --bg: #f7f9fc;
-    --card: #ffffff;
-    --muted: #6b7280;
-    --accent: #2563eb;
-    --border: #e6e9ef;
-    --radius: 8px;
-    --padding: 16px;
+/* Màu sắc cơ bản */
+:root {
+    --primary-color: #007bff; /* Xanh dương */
+    --primary-hover-color: #0056b3;
+    --border-color: #dee2e6;
+    --text-color: #343a40;
+    --white-color: #fff;
+    --input-border: #ced4da;
+    --table-header-bg: #e9ecef;
 }
 
-* { box-sizing: border-box; font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-
+/* Cấu trúc trang chung */
 body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6;
     margin: 0;
-    background: var(--bg);
-    color: #111827;
-    padding: 24px;
+    padding: 20px;
+    color: var(--text-color);
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
+    background: var(--white-color);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.page-header {
-    background: linear-gradient(90deg, rgba(37,99,235,0.08), rgba(99,102,241,0.03));
-    border-radius: var(--radius);
-    padding: 18px;
-    margin-bottom: 18px;
-    box-shadow: 0 1px 2px rgba(16,24,40,0.04);
-}
-
+/* Header */
 .page-header h1 {
-    margin: 0;
-    font-size: 20px;
-    color: #0f172a;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2.5em;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
 }
 
+/* --- FORM TÌM KIẾM --- */
 
+.search-form {
+    display: flex;
+    flex-direction: column; /* Xếp nhãn và input thành 2 hàng */
+    gap: 5px; /* Khoảng cách giữa nhãn và input */
+    margin-bottom: 30px;
+    max-width: 500px; /* Giới hạn chiều rộng của form */
+}
+
+.form-label {
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+.input-group {
+    display: flex;
+    width: 100%;
+}
+
+.form-control {
+    padding: 10px 15px;
+    border: 1px solid var(--input-border);
+    border-right: none; /* Loại bỏ đường viền phải để nối liền với nút */
+    border-radius: 5px 0 0 5px;
+    flex-grow: 1;
+    transition: border-color 0.3s;
+    font-size: 1em;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
+    outline: none;
+    z-index: 2;
+}
+
+.btn.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: 1px solid var(--primary-color);
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0;
+    transition: background-color 0.3s, border-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.btn.btn-primary:hover {
+    background-color: var(--primary-hover-color);
+    border-color: var(--primary-hover-color);
+}
+
+/* Bảng */
 .table-wrap {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 12px;
-    box-shadow: 0 1px 4px rgba(2,6,23,0.04);
-    border: 1px solid var(--border);
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
 }
 
 .workhistory-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 920px;
+    margin-top: 0;
 }
 
-.workhistory-table thead th {
+.workhistory-table th,
+.workhistory-table td {
+    padding: 12px 15px;
     text-align: left;
-    padding: 12px 14px;
-    font-size: 13px;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: var(--card);
+    border: 1px solid var(--border-color);
 }
 
-.workhistory-table tbody td {
-    padding: 12px 14px;
-    font-size: 14px;
-    vertical-align: top;
-    border-bottom: 1px solid #f1f3f5;
-    color: #111827;
+/* Header bảng */
+.workhistory-table thead th {
+    background-color: var(--table-header-bg);
+    color: var(--text-color);
+    font-weight: bold;
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+/* Nội dung bảng */
+.workhistory-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
 }
 
 .workhistory-table tbody tr:hover {
-    background: #fbfdff;
+    background-color: #e9f2ff;
 }
-
-
-@media (max-width: 1000px) {
-    .table-wrap { overflow-x: auto; }
-    .workhistory-table { min-width: 900px; }
-}
-
-
-.workhistory-table td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 220px;
-}
-
-
-
