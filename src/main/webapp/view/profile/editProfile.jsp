@@ -47,44 +47,56 @@
         <h2 class="page-title"><i class="fas fa-user-edit"></i> Edit Profile</h2>
 
         <c:if test="${not empty successMessage}">
-            <div class="alert alert-success text-center">${successMessage}</div>
+            <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                <i class="fas fa-check-circle me-2"></i>${successMessage}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         </c:if>
+        
         <c:if test="${not empty errorMessage}">
-            <div class="alert alert-danger text-center">${errorMessage}</div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <div>${errorMessage}</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         </c:if>
 
-        <form action="<c:url value='/edit' />" method="post">
+        <form action="<c:url value='/edit' />" method="post" id="editProfileForm">
             <!-- Basic Information -->
             <div class="info-card">
                 <div class="section-title"><i class="fas fa-user"></i> Basic Information</div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Full Name</label>
+                        <label class="form-label">Full Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="fullname" value="${user.fullname}" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">ID / CCCD</label>
-                        <input type="text" class="form-control" name="cccd" value="${user.cccd}">
+                        <input type="text" class="form-control" name="cccd" value="${user.cccd}" 
+                               pattern="[0-9]{12}" title="CCCD must be 12 digits">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Birth Date</label>
-                        <input type="date" class="form-control" name="birthDate" value="<fmt:formatDate value='${user.birthDate}' pattern='yyyy-MM-dd'/>">
+                        <input type="date" class="form-control" name="birthDate" 
+                               value="<fmt:formatDate value='${user.birthDate}' pattern='yyyy-MM-dd'/>">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Gender</label>
-                        <select name="gender" class="form-select">
+                        <label class="form-label">Gender <span class="text-danger">*</span></label>
+                        <select name="gender" class="form-select" required>
+                            <option value="">-- Select Gender --</option>
                             <c:forEach var="g" items="${genders}">
                                 <option value="${g}" <c:if test="${user.gender==g}">selected</c:if>>${g}</option>
                             </c:forEach>
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" name="phoneNumber" value="${user.phoneNumber}">
+                        <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="phoneNumber" value="${user.phoneNumber}" 
+                               pattern="^(0|\+84)[0-9]{9}$" title="Phone format: 0xxxxxxxxx or +84xxxxxxxxx" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" value="${user.email}">
+                        <label class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" name="email" value="${user.email}" required>
                     </div>
                 </div>
             </div>
@@ -94,8 +106,8 @@
                 <div class="section-title"><i class="fas fa-info-circle"></i> Additional Information</div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Address</label>
-                        <input type="text" class="form-control" name="address" value="${user.address}">
+                        <label class="form-label">Address <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="address" value="${user.address}" required>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label class="form-label">Ethnicity</label>
@@ -113,29 +125,54 @@
                 <div class="section-title"><i class="fas fa-briefcase"></i> Job Information</div>
                 <div class="row">
                     <div class="col-md-4 mb-3">
-                        <label class="form-label">Department</label>
-                        <select name="departmentId" class="form-select" <c:if test="${roleId != 2 && roleId != 3}">disabled</c:if>>
+                        <label class="form-label">
+                            Department
+                            <c:if test="${roleId == 2 || roleId == 3}">
+                                <span class="text-danger">*</span>
+                            </c:if>
+                        </label>
+                        <select name="departmentId" id="departmentId" class="form-select" 
+                                <c:if test="${roleId != 2 && roleId != 3}">disabled</c:if>
+                                onchange="filterPositions()">
                             <option value="">-- Select Department --</option>
                             <c:forEach var="dept" items="${departmentList}">
-                                <option value="${dept.departmentId}" <c:if test="${user.departmentId==dept.departmentId}">selected</c:if>>${dept.name}</option>
+                                <option value="${dept.departmentId}" 
+                                    <c:if test="${user.departmentId==dept.departmentId}">selected</c:if>>
+                                    ${dept.name}
+                                </option>
                             </c:forEach>
                         </select>
+                        <c:if test="${roleId != 2 && roleId != 3}">
+                            <small class="text-muted">Only HR can edit this field</small>
+                        </c:if>
                     </div>
+                    
                     <div class="col-md-4 mb-3">
-                        <label class="form-label">Position</label>
-                        <select name="positionId" class="form-select" <c:if test="${roleId != 2 && roleId != 3}">disabled</c:if>>
+                        <label class="form-label">
+                            Position
+                            <c:if test="${roleId == 2 || roleId == 3}">
+                                <span class="text-danger">*</span>
+                            </c:if>
+                        </label>
+                        <select name="positionId" id="positionId" class="form-select" 
+                                <c:if test="${roleId != 2 && roleId != 3}">disabled</c:if>>
                             <option value="">-- Select Position --</option>
-                            <c:forEach var="pos" items="${positionList}">
-                                <option value="${pos.positionId}" <c:if test="${user.positionId==pos.positionId}">selected</c:if>>${pos.name}</option>
-                            </c:forEach>
+                            <!-- Positions will be loaded by JavaScript -->
                         </select>
+                        <c:if test="${roleId != 2 && roleId != 3}">
+                            <small class="text-muted">Only HR can edit this field</small>
+                        </c:if>
                     </div>
+                    
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Degree</label>
                         <select name="degreeId" class="form-select">
                             <option value="">-- Select Degree --</option>
                             <c:forEach var="d" items="${degreeList}">
-                                <option value="${d.degreeId}" <c:if test="${user.degreeId==d.degreeId}">selected</c:if>>${d.name}</option>
+                                <option value="${d.degreeId}" 
+                                    <c:if test="${user.degreeId==d.degreeId}">selected</c:if>>
+                                    ${d.name}
+                                </option>
                             </c:forEach>
                         </select>
                     </div>
@@ -144,12 +181,141 @@
 
             <!-- Action Buttons -->
             <div class="form-actions">
-                <button type="submit" class="btn-save btn-custom"><i class="fas fa-save"></i> Save Changes</button>
-                <a href="<c:url value='/view' />" class="btn-back btn-custom"><i class="fas fa-arrow-left"></i> Back</a>
+                <button type="submit" class="btn-save btn-custom">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a href="<c:url value='/view' />" class="btn-back btn-custom">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
             </div>
         </form>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// ===== DATA FROM JSP - ALL POSITIONS =====
+const allPositions = [
+    <c:forEach var="p" items="${positionList}" varStatus="status">
+    {
+        positionId: ${p.positionId},
+        name: "${p.name}",
+        departmentId: ${p.departmentId}
+    }<c:if test="${!status.last}">,</c:if>
+    </c:forEach>
+];
+
+// Current selected values from user data
+const currentDepartmentId = "${user.departmentId}";
+const currentPositionId = "${user.positionId}";
+const canEditJobInfo = ${roleId == 2 || roleId == 3};
+
+console.log("Loaded " + allPositions.length + " positions");
+console.log("Current department: " + currentDepartmentId);
+console.log("Current position: " + currentPositionId);
+console.log("Can edit job info: " + canEditJobInfo);
+
+/**
+ * Filter positions based on selected department
+ */
+function filterPositions() {
+    const departmentSelect = document.getElementById('departmentId');
+    const positionSelect = document.getElementById('positionId');
+    const selectedDepartmentId = departmentSelect.value;
+    
+    console.log("Department changed to: " + selectedDepartmentId);
+    
+    // Clear position dropdown
+    positionSelect.innerHTML = '<option value="">-- Select Position --</option>';
+    
+    if (!selectedDepartmentId) {
+        console.log("No department selected");
+        return;
+    }
+    
+    // Filter positions by departmentId
+    const filteredPositions = allPositions.filter(function(pos) {
+        return pos.departmentId == selectedDepartmentId;
+    });
+    
+    console.log("Filtered " + filteredPositions.length + " positions");
+    
+    // Add filtered options to dropdown
+    if (filteredPositions.length > 0) {
+        filteredPositions.forEach(function(pos) {
+            const option = document.createElement('option');
+            option.value = pos.positionId;
+            option.textContent = pos.name;
+            
+            // Keep current selection if it matches
+            if (pos.positionId == currentPositionId) {
+                option.selected = true;
+            }
+            
+            positionSelect.appendChild(option);
+        });
+    } else {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'No positions available for this department';
+        positionSelect.appendChild(option);
+    }
+}
+
+/**
+ * Initialize on page load
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    // If department is already selected, filter positions
+    if (currentDepartmentId) {
+        console.log("Initializing with department: " + currentDepartmentId);
+        filterPositions();
+    }
+});
+
+/**
+ * Form validation
+ */
+document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+    // Validate CCCD
+    const cccd = document.querySelector('input[name="cccd"]').value;
+    if (cccd && !/^[0-9]{12}$/.test(cccd)) {
+        alert('CCCD must be exactly 12 digits!');
+        e.preventDefault();
+        return false;
+    }
+    
+    // Validate phone
+    const phone = document.querySelector('input[name="phoneNumber"]').value;
+    if (phone && !/^(0|\+84)[0-9]{9}$/.test(phone)) {
+        alert('Invalid phone format! Use: 0xxxxxxxxx or +84xxxxxxxxx');
+        e.preventDefault();
+        return false;
+    }
+    
+    // Validate age (must be 18+)
+    const birthDate = document.querySelector('input[name="birthDate"]').value;
+    if (birthDate) {
+        const birth = new Date(birthDate);
+        const today = new Date();
+        const age = Math.floor((today - birth) / (365.25 * 24 * 60 * 60 * 1000));
+        
+        if (age < 18) {
+            alert('User must be at least 18 years old!');
+            e.preventDefault();
+            return false;
+        }
+        
+        if (birth > today) {
+            alert('Birth date cannot be in the future!');
+            e.preventDefault();
+            return false;
+        }
+    }
+    
+    return true;
+});
+</script>
 </body>
 </html>

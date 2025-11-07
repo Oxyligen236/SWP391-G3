@@ -32,13 +32,20 @@ public class CreateUserServlet extends HttpServlet {
             return;
         }
 
-        String[] fields = {"fullname","email","phoneNumber","birthDate","gender","address","nation","cccd","degreeId"};
+        String depParam = request.getParameter("departmentId");
+        String posParam = request.getParameter("positionId");
+        request.setAttribute("formDepartmentId", depParam);
+        request.setAttribute("formPositionId", posParam);
+
+        String[] fields = {"fullname","email","phoneNumber","birthDate","gender","address","nation","ethnicity","cccd","degreeId"};
         for (String f : fields) {
             String val = request.getParameter(f);
             if (val != null) request.setAttribute("form" + capitalize(f), val);
         }
 
-        loadDropdownData(request);
+        Integer selectedDeptId = parseInteger(depParam);
+        loadDropdownData(request, selectedDeptId);
+
         request.getRequestDispatcher("/view/profile/createUser.jsp").forward(request, response);
     }
 
@@ -102,23 +109,23 @@ public class CreateUserServlet extends HttpServlet {
             request.setAttribute("error", errorMsg.toString());
             preserveFormData(request, fullname, email, phoneNumber, birthDate, gender,
                     address, nation, ethnicity, cccd, depParam, posParam, degParam);
-            loadDropdownData(request);
+            loadDropdownData(request, departmentId);
             request.getRequestDispatcher("/view/profile/createUser.jsp").forward(request, response);
             return;
         }
 
         UserDTO user = new UserDTO();
-        user.setFullname(fullname); 
-        user.setEmail(email); 
+        user.setFullname(fullname);
+        user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
-        user.setBirthDate(birthDate); 
-        user.setGender(gender); 
+        user.setBirthDate(birthDate);
+        user.setGender(gender);
         user.setAddress(address);
-        user.setNation(nation); 
-        user.setEthnicity(ethnicity); 
+        user.setNation(nation);
+        user.setEthnicity(ethnicity);
         user.setCccd(cccd);
-        user.setDepartmentId(departmentId); 
-        user.setPositionId(positionId); 
+        user.setDepartmentId(departmentId);
+        user.setPositionId(positionId);
         user.setDegreeId(degreeId);
 
         Integer userId = userDao.createUserReturnId(user);
@@ -127,16 +134,16 @@ public class CreateUserServlet extends HttpServlet {
             request.setAttribute("newUserId", userId);
             System.out.println("User created: " + userId);
         } else {
-            request.setAttribute("error", " User creation failed!");
-            System.out.println(" User creation failed");
+            request.setAttribute("error", "User creation failed!");
+            System.out.println("User creation failed");
             preserveFormData(request, fullname, email, phoneNumber, birthDate, gender,
                     address, nation, ethnicity, cccd, depParam, posParam, degParam);
-            loadDropdownData(request);
+            loadDropdownData(request, departmentId);
             request.getRequestDispatcher("/view/profile/createUser.jsp").forward(request, response);
             return;
         }
 
-        loadDropdownData(request);
+        loadDropdownData(request, departmentId);
         request.getRequestDispatcher("/view/profile/createUser.jsp").forward(request, response);
     }
 
@@ -147,10 +154,10 @@ public class CreateUserServlet extends HttpServlet {
 
     private Integer parseInteger(String param) {
         if (param == null || param.isEmpty()) return null;
-        try { 
-            return Integer.parseInt(param); 
-        } catch (NumberFormatException e) { 
-            return null; 
+        try {
+            return Integer.parseInt(param);
+        } catch (NumberFormatException e) {
+            return null;
         }
     }
 
@@ -171,24 +178,27 @@ public class CreateUserServlet extends HttpServlet {
         request.setAttribute("formDegreeId", degreeId);
     }
 
-    private void loadDropdownData(HttpServletRequest request) {
-        DepartmentDAO deptDao = new DepartmentDAO();
-        PositionDAO posDao = new PositionDAO();
-        DegreeDAO degDao = new DegreeDAO();
+  private void loadDropdownData(HttpServletRequest request, Integer departmentId) {
+    DepartmentDAO deptDao = new DepartmentDAO();
+    PositionDAO posDao = new PositionDAO();
+    DegreeDAO degDao = new DegreeDAO();
 
-        List<Department> departments = deptDao.getAll();
-        request.setAttribute("departments", departments != null ? departments : new ArrayList<>());
+    // Load all departments
+    List<Department> departments = deptDao.getAll();
+    request.setAttribute("departments", departments != null ? departments : new ArrayList<>());
 
-        List<Position> positions = posDao.getAll();
-        request.setAttribute("positions", positions != null ? positions : new ArrayList<>());
+    // Load ALL positions (không filter)
+    List<Position> positions = posDao.getAll(); // Thay đổi từ getByDepartmentId
+    request.setAttribute("positions", positions != null ? positions : new ArrayList<>());
 
-        List<Degree> degrees = degDao.getAll();
-        request.setAttribute("degrees", degrees != null ? degrees : new ArrayList<>());
+    // Load all degrees
+    List<Degree> degrees = degDao.getAll();
+    request.setAttribute("degrees", degrees != null ? degrees : new ArrayList<>());
 
-        List<String> genders = List.of("Male", "Female", "Other");
-        request.setAttribute("genders", genders);
-    }
-
+    // Load genders
+    List<String> genders = List.of("Male", "Female", "Other");
+    request.setAttribute("genders", genders);
+}
     private String capitalize(String str) {
         if (str == null || str.isEmpty()) return str;
         return Character.toUpperCase(str.charAt(0)) + str.substring(1);

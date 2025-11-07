@@ -190,17 +190,19 @@ public class EditProfileServlet extends HttpServlet {
         request.getRequestDispatcher("/view/profile/editProfile.jsp").forward(request, response);
     }
 
-    private void setDropdowns(HttpServletRequest request) {
-        request.setAttribute("degreeList", degreeDAO.getAll());
-        request.setAttribute("departmentList", departmentDAO.getAll());
-        request.setAttribute("positionList", positionDAO.getAll());
+   private void setDropdowns(HttpServletRequest request) {
+    request.setAttribute("degreeList", degreeDAO.getAll());
+    request.setAttribute("departmentList", departmentDAO.getAll());
+    
+    // Load ALL positions (không filter)
+    request.setAttribute("positionList", positionDAO.getAll());
 
-        List<String> genders = new ArrayList<>();
-        genders.add("Male");
-        genders.add("Female");
-        genders.add("Other");
-        request.setAttribute("genders", genders);
-    }
+    List<String> genders = new ArrayList<>();
+    genders.add("Male");
+    genders.add("Female");
+    genders.add("Other");
+    request.setAttribute("genders", genders);
+}
 
     private Integer parseOrNull(String str) {
         try {
