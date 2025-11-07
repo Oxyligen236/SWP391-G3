@@ -32,7 +32,7 @@
                         <li class="nav-item"><a class="nav-link" href="#contact">Job description</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle p-0" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="https://ui-avatars.com/api/?name=${fn:escapeXml(sessionScope.users.fullname)}&size=40&background=ff80ab&color=fff&bold=true" 
+                                <img src="https://ui-avatars.com/api/?name=${fn:escapeXml(sessionScope.users.fullname)}&size=40&background=b5d3ff&color=0d3b66&bold=true" 
                                      alt="Avatar" 
                                      class="rounded-circle" 
                                      style="width: 40px; height: 40px; object-fit: cover; border: 2px solid #fff;" />
@@ -40,7 +40,7 @@
                             <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="min-width: 250px;">
                                 <li>
                                     <div class="dropdown-item-text d-flex align-items-center py-3">
-                                        <img src="https://ui-avatars.com/api/?name=${fn:escapeXml(sessionScope.users.fullname)}&size=60&background=ff80ab&color=fff&bold=true" 
+                                        <img src="https://ui-avatars.com/api/?name=${fn:escapeXml(sessionScope.users.fullname)}&size=60&background=b5d3ff&color=0d3b66&bold=true" 
                                              alt="Avatar" 
                                              class="rounded-circle me-3" 
                                              style="width: 60px; height: 60px; object-fit: cover;" />

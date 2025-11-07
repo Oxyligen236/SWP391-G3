@@ -1,9 +1,5 @@
 package hrms.service;
 
-import hrms.dto.AttendanceDTO;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -11,20 +7,29 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import hrms.dto.AttendanceDTO;
+
 public class AttendanceExportService {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    /**
-     * Generate Excel workbook containing attendance data
-     * 
-     * @param attendances List of attendance records to export
-     * @param exportedBy Username of the person performing the export
-     * @param appliedFilters Map of filters applied to the data
-     * @return Workbook containing formatted attendance data
-     */
+
     public Workbook generateAttendanceExcel(List<AttendanceDTO> attendances, 
                                            String exportedBy, 
                                            Map<String, String> appliedFilters) {
@@ -358,21 +363,14 @@ public class AttendanceExportService {
         return sb.length() > 0 ? sb.toString() : "None";
     }
 
-    /**
-     * Apply final formatting to the sheet including auto-sizing columns
-     */
+
     private void applyFormatting(Sheet sheet) {
-        // Auto-size all 17 columns to fit content
+
         for (int i = 0; i < 17; i++) {
             sheet.autoSizeColumn(i);
         }
     }
 
-    /**
-     * Format LocalTime to HH:mm:ss string
-     * Returns empty string for null values
-     * Returns "00:00:00" for zero time values (not empty)
-     */
     private String formatTimeValue(LocalTime time) {
         if (time == null) {
             return "";
@@ -380,9 +378,7 @@ public class AttendanceExportService {
         return time.format(TIME_FORMATTER);
     }
 
-    /**
-     * Format LocalDate to yyyy-MM-dd string
-     */
+
     private String formatDateValue(LocalDate date) {
         if (date == null) {
             return "";

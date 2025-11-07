@@ -186,13 +186,7 @@ public class ExportAttendanceServlet extends HttpServlet {
             }
         }
     }
-    
-    /**
-     * Extract all filter parameters into Map for logging and summary
-     * 
-     * @param request HTTP request containing filter parameters
-     * @return Map of filter names to values
-     */
+
     private Map<String, String> extractFilters(HttpServletRequest request) {
         Map<String, String> filters = new HashMap<>();
         
@@ -245,12 +239,7 @@ public class ExportAttendanceServlet extends HttpServlet {
         return filters;
     }
     
-    /**
-     * Format filter map as readable string for logging
-     * 
-     * @param filters Map of applied filters
-     * @return Formatted string representation
-     */
+   
     private String formatFiltersForLog(Map<String, String> filters) {
         if (filters == null || filters.isEmpty()) {
             return "None";
