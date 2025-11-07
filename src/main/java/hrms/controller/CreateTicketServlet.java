@@ -33,19 +33,29 @@ public class CreateTicketServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Kiểm tra nếu user chọn Overtime Date
+        String selectedTypeId = request.getParameter("selectedTypeId");
+
+        if ("3".equals(selectedTypeId)) {
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute("account");
+
+            if (account == null || account.getRole() != 2) {
+                session.setAttribute("errorMessage", "Only HR personnel can create Recruitment Tickets!");
+                response.sendRedirect(request.getContextPath() + "/create-ticket");
+                return;
+            }
+        }
+
         String overtimeDateStr = request.getParameter("overtimeDate");
 
         if (overtimeDateStr != null && !overtimeDateStr.isEmpty()) {
             try {
                 LocalDate overtimeDate = LocalDate.parse(overtimeDateStr);
 
-                // Gọi CalendarCheck để xác định loại ngày
                 CalendarCheck calendarCheck = new CalendarCheck();
                 String dayType = calendarCheck.getDayType(overtimeDate);
                 double otSalaryPercent = calendarCheck.getOTSalaryPercentage(dayType);
 
-                // Gửi thông tin về JSP
                 request.setAttribute("selectedOvertimeDate", overtimeDateStr);
                 request.setAttribute("dayType", dayType);
                 request.setAttribute("otSalaryPer", otSalaryPercent);
@@ -68,6 +78,8 @@ public class CreateTicketServlet extends HttpServlet {
             return;
         }
 
+        int userRole = account.getRole();
+
         UserDAO userDAO = new UserDAO();
         int userId = account.getUserID();
         String fullName = userDAO.getUserById(userId).getFullname();
@@ -83,6 +95,7 @@ public class CreateTicketServlet extends HttpServlet {
 
         request.setAttribute("userId", userId);
         request.setAttribute("fullname", fullName);
+        request.setAttribute("userRole", userRole);
         request.setAttribute("ticketTypes", ticketTypes);
         request.setAttribute("leaveTypes", leaveTypes);
         request.setAttribute("currentDate", currentDate);

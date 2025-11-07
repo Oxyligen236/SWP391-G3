@@ -46,6 +46,17 @@ public class SubmitTicketServlet extends HttpServlet {
 
             TicketDAO ticketDAO = new TicketDAO();
 
+            if (selectedTypeId == 3) {
+
+                if (account.getRole() != 2) {
+                    session.setAttribute("errorMessage", "Access denied! Only HR can create Recruitment Tickets.");
+                    session.setAttribute("selectedTypeId", selectedTypeId);
+                    response.sendRedirect(request.getContextPath() + "/create-ticket");
+                    return;
+                }
+
+            }
+
             String startDate = null;
             String endDate = null;
             String reason = null;
@@ -177,7 +188,6 @@ public class SubmitTicketServlet extends HttpServlet {
                 case 3: // ===== RECRUITMENT TICKET =====
                     reason = request.getParameter("ticketContent");
 
-                    // Kiểm tra null/empty
                     if (reason == null || reason.trim().isEmpty()) {
                         session.setAttribute("errorMessage", "Recruitment request content is required!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
@@ -185,7 +195,6 @@ public class SubmitTicketServlet extends HttpServlet {
                         return;
                     }
 
-                    // Content không được quá ngắn
                     if (reason.trim().length() < 1) {
                         session.setAttribute("errorMessage", "Recruitment request must be at least 1 character!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
