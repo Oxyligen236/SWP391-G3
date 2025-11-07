@@ -23,7 +23,7 @@ public class HolidayDAO extends DBContext {
                 Holiday holiday = new Holiday(
                         rs.getInt("HolidayID"),
                         rs.getInt("CalendarID"),
-                        rs.getDate("Date_Holiday").toLocalDate(), // ✅ Convert Date to LocalDate
+                        rs.getDate("Date_Holiday").toLocalDate(),
                         rs.getString("Name"),
                         rs.getBoolean("Is_Substitute"),
                         rs.getString("Description")
@@ -43,8 +43,7 @@ public class HolidayDAO extends DBContext {
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, h.getCalendarID());
-            ps.setDate(2, java.sql.Date.valueOf(h.getDateHoliday())); // ✅ Convert LocalDate to Date
-            ps.setString(3, h.getName());
+            ps.setDate(2, java.sql.Date.valueOf(h.getDateHoliday()));
             ps.setBoolean(4, h.isSubstitute());
             ps.setString(5, h.getDescription());
             ps.executeUpdate();
@@ -64,7 +63,7 @@ public class HolidayDAO extends DBContext {
                 Holiday holiday = new Holiday(
                         rs.getInt("HolidayID"),
                         rs.getInt("CalendarID"),
-                        rs.getDate("Date_Holiday").toLocalDate(), // ✅ Convert Date to LocalDate
+                        rs.getDate("Date_Holiday").toLocalDate(),
                         rs.getString("Name"),
                         rs.getBoolean("Is_Substitute"),
                         rs.getString("Description")
