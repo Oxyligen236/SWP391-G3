@@ -123,21 +123,43 @@ public String getNameById(Integer id) {
 }
 public List<Position> getByDepartmentId(int departmentId) {
     List<Position> list = new ArrayList<>();
-    String sql = "SELECT * FROM Position WHERE departmentId = ?";
+    String sql = "SELECT * FROM Positions WHERE DepartmentID = ?";
     try (PreparedStatement ps = connection.prepareStatement(sql)) {
         ps.setInt(1, departmentId);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
             Position p = new Position();
-            p.setPositionId(rs.getInt("positionId"));
-            p.setName(rs.getString("name"));
-            p.setDepartmentId(rs.getInt("departmentId"));
+            p.setPositionId(rs.getInt("PositionID"));
+            p.setName(rs.getString("Name"));
+            p.setDepartmentId(rs.getInt("DepartmentID"));
             list.add(p);
         }
     } catch (Exception e) {
         e.printStackTrace();
     }
     return list;
+}
+
+/**
+ * Check if a position belongs to a specific department
+ * @param positionID the position ID
+ * @param departmentID the department ID
+ * @return true if position belongs to department, false otherwise
+ */
+public boolean checkPositionBelongsToDepartment(int positionID, int departmentID) {
+    String sql = "SELECT COUNT(*) FROM Positions WHERE PositionID = ? AND DepartmentID = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, positionID);
+        ps.setInt(2, departmentID);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false;
 }
 
 }

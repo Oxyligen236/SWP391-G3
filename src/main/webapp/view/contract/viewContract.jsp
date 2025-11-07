@@ -205,7 +205,7 @@ pageEncoding="UTF-8" isELIgnored="false" %>
             <div class="detail-item-full">
               <label class="detail-label">
                 Status:
-                <c:if test="${(sessionScope.account.role == 1 || sessionScope.account.role == 2) && sessionScope.account.userID != contract.userId}">
+                <c:if test="${(sessionScope.account.role == 1 || sessionScope.account.role == 2) && sessionScope.account.userID != contract.userId && contract.status != 'Cancelled' && contract.status != 'Archived'}">
                   <button type="button" id="editStatusBtn" class="btn-edit" 
                           data-role="${sessionScope.account.role}"
                           data-user-id="${sessionScope.account.userID}"
@@ -263,7 +263,7 @@ pageEncoding="UTF-8" isELIgnored="false" %>
             <div class="detail-item-full">
               <label class="detail-label">
                 Note:
-                <c:if test="${(sessionScope.account.role == 1 || sessionScope.account.role == 2) && sessionScope.account.userID != contract.userId}">
+                <c:if test="${(sessionScope.account.role == 1 || sessionScope.account.role == 2) && sessionScope.account.userID != contract.userId && contract.status != 'Cancelled' && contract.status != 'Archived'}">
                   <button type="button" id="editNoteBtn" class="btn-edit" 
                           data-role="${sessionScope.account.role}"
                           data-user-id="${sessionScope.account.userID}"

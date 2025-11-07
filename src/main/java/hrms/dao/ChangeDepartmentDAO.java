@@ -129,5 +129,41 @@ public class ChangeDepartmentDAO extends DBContext {
         return 0;
     }
     
+    /**
+     * Get current positionID of a user
+     * @param userID the user ID
+     * @return positionID or 0 if not found
+     */
+    public int getCurrentPositionID(int userID) {
+        String sql = "SELECT PositionID FROM Users WHERE UserID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("PositionID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    /**
+     * Update user department and reset position to NULL
+     * @param userID the user ID
+     * @param departmentID the new department ID
+     * @return true if successful, false otherwise
+     */
+    public boolean updateUserDepartmentAndResetPosition(int userID, int departmentID) {
+        String sql = "UPDATE Users SET DepartmentID = ?, PositionID = NULL WHERE UserID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, departmentID);
+            ps.setInt(2, userID);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     
 }

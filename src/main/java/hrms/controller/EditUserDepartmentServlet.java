@@ -5,6 +5,7 @@ import java.util.List;
 
 import hrms.dao.ChangeDepartmentDAO;
 import hrms.dao.DepartmentDAO;
+import hrms.dao.PositionDAO;
 import hrms.dto.UserDTO;
 import hrms.model.Department;
 import jakarta.servlet.ServletException;
@@ -66,6 +67,31 @@ public class EditUserDepartmentServlet extends HttpServlet {
             int newDepartmentID = Integer.parseInt(request.getParameter("newDepartmentID"));
 
             ChangeDepartmentDAO changeDepartmentDAO = new ChangeDepartmentDAO();
+            
+            // Get current position and department
+            int currentPositionID = changeDepartmentDAO.getCurrentPositionID(userID);
+            int currentDepartmentID = changeDepartmentDAO.getCurrentDepartmentID(userID);
+            
+            // If department changes, check if current position belongs to new department
+            if (currentDepartmentID != newDepartmentID && currentPositionID > 0) {
+                // Check if current position belongs to new department
+                PositionDAO positionDAO = new PositionDAO();
+                boolean positionBelongsToDepartment = positionDAO.checkPositionBelongsToDepartment(currentPositionID, newDepartmentID);
+                
+                if (!positionBelongsToDepartment) {
+                    // Reset position to NULL if it doesn't belong to new department
+                    boolean resetSuccess = changeDepartmentDAO.updateUserDepartmentAndResetPosition(userID, newDepartmentID);
+                    if (resetSuccess) {
+                        session.setAttribute("successMessage", "Cập nhật phòng ban thành công! Chức vụ đã được reset do không thuộc phòng ban mới.");
+                    } else {
+                        session.setAttribute("errorMessage", "Cập nhật phòng ban thất bại!");
+                    }
+                    response.sendRedirect(request.getContextPath() + "/userlist");
+                    return;
+                }
+            }
+            
+            // Normal update if position is compatible or NULL
             boolean success = changeDepartmentDAO.updateUserDepartment(userID, newDepartmentID);
 
             if(success) {
@@ -78,7 +104,6 @@ public class EditUserDepartmentServlet extends HttpServlet {
         } catch (Exception e) {
             session.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
         }
-
 
         response.sendRedirect(request.getContextPath() + "/userlist");
     }

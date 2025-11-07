@@ -120,5 +120,18 @@ public class ChangePositionDAO extends DBContext {
         return -1;
     }
     
+    public int getCurrentDepartmentID(int userID) {
+        String sql = "SELECT DepartmentID FROM Users WHERE UserID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("DepartmentID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
     
 }
