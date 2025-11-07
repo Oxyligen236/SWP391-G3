@@ -33,14 +33,14 @@ public class CreateAccountServlet extends HttpServlet {
             try {
                 int userID = Integer.parseInt(userIDParam);
                 req.setAttribute("userId", userID);
-                System.out.println("Received userID from URL: " + userID);
+                System.out.println("Received userId from URL: " + userID);
             } catch (NumberFormatException e) {
-                req.setAttribute("errorMessage", "❌ Invalid userID!");
-                System.out.println("Invalid userID format: " + userIDParam);
+                req.setAttribute("errorMessage", "❌ Invalid userId!");
+                System.out.println("Invalid userId format: " + userIDParam);
             }
         } else {
             req.setAttribute("errorMessage", "⚠️ User ID is required!");
-            System.out.println("No userID parameter provided");
+            System.out.println("No userId parameter provided");
         }
 
         req.setAttribute("roleList", roleDAO.getAllRoles());
@@ -60,51 +60,81 @@ public class CreateAccountServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         try {
-            int userID = Integer.parseInt(req.getParameter("userID"));
+            String userIDParam = req.getParameter("userId");
+            String roleIDParam = req.getParameter("roleID");
+            
+            if (userIDParam == null || userIDParam.trim().isEmpty()) {
+                req.setAttribute("errorMessage", "❌ User ID is required!");
+                forwardWithRoles(req, resp);
+                return;
+            }
+
+            if (roleIDParam == null || roleIDParam.trim().isEmpty()) {
+                req.setAttribute("errorMessage", "❌ Role is required!");
+                req.setAttribute("userId", userIDParam);
+                forwardWithRoles(req, resp);
+                return;
+            }
+
+            int userID = Integer.parseInt(userIDParam);
+            int roleID = Integer.parseInt(roleIDParam);
+            
             String username = req.getParameter("username");
             String password = req.getParameter("password");
             String confirmPassword = req.getParameter("confirmPassword");
-            int roleID = Integer.parseInt(req.getParameter("roleID"));
-            boolean isActive = Boolean.parseBoolean(req.getParameter("isActive"));
+            String isActiveParam = req.getParameter("isActive");
+            
+            boolean isActive = isActiveParam != null && isActiveParam.equals("true");
+
+            System.out.println("Form submitted - userId: " + userID + ", username: " + username + ", roleID: " + roleID + ", isActive: " + isActive);
 
             if (username == null || username.trim().isEmpty()) {
                 req.setAttribute("errorMessage", "❌ Username cannot be empty!");
-                req.setAttribute("userID", userID);
+                req.setAttribute("userId", userID);
+                forwardWithRoles(req, resp);
+                return;
+            }
+
+            username = username.trim();
+
+            if (username.length() < 3) {
+                req.setAttribute("errorMessage", "❌ Username must be at least 3 characters!");
+                req.setAttribute("userId", userID);
                 forwardWithRoles(req, resp);
                 return;
             }
 
             if (password == null || password.trim().isEmpty()) {
                 req.setAttribute("errorMessage", "❌ Password cannot be empty!");
-                req.setAttribute("userID", userID);
+                req.setAttribute("userId", userID);
                 forwardWithRoles(req, resp);
                 return;
             }
 
             if (password.length() < 6) {
                 req.setAttribute("errorMessage", "❌ Password must be at least 6 characters!");
-                req.setAttribute("userID", userID);
+                req.setAttribute("userId", userID);
                 forwardWithRoles(req, resp);
                 return;
             }
 
-            if (!password.equals(confirmPassword)) {
+            if (confirmPassword == null || !password.equals(confirmPassword)) {
                 req.setAttribute("errorMessage", "❌ Password confirmation does not match!");
-                req.setAttribute("userID", userID);
+                req.setAttribute("userId", userID);
                 forwardWithRoles(req, resp);
                 return;
             }
 
             if (accountDAO.getAccountByUsername(username) != null) {
                 req.setAttribute("errorMessage", "❌ Username already exists!");
-                req.setAttribute("userID", userID);
+                req.setAttribute("userId", userID);
                 forwardWithRoles(req, resp);
                 return;
             }
 
             if (accountDAO.getAccountByUserID(userID) != null) {
                 req.setAttribute("errorMessage", "❌ This user already has an account!");
-                req.setAttribute("userID", userID);
+                req.setAttribute("userId", userID);
                 forwardWithRoles(req, resp);
                 return;
             }
@@ -123,22 +153,24 @@ public class CreateAccountServlet extends HttpServlet {
             boolean created = accountDAO.createAccount(account);
 
             if (created) {
-                req.setAttribute("successMessage", "✅ Account created successfully for userID: " + userID);
+                req.setAttribute("successMessage", "✅ Account created successfully!");
+                req.setAttribute("newUsername", username);
+                req.setAttribute("newUserId", userID);
                 req.setAttribute("resetForm", true);
-                req.setAttribute("userID", userID);
-                System.out.println("Account created for userID: " + userID + " with username: " + username);
+                System.out.println("✅ Account created - userId: " + userID + ", username: " + username);
             } else {
                 req.setAttribute("errorMessage", "❌ Failed to create account!");
-                req.setAttribute("userID", userID);
+                req.setAttribute("userId", userID);
+                System.out.println("❌ Account creation failed for userId: " + userID);
             }
 
         } catch (NumberFormatException e) {
-            req.setAttribute("errorMessage", "❌ Invalid input data!");
-            System.out.println("NumberFormatException: " + e.getMessage());
+            req.setAttribute("errorMessage", "❌ Invalid input data! " + e.getMessage());
+            System.out.println("❌ NumberFormatException: " + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
             req.setAttribute("errorMessage", "💥 System error: " + e.getMessage());
-            System.out.println("Exception: " + e.getMessage());
+            System.out.println("💥 Exception: " + e.getMessage());
             e.printStackTrace();
         }
 
