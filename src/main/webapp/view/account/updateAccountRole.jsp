@@ -71,7 +71,7 @@
             </div>
             
             <div class="popup-footer">
-                <button type="button" class="btn-cancel" onclick="window.location.href='<c:url value='/userlist'/>'">
+                <button type="button" class="btn-cancel" onclick="window.location.href='<c:url value='/account/view'/>'">
                     <i class="fas fa-times"></i> Hủy
                 </button>
                 <button type="submit" class="btn-submit">
