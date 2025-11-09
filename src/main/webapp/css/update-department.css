@@ -1,7 +1,7 @@
 body {
-  font-family: "Segoe UI", Arial, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f5f5f5;
-  color: #333;
+  color: #2c3e50;
   margin: 0;
   padding: 20px 0;
   display: flex;
@@ -180,19 +180,20 @@ select {
 /* Popup Styles */
 .popup-container {
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
   width: 100%;
   padding: 0;
   margin: 20px;
+  overflow: hidden;
 }
 
 .popup-header {
-  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 20px;
-  border-radius: 8px 8px 0 0;
+  padding: 25px 30px;
+  border-radius: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -200,133 +201,150 @@ select {
 
 .popup-header h5 {
   margin: 0;
-  font-weight: 600;
-  font-size: 18px;
+  font-weight: 700;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .popup-body {
-  padding: 25px;
+  padding: 30px;
 }
 
 .info-row {
   display: flex;
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 18px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
 }
 
 .info-row:last-of-type {
-  border-bottom: none;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .info-label {
   font-weight: 600;
-  color: #555;
-  width: 160px;
+  color: #495057;
+  width: 180px;
   flex-shrink: 0;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .info-label i {
-  margin-right: 5px;
-  color: #17a2b8;
+  color: #667eea;
+  font-size: 16px;
 }
 
 .info-value {
-  color: #333;
+  color: #2c3e50;
   flex-grow: 1;
   font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 
 .info-value strong {
-  color: #222;
+  color: #212529;
+  font-weight: 600;
 }
 
 .current-department-badge {
   display: inline-block;
-  background-color: #17a2b8;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .form-group {
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 .select-label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-weight: 600;
-  color: #333;
-  font-size: 14px;
+  color: #495057;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .select-label i {
-  margin-right: 5px;
-  color: #17a2b8;
+  color: #667eea;
+  font-size: 16px;
 }
 
 .department-select {
   width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ccc;
+  padding: 12px 16px;
+  border: 1px solid #dee2e6;
   border-radius: 8px;
   font-size: 15px;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
   background-color: white;
+  cursor: pointer;
 }
 
 .department-select:focus {
-  border-color: #17a2b8;
-  box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.1);
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
 }
 
 .popup-footer {
-  padding: 15px 25px 25px;
+  padding: 0 30px 30px;
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
 }
 
 .btn-cancel {
   background-color: #6c757d;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  font-weight: 600;
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
 }
 
 .btn-cancel:hover {
   background-color: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
 }
 
 .btn-submit {
-  background-color: #17a2b8;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  font-weight: 600;
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
 }
 
 .btn-submit:hover {
-  background-color: #138496;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
