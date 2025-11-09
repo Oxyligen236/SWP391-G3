@@ -393,4 +393,57 @@ public class PayrollDAO extends DBContext {
         return null;
     }
 
+    public boolean addNewPayroll(int userId, double baseSalary, int month, int year) {
+        String sql = "INSERT INTO Payroll (UserID, BaseSalary, Month, Year, TotalWorkHours, PayDate, Status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, userId);
+            st.setDouble(2, baseSalary);
+            st.setInt(3, month);
+            st.setInt(4, year);
+            st.setString(5, "00:00");
+            st.setObject(6, "null");
+            st.setString(7, "Pending");
+            return st.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    public boolean updatePayrollSalary(int payrollId, double netSalary, String workHoursStr) {
+        String sql = "UPDATE Payroll SET NetSalary = ?, TotalWorkHours = ?, Status = 'Calculated' WHERE Payroll_ID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setDouble(1, netSalary);
+            st.setString(2, workHoursStr);
+            st.setInt(3, payrollId);
+            int result = st.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating payroll: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean insertPayroll(Payroll payroll, String workHoursStr) {
+        String sql = "INSERT INTO Payroll (UserID, BaseSalary, Month, Year, TotalWorkHours, NetSalary, PayDate, Status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, payroll.getUserID());
+            st.setDouble(2, payroll.getBaseSalary());
+            st.setInt(3, payroll.getMonth());
+            st.setInt(4, payroll.getYear());
+            st.setString(5, workHoursStr);
+            st.setDouble(6, payroll.getNetSalary());
+            st.setDate(7, payroll.getPayDate() != null ? java.sql.Date.valueOf(payroll.getPayDate()) : null);
+            st.setString(8, payroll.getStatus());
+            int result = st.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            System.err.println("Error inserting payroll: " + e.getMessage());
+            return false;
+        }
+    }
 }

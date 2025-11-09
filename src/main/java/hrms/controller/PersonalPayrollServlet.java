@@ -29,7 +29,6 @@ public class PersonalPayrollServlet extends HttpServlet {
         }
         int userId = account.getUserID();
 
-        // Get pagination parameters
         int page = 1;
         int itemsPerPage = 5;
 
@@ -112,7 +111,6 @@ public class PersonalPayrollServlet extends HttpServlet {
             return;
         }
 
-        // Get pagination parameters
         int page = 1;
         int itemsPerPage = 5;
 

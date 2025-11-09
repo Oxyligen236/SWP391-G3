@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hrms.dao.PayrollDAO;
+import hrms.dao.UserDAO;
 import hrms.dto.PayrollDTO;
 import hrms.dto.PayrollItemDetailDTO;
 import hrms.dto.UserDTO;
@@ -52,7 +53,7 @@ public class PayrollService {
         return dto;
     }
 
-    private List<PayrollItemDetailDTO> getPayrollItemDetails(int payrollId) {
+    public List<PayrollItemDetailDTO> getPayrollItemDetails(int payrollId) {
         List<PayrollItem> items = payrollDao.getPayrollItemsByPayrollId(payrollId);
         List<PayrollItemDetailDTO> details = new ArrayList<>();
 
@@ -186,6 +187,22 @@ public class PayrollService {
                 .stream()
                 .filter(type -> "Adjustment".equals(type.getCategory()))
                 .toList();
+    }
+
+    public int countEmployeesWithoutPayroll(int month, int year) {
+        UserDAO userDAO = new UserDAO();
+        PayrollDAO payrollDAO = new PayrollDAO();
+        List<UserDTO> allUsers = userDAO.getAllWithJoin();
+        int count = 0;
+
+        for (UserDTO user : allUsers) {
+            List<Payroll> payrolls = payrollDAO.searchPayroll(user.getUserId(), month, year, null);
+            if (payrolls.isEmpty()) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
 }

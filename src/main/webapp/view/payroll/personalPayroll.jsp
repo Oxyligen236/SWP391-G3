@@ -102,7 +102,6 @@
                         </tbody>
                     </table>
 
-                    <!-- Pagination -->
                     <div class="pagination-container">
                         <form action="<c:url value='/payroll/personal'/>" method="get" class="items-per-page-form">
                             <label>Items per page:</label>

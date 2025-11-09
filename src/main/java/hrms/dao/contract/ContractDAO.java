@@ -13,11 +13,11 @@ import hrms.dto.ContractDTO;
 import hrms.model.Contract;
 import hrms.utils.DBContext;
 
-public class ContractDAO extends DBContext{
+public class ContractDAO extends DBContext {
 
     /**
-     * Ensure database connection is open and valid
-     * Reconnects if connection is closed
+     * Ensure database connection is open and valid Reconnects if connection is
+     * closed
      */
     private void ensureConnection() throws SQLException {
         try {
@@ -35,33 +35,32 @@ public class ContractDAO extends DBContext{
 
     public List<ContractDTO> getAllContracts() {
         List<ContractDTO> contracts = new ArrayList<>();
-        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, " +
-                 "p.Name AS PositionName, s.FullName AS SignerName " +  
-                 "FROM Contract c " +
-                 "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
-                 "LEFT JOIN Users u ON c.UserID = u.UserID " +
-                 "LEFT JOIN Positions p ON c.PositionID = p.PositionID " +  
-                 "LEFT JOIN Users s ON c.SignerID = s.UserID " +
-                 "ORDER BY c.ContractID";
+        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, "
+                + "p.Name AS PositionName, s.FullName AS SignerName "
+                + "FROM Contract c "
+                + "JOIN Contract_Type t ON c.TypeID = t.TypeID "
+                + "LEFT JOIN Users u ON c.UserID = u.UserID "
+                + "LEFT JOIN Positions p ON c.PositionID = p.PositionID "
+                + "LEFT JOIN Users s ON c.SignerID = s.UserID "
+                + "ORDER BY c.ContractID";
 
         try (
-            PreparedStatement ps = connection.prepareStatement(sql); 
-            ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 ContractDTO contract = new ContractDTO();
                 contract.setContractId(rs.getInt("ContractID"));
                 contract.setUserId(rs.getInt("UserID"));
-                
+
                 Date startDate = rs.getDate("Start_Date");
                 contract.setStartDate(startDate != null ? startDate.toLocalDate() : null);
-                
+
                 Date endDate = rs.getDate("End_Date");
                 contract.setEndDate(endDate != null ? endDate.toLocalDate() : null);
-                
+
                 Date signDate = rs.getDate("Sign_Date");
                 contract.setSignDate(signDate != null ? signDate.toLocalDate() : null);
-                
+
                 contract.setBaseSalary(rs.getDouble("BaseSalary"));
                 contract.setNote(rs.getString("Note"));
                 contract.setStatus(rs.getString("Status"));
@@ -82,7 +81,7 @@ public class ContractDAO extends DBContext{
     public void addContract(Contract contract) {
         String sql = "INSERT INTO Contract(UserID, Start_Date, End_Date, Sign_Date, Duration, BaseSalary, Note, TypeID, PositionID, SignerID) VALUES (?,?,?,?,?,?,?,?,?,?)";
         try (
-             PreparedStatement ps = connection.prepareStatement(sql)) {
+                PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, contract.getUserId());
             ps.setDate(2, java.sql.Date.valueOf(contract.getStartDate()));
             ps.setDate(3, contract.getEndDate() != null ? java.sql.Date.valueOf(contract.getEndDate()) : null);
@@ -98,19 +97,19 @@ public class ContractDAO extends DBContext{
             e.printStackTrace();
         }
     }
+
     public ContractDTO getContractById(int contractId) {
         ContractDTO contract = null;
-        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, " +
-                 "p.Name AS PositionName, s.FullName AS SignerName " +
-                 "FROM Contract c " +
-                 "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
-                 "LEFT JOIN Users u ON c.UserID = u.UserID " +
-                 "LEFT JOIN Positions p ON c.PositionID = p.PositionID " +
-                 "LEFT JOIN Users s ON c.SignerID = s.UserID " +
-                 "WHERE c.ContractID = ?";
+        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, "
+                + "p.Name AS PositionName, s.FullName AS SignerName "
+                + "FROM Contract c "
+                + "JOIN Contract_Type t ON c.TypeID = t.TypeID "
+                + "LEFT JOIN Users u ON c.UserID = u.UserID "
+                + "LEFT JOIN Positions p ON c.PositionID = p.PositionID "
+                + "LEFT JOIN Users s ON c.SignerID = s.UserID "
+                + "WHERE c.ContractID = ?";
 
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, contractId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -145,37 +144,49 @@ public class ContractDAO extends DBContext{
     }
 
     public List<ContractDTO> getContracts(String searchField, String searchValue, String fromDate, String toDate,
-                                       String sortField, String sortOrder) throws Exception {
+            String sortField, String sortOrder) throws Exception {
         List<ContractDTO> list = new ArrayList<>();
         DBContext db = new DBContext();
         StringBuilder sql = new StringBuilder(
-        "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, " +
-        "p.Name AS PositionName, " +  
-        "s.FullName AS SignerName " +  
-        "FROM Contract c " +
-        "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
-        "LEFT JOIN Users u ON c.UserID = u.UserID " +
-        "LEFT JOIN Positions p ON c.PositionID = p.PositionID " +  
-        "LEFT JOIN Users s ON c.SignerID = s.UserID " +            
-        "WHERE 1=1"
-    );
+                "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, "
+                + "p.Name AS PositionName, "
+                + "s.FullName AS SignerName "
+                + "FROM Contract c "
+                + "JOIN Contract_Type t ON c.TypeID = t.TypeID "
+                + "LEFT JOIN Users u ON c.UserID = u.UserID "
+                + "LEFT JOIN Positions p ON c.PositionID = p.PositionID "
+                + "LEFT JOIN Users s ON c.SignerID = s.UserID "
+                + "WHERE 1=1"
+        );
         List<Object> params = new ArrayList<>();
 
-        
         String col = null;
         if (searchField != null) {
             switch (searchField) {
-                case "userId": col = "c.UserID"; break;
-                case "duration": col = "c.Duration"; break;
-                case "baseSalary": col = "c.BaseSalary"; break;
-                case "startDate": col = "c.Start_Date"; break;
-                case "endDate": col = "c.End_Date"; break;
-                case "signDate": col = "c.Sign_Date"; break;
-                default: col = null; break;
+                case "userId":
+                    col = "c.UserID";
+                    break;
+                case "duration":
+                    col = "c.Duration";
+                    break;
+                case "baseSalary":
+                    col = "c.BaseSalary";
+                    break;
+                case "startDate":
+                    col = "c.Start_Date";
+                    break;
+                case "endDate":
+                    col = "c.End_Date";
+                    break;
+                case "signDate":
+                    col = "c.Sign_Date";
+                    break;
+                default:
+                    col = null;
+                    break;
             }
         }
 
-        
         if (col != null && searchValue != null && !searchValue.trim().isEmpty()) {
             if ("c.UserID".equals(col)) {
                 sql.append(" AND ").append(col).append(" = ?");
@@ -187,25 +198,23 @@ public class ContractDAO extends DBContext{
                 sql.append(" AND ").append(col).append(" = ?");
                 params.add(Double.parseDouble(searchValue.trim()));
             } else if (col.endsWith("_Date")) {
-                
+
             } else {
                 sql.append(" AND ").append(col).append(" LIKE ?");
                 params.add("%" + searchValue.trim() + "%");
             }
         }
 
-        
         if (("startDate".equals(searchField) || "endDate".equals(searchField) || "signDate".equals(searchField))
                 && fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
             String dateCol = ("startDate".equals(searchField)) ? "c.Start_Date"
-                           : ("endDate".equals(searchField)) ? "c.End_Date"
-                           : "c.Sign_Date";
+                    : ("endDate".equals(searchField)) ? "c.End_Date"
+                    : "c.Sign_Date";
             sql.append(" AND ").append(dateCol).append(" BETWEEN ? AND ?");
             params.add(Date.valueOf(fromDate));
             params.add(Date.valueOf(toDate));
         }
 
-        
         String orderBy = "";
         if (sortField != null) {
             String sf = sortField.trim();
@@ -225,10 +234,8 @@ public class ContractDAO extends DBContext{
             sql.append(" ORDER BY c.ContractID");
         }
 
-        try (Connection conn = db.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+        try (Connection conn = db.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 
-            
             for (int i = 0; i < params.size(); i++) {
                 Object p = params.get(i);
                 int idx = i + 1;
@@ -272,53 +279,53 @@ public class ContractDAO extends DBContext{
 
     public List<ContractDTO> getContractsByUserId(int userId) throws SQLException {
         List<ContractDTO> contracts = new ArrayList<>();
-        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, " +
-                         "p.Name AS PositionName, s.FullName AS SignerName " +
-                         "FROM Contract c " +
-                         "JOIN Contract_Type t ON c.TypeID = t.TypeID " +
-                         "LEFT JOIN Users u ON c.UserID = u.UserID " +
-                         "LEFT JOIN Positions p ON c.PositionID = p.PositionID " +
-                         "LEFT JOIN Users s ON c.SignerID = s.UserID " +
-                         "WHERE c.UserID = ? ORDER BY c.Start_Date DESC";
-        
+        String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, "
+                + "p.Name AS PositionName, s.FullName AS SignerName "
+                + "FROM Contract c "
+                + "JOIN Contract_Type t ON c.TypeID = t.TypeID "
+                + "LEFT JOIN Users u ON c.UserID = u.UserID "
+                + "LEFT JOIN Positions p ON c.PositionID = p.PositionID "
+                + "LEFT JOIN Users s ON c.SignerID = s.UserID "
+                + "WHERE c.UserID = ? ORDER BY c.Start_Date DESC";
+
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
-            
-            while (rs.next()) {
-                ContractDTO contract = new ContractDTO();
-                contract.setContractId(rs.getInt("ContractID"));
-                contract.setUserId(rs.getInt("UserID"));
-                Date startDate = rs.getDate("Start_Date");
-                contract.setStartDate(startDate != null ? startDate.toLocalDate() : null);
-                Date endDate = rs.getDate("End_Date");
-                contract.setEndDate(endDate != null ? endDate.toLocalDate() : null);
-                Date signDate = rs.getDate("Sign_Date");
-                contract.setSignDate(signDate != null ? signDate.toLocalDate() : null);
-                contract.setDuration(rs.getInt("Duration"));
-                contract.setBaseSalary(rs.getDouble("BaseSalary"));
-                contract.setNote(rs.getString("Note"));
-                contract.setStatus(rs.getString("Status"));
-                contract.setContractTypeName(rs.getString("TypeName"));
-                contract.setPositionName(rs.getString("PositionName"));
-                contract.setSignerName(rs.getString("SignerName"));
-                contract.setEmployeeName(rs.getString("EmployeeName"));
-                contracts.add(contract);
+
+                while (rs.next()) {
+                    ContractDTO contract = new ContractDTO();
+                    contract.setContractId(rs.getInt("ContractID"));
+                    contract.setUserId(rs.getInt("UserID"));
+                    Date startDate = rs.getDate("Start_Date");
+                    contract.setStartDate(startDate != null ? startDate.toLocalDate() : null);
+                    Date endDate = rs.getDate("End_Date");
+                    contract.setEndDate(endDate != null ? endDate.toLocalDate() : null);
+                    Date signDate = rs.getDate("Sign_Date");
+                    contract.setSignDate(signDate != null ? signDate.toLocalDate() : null);
+                    contract.setDuration(rs.getInt("Duration"));
+                    contract.setBaseSalary(rs.getDouble("BaseSalary"));
+                    contract.setNote(rs.getString("Note"));
+                    contract.setStatus(rs.getString("Status"));
+                    contract.setContractTypeName(rs.getString("TypeName"));
+                    contract.setPositionName(rs.getString("PositionName"));
+                    contract.setSignerName(rs.getString("SignerName"));
+                    contract.setEmployeeName(rs.getString("EmployeeName"));
+                    contracts.add(contract);
+                }
             }
         }
-        }
-            return contracts;
-        }
+        return contracts;
+    }
 
     public boolean updateContractNote(int contractId, String note) {
         String sql = "UPDATE Contract SET Note = ? WHERE ContractID = ?";
-        
+
         try {
             ensureConnection();
         } catch (SQLException e) {
             return false;
         }
-        
+
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, note);
             ps.setInt(2, contractId);
@@ -332,13 +339,13 @@ public class ContractDAO extends DBContext{
 
     public boolean updateContractStatus(int contractId, String status) {
         String sql = "UPDATE Contract SET Status = ? WHERE ContractID = ?";
-        
+
         try {
             ensureConnection();
         } catch (SQLException e) {
             return false;
         }
-        
+
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, status);
             ps.setInt(2, contractId);
@@ -351,20 +358,20 @@ public class ContractDAO extends DBContext{
     }
 
     /**
-     * Automatically update contract status based on dates:
-     * - Status 'Pending' or 'Approved' changes to 'Active' when current date >= start date
-     * - Status 'Active' changes to 'Expired' when current date >= end date
-     * Only updates contracts that are not 'Cancelled' or 'Archived'
+     * Automatically update contract status based on dates: - Status 'Pending'
+     * or 'Approved' changes to 'Active' when current date >= start date -
+     * Status 'Active' changes to 'Expired' when current date >= end date Only
+     * updates contracts that are not 'Cancelled' or 'Archived'
      */
     public void autoUpdateContractStatus() {
-        String sql = "UPDATE Contract " +
-                     "SET Status = CASE " +
-                     "  WHEN Status IN ('Pending', 'Approved') AND Start_Date <= CURDATE() THEN 'Active' " +
-                     "  WHEN Status = 'Active' AND End_Date IS NOT NULL AND End_Date <= CURDATE() THEN 'Expired' " +
-                     "  ELSE Status " +
-                     "END " +
-                     "WHERE Status NOT IN ('Cancelled', 'Archived')";
-        
+        String sql = "UPDATE Contract "
+                + "SET Status = CASE "
+                + "  WHEN Status IN ('Pending', 'Approved') AND Start_Date <= CURDATE() THEN 'Active' "
+                + "  WHEN Status = 'Active' AND End_Date IS NOT NULL AND End_Date <= CURDATE() THEN 'Expired' "
+                + "  ELSE Status "
+                + "END "
+                + "WHERE Status NOT IN ('Cancelled', 'Archived')";
+
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
