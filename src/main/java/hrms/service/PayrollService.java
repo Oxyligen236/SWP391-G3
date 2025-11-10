@@ -189,20 +189,20 @@ public class PayrollService {
                 .toList();
     }
 
-    public int countEmployeesWithoutPayroll(int month, int year) {
+    public List<UserDTO> findEmployeesWithoutPayroll(int month, int year) {
         UserDAO userDAO = new UserDAO();
         PayrollDAO payrollDAO = new PayrollDAO();
         List<UserDTO> allUsers = userDAO.getAllWithJoin();
-        int count = 0;
+        List<UserDTO> usersWithoutPayroll = new ArrayList<>();
 
         for (UserDTO user : allUsers) {
             List<Payroll> payrolls = payrollDAO.searchPayroll(user.getUserId(), month, year, null);
             if (payrolls.isEmpty()) {
-                count++;
+                usersWithoutPayroll.add(user);
             }
         }
 
-        return count;
+        return usersWithoutPayroll;
     }
 
 }

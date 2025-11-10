@@ -70,7 +70,7 @@ public class SalaryServlet extends HttpServlet {
         int currentMonth = now.getMonthValue();
         int currentYear = now.getYear();
 
-        int employeesWithoutPayroll = payrollService.countEmployeesWithoutPayroll(currentMonth, currentYear);
+        List<UserDTO> employeesWithoutPayroll = payrollService.findEmployeesWithoutPayroll(currentMonth, currentYear);
 
         request.setAttribute("currentMonth", currentMonth);
         request.setAttribute("currentYear", currentYear);
@@ -130,7 +130,7 @@ public class SalaryServlet extends HttpServlet {
             }
         }
 
-        int employeesWithoutPayroll = payrollService.countEmployeesWithoutPayroll(currentMonth, currentYear);
+        List<UserDTO> employeesWithoutPayroll = payrollService.findEmployeesWithoutPayroll(currentMonth, currentYear);
 
         request.setAttribute("currentMonth", currentMonth);
         request.setAttribute("currentYear", currentYear);
@@ -139,10 +139,10 @@ public class SalaryServlet extends HttpServlet {
         request.setAttribute("failCount", failCount);
 
         if (successCount > 0) {
-            request.setAttribute("successMessage", "Đã tạo " + successCount + " bảng lương thành công!");
+            request.setAttribute("successMessage", "Created " + successCount + " payrolls successfully!");
         }
         if (failCount > 0) {
-            request.setAttribute("errorMessage", "Có " + failCount + " bảng lương tạo thất bại!");
+            request.setAttribute("errorMessage", "There were " + failCount + " payroll creation failures!");
         }
 
         request.getRequestDispatcher("/view/payroll/salaryProcessor.jsp").forward(request, response);
@@ -188,7 +188,7 @@ public class SalaryServlet extends HttpServlet {
             }
         }
 
-        int employeesWithoutPayroll = payrollService.countEmployeesWithoutPayroll(currentMonth, currentYear);
+        List<UserDTO> employeesWithoutPayroll = payrollService.findEmployeesWithoutPayroll(currentMonth, currentYear);
 
         request.setAttribute("currentMonth", currentMonth);
         request.setAttribute("currentYear", currentYear);
