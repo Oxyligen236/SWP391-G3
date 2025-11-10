@@ -411,13 +411,14 @@ public class PayrollDAO extends DBContext {
         return false;
     }
 
-    public boolean updatePayrollSalary(int payrollId, double netSalary, String workHoursStr) {
-        String sql = "UPDATE Payroll SET NetSalary = ?, TotalWorkHours = ?, Status = 'Calculated' WHERE Payroll_ID = ?";
+    public boolean updatePayrollSalary(int payrollId, double netSalary, String workHoursStr, String paymentDate) {
+        String sql = "UPDATE Payroll SET NetSalary = ?, TotalWorkHours = ?,paymentDate = ?, Status = 'Paid' WHERE Payroll_ID = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setDouble(1, netSalary);
             st.setString(2, workHoursStr);
-            st.setInt(3, payrollId);
+            st.setString(3, paymentDate);
+            st.setInt(4, payrollId);
             int result = st.executeUpdate();
             return result > 0;
         } catch (SQLException e) {
@@ -427,7 +428,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public boolean insertPayroll(Payroll payroll, String workHoursStr) {
-        String sql = "INSERT INTO Payroll (UserID, BaseSalary, Month, Year, TotalWorkHours, NetSalary, PayDate, Status) "
+        String sql = "INSERT INTO Payroll (UserID, BaseSalary, Month, Year, TotalWorkHours, NetSalary, PaymentDate, Status) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -437,7 +438,7 @@ public class PayrollDAO extends DBContext {
             st.setInt(4, payroll.getYear());
             st.setString(5, workHoursStr);
             st.setDouble(6, payroll.getNetSalary());
-            st.setDate(7, payroll.getPayDate() != null ? java.sql.Date.valueOf(payroll.getPayDate()) : null);
+            st.setObject(7, null);
             st.setString(8, payroll.getStatus());
             int result = st.executeUpdate();
             return result > 0;

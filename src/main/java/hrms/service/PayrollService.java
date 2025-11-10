@@ -3,11 +3,16 @@ package hrms.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import hrms.dao.AccountDAO;
 import hrms.dao.PayrollDAO;
 import hrms.dao.UserDAO;
+import hrms.dao.contract.ContractDAO;
+import hrms.dto.AccountDTO;
+import hrms.dto.ContractDTO;
 import hrms.dto.PayrollDTO;
 import hrms.dto.PayrollItemDetailDTO;
 import hrms.dto.UserDTO;
+import hrms.model.Account;
 import hrms.model.Payroll;
 import hrms.model.PayrollItem;
 import hrms.model.PayrollType;
@@ -192,10 +197,33 @@ public class PayrollService {
     public List<UserDTO> findEmployeesWithoutPayroll(int month, int year) {
         UserDAO userDAO = new UserDAO();
         PayrollDAO payrollDAO = new PayrollDAO();
+        ContractDAO contractDAO = new ContractDAO();
+        AccountDAO accountDAO = new AccountDAO();
+
         List<UserDTO> allUsers = userDAO.getAllWithJoin();
         List<UserDTO> usersWithoutPayroll = new ArrayList<>();
 
         for (UserDTO user : allUsers) {
+            Account account = accountDAO.getAccountByUserID(user.getUserId());
+            AccountDTO accountDTO = accountDAO.getAccountDTOByID(account.getAccountID());
+            if (accountDTO != null && accountDTO.getRoleName().equals("Admin")) {
+                continue;
+            }
+
+            List<ContractDTO> contracts = contractDAO.getContractsByUserId(user.getUserId());
+            boolean hasActiveContract = false;
+
+            for (ContractDTO contract : contracts) {
+                if ("Active".equals(contract.getStatus())) {
+                    hasActiveContract = true;
+                    break;
+                }
+            }
+
+            if (!hasActiveContract) {
+                continue;
+            }
+
             List<Payroll> payrolls = payrollDAO.searchPayroll(user.getUserId(), month, year, null);
             if (payrolls.isEmpty()) {
                 usersWithoutPayroll.add(user);

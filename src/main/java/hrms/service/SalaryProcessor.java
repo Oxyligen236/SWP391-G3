@@ -104,8 +104,13 @@ public class SalaryProcessor {
                     && !att.getDate().isBefore(startDate)
                     && !att.getDate().isAfter(endDate)) {
 
-                double lateMinutes = convertTimeToHours(att.getLateMinutes()) * 60;
-                double earlyMinutes = convertTimeToHours(att.getEarlyLeaveMinutes()) * 60;
+                LocalTime lateTime = att.getLateMinutes();
+                LocalTime earlyTime = att.getEarlyLeaveMinutes();
+
+                double lateMinutes = lateTime != null
+                        ? (lateTime.getHour() * 60 + lateTime.getMinute()) : 0.0;
+                double earlyMinutes = earlyTime != null
+                        ? (earlyTime.getHour() * 60 + earlyTime.getMinute()) : 0.0;
 
                 if (lateMinutes > gracePeriodMinutes) {
                     totalPenaltyHours += (lateMinutes - gracePeriodMinutes) / 60.0;
@@ -165,7 +170,10 @@ public class SalaryProcessor {
 
             LocalDate otDate = ot.getOt_Date();
             if (otDate != null && !otDate.isBefore(startDate) && !otDate.isAfter(endDate)) {
-                double hours = ot.getTotalHours();
+                LocalTime startTime = ot.getStart_Time();
+                LocalTime endTime = ot.getEnd_Time();
+
+                double hours = Duration.between(startTime, endTime).toMinutes() / 60.0;
 
                 if (calendarCheck.checkHoliday(otDate)) {
                     holidayOT += hours;
@@ -236,7 +244,7 @@ public class SalaryProcessor {
                 continue;
             }
 
-            if (leave.getLeaveTypeID() != 3) {
+            if (leave.getLeaveTypeID() != 2) {
                 continue;
             }
 
@@ -378,9 +386,16 @@ public class SalaryProcessor {
     }
 
     public Payroll createPayroll(int userId, double baseSalary, int month, int year) {
-        int payrollId = 0;
+        Payroll payroll = new Payroll();
+        payroll.setUserID(userId);
+        payroll.setBaseSalary(baseSalary);
+        payroll.setMonth(month);
+        payroll.setYear(year);
 
-        Payroll payroll = calculatePayroll(userId, payrollId, baseSalary, month, year);
+        payroll.setWorkingHours(Duration.ZERO);
+        payroll.setNetSalary(0.0);
+        payroll.setPayDate(null);
+        payroll.setStatus("Pending");
 
         return payroll;
     }

@@ -23,7 +23,7 @@
                 <li>
                   <a href="<c:url value='/edit'/>" target="mainFrame">Edit Profile</a>
                 </li>
-                 <li>
+                <li>
                   <a href="<c:url value='/option/add'/>" target="mainFrame">Add Option</a>
                 </li>
               </ul>
@@ -94,6 +94,9 @@
                 </li>
                 <li>
                   <a href="<c:url value='/payroll/company'/>" target="mainFrame">Company Payroll</a>
+                </li>
+                <li>
+                  <a href="<c:url value='/salary'/>" target="mainFrame">Salary Processor</a>
                 </li>
               </ul>
             </div>
