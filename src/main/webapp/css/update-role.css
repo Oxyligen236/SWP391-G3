@@ -1,8 +1,7 @@
-
 body {
-  font-family: "Segoe UI", Arial, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f5f5f5;
-  color: #333;
+  color: #2c3e50;
   margin: 0;
   padding: 20px 0;
   display: flex;
@@ -20,7 +19,7 @@ header {
 h1 {
   font-size: 24px;
   font-weight: 600;
-  color: #222;
+  color: #2c3e50;
 }
 
 
@@ -35,30 +34,31 @@ form[action="searchAccountRole"] {
 #searchValue {
   width: 300px;
   padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
   font-size: 15px;
   outline: none;
 }
 
 #searchValue:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 3px rgba(0, 123, 255, 0.4);
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
 }
 
 button[type="submit"] {
-  background-color: #007bff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   color: white;
-  padding: 9px 16px;
-  border-radius: 10px;
+  padding: 10px 18px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 button[type="submit"]:hover {
-  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
 }
 
 
@@ -67,36 +67,37 @@ table {
   margin: 0 auto;
   border-collapse: collapse;
   background: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   overflow: hidden;
+  border: 1px solid #dee2e6;
 }
 
 thead {
-  background-color: #f1f3f5;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 th, td {
   text-align: left;
   padding: 14px 18px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #e9ecef;
   font-size: 15px;
 }
 
 th {
-  color: #555;
+  color: white;
   font-weight: 600;
 }
 
 tr:hover {
-  background-color: #f8f9fa;
+  background-color: rgba(102, 126, 234, 0.05);
 }
 
 
 button[type="button"], button[type="submit"]:not([form]) {
   background-color: #e9ecef;
-  color: #333;
-  border: 1px solid #ccc;
+  color: #495057;
+  border: 1px solid #dee2e6;
   padding: 6px 14px;
   border-radius: 8px;
   cursor: pointer;
@@ -108,20 +109,21 @@ button[type="button"]:hover {
 }
 
 button[id^="saveBtn-"] {
-  background-color: #28a745;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
 }
 
 button[id^="saveBtn-"]:hover {
-  background-color: #218838;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
 }
 
 
 select {
   padding: 6px 10px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #dee2e6;
   font-size: 14px;
   outline: none;
 }
@@ -135,26 +137,27 @@ select {
   background-color: #d4edda;
   color: #155724;
   border: 1px solid #c3e6cb;
-  border-radius: 10px;
+  border-radius: 8px;
   font-weight: 500;
 }
 
 /* Popup Styles */
 .popup-container {
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
   width: 100%;
   padding: 0;
   margin: 20px;
+  overflow: hidden;
 }
 
 .popup-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 20px;
-  border-radius: 8px 8px 0 0;
+  padding: 25px 30px;
+  border-radius: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -162,8 +165,11 @@ select {
 
 .popup-header h5 {
   margin: 0;
-  font-weight: 600;
-  font-size: 18px;
+  font-weight: 700;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .close-btn {
@@ -184,128 +190,142 @@ select {
 }
 
 .popup-body {
-  padding: 25px;
+  padding: 30px;
 }
 
 .info-row {
   display: flex;
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 18px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
 }
 
 .info-row:last-of-type {
-  border-bottom: none;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .info-label {
   font-weight: 600;
-  color: #555;
-  width: 140px;
+  color: #495057;
+  width: 160px;
   flex-shrink: 0;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .info-label i {
-  margin-right: 5px;
   color: #667eea;
+  font-size: 16px;
 }
 
 .info-value {
-  color: #333;
+  color: #2c3e50;
   flex-grow: 1;
   font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 
 .info-value strong {
-  color: #222;
+  color: #212529;
+  font-weight: 600;
 }
 
 .current-role-badge {
   display: inline-block;
-  background-color: #5bc0de;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .form-group {
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 .select-label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-weight: 600;
-  color: #333;
-  font-size: 14px;
+  color: #495057;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .select-label i {
-  margin-right: 5px;
   color: #667eea;
+  font-size: 16px;
 }
 
 .role-select {
   width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ccc;
+  padding: 12px 16px;
+  border: 1px solid #dee2e6;
   border-radius: 8px;
   font-size: 15px;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
   background-color: white;
+  cursor: pointer;
 }
 
 .role-select:focus {
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
 }
 
 .popup-footer {
-  padding: 15px 25px 25px;
+  padding: 0 30px 30px;
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
 }
 
 .btn-cancel {
   background-color: #6c757d;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  font-weight: 600;
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
 }
 
 .btn-cancel:hover {
   background-color: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
 }
 
 .btn-submit {
-  background-color: #007bff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  font-weight: 600;
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
 }
 
 .btn-submit:hover {
-  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }

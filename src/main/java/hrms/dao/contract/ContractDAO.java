@@ -277,7 +277,7 @@ public class ContractDAO extends DBContext {
         return list;
     }
 
-    public List<ContractDTO> getContractsByUserId(int userId) throws SQLException {
+    public List<ContractDTO> getContractsByUserId(int userId) {
         List<ContractDTO> contracts = new ArrayList<>();
         String sql = "SELECT c.*, t.Name AS TypeName, u.FullName AS EmployeeName, "
                 + "p.Name AS PositionName, s.FullName AS SignerName "
@@ -288,10 +288,16 @@ public class ContractDAO extends DBContext {
                 + "LEFT JOIN Users s ON c.SignerID = s.UserID "
                 + "WHERE c.UserID = ? ORDER BY c.Start_Date DESC";
 
+        try {
+            ensureConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to establish database connection: " + e.getMessage());
+        }
+
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
-
                 while (rs.next()) {
                     ContractDTO contract = new ContractDTO();
                     contract.setContractId(rs.getInt("ContractID"));
@@ -313,8 +319,11 @@ public class ContractDAO extends DBContext {
                     contracts.add(contract);
                 }
             }
+            return contracts;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error fetching contracts by user ID: " + e.getMessage());
         }
-        return contracts;
     }
 
     public boolean updateContractNote(int contractId, String note) {
@@ -357,12 +366,6 @@ public class ContractDAO extends DBContext {
         }
     }
 
-    /**
-     * Automatically update contract status based on dates: - Status 'Pending'
-     * or 'Approved' changes to 'Active' when current date >= start date -
-     * Status 'Active' changes to 'Expired' when current date >= end date Only
-     * updates contracts that are not 'Cancelled' or 'Archived'
-     */
     public void autoUpdateContractStatus() {
         String sql = "UPDATE Contract "
                 + "SET Status = CASE "
