@@ -8,42 +8,7 @@
     <title>Chỉnh Sửa Tài Khoản - HRMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #e9f2ff;
-        }
-        .edit-card {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-top: 60px;
-        }
-        .edit-card h3 {
-            color: #0d6efd;
-        }
-        .btn-primary {
-            background-color: #0d6efd;
-            border-radius: 8px;
-        }
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-        }
-        .btn-secondary {
-            border-radius: 8px;
-        }
-        .password-input-wrapper {
-            position: relative;
-        }
-        .password-toggle {
-            position: absolute;
-            top: 50%;
-            right: 12px;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #6c757d;
-        }
-    </style>
+     <link rel="stylesheet" href="<c:url value='/css/edit-account.css'/>">
 </head>
 <body>
 <div class="container">

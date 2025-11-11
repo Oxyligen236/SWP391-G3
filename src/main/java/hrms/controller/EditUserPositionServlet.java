@@ -5,7 +5,9 @@ import java.util.List;
 
 import hrms.dao.ChangePositionDAO;
 import hrms.dao.PositionDAO;
+import hrms.dao.WorkHistoryDAO;
 import hrms.dto.UserDTO;
+import hrms.model.Account;
 import hrms.model.Position;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -43,7 +45,7 @@ public class EditUserPositionServlet extends HttpServlet {
         if (currentDepartmentID <= 0) {
             HttpSession session = request.getSession();
             session.setAttribute("errorMessage", "Người dùng chưa có phòng ban! Vui lòng cập nhật phòng ban trước.");
-            response.sendRedirect(request.getContextPath() + "/userlist");
+            response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
             return;
         }
         
@@ -55,7 +57,7 @@ public class EditUserPositionServlet extends HttpServlet {
         if (positions.isEmpty()) {
             HttpSession session = request.getSession();
             session.setAttribute("errorMessage", "Phòng ban hiện tại chưa có chức vụ nào! Vui lòng thêm chức vụ cho phòng ban.");
-            response.sendRedirect(request.getContextPath() + "/userlist");
+            response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
             return;
         }
 
@@ -77,22 +79,35 @@ public class EditUserPositionServlet extends HttpServlet {
 
             ChangePositionDAO changePositionDAO = new ChangePositionDAO();
             PositionDAO positionDAO = new PositionDAO();
+            WorkHistoryDAO workHistoryDAO = new WorkHistoryDAO();
             
             // Get user's current department
             int currentDepartmentID = changePositionDAO.getCurrentDepartmentID(userID);
             
             if (currentDepartmentID <= 0) {
                 session.setAttribute("errorMessage", "Người dùng chưa có phòng ban! Vui lòng cập nhật phòng ban trước.");
-                response.sendRedirect(request.getContextPath() + "/userlist");
+                response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
                 return;
             }
+            
+            // Get current position ID and names
+            int currentPositionID = changePositionDAO.getCurrentPositionID(userID);
+            String oldPositionName = positionDAO.getNameById(currentPositionID);
+            String newPositionName = positionDAO.getNameById(newPositionID);
+            
+            if (oldPositionName == null) oldPositionName = "None";
+            if (newPositionName == null) newPositionName = "Unknown";
+            
+            // Get current user from session (the person making the change)
+            Account currentUser = (Account) session.getAttribute("account");
+            int performedByUserID = (currentUser != null) ? currentUser.getUserID() : userID;
             
             // Check if the new position belongs to user's department
             boolean positionBelongsToDepartment = positionDAO.checkPositionBelongsToDepartment(newPositionID, currentDepartmentID);
             
             if (!positionBelongsToDepartment) {
                 session.setAttribute("errorMessage", "Chức vụ này không thuộc phòng ban hiện tại của người dùng!");
-                response.sendRedirect(request.getContextPath() + "/userlist");
+                response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
                 return;
             }
             
@@ -100,16 +115,33 @@ public class EditUserPositionServlet extends HttpServlet {
             boolean success = changePositionDAO.updateUserPosition(userID, newPositionID);
 
             if(success) {
+                // Log to work history
+                workHistoryDAO.addWorkHistory(
+                    performedByUserID,
+                    "Position Change",
+                    oldPositionName,
+                    newPositionName,
+                    "Position changed from " + oldPositionName + " to " + newPositionName,
+                    "Updated successfully"
+                );
+                
                 session.setAttribute("successMessage", "Cập nhật chức vụ thành công!");
             } else {
                 session.setAttribute("errorMessage", "Cập nhật chức vụ thất bại!");
             }
         } catch (NumberFormatException e) {
+            int userID = Integer.parseInt(request.getParameter("userID"));
             session.setAttribute("errorMessage", "Dữ liệu không hợp lệ!");
+            response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
+            return;
         } catch (Exception e) {
+            int userID = Integer.parseInt(request.getParameter("userID"));
             session.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
+            return;
         }
-
-        response.sendRedirect(request.getContextPath() + "/userlist");
+        
+        int userID = Integer.parseInt(request.getParameter("userID"));
+        response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
     }
 }

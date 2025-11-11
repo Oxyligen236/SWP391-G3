@@ -6,7 +6,9 @@ import java.util.List;
 import hrms.dao.ChangeDepartmentDAO;
 import hrms.dao.DepartmentDAO;
 import hrms.dao.PositionDAO;
+import hrms.dao.WorkHistoryDAO;
 import hrms.dto.UserDTO;
+import hrms.model.Account;
 import hrms.model.Department;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -38,7 +40,7 @@ public class EditUserDepartmentServlet extends HttpServlet {
             if (userDetail == null) {
                 HttpSession session = request.getSession();
                 session.setAttribute("errorMessage", "Không tìm thấy người dùng!");
-                response.sendRedirect(request.getContextPath() + "/userlist");
+                response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
                 return;
             }
             
@@ -67,10 +69,23 @@ public class EditUserDepartmentServlet extends HttpServlet {
             int newDepartmentID = Integer.parseInt(request.getParameter("newDepartmentID"));
 
             ChangeDepartmentDAO changeDepartmentDAO = new ChangeDepartmentDAO();
+            DepartmentDAO departmentDAO = new DepartmentDAO();
+            WorkHistoryDAO workHistoryDAO = new WorkHistoryDAO();
             
             // Get current position and department
             int currentPositionID = changeDepartmentDAO.getCurrentPositionID(userID);
             int currentDepartmentID = changeDepartmentDAO.getCurrentDepartmentID(userID);
+            
+            // Get department names for work history
+            String oldDepartmentName = departmentDAO.getNameById(currentDepartmentID);
+            String newDepartmentName = departmentDAO.getNameById(newDepartmentID);
+            
+            if (oldDepartmentName == null) oldDepartmentName = "None";
+            if (newDepartmentName == null) newDepartmentName = "Unknown";
+            
+            // Get current user from session (the person making the change)
+            Account currentUser = (Account) session.getAttribute("account");
+            int performedByUserID = (currentUser != null) ? currentUser.getUserID() : userID;
             
             // If department changes, check if current position belongs to new department
             if (currentDepartmentID != newDepartmentID && currentPositionID > 0) {
@@ -82,11 +97,21 @@ public class EditUserDepartmentServlet extends HttpServlet {
                     // Reset position to NULL if it doesn't belong to new department
                     boolean resetSuccess = changeDepartmentDAO.updateUserDepartmentAndResetPosition(userID, newDepartmentID);
                     if (resetSuccess) {
-                        session.setAttribute("successMessage", "Cập nhật phòng ban thành công! Chức vụ đã được reset do không thuộc phòng ban mới.");
+                        // Log to work history
+                        workHistoryDAO.addWorkHistory(
+                            performedByUserID,
+                            "Department Change",
+                            oldDepartmentName,
+                            newDepartmentName,
+                            "Department changed from " + oldDepartmentName + " to " + newDepartmentName + ". Position reset due to incompatibility.",
+                            "Position reset required"
+                        );
+                        
+                        session.setAttribute("successMessage", "Update department successful! Position has been reset because it does not belong to the new department.");
                     } else {
-                        session.setAttribute("errorMessage", "Cập nhật phòng ban thất bại!");
+                        session.setAttribute("errorMessage", "Update department failed!");
                     }
-                    response.sendRedirect(request.getContextPath() + "/userlist");
+                    response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
                     return;
                 }
             }
@@ -95,16 +120,33 @@ public class EditUserDepartmentServlet extends HttpServlet {
             boolean success = changeDepartmentDAO.updateUserDepartment(userID, newDepartmentID);
 
             if(success) {
-                session.setAttribute("successMessage", "Cập nhật phòng ban thành công!");
+                // Log to work history
+                workHistoryDAO.addWorkHistory(
+                    performedByUserID,
+                    "Department Change",
+                    oldDepartmentName,
+                    newDepartmentName,
+                    "Department changed from " + oldDepartmentName + " to " + newDepartmentName,
+                    "Updated successfully"
+                );
+                
+                session.setAttribute("successMessage", "Update department successfull!");
             } else {
-                session.setAttribute("errorMessage", "Cập nhật phòng ban thất bại!");
+                session.setAttribute("errorMessage", "Update department failed!");
             }
         } catch (NumberFormatException e) {
-            session.setAttribute("errorMessage", "Dữ liệu không hợp lệ!");
+            int userID = Integer.parseInt(request.getParameter("userID"));
+            session.setAttribute("errorMessage", "Invalid data!");
+            response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
+            return;
         } catch (Exception e) {
-            session.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
+            int userID = Integer.parseInt(request.getParameter("userID"));
+            session.setAttribute("errorMessage", "System error: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
+            return;
         }
-
-        response.sendRedirect(request.getContextPath() + "/userlist");
+        
+        int userID = Integer.parseInt(request.getParameter("userID"));
+        response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
     }
 }

@@ -13,7 +13,8 @@
     <div class="popup-container">
       <div class="popup-header">
         <i class="fas fa-briefcase"></i>
-        <h2>Cập Nhật Chức Vụ</h2>
+        <h2>Update Position
+        </h2>
       </div>
 
       <div class="popup-body">
@@ -23,7 +24,7 @@
         </div>
 
         <div class="info-row">
-          <label><i class="fas fa-user"></i> Họ Tên:</label>
+          <label><i class="fas fa-user"></i> Full Name:</label>
           <span>${user.fullname}</span>
         </div>
 
@@ -31,9 +32,14 @@
           <label><i class="fas fa-envelope"></i> Email:</label>
           <span>${user.email}</span>
         </div>
+        
+        <div class="info-row">
+          <label><i class="fas fa-envelope"></i> Current Department:</label>
+          <span>${user.departmentName}</span>
+        </div>
 
         <div class="info-row">
-          <label><i class="fas fa-briefcase"></i> Chức Vụ Hiện Tại:</label>
+          <label><i class="fas fa-briefcase"></i> Current Position:</label>
           <span class="current-position-badge">${user.positionName}</span>
         </div>
 
@@ -41,7 +47,7 @@
           <input type="hidden" name="userID" value="${user.userId}" />
 
           <div class="form-group">
-            <label for="newPositionID"><i class="fas fa-exchange-alt"></i> Chọn Chức Vụ Mới:</label>
+            <label for="newPositionID"><i class="fas fa-exchange-alt"></i> Select New Position:</label>
             <select name="newPositionID" id="newPositionID" class="position-select" required>
               <c:forEach var="pos" items="${positions}">
                 <option value="${pos.positionId}" ${currentPositionID == pos.positionId ? 'selected' : ''}>
@@ -52,11 +58,11 @@
           </div>
 
           <div class="button-group">
-            <button type="button" class="btn-cancel" onclick="window.location.href='<c:url value='/userlist'/>'">
-              <i class="fas fa-times"></i> Hủy
+            <button type="button" class="btn-cancel" onclick="window.location.href='${pageContext.request.contextPath}/user_detail?userID=${user.userId}'">
+              <i class="fas fa-times"></i> Cancel
             </button>
             <button type="submit" class="btn-submit">
-              <i class="fas fa-check"></i> Cập Nhật
+              <i class="fas fa-check"></i> Update
             </button>
           </div>
         </form>

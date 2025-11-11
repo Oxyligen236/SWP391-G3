@@ -29,7 +29,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-                        <li class="nav-item"><a class="nav-link" href="#contact">Job description</a></li>
+                        <li class="nav-item"><a class="nav-link" href="<c:url value='/jd_guest'/>">Job description</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle p-0" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="https://ui-avatars.com/api/?name=${fn:escapeXml(sessionScope.users.fullname)}&size=40&background=b5d3ff&color=0d3b66&bold=true" 
@@ -51,7 +51,7 @@
                                     </div>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="<c:url value='/home'/>"><i class="fas fa-home me-2"></i> Home</a></li>
+                                <li><a class="dropdown-item" href="<c:url value='/home'/>"><i class="fas fa-home me-2"></i>Dashboard</a></li>
                                 <li><a class="dropdown-item" href="<c:url value='/logout'/>"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
                             </ul>
                         </li>
