@@ -5,7 +5,7 @@
 
         <head>
             <meta charset="UTF-8">
-            <title>Đổi Mật Khẩu Thành Công</title>
+            <title>Chnage password successfully</title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
             <style>
                 body {
@@ -34,9 +34,9 @@
 
         <body>
             <div class="success-box">
-                <h2>✅ Đổi mật khẩu thành công!</h2>
-                <p>Vui lòng đăng nhập lại để tiếp tục sử dụng hệ thống.</p>
-                <a href="<c:url value='/authenticate'/>" class="btn btn-primary mt-3">Đăng nhập lại</a>
+                <h2>✅ Change password successfully!</h2>
+                <p>Please log in again to continue using the system.</p>
+                <a href="<c:url value='/authenticate'/>" class="btn btn-primary mt-3">Log in again</a>
             </div>
         </body>
 
