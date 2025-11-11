@@ -6,75 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Users List</title>
-    <link rel="stylesheet" href="css/userlist.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* --- Style trực tiếp cho Search, Filter, Reset --- */
-        .search-form {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .search-form input[type="text"] {
-            padding: 8px 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            width: 220px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .search-form input[type="text"]:focus {
-            border-color: #00a884;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(0, 168, 132, 0.2);
-        }
-        .search-form label {
-            font-weight: 500;
-            color: #475569;
-        }
-        .search-form select {
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid #cbd5e1;
-            font-size: 0.9rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .search-form select:focus {
-            border-color: #00a884;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(0, 168, 132, 0.2);
-        }
-        .search-form button[type="submit"] {
-            padding: 8px 16px;
-            border-radius: 6px;
-            background-color: #00a884;
-            color: #fff;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .search-form button[type="submit"]:hover {
-            background-color: #008f71;
-        }
-        .search-form .btn-reset {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: 1px solid #cbd5e1;
-            background-color: #e2e8f0;
-            color: #475569;
-            text-decoration: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-        .search-form .btn-reset:hover {
-            background-color: #cbd5e1;
-            border-color: #94a3b8;
-        }
-    </style>
+    <link rel="stylesheet" href="<c:url value='/css/userlist.css'/>">
 </head>
 <body>
 <div class="container">
@@ -94,7 +28,6 @@
         <c:remove var="errorMessage" scope="session"/>
     </c:if>
 
-    <!-- Search + Filter + Reset -->
     <form method="get" action="${pageContext.request.contextPath}/userlist" class="search-form">
         <input type="text" name="keyword" placeholder="Search by fullname"
                value="${param.keyword != null ? param.keyword : ''}" />
@@ -117,8 +50,7 @@
     <table class="table-custom">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Name</th>
+            <th style="text-align: center;">ID</th> <th>Name</th>
             <th>Email</th>
             <th>Phone number</th>
             <th>Birth date</th>
@@ -134,7 +66,6 @@
             <th>Actions</th>
         </tr>
         </thead>
-
         <tbody>
         <c:forEach var="u" items="${users}">
             <tr>
@@ -151,8 +82,7 @@
                 <td>${u.departmentName}</td>
                 <td>${u.degreeName}</td>
                 <td>${u.positionName}</td>
-                <td style="text-align: center;">
-                    <c:choose>
+                <td> <c:choose>
                         <c:when test="${userHasAccount.contains(u.userId)}">
                             <span class="account-status active">Yes</span>
                         </c:when>
@@ -168,23 +98,50 @@
         </c:forEach>
         </tbody>
     </table>
+
+    <div class="items-per-page mt-3 mb-3">
+        <form method="get" action="${pageContext.request.contextPath}/userlist" class="d-inline">
+            <label for="itemsPerPage">Items per page:</label>
+            <select name="itemsPerPage" id="itemsPerPage" onchange="this.form.submit()">
+                <option value="5" ${itemsPerPage == 5 ? 'selected' : ''}>5</option>
+                <option value="10" ${itemsPerPage == 10 ? 'selected' : ''}>10</option>
+                <option value="20" ${itemsPerPage == 20 ? 'selected' : ''}>20</option>
+            </select>
+            <input type="hidden" name="keyword" value="${param.keyword}">
+            <input type="hidden" name="accountFilter" value="${param.accountFilter}">
+        </form>
+    </div>
+
+    <div class="pagination-container mb-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                <a class="page-link" href="?page=${currentPage - 1}&itemsPerPage=${itemsPerPage}&keyword=${param.keyword}&accountFilter=${param.accountFilter}">Previous</a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">Page ${currentPage} / ${totalPages}</span>
+            </li>
+            <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="?page=${currentPage + 1}&itemsPerPage=${itemsPerPage}&keyword=${param.keyword}&accountFilter=${param.accountFilter}">Next</a>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <script>
-setTimeout(function () {
-    var successAlert = document.getElementById('successAlert');
-    var errorAlert = document.getElementById('errorAlert');
-    if (successAlert) {
-        successAlert.style.transition = 'opacity 0.5s';
-        successAlert.style.opacity = '0';
-        setTimeout(() => successAlert.remove(), 500);
-    }
-    if (errorAlert) {
-        errorAlert.style.transition = 'opacity 0.5s';
-        errorAlert.style.opacity = '0';
-        setTimeout(() => errorAlert.remove(), 500);
-    }
-}, 5000);
+    setTimeout(function () {
+        const successAlert = document.getElementById('successAlert');
+        const errorAlert = document.getElementById('errorAlert');
+        if (successAlert) {
+            successAlert.style.transition = 'opacity 0.5s';
+            successAlert.style.opacity = '0';
+            setTimeout(() => successAlert.remove(), 500);
+        }
+        if (errorAlert) {
+            errorAlert.style.transition = 'opacity 0.5s';
+            errorAlert.style.opacity = '0';
+            setTimeout(() => errorAlert.remove(), 500);
+        }
+    }, 5000);
 </script>
 </body>
 </html>

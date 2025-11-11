@@ -1,11 +1,10 @@
 package hrms.controller;
 
-import hrms.dao.DepartmentDAO;
 import java.io.IOException;
 import java.util.List;
 
+import hrms.dao.DepartmentDAO;
 import hrms.dao.JobDAO;
-import hrms.model.Account;
 import hrms.model.Department;
 import hrms.model.JobDescription;
 import jakarta.servlet.ServletException;
@@ -13,38 +12,68 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/jdlist")
 public class JdListServlet extends HttpServlet {
-
-    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         JobDAO dao = new JobDAO();
-
-        HttpSession session = request.getSession();
+        DepartmentDAO dDao = new DepartmentDAO();
 
         try {
             dao.autoCancelExpiredJobs();
+
             String search = request.getParameter("search");
             String departmentFilter = request.getParameter("department");
             String statusFilter = request.getParameter("status");
 
-            List<JobDescription> jdList = dao.getFilteredJD(
-                    search, departmentFilter, statusFilter, 1, 100);
 
-            request.setAttribute("jdList", jdList);
+            int page = 1;
+            int itemsPerPage = 5;
+
+            String pageParam = request.getParameter("page");
+            String itemsPerPageParam = request.getParameter("itemsPerPage");
+
+            if (pageParam != null && !pageParam.isEmpty()) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                    if (page < 1) page = 1;
+                } catch (NumberFormatException e) { page = 1; }
+            }
+
+            if (itemsPerPageParam != null && !itemsPerPageParam.isEmpty()) {
+                try {
+                    itemsPerPage = Integer.parseInt(itemsPerPageParam);
+                    if (itemsPerPage < 1) itemsPerPage = 5;
+                    if (itemsPerPage > 50) itemsPerPage = 50;
+                } catch (NumberFormatException e) { itemsPerPage = 5; }
+            }
+
+            List<JobDescription> allJD = dao.getFilteredJD(search, departmentFilter, statusFilter, 1, 1000);
+
+            int totalItems = allJD.size();
+            int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            int startIndex = (page - 1) * itemsPerPage;
+            int endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+
+            List<JobDescription> paginatedJD = allJD.subList(startIndex, endIndex);
+
+            request.setAttribute("jdList", paginatedJD);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("itemsPerPage", itemsPerPage);
+            request.setAttribute("totalItems", totalItems);
 
             request.setAttribute("search", search);
             request.setAttribute("departmentFilter", departmentFilter);
             request.setAttribute("statusFilter", statusFilter);
 
-            DepartmentDAO d = new DepartmentDAO();
-            List<Department> departments = d.getAll();
+            List<Department> departments = dDao.getAll();
             request.setAttribute("departments", departments);
 
             request.getRequestDispatcher("/view/jd/jdlist.jsp").forward(request, response);
@@ -53,7 +82,5 @@ public class JdListServlet extends HttpServlet {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi hệ thống: " + e.getMessage());
         }
-
     }
-
 }

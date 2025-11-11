@@ -1,138 +1,125 @@
+/* Nền và Tiêu đề */
 body {
     font-family: "Segoe UI", sans-serif;
-    background-color: #f9f9f9;
+    background-color: #f8f9fa; /* Nền sáng */
     margin: 0;
-    padding: 20px;
+    padding: 0;
+}
+
+.container-fluid {
+    padding: 20px 40px;
 }
 
 h2 {
     text-align: center;
     margin-bottom: 30px;
     color: #2c3e50;
+    font-weight: 600;
 }
 
+/* --- ĐIỀU CHỈNH NÚT HOME (Back to Home Page) --- */
+.container-fluid > .btn.btn-secondary {
+    padding: 8px 15px; /* Giảm padding */
+    font-size: 14px; /* Giảm cỡ chữ */
+    border-radius: 5px;
+    margin-bottom: 20px !important; /* Đẩy tiêu đề xuống một chút */
+    display: inline-flex;
+    align-items: center;
+    color: #fff;
+    background-color: #7f8c8d; /* Màu xám trung tính */
+    border-color: #7f8c8d;
+    transition: background-color 0.2s;
+}
+
+.container-fluid > .btn.btn-secondary:hover {
+    background-color: #95a5a6;
+    border-color: #95a5a6;
+}
+
+.container-fluid > .btn.btn-secondary i {
+    margin-right: 6px;
+    font-size: 16px;
+}
+/* ------------------------------------------------ */
+
+
+/* Form Filter/Search */
+.filter-form {
+    max-width: 95%;
+    margin: 0 auto 30px auto;
+}
+
+/* Bảng */
 table {
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
     border-collapse: collapse;
     background: white;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
-    padding: 10px 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+    text-align: center; 
+    vertical-align: middle; 
+}
+
+/* Cân đối lại độ rộng cột */
+th:nth-child(1), td:nth-child(1) { width: 5%; } /* ID */
+th:nth-child(6), td:nth-child(6) { width: 8%; } /* Vacancies */
+th:nth-child(10), td:nth-child(10) { width: 8%; } /* Action */
+
+/* Cột nội dung dài căn trái và có độ rộng cố định */
+.summary-col {
+    text-align: left !important;
+    max-width: 150px; 
+    white-space: normal; 
+    word-break: break-word;
+}
+th.text-start {
+    text-align: left !important;
 }
 
 th {
-    background-color: #2c3e50;
+    background-color: #34495e;
     color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 tr:hover {
-    background-color: #f1f1f1;
+    background-color: #f5f5f5;
 }
 
-/* Nút Apply */
+/* Nút Apply (btn-edit) */
 .btn-edit {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    background: linear-gradient(135deg, #3498db, #2980b9);
     color: white;
     text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 25px;
+    padding: 6px 14px;
+    border-radius: 5px;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 13px;
     transition: all 0.25s ease;
-    box-shadow: 0 2px 4px rgba(39, 174, 96, 0.3);
+    box-shadow: 0 2px 4px rgba(41, 128, 185, 0.3);
+    border: none;
 }
 
 .btn-edit:hover {
-    background: linear-gradient(135deg, #27ae60, #1e8449);
-    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.4);
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #2980b9, #1f6498);
+    box-shadow: 0 4px 8px rgba(41, 128, 185, 0.4);
+    transform: translateY(-1px);
 }
 
 .btn-edit:active {
     transform: translateY(0);
-    box-shadow: 0 2px 3px rgba(39, 174, 96, 0.3);
-}
-
-/* Icon trong nút (nếu có) */
-.btn-edit i {
-    margin-right: 6px;
-}
-body {
-    font-family: "Segoe UI", sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 20px;
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #2c3e50;
-}
-
-table {
-    width: 90%;
-    margin: 0 auto;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-th, td {
-    padding: 10px 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
-}
-
-th {
-    background-color: #2c3e50;
-    color: white;
-}
-
-tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Nút Apply */
-.btn-edit {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
-    color: white;
-    text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 25px;
-    font-weight: 500;
-    font-size: 14px;
-    transition: all 0.25s ease;
-    box-shadow: 0 2px 4px rgba(39, 174, 96, 0.3);
-}
-
-.btn-edit:hover {
-    background: linear-gradient(135deg, #27ae60, #1e8449);
-    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.4);
-    transform: translateY(-2px);
-}
-
-.btn-edit:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 3px rgba(39, 174, 96, 0.3);
-}
-
-/* Icon trong nút (nếu có) */
-.btn-edit i {
-    margin-right: 6px;
+    box-shadow: 0 2px 3px rgba(41, 128, 185, 0.3);
 }
