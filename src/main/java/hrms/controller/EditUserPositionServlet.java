@@ -5,7 +5,9 @@ import java.util.List;
 
 import hrms.dao.ChangePositionDAO;
 import hrms.dao.PositionDAO;
+import hrms.dao.WorkHistoryDAO;
 import hrms.dto.UserDTO;
+import hrms.model.Account;
 import hrms.model.Position;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -77,6 +79,7 @@ public class EditUserPositionServlet extends HttpServlet {
 
             ChangePositionDAO changePositionDAO = new ChangePositionDAO();
             PositionDAO positionDAO = new PositionDAO();
+            WorkHistoryDAO workHistoryDAO = new WorkHistoryDAO();
             
             // Get user's current department
             int currentDepartmentID = changePositionDAO.getCurrentDepartmentID(userID);
@@ -86,6 +89,18 @@ public class EditUserPositionServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
                 return;
             }
+            
+            // Get current position ID and names
+            int currentPositionID = changePositionDAO.getCurrentPositionID(userID);
+            String oldPositionName = positionDAO.getNameById(currentPositionID);
+            String newPositionName = positionDAO.getNameById(newPositionID);
+            
+            if (oldPositionName == null) oldPositionName = "None";
+            if (newPositionName == null) newPositionName = "Unknown";
+            
+            // Get current user from session (the person making the change)
+            Account currentUser = (Account) session.getAttribute("account");
+            int performedByUserID = (currentUser != null) ? currentUser.getUserID() : userID;
             
             // Check if the new position belongs to user's department
             boolean positionBelongsToDepartment = positionDAO.checkPositionBelongsToDepartment(newPositionID, currentDepartmentID);
@@ -100,6 +115,16 @@ public class EditUserPositionServlet extends HttpServlet {
             boolean success = changePositionDAO.updateUserPosition(userID, newPositionID);
 
             if(success) {
+                // Log to work history
+                workHistoryDAO.addWorkHistory(
+                    performedByUserID,
+                    "Position Change",
+                    oldPositionName,
+                    newPositionName,
+                    "Position changed from " + oldPositionName + " to " + newPositionName,
+                    "Updated successfully"
+                );
+                
                 session.setAttribute("successMessage", "Cập nhật chức vụ thành công!");
             } else {
                 session.setAttribute("errorMessage", "Cập nhật chức vụ thất bại!");
