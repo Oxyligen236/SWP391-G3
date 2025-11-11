@@ -116,6 +116,9 @@
                 <li>
                   <a href="<c:url value='/create-ticket'/>" target="mainFrame">Create Ticket</a>
                 </li>
+                <li>
+                  <a href="<c:url value='/department-ticket'/>" target="mainFrame">View employee Ticket</a>
+                </li>
               </ul>
             </div>
           </li>

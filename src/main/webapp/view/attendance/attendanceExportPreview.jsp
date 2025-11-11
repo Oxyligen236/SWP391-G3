@@ -41,9 +41,6 @@
         <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2><i class="bi bi-file-earmark-spreadsheet"></i> Attendance Export Preview</h2>
-            <a href="${pageContext.request.contextPath}/view/home.jsp" class="btn btn-outline-secondary">
-                <i class="bi bi-house"></i> Back to Home
-            </a>
         </div>
 
         <!-- Summary Section -->

@@ -32,6 +32,11 @@
           <label><i class="fas fa-envelope"></i> Email:</label>
           <span>${user.email}</span>
         </div>
+        
+        <div class="info-row">
+          <label><i class="fas fa-envelope"></i> Current Department:</label>
+          <span>${user.departmentName}</span>
+        </div>
 
         <div class="info-row">
           <label><i class="fas fa-briefcase"></i> Current Position:</label>

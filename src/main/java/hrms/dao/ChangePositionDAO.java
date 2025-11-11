@@ -81,9 +81,11 @@ public class ChangePositionDAO extends DBContext {
 
     public UserDTO getUserDetailById(int userID) {
         String sql = "SELECT u.UserID, u.FullName, u.Email, u.PhoneNumber, " +
-                     "u.PositionID, p.Name AS PositionName " +
+                     "u.PositionID, p.Name AS PositionName, " +
+                     "u.DepartmentID, d.Name AS DepartmentName " +
                      "FROM Users u " +
                      "LEFT JOIN Positions p ON u.PositionID = p.PositionID " +
+                     "LEFT JOIN Department d ON u.DepartmentID = d.DepartmentID " +
                      "WHERE u.UserID = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -97,6 +99,8 @@ public class ChangePositionDAO extends DBContext {
                 dto.setPhoneNumber(rs.getString("PhoneNumber"));
                 dto.setPositionId(rs.getInt("PositionID"));
                 dto.setPositionName(rs.getString("PositionName"));
+                dto.setDepartmentId(rs.getInt("DepartmentID"));
+                dto.setDepartmentName(rs.getString("DepartmentName"));
                 return dto;
             }
         } catch (SQLException e) {

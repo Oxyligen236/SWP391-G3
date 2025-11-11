@@ -94,11 +94,6 @@ public class UserRoleDAO extends DBContext {
     return list;
 }
 
-    /**
-     * Get detailed account information by account ID
-     * @param accountID the account ID
-     * @return AccountDTO object or null if not found
-     */
     public AccountDTO getAccountDetailById(int accountID) {
         String sql = "SELECT a.AccountID, a.Username, u.FullName, r.Name AS RoleName "
                    + "FROM Account a "
@@ -123,11 +118,7 @@ public class UserRoleDAO extends DBContext {
         return null;
     }
 
-    /**
-     * Get current roleID of an account
-     * @param accountID the account ID
-     * @return roleID or 0 if not found
-     */
+
     public int getCurrentRoleID(int accountID) {
         String sql = "SELECT RoleID FROM Account WHERE AccountID = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -140,5 +131,20 @@ public class UserRoleDAO extends DBContext {
             e.printStackTrace();
         }
         return 0;
+    }
+    
+
+    public String getRoleNameById(int roleID) {
+        String sql = "SELECT Name FROM Role WHERE RoleID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, roleID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("Name");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

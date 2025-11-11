@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import hrms.dao.UserRoleDAO;
+import hrms.dao.WorkHistoryDAO;
 import hrms.dto.AccountDTO;
 import hrms.model.Account;
 import hrms.model.Role;
@@ -82,9 +83,30 @@ public class EditUserRoleServlet extends HttpServlet {
             }
 
             UserRoleDAO roleDAO = new UserRoleDAO();
+            WorkHistoryDAO workHistoryDAO = new WorkHistoryDAO();
+            
+            // Get old role ID to retrieve the name
+            int oldRoleID = roleDAO.getCurrentRoleID(accountID);
+            String oldRoleName = roleDAO.getRoleNameById(oldRoleID);
+            String newRoleName = roleDAO.getRoleNameById(newRoleID);
+            
             boolean success = roleDAO.updateUserRole(accountID, newRoleID);
 
             if(success) {
+                // Log to Work History
+                Account account = (Account) session.getAttribute("account");
+                int performedByUserID = (account != null) ? account.getUserID() : 0;
+                
+                String description = "Role changed from " + oldRoleName + " to " + newRoleName;
+                workHistoryDAO.addWorkHistory(
+                    performedByUserID,
+                    "Role Change",
+                    oldRoleName,
+                    newRoleName,
+                    description,
+                    "Updated successfully"
+                );
+                
                 session.setAttribute("successMessage", "Update role successfully!");
             } else {
                 session.setAttribute("errorMessage", "Update role failed!");

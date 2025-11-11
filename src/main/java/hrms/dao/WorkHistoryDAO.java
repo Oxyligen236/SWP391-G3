@@ -1,12 +1,14 @@
 package hrms.dao;
 
-import com.mysql.cj.Messages;
-import hrms.model.WorkHistory;
-import hrms.utils.DBContext;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import hrms.model.WorkHistory;
+import hrms.utils.DBContext;
 
 public class WorkHistoryDAO extends DBContext {
 
@@ -94,5 +96,4 @@ public class WorkHistoryDAO extends DBContext {
 
         return list;
     }
-
 }
