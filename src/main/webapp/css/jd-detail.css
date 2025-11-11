@@ -99,6 +99,7 @@ body {
     background-color: #fff3cd;
     border-color: #ffeeba;
 }
+
 /* Khu vực nút hành động */
 .action-buttons {
     display: flex;
@@ -139,4 +140,29 @@ body {
 
 .action-buttons .btn-success:hover {
     background-color: #218838;
+}
+
+/* *** Bổ sung/Cải thiện Style cho Badge Trạng thái *** */
+.badge {
+    padding: 0.5em 0.7em;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 6px;
+    vertical-align: middle;
+}
+
+/* Tùy chỉnh màu cho các trạng thái */
+.badge.bg-info { /* Giữ nguyên cho InProgress */
+    background-color: #0dcaf0 !important;
+    color: #000 !important;
+}
+
+.badge.bg-danger { /* Màu đỏ cho Cancelled */
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+.badge.bg-warning { /* Màu vàng cho Pending, cần chữ tối */
+    background-color: #ffc107 !important;
+    color: #333 !important;
 }

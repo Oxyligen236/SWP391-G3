@@ -54,8 +54,50 @@ public class UserListServlet extends HttpServlet {
             filteredUsers.add(u);
         }
 
-        request.setAttribute("users", filteredUsers);
+        // --- Pagination ---
+        int currentPage = 1;
+        int itemsPerPage = 10;
+
+        String pageParam = request.getParameter("page");
+        String itemsParam = request.getParameter("itemsPerPage");
+
+        if (pageParam != null) {
+            try {
+                currentPage = Integer.parseInt(pageParam);
+                if (currentPage < 1) currentPage = 1;
+            } catch (NumberFormatException e) {
+                currentPage = 1;
+            }
+        }
+
+        if (itemsParam != null) {
+            try {
+                itemsPerPage = Integer.parseInt(itemsParam);
+                if (itemsPerPage < 1) itemsPerPage = 5;
+                if (itemsPerPage > 50) itemsPerPage = 50;
+            } catch (NumberFormatException e) {
+                itemsPerPage = 10;
+            }
+        }
+
+        int totalItems = filteredUsers.size();
+        int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
+
+        if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+
+        int startIndex = (currentPage - 1) * itemsPerPage;
+        int endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+
+        List<UserDTO> paginatedUsers = filteredUsers.subList(startIndex, endIndex);
+
+        request.setAttribute("users", paginatedUsers);
         request.setAttribute("userHasAccount", userHasAccount);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("itemsPerPage", itemsPerPage);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("accountFilter", accountFilter);
+        request.setAttribute("keyword", keyword);
+
         request.getRequestDispatcher("/view/users/userlist.jsp").forward(request, response);
     }
 }
