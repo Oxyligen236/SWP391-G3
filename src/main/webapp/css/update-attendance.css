@@ -1,65 +1,117 @@
 body {
-    background-color: #f8f9fa;
-    font-family: Arial, sans-serif;
+    background-color: #f4f6f9; /* Nền sáng và hiện đại hơn */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
 }
 
 .container {
-    width: 500px;
+    max-width: 500px;
     margin: 40px auto;
     background: #fff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    padding: 30px;
+    border-radius: 12px; /* Bo tròn hơn */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 h3 {
     text-align: center;
-    color: #f87171;
+    color: #dc2626; /* Sử dụng màu đỏ đậm hơn cho tiêu đề */
+    margin-bottom: 30px;
+    font-size: 24px;
+    border-bottom: 2px solid #f87171;
+    padding-bottom: 10px;
+}
+
+/* Style cho thông báo lỗi */
+p[style*="color:red"] {
+    background-color: #fef2f2;
+    border-left: 4px solid #dc2626;
+    color: #dc2626 !important;
+    padding: 10px 15px;
+    border-radius: 4px;
     margin-bottom: 20px;
+    font-weight: 600;
 }
 
 label {
     display: block;
-    margin-top: 10px;
-    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #444;
+    font-size: 14px;
 }
 
-input[type="text"], input[type="number"], input[type="date"], input[type="time"] {
+/* Style chung cho tất cả các input */
+input[type="text"], 
+input[type="number"], 
+input[type="date"], 
+input[type="time"] {
     width: 100%;
-    padding: 8px;
+    padding: 10px 12px;
     margin-top: 4px;
-    border: 1px solid #ddd;
+    border: 1px solid #ced4da; /* Viền nhẹ nhàng hơn */
     border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-size: 14px;
+}
+
+/* 🎯 ĐIỀU CHỈNH CHÍNH: Làm nổi bật ô chỉ đọc (Readonly) */
+input[readonly] {
+    background-color: #e9ecef; /* Màu xám nhạt */
+    color: #6c757d; /* Màu chữ xám */
+    cursor: not-allowed;
+    border-style: dashed; /* Viền nét đứt nhẹ để phân biệt rõ hơn */
+    border-color: #ced4da;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Style cho ô có thể chỉnh sửa khi focus */
+input:not([readonly]):focus {
+    border-color: #f87171;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(248, 113, 113, 0.25);
 }
 
 .actions {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+    justify-content: flex-end; /* Đẩy nút sang phải */
+    gap: 15px; /* Khoảng cách giữa các nút */
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
 }
 
-button {
+/* Nút Update */
+button[type="submit"] {
     background-color: #f87171;
     color: white;
     border: none;
-    padding: 10px 16px;
+    padding: 10px 20px;
     border-radius: 6px;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
 }
 
-button:hover {
+button[type="submit"]:hover {
     background-color: #dc2626;
+    transform: translateY(-1px);
 }
 
-a {
-    color: #555;
+/* Nút Cancel (liên kết) */
+.actions a {
+    color: #6c757d;
     text-decoration: none;
-    padding: 10px 16px;
-    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border: 1px solid #ced4da;
     border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s;
 }
 
-a:hover {
+.actions a:hover {
     background-color: #f0f0f0;
+    color: #495057;
 }

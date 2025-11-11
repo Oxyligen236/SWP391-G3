@@ -183,31 +183,90 @@ public class AttendanceDAO extends DBContext {
 
         return false;
     }
-    
+
     public List<Attendance> getAttendanceByDateRange(LocalDate startDate, LocalDate endDate) {
-    List<Attendance> list = new ArrayList<>();
-    String sql = """
+        List<Attendance> list = new ArrayList<>();
+        String sql = """
         SELECT * 
         FROM Attendance 
         WHERE Date >= ? AND Date < ? 
         ORDER BY UserID, Date
     """;
 
-    try (PreparedStatement ps = connection.prepareStatement(sql)) {
-        ps.setDate(1, Date.valueOf(startDate));
-        ps.setDate(2, Date.valueOf(endDate));
-        
-        ResultSet rs = ps.executeQuery();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setDate(1, Date.valueOf(startDate));
+            ps.setDate(2, Date.valueOf(endDate));
 
-        while (rs.next()) {
-            list.add(extractAttendance(rs));
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(extractAttendance(rs));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error in getAttendanceByDateRange: " + e.getMessage());
+            e.printStackTrace();
         }
 
-    } catch (SQLException e) {
-        System.err.println("Error in getAttendanceByDateRange: " + e.getMessage());
-        e.printStackTrace();
+        return list;
     }
 
-    return list;
+    public List<Attendance> getAttendanceFiltered(int userID, LocalDate startDate, LocalDate endDate, String dayOfWeek) {
+        List<Attendance> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM Attendance WHERE UserID = ?");
+        if (startDate != null) {
+            sql.append(" AND Date >= ?");
+        }
+        if (endDate != null) {
+            sql.append(" AND Date <= ?");
+        }
+        if (dayOfWeek != null && !dayOfWeek.isEmpty()) {
+            sql.append(" AND Day = ?");
+        }
+        sql.append(" ORDER BY Date DESC");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int idx = 1;
+            ps.setInt(idx++, userID);
+            if (startDate != null) {
+                ps.setDate(idx++, Date.valueOf(startDate));
+            }
+            if (endDate != null) {
+                ps.setDate(idx++, Date.valueOf(endDate));
+            }
+            if (dayOfWeek != null && !dayOfWeek.isEmpty()) {
+                ps.setString(idx++, dayOfWeek);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(extractAttendance(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public boolean updateAttendanceTimes(Attendance attendance) {
+    String sql = """
+        UPDATE Attendance
+        SET LateMinutes = ?, EarlyLeaveMinutes = ?, TotalWorkHours = ?, OT_Hours = ?
+        WHERE AttendanceID = ?
+    """;
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setObject(1, attendance.getLateMinutes());
+        ps.setObject(2, attendance.getEarlyLeaveMinutes());
+        ps.setObject(3, attendance.getTotalWorkHours());
+        ps.setObject(4, attendance.getOtHours());
+        ps.setInt(5, attendance.getAttendanceID());
+        return ps.executeUpdate() > 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
 }
+
+
 }

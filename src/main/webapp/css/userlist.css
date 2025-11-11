@@ -422,3 +422,15 @@ h3 {
         gap: 6px;
     }
 }
+/* --- Truncate các cột dài: Email, Address, CCCD, Department --- */
+.table-custom td:nth-child(3),  /* Email */
+.table-custom td:nth-child(7),  /* Address */
+.table-custom td:nth-child(8),  /* CCCD */
+.table-custom td:nth-child(11)  /* Department */ {
+    max-width: 180px;        /* giới hạn chiều rộng */
+    white-space: nowrap;     /* không xuống dòng */
+    overflow: hidden;        /* ẩn phần tràn */
+    text-overflow: ellipsis; /* hiển thị ... */
+    text-align: left;        /* căn trái để dễ đọc */
+}
+
