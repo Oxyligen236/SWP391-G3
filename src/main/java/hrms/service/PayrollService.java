@@ -205,6 +205,9 @@ public class PayrollService {
 
         for (UserDTO user : allUsers) {
             Account account = accountDAO.getAccountByUserID(user.getUserId());
+            if (account == null || !account.isIsActive()) {
+                continue;
+            }
             AccountDTO accountDTO = accountDAO.getAccountDTOByID(account.getAccountID());
             if (accountDTO != null && accountDTO.getRoleName().equals("Admin")) {
                 continue;
