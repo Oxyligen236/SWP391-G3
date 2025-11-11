@@ -17,35 +17,6 @@ isELIgnored="false" %>
       rel="stylesheet"
       href="${pageContext.request.contextPath}/css/ticketDetail.css"
     />
-
-    <style>
-      .ot-info-box {
-        background: linear-gradient(135deg, #e8f0fe 0%, #f0f7ff 100%);
-        border-left: 4px solid #4273f1;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-      }
-
-      .badge-Holiday {
-        background-color: #dc3545;
-        color: white;
-      }
-
-      .badge-Weekend {
-        background-color: #ffc107;
-        color: #000;
-      }
-
-      .badge-Weekday {
-        background-color: #28a745;
-        color: white;
-      }
-
-      .text-primary-custom {
-        color: #4273f1 !important;
-      }
-    </style>
   </head>
   <body>
     <div class="ticket-detail-container">
@@ -69,6 +40,7 @@ isELIgnored="false" %>
         </div>
 
         <div class="ticket-body">
+          <!-- Employee Information -->
           <section class="employee-info-section">
             <h3 class="section-title">Employee Information</h3>
             <div class="info-grid">
@@ -91,12 +63,14 @@ isELIgnored="false" %>
             </div>
           </section>
 
+          <!-- Status -->
           <section class="status-section">
             <div class="status-badge status-${ticket.status.toLowerCase()}">
               ${ticket.status}
             </div>
           </section>
 
+          <!-- Request Details -->
           <section class="content-section">
             <h3 class="section-title">Request Details</h3>
 
@@ -176,6 +150,7 @@ isELIgnored="false" %>
             </c:choose>
           </section>
 
+          <!-- Approval Form (if Pending) -->
           <c:if test="${isPending}">
             <section class="approval-section">
               <h3 class="section-title">Manager Action</h3>
@@ -199,13 +174,10 @@ isELIgnored="false" %>
                     name="comment"
                     class="form-textarea"
                     rows="4"
-                    placeholder="Add your feedback here (minimum 10 characters)..."
+                    placeholder="Add your feedback here ..."
                     required
                     minlength="1"
                   ></textarea>
-                  <small class="text-muted"
-                    >Minimum 1 characters required</small
-                  >
                 </div>
 
                 <div class="action-buttons">
@@ -215,8 +187,7 @@ isELIgnored="false" %>
                     value="approve"
                     class="btn btn-approve"
                   >
-                    <span class="btn-icon"></span>
-                    <span class="btn-text">Approve</span>
+                    Approve
                   </button>
                   <button
                     type="submit"
@@ -224,20 +195,20 @@ isELIgnored="false" %>
                     value="reject"
                     class="btn btn-reject"
                   >
-                    <span class="btn-icon"></span>
-                    <span class="btn-text">Reject</span>
+                    Reject
                   </button>
                   <a
                     href="${pageContext.request.contextPath}/department-ticket"
                     class="btn btn-cancel"
                   >
-                    <span class="btn-text">Back to List</span>
+                    Back to List
                   </a>
                 </div>
               </form>
             </section>
           </c:if>
 
+          <!-- Manager Comment (if not Pending) -->
           <c:if test="${!isPending && not empty ticket.comment}">
             <section class="manager-comment-section">
               <h3 class="section-title">Manager Feedback</h3>
@@ -253,6 +224,7 @@ isELIgnored="false" %>
             </section>
           </c:if>
 
+          <!-- Back Button (if not Pending) -->
           <c:if test="${!isPending}">
             <div class="back-button-wrapper">
               <a

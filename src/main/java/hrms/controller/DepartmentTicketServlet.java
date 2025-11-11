@@ -5,10 +5,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import hrms.dao.AccountDAO;
+import hrms.dao.DepartmentDAO;
 import hrms.dao.Ticket_TypesDAO;
 import hrms.dto.TicketDTO;
 import hrms.dto.UserDTO;
 import hrms.model.Account;
+import hrms.model.Department;
 import hrms.model.Ticket_Types;
 import hrms.service.TicketService;
 import hrms.service.UserService;
@@ -26,9 +29,12 @@ public class DepartmentTicketServlet extends HttpServlet {
     private TicketService ticketService = new TicketService();
     private UserService userService = new UserService();
     private Ticket_TypesDAO ticketTypesDAO = new Ticket_TypesDAO();
+    private DepartmentDAO departmentDAO = new DepartmentDAO();
+    private AccountDAO accountDAO = new AccountDAO();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
 
@@ -40,38 +46,29 @@ public class DepartmentTicketServlet extends HttpServlet {
         int userId = account.getUserID();
         UserDTO userDTO = userService.getUserById(userId);
 
+        Account fullAccount = accountDAO.getAccountByUserID(userId);
+        int userRole = fullAccount != null ? fullAccount.getRole() : 0;
+
         String statusParam = request.getParameter("status");
         String typeParam = request.getParameter("type");
         String searchSender = request.getParameter("searchSender");
         String sortByParam = request.getParameter("sortBy");
         String sortOrderParam = request.getParameter("sortOrder");
+        String departmentParam = request.getParameter("department");
 
-        String statusFilter;
-        if (statusParam == null || statusParam.isEmpty()) {
-            statusFilter = "Pending";
-        } else {
-            statusFilter = statusParam;
-        }
+        String statusFilter = (statusParam == null || statusParam.isEmpty()) ? "Pending" : statusParam;
+        String typeFilter = (typeParam == null || typeParam.isEmpty()) ? "All" : typeParam;
+        String sortBy = (sortByParam == null || sortByParam.isEmpty()) ? "createDate" : sortByParam;
+        String sortOrder = (sortOrderParam == null || sortOrderParam.isEmpty()) ? "desc" : sortOrderParam;
 
-        String typeFilter;
-        if (typeParam == null || typeParam.isEmpty()) {
-            typeFilter = "All";
-        } else {
-            typeFilter = typeParam;
-        }
+        String departmentFilter;
+        String userDepartmentName = null;
 
-        String sortBy;
-        if (sortByParam == null || sortByParam.isEmpty()) {
-            sortBy = "createDate";
+        if (userRole == 3) {
+            userDepartmentName = departmentDAO.getNameById(userDTO.getDepartmentId());
+            departmentFilter = userDepartmentName;
         } else {
-            sortBy = sortByParam;
-        }
-
-        String sortOrder;
-        if (sortOrderParam == null || sortOrderParam.isEmpty()) {
-            sortOrder = "desc";
-        } else {
-            sortOrder = sortOrderParam;
+            departmentFilter = (departmentParam == null || departmentParam.isEmpty()) ? "All" : departmentParam;
         }
 
         int itemsPerPage = 5;
@@ -92,8 +89,20 @@ public class DepartmentTicketServlet extends HttpServlet {
             }
         }
 
-        List<TicketDTO> tickets = ticketService.getTicketsByDepartmentId(userDTO.getDepartmentId());
+        List<TicketDTO> tickets;
+        if (userRole == 3) {
+            tickets = ticketService.getTicketsByDepartmentId(userDTO.getDepartmentId());
+        } else {
+            tickets = ticketService.getAllTicketsForDisplay();
+        }
 
+        // 
+        final int currentUserId = userId;
+        tickets = tickets.stream()
+                .filter(t -> t.getUserID() != currentUserId)
+                .collect(Collectors.toList());
+
+        // Filter by sender name
         if (searchSender != null && !searchSender.trim().isEmpty()) {
             String searchLower = searchSender.toLowerCase().trim();
             tickets = tickets.stream()
@@ -102,12 +111,14 @@ public class DepartmentTicketServlet extends HttpServlet {
                     .collect(Collectors.toList());
         }
 
+        // Filter by status
         if (!statusFilter.equals("All")) {
             tickets = tickets.stream()
                     .filter(t -> t.getStatus() != null && t.getStatus().equalsIgnoreCase(statusFilter))
                     .collect(Collectors.toList());
         }
 
+        // Filter by type
         if (!typeFilter.equals("All")) {
             try {
                 int typeId = Integer.parseInt(typeFilter);
@@ -119,6 +130,15 @@ public class DepartmentTicketServlet extends HttpServlet {
             }
         }
 
+        // Filter by department
+        if (!departmentFilter.equals("All") && userRole != 3) {
+            tickets = tickets.stream()
+                    .filter(t -> t.getDepartmentName() != null
+                    && t.getDepartmentName().equals(departmentFilter))
+                    .collect(Collectors.toList());
+        }
+
+        // Sort
         if (sortBy != null && !sortBy.isEmpty()) {
             Comparator<TicketDTO> comparator = null;
 
@@ -138,6 +158,7 @@ public class DepartmentTicketServlet extends HttpServlet {
             }
         }
 
+        // Pagination
         int totalItems = tickets.size();
         int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
 
@@ -150,23 +171,28 @@ public class DepartmentTicketServlet extends HttpServlet {
 
         List<TicketDTO> paginatedTickets = tickets.subList(startIndex, endIndex);
 
+        List<Department> departments;
+        if (userRole == 3) {
+            Department userDept = departmentDAO.getByName(userDepartmentName);
+            departments = List.of(userDept);
+        } else {
+            departments = departmentDAO.getAll();
+        }
+
         List<Ticket_Types> ticketTypes = ticketTypesDAO.getAllTicketTypes();
 
         request.setAttribute("ticketList", paginatedTickets);
         request.setAttribute("ticketTypes", ticketTypes);
+        request.setAttribute("departments", departments);
+        request.setAttribute("userRole", userRole);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("itemsPerPage", itemsPerPage);
         request.setAttribute("totalItems", totalItems);
-
-        if (searchSender == null) {
-            request.setAttribute("searchSender", "");
-        } else {
-            request.setAttribute("searchSender", searchSender);
-        }
-
+        request.setAttribute("searchSender", searchSender == null ? "" : searchSender);
         request.setAttribute("selectedStatus", statusFilter);
         request.setAttribute("selectedType", typeFilter);
+        request.setAttribute("selectedDepartment", departmentFilter);
         request.setAttribute("sortBy", sortBy);
         request.setAttribute("sortOrder", sortOrder);
 
@@ -174,7 +200,8 @@ public class DepartmentTicketServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         // TODO: handle POST request
     }
 }

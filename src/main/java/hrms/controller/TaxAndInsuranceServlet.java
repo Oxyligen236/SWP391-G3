@@ -33,7 +33,6 @@ public class TaxAndInsuranceServlet extends HttpServlet {
 
         PayrollDAO payrollDAO = new PayrollDAO();
 
-        // Lấy tất cả Payroll Types (Insurance và Tax)
         List<PayrollType> allTypes = payrollDAO.getAllPayrollTypes();
         List<PayrollType> taxAndInsuranceTypes = new ArrayList<>();
 
@@ -67,26 +66,33 @@ public class TaxAndInsuranceServlet extends HttpServlet {
             double amount = Double.parseDouble(request.getParameter("amount"));
             String amountType = request.getParameter("amountType");
 
-            PayrollDAO payrollDAO = new PayrollDAO();
+            // ✅ VALIDATION: amount phải > 0
+            if (amount <= 0) {
+                session.setAttribute("errorMessage", "Amount must be greater than 0!");
+                response.sendRedirect(request.getContextPath() + "/tax-and-insurance");
+                return;
+            }
 
+            PayrollDAO payrollDAO = new PayrollDAO();
             PayrollItem existingItem = payrollDAO.getPayrollItemByPayrollIdAndTypeId(1, typeId);
 
             boolean success;
             if (existingItem != null) {
                 success = payrollDAO.updatePayrollItem(existingItem.getPayrollItemID(), amount, amountType);
             } else {
-
                 success = payrollDAO.addPayrollItem(1, typeId, amount, amountType, false);
             }
 
             if (success) {
-                session.setAttribute("successMessage", "Cập nhật thành công!");
+                session.setAttribute("successMessage", "Updated successfully!");
             } else {
-                session.setAttribute("errorMessage", "Cập nhật thất bại!");
+                session.setAttribute("errorMessage", "Update failed!");
             }
 
+        } catch (NumberFormatException e) {
+            session.setAttribute("errorMessage", "Invalid number format!");
         } catch (Exception e) {
-            session.setAttribute("errorMessage", "Lỗi: " + e.getMessage());
+            session.setAttribute("errorMessage", "Error: " + e.getMessage());
         }
 
         response.sendRedirect(request.getContextPath() + "/tax-and-insurance");
