@@ -1,64 +1,389 @@
-body {
-    font-family: "Segoe UI", Arial, sans-serif;
-    background-color: #f6f7fb;
+* {
     margin: 0;
-    padding: 30px;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 25px;
-    font-size: 24px;
-    font-weight: 600;
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
 }
 
-table {
-    width: 90%;
+/* Đổi tên từ .payroll-container sang .attendance-container để phù hợp ngữ cảnh */
+.attendance-container { 
+    max-width: 1400px;
     margin: 0 auto;
+    padding: 20px;
+}
+
+/* Đổi h1 thành h2 để khớp với JSP */
+h2 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 28px;
+    font-weight: 700;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #3498db;
+}
+
+/* --- Form Lọc (Sử dụng style .search-form của payroll) --- */
+.filter-form-container { /* Sử dụng class đã có trong JSP, nhưng áp dụng style của .search-form */
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+.form-row { /* Sử dụng Grid cho các trường nhập */
+    display: grid;
+    /* Điều chỉnh grid để ít nhất có 3 cột cho 3 trường lọc */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* Định nghĩa lại filter-group để khớp với field-group trong JSP */
+.filter-group { 
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-form-container label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.filter-form-container select,
+.filter-form-container input[type="date"],
+.filter-form-container input[type="number"] {
+    padding: 10px 14px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background-color: #fff;
+    /* Đảm bảo chiều cao đồng nhất */
+    height: 38px;
+}
+
+.filter-form-container select:focus,
+.filter-form-container input[type="date"]:focus,
+.filter-form-container input[type="number"]:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+.filter-form-container select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath fill='%232c3e50' d='M0 4l6 6 6-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 35px;
+    cursor: pointer;
+}
+
+/* Nút bấm */
+.button-group {
+    display: flex;
+    gap: 15px;
+    /* Để nút Apply nằm ngang hàng với input khác */
+    align-self: flex-end; 
+    padding-bottom: 0;
+}
+
+.btn {
+    padding: 10px 30px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center; /* căn chỉnh nội dung nút */
+    height: 38px; /* Chiều cao cố định */
+}
+
+.btn.primary {
+    background-color: #3498db;
+}
+
+.btn.primary:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.btn.secondary {
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    border: 1px solid #dee2e6;
+    padding: 10px 20px;
+}
+
+.btn.secondary:hover {
+    background-color: #d5dbde;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn.small { /* Dùng cho nút Apply trong phân trang */
+    padding: 8px 18px;
+    height: 38px;
+}
+
+/* --- Table Styles (Điều chỉnh để áp dụng style payroll) --- */
+table {
+    width: 100%;
     border-collapse: collapse;
     background: #fff;
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+    border: none;
 }
 
 thead {
-    background-color: #007bff;
-    color: #fff;
+    background: #f8f9fa;
 }
 
-th, td {
-    padding: 10px 12px;
-    text-align: center;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-tr:hover {
-    background-color: #eaf3ff;
-}
-
-th {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 13px;
-}
-
-td {
+thead th {
+    padding: 15px 12px;
     font-size: 14px;
-    color: #333;
+    text-align: center;
+    color: #2c3e50;
+    font-weight: 600;
+    border-bottom: 2px solid #e9ecef;
+    /* Bỏ border-right */
+}
+thead th:last-child {
+    border-right: none;
+}
+/* Style cho cột đang được sắp xếp */
+.sort-header {
+    cursor: pointer;
+}
+.sort-icon {
+    margin-left: 5px;
+    font-size: 0.9em;
+    color: #3498db;
+    font-weight: bold;
+}
+
+
+tbody td {
+    padding: 14px 12px;
+    text-align: center;
+    font-size: 14px;
+    color: #495057;
+    border-bottom: 1px solid #f1f3f5;
+    /* Bỏ border-right */
+}
+tbody td:last-child {
+    border-right: none;
+}
+
+tbody tr:hover {
+    background: #f8f9fa; /* Sử dụng màu sáng hơn */
+}
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.no-data-found {
+    text-align: center !important;
+    font-style: italic;
+    color: #dc3545; /* Đổi màu lỗi/không tìm thấy */
+    font-weight: 600;
+    padding: 30px !important;
+}
+
+/* --- Pagination Styles (Áp dụng style payroll) --- */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 25px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.items-per-page-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.items-per-page-form label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.items-per-page-form .input-limit {
+    width: 80px;
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+    text-align: center;
+    height: 38px;
+}
+
+.items-per-page-form .input-limit:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+.pagination-nav {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+}
+
+.page-item {
+    display: inline-block;
+}
+
+.page-link {
+    padding: 8px 16px;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    color: #3498db;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-block;
+    height: 38px;
+    line-height: 20px; /* Căn chỉnh nội dung */
+}
+
+.page-link:hover {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+    transform: translateY(-1px);
+}
+
+.page-item.disabled .page-link {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    color: #6c757d;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.page-item.page-status .page-link {
+    background-color: transparent;
+    border: none;
+    color: #6c757d;
+    font-weight: normal;
+}
+.page-item.page-status .page-link:hover {
+    background-color: transparent;
+    color: #6c757d;
+    transform: none;
+}
+
+/* --- Responsive Design (Điều chỉnh lại) --- */
+@media (max-width: 992px) {
+    .attendance-container { 
+        padding: 15px; 
+    }
+    h2 { font-size: 24px; }
+    
+    .form-row {
+        /* Cho phép 2 cột tối thiểu */
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
 }
 
 @media (max-width: 768px) {
-    table {
+    .filter-form-container {
+        padding: 20px;
+    }
+    h2 { font-size: 22px; }
+
+    .form-row {
+        grid-template-columns: 1fr; /* 1 cột trên di động */
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    /* Chuyển các field-group thành 100% chiều rộng */
+    .filter-group {
         width: 100%;
+    }
+    /* Đảm bảo nút Apply/Reset luôn ở dưới cùng và căn chỉnh phù hợp */
+    .button-group {
+        width: 100%;
+        justify-content: flex-start;
+        align-self: flex-start;
+    }
+
+    table {
+        /* Cho phép cuộn ngang */
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        min-width: 700px;
+    }
+    thead th, tbody td {
+        padding: 10px 6px;
         font-size: 12px;
     }
-    th, td {
-        padding: 8px 6px;
+
+    .pagination-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .pagination-nav {
+        justify-content: center;
+    }
+    .items-per-page-form {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .attendance-container { padding: 10px; }
+    h2 { font-size: 20px; }
+    .filter-form-container { padding: 15px; }
+    
+    .filter-form-container label { font-size: 13px; }
+    
+    thead th, tbody td {
+        padding: 8px 4px;
+        font-size: 11px;
+    }
+    .btn {
+        padding: 8px 15px;
+        font-size: 13px;
     }
 }
