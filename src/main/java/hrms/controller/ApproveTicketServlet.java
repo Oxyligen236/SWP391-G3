@@ -27,6 +27,14 @@ public class ApproveTicketServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("account");
+
+        if (account == null) {
+            response.sendRedirect(request.getContextPath() + "/authenticate");
+            return;
+        }
+
         String ticketIdRaw = request.getParameter("ticketId");
 
         if (ticketIdRaw == null || ticketIdRaw.isEmpty()) {
@@ -39,7 +47,14 @@ public class ApproveTicketServlet extends HttpServlet {
             TicketDTO ticket = ticketService.getTicketById(ticketId);
 
             if (ticket == null) {
-                request.setAttribute("errorMessage", "Ticket not found!");
+                session.setAttribute("errorMessage", "Ticket not found!");
+                response.sendRedirect(request.getContextPath() + "/department-ticket");
+                return;
+            }
+
+            // validation
+            if (ticket.getUserID() == account.getUserID()) {
+                session.setAttribute("errorMessage", "You cannot view tickets created by yourself!");
                 response.sendRedirect(request.getContextPath() + "/department-ticket");
                 return;
             }
@@ -48,7 +63,7 @@ public class ApproveTicketServlet extends HttpServlet {
             boolean isPending = "Pending".equalsIgnoreCase(ticket.getStatus());
             request.setAttribute("isPending", isPending);
 
-            // Tính toán OT Info nếu là Overtime Ticket
+            // Tính toán OT Info 
             if (ticket.getTicket_Type_ID() == 2 && ticket.getOvertimeDate() != null) {
                 LocalDate overtimeDate = ticket.getOvertimeDate();
                 String dayType = calendarCheck.getDayType(overtimeDate);
@@ -84,6 +99,21 @@ public class ApproveTicketServlet extends HttpServlet {
             String action = request.getParameter("action");
             String comment = request.getParameter("comment");
 
+            Ticket ticket = ticketDAO.getTicketById(ticketId);
+
+            if (ticket == null) {
+                session.setAttribute("errorMessage", "Ticket not found!");
+                response.sendRedirect(request.getContextPath() + "/department-ticket");
+                return;
+            }
+
+            // val;idation
+            if (ticket.getUserID() == account.getUserID()) {
+                session.setAttribute("errorMessage", "You cannot approve/reject tickets created by yourself!");
+                response.sendRedirect(request.getContextPath() + "/department-ticket");
+                return;
+            }
+
             if (action == null || (!action.equals("approve") && !action.equals("reject"))) {
                 session.setAttribute("errorMessage", "Invalid action!");
                 response.sendRedirect(request.getContextPath() + "/approve-ticket?ticketId=" + ticketId);
@@ -99,14 +129,6 @@ public class ApproveTicketServlet extends HttpServlet {
             if (comment.trim().length() < 1) {
                 session.setAttribute("errorMessage", "Comment must be at least 1 character!");
                 response.sendRedirect(request.getContextPath() + "/approve-ticket?ticketId=" + ticketId);
-                return;
-            }
-
-            Ticket ticket = ticketDAO.getTicketById(ticketId);
-
-            if (ticket == null) {
-                session.setAttribute("errorMessage", "Ticket not found!");
-                response.sendRedirect(request.getContextPath() + "/department-ticket");
                 return;
             }
 

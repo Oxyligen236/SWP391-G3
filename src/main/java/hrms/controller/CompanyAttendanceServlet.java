@@ -2,6 +2,7 @@ package hrms.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,15 +37,25 @@ public class CompanyAttendanceServlet extends HttpServlet {
         String fromDateParam = req.getParameter("fromDate");
         String toDateParam = req.getParameter("toDate");
 
-        String hasCheckout3Param = req.getParameter("hasCheckout3");
         String hasLateParam = req.getParameter("hasLate");
         String hasEarlyLeaveParam = req.getParameter("hasEarlyLeave");
         String hasOTParam = req.getParameter("hasOT");
 
-        boolean hasCheckout3 = "true".equals(hasCheckout3Param);
         boolean hasLate = "true".equals(hasLateParam);
         boolean hasEarlyLeave = "true".equals(hasEarlyLeaveParam);
         boolean hasOT = "true".equals(hasOTParam);
+
+        LocalDate defaultFromDate = null;
+        LocalDate defaultToDate = null;
+
+        if ((fromDateParam == null || fromDateParam.isEmpty())
+                && (toDateParam == null || toDateParam.isEmpty())) {
+            YearMonth currentMonth = YearMonth.now();
+            defaultFromDate = currentMonth.atDay(1);
+            defaultToDate = currentMonth.atEndOfMonth();
+            fromDateParam = defaultFromDate.toString();
+            toDateParam = defaultToDate.toString();
+        }
 
         int itemsPerPage = 10;
         if (req.getParameter("itemsPerPage") != null) {
@@ -67,9 +78,9 @@ public class CompanyAttendanceServlet extends HttpServlet {
         List<AttendanceDTO> attendanceList;
 
         if (userName != null || department != null || position != null
-                || hasCheckout3 || hasLate || hasEarlyLeave || hasOT) {
+                || hasLate || hasEarlyLeave || hasOT) {
             attendanceList = attendanceService.searchAttendances(
-                    userName, department, position, hasCheckout3, hasLate, hasEarlyLeave, hasOT);
+                    userName, department, position, false, hasLate, hasEarlyLeave, hasOT);
         } else {
             attendanceList = attendanceService.getAllAttendances();
         }
@@ -124,8 +135,15 @@ public class CompanyAttendanceServlet extends HttpServlet {
                     .collect(Collectors.toList());
         }
 
-        attendanceList.sort(Comparator.comparing(AttendanceDTO::getDate,
-                Comparator.nullsLast(Comparator.reverseOrder())));
+        // sort table
+        attendanceList.sort(
+                Comparator.comparing(AttendanceDTO::getDepartmentName,
+                        Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER))
+                        .thenComparing(AttendanceDTO::getUserName,
+                                Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER))
+                        .thenComparing(AttendanceDTO::getDate,
+                                Comparator.nullsLast(Comparator.naturalOrder()))
+        );
 
         int totalItems = attendanceList.size();
         int totalPages = (int) Math.ceil((double) totalItems / itemsPerPage);
@@ -151,7 +169,6 @@ public class CompanyAttendanceServlet extends HttpServlet {
         req.setAttribute("fromDate", fromDateParam != null ? fromDateParam : "");
         req.setAttribute("toDate", toDateParam != null ? toDateParam : "");
 
-        req.setAttribute("hasCheckout3", hasCheckout3);
         req.setAttribute("hasLate", hasLate);
         req.setAttribute("hasEarlyLeave", hasEarlyLeave);
         req.setAttribute("hasOT", hasOT);

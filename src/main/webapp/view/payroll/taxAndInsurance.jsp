@@ -1,8 +1,6 @@
-<!-- filepath: d:\FPT\Ky_5\SWP391\Project\SWP391-G3\src\main\webapp\view\payroll\taxAndInsurance.jsp -->
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %> <%@
 taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ taglib
-prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> <%@ taglib
-prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> <%@ page
+prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> <%@ page
 isELIgnored="false" %>
 
 <!DOCTYPE html>
@@ -10,90 +8,57 @@ isELIgnored="false" %>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quản lý Thuế và Bảo hiểm</title>
+    <title>Tax and Insurance Management</title>
     <link
       rel="stylesheet"
       href="${pageContext.request.contextPath}/webjars/bootstrap/5.3.3/css/bootstrap.min.css"
     />
-    <style>
-      .bg-gradient-primary {
-        background: linear-gradient(135deg, #4273f1 0%, #6ba3ff 100%);
-      }
-      .text-primary-custom {
-        color: #4273f1 !important;
-      }
-      .btn-primary-custom {
-        background: linear-gradient(135deg, #4273f1 0%, #5a8fff 100%);
-        border: none;
-        color: white;
-      }
-      .btn-primary-custom:hover {
-        background: linear-gradient(135deg, #3a63d1 0%, #4a7fef 100%);
-      }
-      .table-header-gradient {
-        background: linear-gradient(135deg, #e8f0fe 0%, #f0f7ff 100%);
-        font-weight: bold;
-        color: #4273f1;
-      }
-      .deduction-badge {
-        background-color: #dc3545;
-        color: white;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-      }
-      .modal {
-        z-index: 9999 !important;
-      }
-      .modal-backdrop {
-        z-index: 9998 !important;
-      }
-    </style>
+    <link
+      rel="stylesheet"
+      href="${pageContext.request.contextPath}/css/taxAndInsurance.css"
+    />
   </head>
-  <body class="bg-light">
-    <div class="container mt-5 mb-5">
-      <div class="card shadow-lg border-0">
-        <div
-          class="card-header bg-gradient-primary text-white text-center py-3"
-        >
-          <h3 class="mb-0">Quản lý Chính sách Thuế và Bảo hiểm</h3>
+  <body>
+    <div class="tax-insurance-container">
+      <div class="tax-insurance-card">
+        <div class="tax-insurance-header">
+          <h3>Tax and Insurance Policy Management</h3>
         </div>
-        <div class="card-body p-4">
-          <!-- Success/Error Messages -->
+
+        <div class="tax-insurance-body">
+          <!-- Success Message -->
           <c:if test="${not empty successMessage}">
-            <div
-              class="alert alert-success alert-dismissible fade show"
-              role="alert"
-            >
-              <strong>Thành công!</strong> ${successMessage}
+            <div class="alert-message alert-success">
+              <strong>Success!</strong> ${successMessage}
               <button
                 type="button"
-                class="btn-close"
-                data-bs-dismiss="alert"
-              ></button>
+                class="alert-close-btn"
+                onclick="this.parentElement.remove()"
+              >
+                &times;
+              </button>
             </div>
             <c:remove var="successMessage" scope="session" />
           </c:if>
 
+          <!-- Error Message -->
           <c:if test="${not empty errorMessage}">
-            <div
-              class="alert alert-danger alert-dismissible fade show"
-              role="alert"
-            >
-              <strong>Lỗi!</strong> ${errorMessage}
+            <div class="alert-message alert-danger">
+              <strong>Error!</strong> ${errorMessage}
               <button
                 type="button"
-                class="btn-close"
-                data-bs-dismiss="alert"
-              ></button>
+                class="alert-close-btn"
+                onclick="this.parentElement.remove()"
+              >
+                &times;
+              </button>
             </div>
             <c:remove var="errorMessage" scope="session" />
           </c:if>
 
-          <!-- Table -->
           <div class="table-responsive">
-            <table class="table table-bordered text-center align-middle">
-              <thead class="table-header-gradient">
+            <table class="tax-insurance-table">
+              <thead>
                 <tr>
                   <th width="30%">Item Name</th>
                   <th width="35%">Amount</th>
@@ -119,31 +84,15 @@ isELIgnored="false" %>
                             <c:when
                               test="${currentItem.amountType == 'percent'}"
                             >
-                              ${currentItem.amount} (% Base Salary)
+                              ${currentItem.amount}% (Base Salary)
                             </c:when>
                             <c:otherwise>
-                              <%-- Hiển thị số thập phân nếu có, ngược lại hiển
-                              thị số nguyên --%>
-                              <c:choose>
-                                <c:when test="${currentItem.amount % 1 == 0}">
-                                  <fmt:formatNumber
-                                    value="${currentItem.amount}"
-                                    pattern="#,##0"
-                                  />
-                                </c:when>
-                                <c:otherwise>
-                                  <fmt:formatNumber
-                                    value="${currentItem.amount}"
-                                    pattern="#,##0.##"
-                                  />
-                                </c:otherwise>
-                              </c:choose>
-                              (₫)
+                              ${currentItem.amount} vn₫
                             </c:otherwise>
                           </c:choose>
                         </c:when>
                         <c:otherwise>
-                          <span class="text-muted">Chưa thiết lập</span>
+                          <span class="text-muted">Not set</span>
                         </c:otherwise>
                       </c:choose>
                     </td>
@@ -153,10 +102,10 @@ isELIgnored="false" %>
                     <td>
                       <button
                         type="button"
-                        class="btn btn-sm btn-outline-primary"
+                        class="btn-edit"
                         data-type-id="${type.payrollTypeID}"
                         data-type-name="${fn:escapeXml(type.typeName)}"
-                        data-amount="${currentItem != null ? currentItem.amount : 0}"
+                        data-amount="${currentItem != null ? currentItem.amount : ''}"
                         data-amount-type="${currentItem != null ? currentItem.amountType : 'fixed'}"
                         onclick="openEditModal(this)"
                       >
@@ -182,11 +131,11 @@ isELIgnored="false" %>
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header bg-gradient-primary text-white">
-            <h5 class="modal-title">Chỉnh sửa</h5>
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Item</h5>
             <button
               type="button"
-              class="btn-close btn-close-white"
+              class="btn-close"
               data-bs-dismiss="modal"
             ></button>
           </div>
@@ -198,10 +147,8 @@ isELIgnored="false" %>
             <div class="modal-body">
               <input type="hidden" id="editTypeId" name="typeId" />
 
-              <div class="mb-3">
-                <label class="form-label fw-bold text-primary-custom"
-                  >Item Name</label
-                >
+              <div class="form-group">
+                <label class="form-label">Item Name</label>
                 <input
                   type="text"
                   class="form-control"
@@ -210,10 +157,8 @@ isELIgnored="false" %>
                 />
               </div>
 
-              <div class="mb-3">
-                <label class="form-label fw-bold text-primary-custom"
-                  >Amount Type</label
-                >
+              <div class="form-group">
+                <label class="form-label">Amount Type</label>
                 <select
                   class="form-select"
                   id="editAmountType"
@@ -221,36 +166,39 @@ isELIgnored="false" %>
                   onchange="updateAmountLabel()"
                 >
                   <option value="percent">Percentage (%)</option>
-                  <option value="fixed">Fixed Amount (₫)</option>
+                  <option value="fixed">Fixed Amount (vn₫)</option>
                 </select>
               </div>
 
-              <div class="mb-3">
-                <label class="form-label fw-bold text-primary-custom">
-                  Amount <span id="amountUnit">(% Base Salary)</span>
+              <div class="form-group">
+                <label class="form-label">
+                  Amount
+                  <span id="amountUnit" class="amount-unit"
+                    >(% Base Salary)</span
+                  >
                 </label>
+
                 <input
-                  type="number"
+                  type="text"
                   class="form-control"
                   id="editAmount"
                   name="amount"
-                  step="0.01"
-                  min="0"
                   required
+                  placeholder="Enter amount"
                 />
               </div>
             </div>
             <div class="modal-footer">
               <button
                 type="button"
-                class="btn btn-secondary"
+                class="btn-secondary"
                 data-bs-dismiss="modal"
               >
                 Cancel
               </button>
               <button
                 type="button"
-                class="btn btn-primary-custom"
+                class="btn-primary-custom"
                 onclick="confirmSave()"
               >
                 Save
@@ -261,7 +209,6 @@ isELIgnored="false" %>
       </div>
     </div>
 
-    <!-- Confirm Modal -->
     <div
       class="modal fade"
       id="confirmModal"
@@ -271,28 +218,24 @@ isELIgnored="false" %>
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header bg-gradient-primary text-white">
-            <h5 class="modal-title">Xác nhận</h5>
+          <div class="modal-header">
+            <h5 class="modal-title">Confirm</h5>
             <button
               type="button"
-              class="btn-close btn-close-white"
+              class="btn-close"
               onclick="backToEdit()"
             ></button>
           </div>
           <div class="modal-body">
-            <p class="mb-0">Bạn có chắc chắn muốn lưu thay đổi này không?</p>
+            <p class="mb-0">Are you sure you want to save this change?</p>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              onclick="backToEdit()"
-            >
+            <button type="button" class="btn-secondary" onclick="backToEdit()">
               No
             </button>
             <button
               type="button"
-              class="btn btn-primary-custom"
+              class="btn-primary-custom"
               onclick="submitForm()"
             >
               Yes
@@ -320,15 +263,9 @@ isELIgnored="false" %>
         const amount = button.getAttribute("data-amount");
         const amountType = button.getAttribute("data-amount-type");
 
-        console.log("Edit Modal Data:", {
-          typeId,
-          typeName,
-          amount,
-          amountType,
-        });
-
         document.getElementById("editTypeId").value = typeId;
         document.getElementById("editTypeName").value = typeName;
+
         document.getElementById("editAmount").value = amount;
         document.getElementById("editAmountType").value = amountType;
         updateAmountLabel();
@@ -346,11 +283,15 @@ isELIgnored="false" %>
       }
 
       function confirmSave() {
-        const amount = document.getElementById("editAmount").value;
-        if (!amount || parseFloat(amount) < 0) {
-          alert("Vui lòng nhập số tiền hợp lệ!");
+        const amountInput = document.getElementById("editAmount").value.trim();
+
+        const amount = parseFloat(amountInput);
+
+        if (isNaN(amount) || amount <= 0) {
+          alert("Amount must be a valid number greater than 0!");
           return;
         }
+
         editModal.hide();
         setTimeout(() => {
           confirmModal.show();
@@ -365,14 +306,6 @@ isELIgnored="false" %>
       }
 
       function submitForm() {
-        console.log("Submitting form...");
-        console.log("TypeID:", document.getElementById("editTypeId").value);
-        console.log("Amount:", document.getElementById("editAmount").value);
-        console.log(
-          "AmountType:",
-          document.getElementById("editAmountType").value
-        );
-
         document.getElementById("editForm").submit();
       }
     </script>

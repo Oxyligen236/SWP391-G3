@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isELIgnored="false" %>
@@ -11,7 +12,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/company-attendance.css" />
     <style>
-       
         .table-responsive {
             overflow-x: auto;
         }
@@ -22,15 +22,10 @@
 </head>
 <body>
     <div class="container mt-4">
-      
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="text-primary mb-0">Company Attendance Records</h4>
-            <a href="${pageContext.request.contextPath}/home" class="btn btn-outline-primary">
-                <i class="bi bi-house-door-fill me-1"></i>Back to Home
-            </a>
         </div>
 
-  
         <c:if test="${not empty dateError}">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>${dateError}
@@ -38,7 +33,6 @@
             </div>
         </c:if>
 
-        <!-- Error message for empty export -->
         <c:if test="${not empty sessionScope.errorMessage}">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>${sessionScope.errorMessage}
@@ -47,9 +41,7 @@
             <c:remove var="errorMessage" scope="session" />
         </c:if>
 
-     
         <form action="${pageContext.request.contextPath}/company-attendance" method="get" class="row g-3 mb-4">
-           
             <div class="col-md-3">
                 <label class="form-label">Employee Name</label>
                 <input type="text" name="userName" value="${searchUserName}" 
@@ -99,12 +91,8 @@
                 <input type="date" name="toDate" value="${toDate}" class="form-control">
             </div>
          
+       
             <div class="col-md-12">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="hasCheckout3" 
-                           value="true" <c:if test="${hasCheckout3}">checked</c:if>>
-                    <label class="form-check-label">Has Checkout 3</label>
-                </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" name="hasLate" 
                            value="true" <c:if test="${hasLate}">checked</c:if>>
@@ -135,14 +123,13 @@
 
         <!-- Export to Excel Form -->
         <form action="${pageContext.request.contextPath}/preview-attendance-export" method="get" id="exportForm" class="mb-3">
-            <!-- Hidden inputs to pass all current filter values -->
             <input type="hidden" name="userName" value="${searchUserName}">
             <input type="hidden" name="department" value="${searchDepartment}">
             <input type="hidden" name="position" value="${searchPosition}">
             <input type="hidden" name="shiftId" value="${selectedShift}">
             <input type="hidden" name="fromDate" value="${fromDate}">
             <input type="hidden" name="toDate" value="${toDate}">
-            <input type="hidden" name="hasCheckout3" value="${hasCheckout3}">
+           
             <input type="hidden" name="hasLate" value="${hasLate}">
             <input type="hidden" name="hasEarlyLeave" value="${hasEarlyLeave}">
             <input type="hidden" name="hasOT" value="${hasOT}">
@@ -156,7 +143,6 @@
             </span>
         </form>
 
-   
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-center align-middle">
                 <thead class="table-primary">
@@ -242,7 +228,6 @@
             </table>
         </div>
 
-
         <div class="d-flex justify-content-between align-items-center mt-4">
             <form action="${pageContext.request.contextPath}/company-attendance" method="get" class="d-flex align-items-center">
                 <label class="me-2">Items per page:</label>
@@ -255,7 +240,7 @@
                 <input type="hidden" name="shiftId" value="${selectedShift}" />
                 <input type="hidden" name="fromDate" value="${fromDate}" />
                 <input type="hidden" name="toDate" value="${toDate}" />
-                <input type="hidden" name="hasCheckout3" value="${hasCheckout3}" />
+            
                 <input type="hidden" name="hasLate" value="${hasLate}" />
                 <input type="hidden" name="hasEarlyLeave" value="${hasEarlyLeave}" />
                 <input type="hidden" name="hasOT" value="${hasOT}" />
@@ -265,7 +250,7 @@
                 <ul class="pagination mb-0">
                     <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
                         <a class="page-link" 
-                           href="${pageContext.request.contextPath}/company-attendance?page=${currentPage - 1}&itemsPerPage=${itemsPerPage}&userName=${searchUserName}&department=${searchDepartment}&position=${searchPosition}&shiftId=${selectedShift}&fromDate=${fromDate}&toDate=${toDate}&hasCheckout3=${hasCheckout3}&hasLate=${hasLate}&hasEarlyLeave=${hasEarlyLeave}&hasOT=${hasOT}">
+                           href="${pageContext.request.contextPath}/company-attendance?page=${currentPage - 1}&itemsPerPage=${itemsPerPage}&userName=${searchUserName}&department=${searchDepartment}&position=${searchPosition}&shiftId=${selectedShift}&fromDate=${fromDate}&toDate=${toDate}&hasLate=${hasLate}&hasEarlyLeave=${hasEarlyLeave}&hasOT=${hasOT}">
                             Previous
                         </a>
                     </li>
@@ -274,7 +259,7 @@
                     </li>
                     <li class="page-item ${currentPage == totalPages || totalPages == 0 ? 'disabled' : ''}">
                         <a class="page-link" 
-                           href="${pageContext.request.contextPath}/company-attendance?page=${currentPage + 1}&itemsPerPage=${itemsPerPage}&userName=${searchUserName}&department=${searchDepartment}&position=${searchPosition}&shiftId=${selectedShift}&fromDate=${fromDate}&toDate=${toDate}&hasCheckout3=${hasCheckout3}&hasLate=${hasLate}&hasEarlyLeave=${hasEarlyLeave}&hasOT=${hasOT}">
+                           href="${pageContext.request.contextPath}/company-attendance?page=${currentPage + 1}&itemsPerPage=${itemsPerPage}&userName=${searchUserName}&department=${searchDepartment}&position=${searchPosition}&shiftId=${selectedShift}&fromDate=${fromDate}&toDate=${toDate}&hasLate=${hasLate}&hasEarlyLeave=${hasEarlyLeave}&hasOT=${hasOT}">
                             Next
                         </a>
                     </li>
@@ -285,18 +270,13 @@
     </div>
     <script src="${pageContext.request.contextPath}/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Export button loading indicator
         document.getElementById('exportForm').addEventListener('submit', function(e) {
             var exportButton = document.getElementById('exportButton');
             var loadingMessage = document.getElementById('exportLoadingMessage');
             
-            // Disable button to prevent double-clicks
             exportButton.disabled = true;
-            
-            // Show loading message
             loadingMessage.style.display = 'inline';
             
-            // Re-enable button after 5 seconds (in case of error or completion)
             setTimeout(function() {
                 exportButton.disabled = false;
                 loadingMessage.style.display = 'none';

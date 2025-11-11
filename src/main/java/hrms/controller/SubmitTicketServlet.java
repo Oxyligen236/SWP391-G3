@@ -72,7 +72,7 @@ public class SubmitTicketServlet extends HttpServlet {
                     endDate = request.getParameter("endDate");
                     reason = request.getParameter("reason");
 
-                    //Kiểm tra null/empty
+                    //Validation
                     if (leaveTypeIDRaw == null || leaveTypeIDRaw.isEmpty()
                             || startDate == null || startDate.isEmpty()
                             || endDate == null || endDate.isEmpty()
@@ -87,7 +87,7 @@ public class SubmitTicketServlet extends HttpServlet {
                     LocalDate leaveStart = LocalDate.parse(startDate);
                     LocalDate leaveEnd = LocalDate.parse(endDate);
 
-                    // End date không được trước start date
+                    // Validation
                     if (leaveEnd.isBefore(leaveStart)) {
                         session.setAttribute("errorMessage", "End date cannot be before start date!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
@@ -95,7 +95,7 @@ public class SubmitTicketServlet extends HttpServlet {
                         return;
                     }
 
-                    // Không được đăng ký nghỉ quá khứ
+                    // Validation
                     if (leaveStart.isBefore(LocalDate.now())) {
                         session.setAttribute("errorMessage", "Start date cannot be in the past!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
@@ -103,8 +103,8 @@ public class SubmitTicketServlet extends HttpServlet {
                         return;
                     }
 
-                    // Reason không được quá ngắn
-                    if (reason.trim().length() < 2) {
+                    // Validation
+                    if (reason.trim().length() < 1) {
                         session.setAttribute("errorMessage", "Reason must be at least 1 character!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
                         response.sendRedirect(request.getContextPath() + "/create-ticket");
@@ -119,7 +119,7 @@ public class SubmitTicketServlet extends HttpServlet {
                     endTime = request.getParameter("endTime");
                     reason = request.getParameter("reason");
 
-                    // Kiểm tra null/empty
+                    // Validation
                     if (overtimeDate == null || overtimeDate.isEmpty()
                             || startTime == null || startTime.isEmpty()
                             || endTime == null || endTime.isEmpty()
@@ -135,7 +135,7 @@ public class SubmitTicketServlet extends HttpServlet {
                     LocalTime otStart = LocalTime.parse(startTime);
                     LocalTime otEnd = LocalTime.parse(endTime);
 
-                    // Không được chọn ngày quá khứ
+                    // Validation
                     if (otDate.isBefore(LocalDate.now())) {
                         session.setAttribute("errorMessage", "Overtime date cannot be in the past!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
@@ -143,7 +143,7 @@ public class SubmitTicketServlet extends HttpServlet {
                         return;
                     }
 
-                    //  End time phải sau start time
+                    //  Validation
                     if (otEnd.isBefore(otStart) || otEnd.equals(otStart)) {
                         session.setAttribute("errorMessage", "End time must be after start time!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
@@ -151,7 +151,7 @@ public class SubmitTicketServlet extends HttpServlet {
                         return;
                     }
 
-                    // Kiểm tra số giờ OT tối thiểu 
+                    // Validation
                     long minutes = java.time.temporal.ChronoUnit.MINUTES.between(otStart, otEnd);
                     if (minutes < 30) {
                         session.setAttribute("errorMessage", "Overtime must be at least 30 minutes!");
@@ -160,7 +160,7 @@ public class SubmitTicketServlet extends HttpServlet {
                         return;
                     }
 
-                    // Kiểm tra giới hạn giờ OT theo chính sách
+                    // Validation
                     CalendarCheck calendarCheck = new CalendarCheck();
                     String dayType = calendarCheck.getDayType(otDate);
                     double maxHours = getMaxOvertimeHours(dayType);
@@ -175,8 +175,8 @@ public class SubmitTicketServlet extends HttpServlet {
                         return;
                     }
 
-                    // Reason không được quá ngắn
-                    if (reason.trim().length() < 10) {
+                    // Validation
+                    if (reason.trim().length() < 1) {
                         session.setAttribute("errorMessage", "Reason must be at least 10 characters!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
                         response.sendRedirect(request.getContextPath() + "/create-ticket");
@@ -215,7 +215,6 @@ public class SubmitTicketServlet extends HttpServlet {
                         return;
                     }
 
-                    // Content không được quá ngắn
                     if (reason.trim().length() < 1) {
                         session.setAttribute("errorMessage", "Ticket content must be at least 1 character!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
@@ -241,7 +240,6 @@ public class SubmitTicketServlet extends HttpServlet {
                 return;
             }
 
-            //THÊM DETAIL
             if (selectedTypeId == 1) {
                 LeaveDetailDAO leaveDetailDAO = new LeaveDetailDAO();
                 LeaveDetail leaveDetail = new LeaveDetail();
@@ -274,7 +272,6 @@ public class SubmitTicketServlet extends HttpServlet {
         }
     }
 
-    // ===== HELPER METHOD =====
     private double getMaxOvertimeHours(String dayType) {
         String policyName = "Weekday".equals(dayType)
                 ? "max_overtime_hours_per_day_weekday"
