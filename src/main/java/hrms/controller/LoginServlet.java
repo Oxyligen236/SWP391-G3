@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
 
                 if (account == null) {
                     request.setAttribute("errorMessage",
-                            "Email chưa được đăng ký!");
+                            "Email is not registered!");
                     request.getRequestDispatcher("/view/authenticate/login.jsp").forward(request, response);
                     return;
                 }

@@ -96,9 +96,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:if test="${empty cvs}">
+                            <c:if test="${not empty message}">
                                 <tr>
-                                    <td colspan="10" class="no-data">No CVs found</td>
+                                    <td colspan="10" class="no-data">${message}</td>
                                 </tr>
                             </c:if>
                             <c:forEach var="cv" items="${cvs}" varStatus="status">

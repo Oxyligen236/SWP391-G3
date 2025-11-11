@@ -87,6 +87,10 @@ public class CvServlet extends HttpServlet {
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("itemsPerPage", itemsPerPage);
 
+            if (cvList.isEmpty()) {
+                request.setAttribute("message", "No CVs found.");
+            }
+
             request.getRequestDispatcher("/view/cv/cv_List.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             request.setAttribute("jobID_error", "Invalid Job_ID format");

@@ -32,6 +32,10 @@ public class SalaryServlet extends HttpServlet {
     private ContractDAO contractDAO;
     private PayrollService payrollService;
 
+    private final LocalDate now = LocalDate.now();
+    private final int currentMonth = now.getMonthValue();
+    private final int currentYear = now.getYear();
+
     @Override
     public void init() throws ServletException {
         this.salaryProcessor = new SalaryProcessor();
@@ -49,21 +53,24 @@ public class SalaryServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
-            LocalDate now = LocalDate.now();
-    int currentMonth = now.getMonthValue();
-    int currentYear = now.getYear();
-    LocalDate payDate = LocalDate.of(currentYear, currentMonth, 26);
-Date payDateSql = Date.valueOf(payDate);
-    request.setAttribute("payDate", payDateSql);
+        List<UserDTO> employeesWithoutPayroll = payrollService.findEmployeesWithoutPayroll(currentMonth, currentYear);
+        LocalDate payDate = LocalDate.of(currentYear, currentMonth, 26);
+        Date payDateSql = Date.valueOf(payDate);
 
-        if (action == null) {
+        request.setAttribute("employeesWithoutPayroll", employeesWithoutPayroll);
+        request.setAttribute("payDate", payDateSql);
+
+        if (null == action) {
             showSalaryPage(request, response);
-        } else if ("generate".equals(action)) {
-            generatePayrolls(request, response);
-        } else if ("calculate".equals(action)) {
-            calculateSalaries(request, response);
         } else {
-            showSalaryPage(request, response);
+            switch (action) {
+                case "generate" ->
+                    generatePayrolls(request, response);
+                case "calculate" ->
+                    calculateSalaries(request, response);
+                default ->
+                    showSalaryPage(request, response);
+            }
         }
     }
 
@@ -74,128 +81,132 @@ Date payDateSql = Date.valueOf(payDate);
     }
 
     private void showSalaryPage(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-
-    LocalDate now = LocalDate.now();
-    int currentMonth = now.getMonthValue();
-    int currentYear = now.getYear();
-
-    LocalDate payDate = LocalDate.of(currentYear, currentMonth, 26);
-Date payDateSql = Date.valueOf(payDate);
-    List<UserDTO> employeesWithoutPayroll = payrollService.findEmployeesWithoutPayroll(currentMonth, currentYear);
-
-    request.setAttribute("currentMonth", currentMonth);
-    request.setAttribute("currentYear", currentYear);
-    request.setAttribute("employeesWithoutPayroll", employeesWithoutPayroll);
-
-    request.getRequestDispatcher("/view/payroll/salaryProcessor.jsp").forward(request, response);
-}
-
-private void generatePayrolls(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-
-    LocalDate now = LocalDate.now();
-    int currentMonth = now.getMonthValue();
-    int currentYear = now.getYear();
-
-    List<UserDTO> allUsers = userDAO.getAllWithJoin();
-    AccountDAO accountDAO = new AccountDAO();
-    int successCount = 0;
-    int failCount = 0;
-
-    for (UserDTO user : allUsers) {
-        Account account = accountDAO.getAccountByUserID(user.getUserId());
-        AccountDTO accountDTO = accountDAO.getAccountDTOByID(account.getAccountID());
-        if (accountDTO != null && accountDTO.getRoleName().equals("Admin")) {
-            continue;
-        }
-
-        List<Payroll> existingPayrolls = payrollDAO.searchPayroll(
-                user.getUserId(), currentMonth, currentYear, null);
-
-        if (existingPayrolls.isEmpty()) {
-            double baseSalary = 0.0;
-            List<ContractDTO> contracts = contractDAO.getContractsByUserId(user.getUserId());
-
-            for (ContractDTO contract : contracts) {
-                if ("Active".equals(contract.getStatus())) {
-                    baseSalary = contract.getBaseSalary();
-                    break;
-                }
-            }
-
-            if (baseSalary > 0) {
-                Payroll payroll = salaryProcessor.createPayroll(
-                        user.getUserId(),
-                        baseSalary,
-                        currentMonth,
-                        currentYear
-                );
-
-                String workHoursStr = "00:00";
-
-                if (payrollDAO.insertPayroll(payroll, workHoursStr)) {
-                    successCount++;
-                } else {
-                    failCount++;
-                }
-            }
-        }
-    }
-
-    List<UserDTO> employeesWithoutPayroll = payrollService.findEmployeesWithoutPayroll(currentMonth, currentYear);
-
-    request.setAttribute("currentMonth", currentMonth);
-    request.setAttribute("currentYear", currentYear);
-    request.setAttribute("employeesWithoutPayroll", employeesWithoutPayroll);
-    request.setAttribute("successCount", successCount);
-    request.setAttribute("failCount", failCount);
-
-    if (successCount > 0) {
-        request.setAttribute("successMessage", "Created " + successCount + " payrolls successfully!");
-    }
-    if (failCount > 0) {
-        request.setAttribute("errorMessage", "There were " + failCount + " payroll creation failures!");
-    }
-
-    request.getRequestDispatcher("/view/payroll/salaryProcessor.jsp").forward(request, response);
-}
-    private void calculateSalaries(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        LocalDate now = LocalDate.now();
-        int currentMonth = now.getMonthValue();
-        int currentYear = now.getYear();
+        List<UserDTO> employeesWithoutPayroll = payrollService.findEmployeesWithoutPayroll(currentMonth, currentYear);
+        request.setAttribute("employeesWithoutPayroll", employeesWithoutPayroll);
+        request.setAttribute("currentMonth", currentMonth);
+        request.setAttribute("currentYear", currentYear);
 
-        List<Payroll> payrolls = payrollDAO.searchPayroll(0, currentMonth, currentYear, null);
+        request.getRequestDispatcher("/view/payroll/salaryProcessor.jsp").forward(request, response);
+    }
+
+    private void generatePayrolls(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<UserDTO> allUsers = userDAO.getAllWithJoin();
+        AccountDAO accountDAO = new AccountDAO();
         int successCount = 0;
         int failCount = 0;
 
-        for (Payroll payroll : payrolls) {
-            try {
-                Map<String, Object> salaryDetails = salaryProcessor.calculateSalaryDetails(
-                        payroll.getUserID(),
-                        payroll.getPayrollID(),
-                        payroll.getBaseSalary(),
-                        currentMonth,
-                        currentYear
-                );
+        for (UserDTO user : allUsers) {
+            Account account = accountDAO.getAccountByUserID(user.getUserId());
+            AccountDTO accountDTO = accountDAO.getAccountDTOByID(account.getAccountID());
+            if (accountDTO != null && accountDTO.getRoleName().equals("Admin")) {
+                continue;
+            }
 
-                double totalSalary = (double) salaryDetails.get("totalSalary");
-                double actualWorkHours = (double) salaryDetails.get("actualWorkHours");
+            List<Payroll> existingPayrolls = payrollDAO.searchPayroll(
+                    user.getUserId(), currentMonth, currentYear, null);
 
-                long hours = (long) actualWorkHours;
-                long minutes = (long) ((actualWorkHours - hours) * 60);
-                String workHoursStr = String.format("%02d:%02d", hours, minutes);
+            if (existingPayrolls.isEmpty()) {
+                double baseSalary = 0.0;
+                List<ContractDTO> contracts = contractDAO.getContractsByUserId(user.getUserId());
 
-                if (payrollDAO.updatePayrollSalary(payroll.getPayrollID(), totalSalary, workHoursStr, Date.valueOf(now).toString())) {
-                    successCount++;
-                } else {
-                    failCount++;
+                for (ContractDTO contract : contracts) {
+                    if ("Active".equals(contract.getStatus())) {
+                        baseSalary = contract.getBaseSalary();
+                        break;
+                    }
                 }
 
-            } catch (Exception e) {
-                System.err.println("Error calculating salary for payroll " + payroll.getPayrollID() + ": " + e.getMessage());
+                if (baseSalary > 0) {
+                    Payroll payroll = salaryProcessor.createPayroll(
+                            user.getUserId(),
+                            baseSalary,
+                            currentMonth,
+                            currentYear
+                    );
+
+                    String workHoursStr = "00:00";
+
+                    if (payrollDAO.insertPayroll(payroll, workHoursStr)) {
+                        successCount++;
+                    } else {
+                        failCount++;
+                    }
+                }
+            }
+        }
+
+        List<UserDTO> employeesWithoutPayroll = payrollService.findEmployeesWithoutPayroll(currentMonth, currentYear);
+
+        request.setAttribute("currentMonth", currentMonth);
+        request.setAttribute("currentYear", currentYear);
+        request.setAttribute("employeesWithoutPayroll", employeesWithoutPayroll);
+        request.setAttribute("successCount", successCount);
+        request.setAttribute("failCount", failCount);
+
+        if (successCount > 0) {
+            request.setAttribute("successMessage", "Created " + successCount + " payrolls successfully!");
+        }
+        if (failCount > 0) {
+            request.setAttribute("errorMessage", "There were " + failCount + " payroll creation failures!");
+        }
+
+        request.getRequestDispatcher("/view/payroll/salaryProcessor.jsp").forward(request, response);
+    }
+
+    private void calculateSalaries(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<Payroll> payrolls = payrollDAO.searchPayroll(0, currentMonth, currentYear, null);
+        if (payrolls.isEmpty()) {
+            request.setAttribute("currentMonth", currentMonth);
+            request.setAttribute("currentYear", currentYear);
+            request.setAttribute("errorMessage", "No payrolls found for the current month to calculate, please generate payrolls first.");
+            request.getRequestDispatcher("/view/payroll/salaryProcessor.jsp").forward(request, response);
+            return;
+        }
+        int successCount = 0;
+        int failCount = 0;
+
+        if (payrollDAO.isPayrollExistForMonth(currentMonth, currentYear)) {
+            List<UserDTO> employeesWithoutPayroll = payrollService.findEmployeesWithoutPayroll(currentMonth, currentYear);
+            if (!employeesWithoutPayroll.isEmpty()) {
+                request.setAttribute("currentMonth", currentMonth);
+                request.setAttribute("currentYear", currentYear);
+                request.setAttribute("employeesWithoutPayroll", employeesWithoutPayroll);
+                request.setAttribute("errorMessage", "Some employees do not have payroll records for the current month.");
+                request.getRequestDispatcher("/view/payroll/salaryProcessor.jsp").forward(request, response);
+                return;
+            } else {
+                request.setAttribute("currentMonth", currentMonth);
+                request.setAttribute("currentYear", currentYear);
+                request.setAttribute("employeesWithoutPayroll", employeesWithoutPayroll);
+                request.setAttribute("errorMessage", "Payrolls for the current month have already been calculated.");
+                request.getRequestDispatcher("/view/payroll/salaryProcessor.jsp").forward(request, response);
+                return;
+            }
+        }
+
+        for (Payroll payroll : payrolls) {
+            Map<String, Object> salaryDetails = salaryProcessor.calculateSalaryDetails(
+                    payroll.getUserID(),
+                    payroll.getPayrollID(),
+                    payroll.getBaseSalary(),
+                    currentMonth,
+                    currentYear
+            );
+
+            double totalSalary = (double) salaryDetails.get("totalSalary");
+            double actualWorkHours = (double) salaryDetails.get("actualWorkHours");
+
+            long hours = (long) actualWorkHours;
+            long minutes = (long) ((actualWorkHours - hours) * 60);
+            String workHoursStr = String.format("%02d:%02d", hours, minutes);
+
+            if (payrollDAO.updatePayrollSalary(payroll.getPayrollID(), totalSalary, workHoursStr, Date.valueOf(now).toString())) {
+                successCount++;
+            } else {
                 failCount++;
             }
         }

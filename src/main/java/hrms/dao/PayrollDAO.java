@@ -66,7 +66,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public List<Payroll> getAllCompanyPayrolls() {
-        String sql = "select * from Payroll";
+        String sql = "select * from payroll";
         List<Payroll> payrolls = new ArrayList<>();
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -81,7 +81,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public List<Payroll> getAllPayrollByUserId(int userId) {
-        String sql = "select * from Payroll where UserID = ?";
+        String sql = "select * from payroll where userid = ?";
         List<Payroll> payrolls = new ArrayList<>();
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -97,7 +97,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public Payroll getPayrollByUserIdAndPayrollId(int userId, int payrollId) {
-        String sql = "select * from Payroll where UserID = ? and Payroll_ID = ?";
+        String sql = "select * from payroll where userid = ? and payroll_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, userId);
@@ -113,7 +113,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public List<PayrollItem> getPayrollItemsByPayrollId(int payrollId) {
-        String sql = "select * from Payroll_Item where Payroll_ID = ?";
+        String sql = "select * from payroll_item where payroll_id = ?";
         List<PayrollItem> items = new ArrayList<>();
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -129,7 +129,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public PayrollType getPayrollTypeById(int typeId) {
-        String sql = "select * from Payroll_Type where Type_ID = ?";
+        String sql = "select * from payroll_type where type_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, typeId);
@@ -144,7 +144,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public List<PayrollType> getAllPayrollTypes() {
-        String sql = "select * from Payroll_Type";
+        String sql = "select * from payroll_type";
         List<PayrollType> types = new ArrayList<>();
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -160,41 +160,29 @@ public class PayrollDAO extends DBContext {
 
     public List<Payroll> searchPayroll(int userID, int month, int year, String status) {
         StringBuilder sql = new StringBuilder("""
-            select p.* from Payroll p
-            join Users u on p.UserID = u.UserID
-            left join Department d on u.DepartmentID = d.DepartmentID
-            left join Positions pos on u.PositionID = pos.PositionID
+            select p.* from payroll p
+            join users u on p.userid = u.userid
+            left join department d on u.departmentid = d.departmentid
+            left join positions pos on u.positionid = pos.positionid
             where 1=1
         """);
 
         List<Object> params = new ArrayList<>();
         if (userID > 0) {
-            sql.append(" and p.UserID = ?");
+            sql.append(" and p.userid = ?");
             params.add(userID);
         }
 
-        // if (userName != null && !userName.trim().isEmpty()) {
-        //     sql.append(" and u.FullName like ?");
-        //     params.add("%" + userName + "%");
-        // }
-        // if (department != null && !department.trim().isEmpty()) {
-        //     sql.append(" and d.name = ?");
-        //     params.add(department);
-        // }
-        // if (position != null && !position.trim().isEmpty()) {
-        //     sql.append(" and pos.name = ?");
-        //     params.add(position);
-        // }
         if (month > 0) {
-            sql.append(" and p.Month = ?");
+            sql.append(" and p.month = ?");
             params.add(month);
         }
         if (year > 0) {
-            sql.append(" and p.Year = ?");
+            sql.append(" and p.year = ?");
             params.add(year);
         }
         if (status != null && !status.trim().isEmpty()) {
-            sql.append(" and p.Status = ?");
+            sql.append(" and p.status = ?");
             params.add(status);
         }
 
@@ -217,17 +205,17 @@ public class PayrollDAO extends DBContext {
     }
 
     public List<Payroll> searchPersonalPayroll(int userId, int month, int year) {
-        StringBuilder sql = new StringBuilder("select * from Payroll where UserID = ?");
+        StringBuilder sql = new StringBuilder("select * from payroll where userid = ?");
         List<Object> params = new ArrayList<>();
         params.add(userId);
 
         if (month > 0) {
-            sql.append(" and Month = ?");
+            sql.append(" and month = ?");
             params.add(month);
         }
 
         if (year > 0) {
-            sql.append(" and Year = ?");
+            sql.append(" and year = ?");
             params.add(year);
         }
 
@@ -251,15 +239,15 @@ public class PayrollDAO extends DBContext {
 
     public double calculateTotalByType(int payrollId, boolean isPositive, double baseSalary) {
         String sql = """
-            SELECT
-                ROUND(SUM(
-                    CASE 
-                        WHEN pi.AmountType = 'fixed' THEN pi.Amount
-                        WHEN pi.AmountType = 'percent' THEN (? * pi.Amount / 100)
-                    END
-                ), 2) AS Total
-            FROM Payroll_Item pi
-            WHERE pi.Payroll_ID = ? AND pi.Is_Positive = ?
+            select
+                round(sum(
+                    case 
+                        when pi.amounttype = 'fixed' then pi.amount
+                        when pi.amounttype = 'percent' then (? * pi.amount / 100)
+                    end
+                ), 2) as total
+            from payroll_item pi
+            where pi.payroll_id = ? and pi.is_positive = ?
         """;
 
         try {
@@ -269,7 +257,7 @@ public class PayrollDAO extends DBContext {
             st.setBoolean(3, isPositive);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                double total = rs.getDouble("Total");
+                double total = rs.getDouble("total");
                 return rs.wasNull() ? 0.0 : total;
             }
         } catch (SQLException e) {
@@ -279,7 +267,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public boolean addPayrollItem(int payrollId, int typeId, double amount, String amountType, boolean isPositive) {
-        String sql = "INSERT INTO Payroll_Item (Payroll_ID, Type_ID, Amount, AmountType, Is_Positive) VALUES (?, ?, ?, ?, ?)";
+        String sql = "insert into payroll_item (payroll_id, type_id, amount, amounttype, is_positive) values (?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, payrollId);
@@ -295,7 +283,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public boolean updatePayrollItem(int itemId, double amount, String amountType) {
-        String sql = "UPDATE Payroll_Item SET Amount = ?, AmountType = ? WHERE Payroll_Item_ID = ?";
+        String sql = "update payroll_item set amount = ?, amounttype = ? where payroll_item_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setDouble(1, amount);
@@ -309,7 +297,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public boolean deletePayrollItem(int itemId) {
-        String sql = "DELETE FROM Payroll_Item WHERE Payroll_Item_ID = ?";
+        String sql = "delete from payroll_item where payroll_item_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, itemId);
@@ -321,7 +309,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public PayrollItem getPayrollItemByPayrollIdAndTypeId(int payrollId, int typeId) {
-        String sql = "SELECT * FROM Payroll_Item WHERE Payroll_ID = ? AND Type_ID = ?";
+        String sql = "select * from payroll_item where payroll_id = ? and type_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, payrollId);
@@ -338,34 +326,34 @@ public class PayrollDAO extends DBContext {
 
     public boolean recalculateNetSalary(int payrollId) {
         String sql = """
-            UPDATE Payroll p
-            SET NetSalary = (
-                SELECT 
-                    p.BaseSalary +
-                    COALESCE(SUM(
-                        CASE 
-                            WHEN pi.Is_Positive = 1 THEN
-                                CASE 
-                                    WHEN pi.AmountType = 'fixed' THEN pi.Amount
-                                    WHEN pi.AmountType = 'percent' THEN (p.BaseSalary * pi.Amount / 100)
-                                END
-                            ELSE 0
-                        END
+            update payroll p
+            set netsalary = (
+                select 
+                    p.basesalary +
+                    coalesce(sum(
+                        case 
+                            when pi.is_positive = 1 then
+                                case 
+                                    when pi.amounttype = 'fixed' then pi.amount
+                                    when pi.amounttype = 'percent' then (p.basesalary * pi.amount / 100)
+                                end
+                            else 0
+                        end
                     ), 0) -
-                    COALESCE(SUM(
-                        CASE 
-                            WHEN pi.Is_Positive = 0 THEN
-                                CASE 
-                                    WHEN pi.AmountType = 'fixed' THEN pi.Amount
-                                    WHEN pi.AmountType = 'percent' THEN (p.BaseSalary * pi.Amount / 100)
-                                END
-                            ELSE 0
-                        END
+                    coalesce(sum(
+                        case 
+                            when pi.is_positive = 0 then
+                                case 
+                                    when pi.amounttype = 'fixed' then pi.amount
+                                    when pi.amounttype = 'percent' then (p.basesalary * pi.amount / 100)
+                                end
+                            else 0
+                        end
                     ), 0)
-                FROM Payroll_Item pi
-                WHERE pi.Payroll_ID = p.Payroll_ID
+                from payroll_item pi
+                where pi.payroll_id = p.payroll_id
             )
-            WHERE p.Payroll_ID = ?
+            where p.payroll_id = ?
         """;
 
         try {
@@ -379,7 +367,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public Payroll getPayrollById(int payrollId) {
-        String sql = "SELECT * FROM Payroll WHERE Payroll_ID = ?";
+        String sql = "select * from payroll where payroll_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, payrollId);
@@ -394,7 +382,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public boolean addNewPayroll(int userId, double baseSalary, int month, int year) {
-        String sql = "INSERT INTO Payroll (UserID, BaseSalary, Month, Year, TotalWorkHours, PayDate, Status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into payroll (userid, basesalary, month, year, totalworkhours, paydate, status) values (?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, userId);
@@ -402,7 +390,7 @@ public class PayrollDAO extends DBContext {
             st.setInt(3, month);
             st.setInt(4, year);
             st.setString(5, "00:00");
-            st.setObject(6, "null");
+            st.setObject(6, null);
             st.setString(7, "Pending");
             return st.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -412,7 +400,7 @@ public class PayrollDAO extends DBContext {
     }
 
     public boolean updatePayrollSalary(int payrollId, double netSalary, String workHoursStr, String paymentDate) {
-        String sql = "UPDATE Payroll SET NetSalary = ?, TotalWorkHours = ?,paymentDate = ?, Status = 'Paid' WHERE Payroll_ID = ?";
+        String sql = "update payroll set netsalary = ?, totalworkhours = ?, paymentdate = ?, status = 'Paid' where payroll_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setDouble(1, netSalary);
@@ -428,8 +416,8 @@ public class PayrollDAO extends DBContext {
     }
 
     public boolean insertPayroll(Payroll payroll, String workHoursStr) {
-        String sql = "INSERT INTO Payroll (UserID, BaseSalary, Month, Year, TotalWorkHours, NetSalary, PaymentDate, Status) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into payroll (userid, basesalary, month, year, totalworkhours, netsalary, paymentdate, status) "
+                + "values (?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, payroll.getUserID());
@@ -447,4 +435,21 @@ public class PayrollDAO extends DBContext {
             return false;
         }
     }
+
+    public boolean isPayrollExistForMonth(int month, int year) {
+        String sql = "select count(*) from payroll where month = ? and year = ? and paymentdate is not null";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, month);
+            st.setInt(2, year);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
 }

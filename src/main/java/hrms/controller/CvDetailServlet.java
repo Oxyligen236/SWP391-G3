@@ -32,7 +32,7 @@ public class CvDetailServlet extends HttpServlet {
                 Boolean isFiltering = (Boolean) session.getAttribute("isFiltering");
 
                 List<CVJobDetailDTO> cvList;
-                if (Boolean.TRUE.equals(isFiltering)) {
+                if (isFiltering) {
                     cvList = (List<CVJobDetailDTO>) session.getAttribute("filteredCVs");
                 } else {
                     cvList = cvService.getAllCVJobTitle();

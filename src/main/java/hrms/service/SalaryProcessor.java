@@ -22,13 +22,13 @@ import hrms.model.Ticket;
 
 public class SalaryProcessor {
 
-    private AttendanceDAO attendanceDAO;
-    private OTDetailDAO otDetailDAO;
-    private LeaveDetailDAO leaveDetailDAO;
-    private TicketDAO ticketDAO;
-    private PayrollPolicyDAO policyDAO;
-    private PayrollService payrollService;
-    private CalendarCheck calendarCheck;
+    private final AttendanceDAO attendanceDAO;
+    private final OTDetailDAO otDetailDAO;
+    private final LeaveDetailDAO leaveDetailDAO;
+    private final TicketDAO ticketDAO;
+    private final PayrollPolicyDAO policyDAO;
+    private final PayrollService payrollService;
+    private final CalendarCheck calendarCheck;
 
     public SalaryProcessor() {
         this.attendanceDAO = new AttendanceDAO();
