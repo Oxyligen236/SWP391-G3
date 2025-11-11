@@ -1,61 +1,424 @@
-/* ... (Giữ nguyên các style khác) ... */
+/* userlist.css - Styled based on the provided CV list CSS template */
 
-/* --- Phân bổ Chiều Rộng Cột (Tối ưu hóa căn chỉnh) --- */
-
-.table-custom th:nth-child(1), .table-custom td:nth-child(1) { 
-    width: 4%; 
-    text-align: center; /* Căn giữa ID */
-}
-.table-custom th:nth-child(2), .table-custom td:nth-child(2) {
-    width: 9%; white-space: normal; overflow: visible; text-overflow: clip; font-weight: 600; color: #333;
-}
-/* ... (Giữ nguyên các cột từ 3 đến 13) ... */
-.table-custom th:nth-child(14) { 
-    width: 5%; 
-    text-align: center; /* Căn giữa tiêu đề Account */
-}
-.table-custom td:nth-child(14) { 
-    width: 5%; 
-    /* Dùng !important để ghi đè mọi thiết lập căn chỉnh khác */
-    text-align: center !important; /* Đảm bảo badge Yes/No được căn giữa */
-    padding-left: 0; /* Đảm bảo không bị đẩy sang phải do padding thừa */
-    padding-right: 0;
-}
-.table-custom th:nth-child(15) {
-    width: 6%; 
-    text-align: center; /* Căn giữa tiêu đề Actions */
-    overflow: visible; white-space: nowrap;
-}
-.table-custom td:nth-child(15) {
-    width: 6%; 
-    text-align: center !important; /* Đảm bảo nút Actions được căn giữa */
-    padding-left: 0; /* Đảm bảo không bị đẩy sang phải do padding thừa */
-    padding-right: 0;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-
-/* --- Cột Account Styling --- */
-
-.account-status {
-    padding: 3px 8px;
-    border-radius: 12px;
-    font-size: 0.8em;
-    font-weight: 600;
-    display: inline-block; 
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #495057; /* Default text color */
 }
-/* ... (Giữ nguyên .account-status.active/.inactive) ... */
 
+.container {
+    max-width: 1500px; /* Make it a bit wider for the user table */
+    margin: 0 auto;
+    padding: 20px;
+}
 
-/* --- Nút Actions (Tối ưu hóa căn chỉnh) --- */
-.action-buttons {
-    /* Đảm bảo flexbox được áp dụng để căn giữa */
+h3 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 28px;
+    font-weight: 700;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #3498db;
+    text-align: center;
+}
+
+/* --- Alert Messages (Based on Bootstrap classes used in JSP) --- */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    opacity: 1;
+    transition: opacity 0.5s ease;
     display: flex;
-    justify-content: center; /* Căn giữa theo chiều ngang */
-    align-items: center; 
-    height: 100%;
-    width: 100%; /* Đảm bảo flexbox chiếm toàn bộ ô */
-    /* Quan trọng: Loại bỏ margin ngầm (nếu có) để căn giữa chuẩn hơn */
-    margin: 0; 
+    align-items: center;
+}
+
+#successAlert {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+#errorAlert {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+.alert i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+/* --- Search and Filter Form --- */
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+.search-form label {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.search-form input[type="text"] {
+    flex-grow: 1;
+    max-width: 300px; /* Limit input width */
+}
+
+.search-form input[type="text"],
+.search-form select {
+    padding: 10px 14px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background-color: #fff;
+}
+
+.search-form input[type="text"]:focus,
+.search-form select:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+.search-form select {
+    min-width: 120px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath fill='%232c3e50' d='M0 4l6 6 6-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 35px;
+    cursor: pointer;
+}
+
+.search-form button[type="submit"],
+.search-form .btn-reset {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.search-form button[type="submit"] {
+    background-color: #3498db;
+    color: white;
+}
+
+.search-form button[type="submit"]:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+}
+
+.btn-reset {
+    display: inline-block;
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-reset:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+}
+
+/* --- No Data Message --- */
+.container > p {
+    text-align: center;
+    color: #dc3545;
+    font-weight: 600;
+    font-style: italic;
+    padding: 30px;
+    border: 1px dashed #dee2e6;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+/* --- Table Styles --- */
+.table-custom { /* Replaces generic 'table' selector for specificity */
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+    table-layout: auto; /* Allow columns to size based on content */
+}
+
+.table-custom thead {
+    background: #f8f9fa;
+}
+
+.table-custom thead th {
+    padding: 15px 12px;
+    font-size: 14px;
+    text-align: center;
+    color: #2c3e50;
+    font-weight: 600;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.table-custom tbody td {
+    padding: 14px 12px;
+    text-align: center;
+    font-size: 14px;
+    color: #495057;
+    border-bottom: 1px solid #f1f3f5;
+    vertical-align: middle;
+}
+
+.table-custom tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* Specific Column Widths/Alignment */
+.table-custom td:nth-child(1) { /* ID */
+    width: 50px;
+    font-weight: 600;
+}
+.table-custom td:nth-child(2) { /* Fullname */
+    text-align: left;
+}
+.table-custom td:nth-child(3) { /* Email */
+    text-align: left;
+}
+.table-custom td:nth-child(15) { /* Account Status */
+    width: 80px;
+}
+.table-custom td:last-child { /* Actions */
+    width: 100px;
+}
+
+/* --- Account Status Badges --- */
+.account-status {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    text-transform: capitalize;
+    white-space: nowrap;
+}
+
+.account-status.active {
+    background-color: #d4edda; /* Light Green */
+    color: #155724; /* Dark Green */
+    border: 1px solid #c3e6cb;
+}
+
+.account-status.inactive {
+    background-color: #f8d7da; /* Light Red */
+    color: #721c24; /* Dark Red */
+    border: 1px solid #f5c6cb;
+}
+
+/* --- Action Buttons --- */
+.action-buttons {
+    text-align: center;
+}
+
+.btn-edit { /* Mapped from .action-link in template */
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 6px 12px;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    display: inline-block;
+    transition: all 0.2s ease;
+    font-size: 13px;
+}
+
+.btn-edit:hover {
+    background-color: #3498db;
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* --- Pagination & Items Per Page --- */
+.items-per-page {
+    /* Container for items per page form/select */
+    margin-top: 15px;
+}
+
+.items-per-page-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.items-per-page-form label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.items-per-page-form select {
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    min-width: 70px;
+    /* Use the same select styling as the search form for consistency */
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath fill='%232c3e50' d='M0 4l6 6 6-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px;
+    padding-right: 30px;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 25px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    gap: 8px;
+    margin: 0;
     padding: 0;
 }
 
+.page-item {
+    display: inline-block;
+}
+
+.page-link {
+    padding: 8px 16px;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    color: #3498db;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-block;
+}
+
+.page-link:hover {
+    background-color: #3498db;
+    color: white;
+    border-color: #3498db;
+    transform: translateY(-1px);
+}
+
+.page-item.disabled .page-link {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    color: #6c757d;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.pagination-container .page-item.disabled .page-link:not(:hover) {
+    /* Style for 'Page X / Y' display */
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 700;
+}
+
+/* --- Responsive Design for User List Table --- */
+@media (max-width: 1400px) {
+    /* Allow horizontal scrolling for wide table on smaller screens */
+    .container {
+        padding: 15px;
+    }
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
+    .table-custom {
+        min-width: 1200px; /* Ensure table remains wide enough */
+        table-layout: fixed;
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        padding: 10px;
+    }
+
+    h3 {
+        font-size: 24px;
+        padding-bottom: 10px;
+    }
+
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .search-form input[type="text"],
+    .search-form select {
+        max-width: 100%;
+        width: 100%;
+    }
+    .search-form button[type="submit"],
+    .btn-reset {
+        width: 100%;
+        margin-top: 5px;
+    }
+}
+
+@media (max-width: 768px) {
+    .table-custom thead th,
+    .table-custom tbody td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+    .btn-edit {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+    .account-status {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+    .pagination-container {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 15px;
+    }
+    .pagination {
+        justify-content: center;
+        gap: 6px;
+    }
+}
