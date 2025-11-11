@@ -1,8 +1,10 @@
 package hrms.controller;
 
 import java.io.IOException;
+
 import hrms.dao.AccountDAO;
 import hrms.model.Account;
+import hrms.utils.PasswordUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -44,55 +46,64 @@ public class ChangePasswordServlet extends HttpServlet {
             return;
         }
 
-        String oldPassword = request.getParameter("currentPassword");
+        String currentPassword = request.getParameter("currentPassword");
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
 
         try {
-            if (oldPassword == null || oldPassword.trim().isEmpty() ||
+            // ===== VALIDATION =====
+            if (currentPassword == null || currentPassword.trim().isEmpty() ||
                 newPassword == null || newPassword.trim().isEmpty() ||
                 confirmPassword == null || confirmPassword.trim().isEmpty()) {
 
-                request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin!");
+                request.setAttribute("errorMessage", "Please fill in all fields!");
                 request.getRequestDispatcher("/view/account/changePassword.jsp").forward(request, response);
                 return;
             }
 
             if (newPassword.length() < 6) {
-                request.setAttribute("errorMessage", "Mật khẩu mới phải có ít nhất 6 ký tự!");
+                request.setAttribute("errorMessage", "New password must be at least 6 characters!");
                 request.getRequestDispatcher("/view/account/changePassword.jsp").forward(request, response);
                 return;
             }
 
             if (!newPassword.equals(confirmPassword)) {
-                request.setAttribute("errorMessage", "Mật khẩu mới và xác nhận không khớp!");
+                request.setAttribute("errorMessage", " New password and confirmation do not match!");
                 request.getRequestDispatcher("/view/account/changePassword.jsp").forward(request, response);
                 return;
             }
 
-            if (oldPassword.equals(newPassword)) {
-                request.setAttribute("errorMessage", "Mật khẩu mới phải khác mật khẩu hiện tại!");
+            if (currentPassword.equals(newPassword)) {
+                request.setAttribute("errorMessage", " New password must be different from current password!");
                 request.getRequestDispatcher("/view/account/changePassword.jsp").forward(request, response);
                 return;
             }
 
+            // ===== HASH PASSWORD =====
+            String hashedNewPassword = PasswordUtil.hashPassword(newPassword);
+
+            // ===== CHANGE PASSWORD =====
             boolean success = accountDAO.changePassword(
-                currentUser.getAccountID(), 
-                oldPassword, 
-                newPassword
+                currentUser.getAccountID(),
+                currentPassword,
+                hashedNewPassword
             );
 
             if (success) {
                 session.invalidate();
                 response.sendRedirect(request.getContextPath() + "/view/account/changePasswordSuccess.jsp");
+                System.out.println("✅ Password changed successfully for account ID: " + currentUser.getAccountID());
             } else {
-                request.setAttribute("errorMessage", "Mật khẩu hiện tại không đúng hoặc có lỗi xảy ra!");
+                request.setAttribute("errorMessage", " Current password is incorrect or system error occurred!");
                 request.getRequestDispatcher("/view/account/changePassword.jsp").forward(request, response);
+                System.out.println(" Password change failed for account ID: " + currentUser.getAccountID());
             }
 
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
+            request.setAttribute("errorMessage", " System error: " + e.getMessage());
             request.getRequestDispatcher("/view/account/changePassword.jsp").forward(request, response);
+            System.out.println(" Exception in ChangePasswordServlet: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

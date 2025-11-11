@@ -1,12 +1,35 @@
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            background-color: #e9f2ff;
         }
         .edit-card {
-            background: white;
-            border-radius: 15px;
+            background-color: #fff;
             padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 60px;
+        }
+        .edit-card h3 {
+            color: #0d6efd;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border-radius: 8px;
+        }
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+        }
+        .btn-secondary {
+            border-radius: 8px;
+        }
+        .password-input-wrapper {
+            position: relative;
+        }
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
         }
