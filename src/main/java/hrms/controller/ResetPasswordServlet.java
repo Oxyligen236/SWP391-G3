@@ -27,14 +27,14 @@ public class ResetPasswordServlet extends HttpServlet {
         try {
             // 🔒 Check admin permission
             if (!isAdmin(currentUser)) {
-                session.setAttribute("errorMessage", "❌ You do not have permission to access this page!");
+                session.setAttribute("errorMessage", "You do not have permission to access this page!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
 
             String accountIDParam = request.getParameter("accountID");
             if (accountIDParam == null || accountIDParam.isEmpty()) {
-                session.setAttribute("errorMessage", "❌ Invalid Account ID!");
+                session.setAttribute("errorMessage", "Invalid Account ID!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
@@ -43,13 +43,13 @@ public class ResetPasswordServlet extends HttpServlet {
 
             AccountDTO accountDetail = accountDAO.getAccountDTOByID(accountID);
             if (accountDetail == null) {
-                session.setAttribute("errorMessage", "❌ Account not found!");
+                session.setAttribute("errorMessage", "Account not found!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
 
             if (accountDetail.getAccountID() == currentUser.getAccountID()) {
-                session.setAttribute("errorMessage", "❌ You cannot reset your own password!");
+                session.setAttribute("errorMessage", " You cannot reset your own password!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
@@ -59,7 +59,7 @@ public class ResetPasswordServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("errorMessage", "💥 System error: " + e.getMessage());
+            session.setAttribute("errorMessage", "System error: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/account/view");
         }
     }
@@ -73,14 +73,14 @@ public class ResetPasswordServlet extends HttpServlet {
 
         try {
             if (!isAdmin(currentUser)) {
-                session.setAttribute("errorMessage", "❌ You do not have permission to perform this action!");
+                session.setAttribute("errorMessage", "You do not have permission to perform this action!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
 
             String accountIDParam = request.getParameter("accountID");
             if (accountIDParam == null || accountIDParam.isEmpty()) {
-                session.setAttribute("errorMessage", "❌ Invalid Account ID!");
+                session.setAttribute("errorMessage", " Invalid Account ID!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
@@ -89,13 +89,13 @@ public class ResetPasswordServlet extends HttpServlet {
             AccountDTO targetAccount = accountDAO.getAccountDTOByID(accountID);
 
             if (targetAccount == null) {
-                session.setAttribute("errorMessage", "❌ Account does not exist!");
+                session.setAttribute("errorMessage", " Account does not exist!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
 
             if (targetAccount.getAccountID() == currentUser.getAccountID()) {
-                session.setAttribute("errorMessage", "❌ You cannot reset your own password!");
+                session.setAttribute("errorMessage", "You cannot reset your own password!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
                 return;
             }
@@ -110,17 +110,17 @@ public class ResetPasswordServlet extends HttpServlet {
                 request.setAttribute("account", targetAccount);
                 request.setAttribute("tempPassword", newPassword); 
                 request.setAttribute("successMessage",
-                        "✅ Password has been successfully reset for account: " + targetAccount.getUsername());
+                        "Password has been successfully reset for account: " + targetAccount.getUsername());
 
                 request.getRequestDispatcher("/view/account/resetPassword.jsp").forward(request, response);
             } else {
-                session.setAttribute("errorMessage", "❌ Password reset failed!");
+                session.setAttribute("errorMessage", "Password reset failed!");
                 response.sendRedirect(request.getContextPath() + "/account/view");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("errorMessage", "💥 System error: " + e.getMessage());
+            session.setAttribute("errorMessage", " System error: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/account/view");
         }
     }
