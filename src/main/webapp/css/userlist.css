@@ -8,7 +8,7 @@
 }
 .table-custom th:nth-child(2), .table-custom td:nth-child(2) {
     width: 9%; white-space: normal; overflow: visible; text-overflow: clip; font-weight: 600; color: #333;
-}
+}   
 /* ... (Giữ nguyên các cột từ 3 đến 13) ... */
 .table-custom th:nth-child(14) { 
     width: 5%; 
