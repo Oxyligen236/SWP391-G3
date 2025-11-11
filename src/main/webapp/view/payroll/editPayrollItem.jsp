@@ -60,14 +60,15 @@
         .items-table th,
         .items-table td {
             padding: 12px;
-            text-align: left;
+            text-align: center;
             border-bottom: 1px solid #ddd;
         }
         
         .items-table th {
-            background-color: #34495e;
-            color: white;
+            background-color: #f8f9fa;
+            color: #2c3e50;
             font-weight: 600;
+            border-bottom: 2px solid #e9ecef;
         }
         
         .items-table tr:hover {

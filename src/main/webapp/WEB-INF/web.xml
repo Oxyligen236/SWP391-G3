@@ -3,7 +3,7 @@
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
   <welcome-file-list>
-    <welcome-file>view/home/home.jsp</welcome-file>
+    <welcome-file>guest</welcome-file>
   </welcome-file-list>
 
 </web-app>

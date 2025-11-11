@@ -38,7 +38,7 @@ public class EditUserDepartmentServlet extends HttpServlet {
             if (userDetail == null) {
                 HttpSession session = request.getSession();
                 session.setAttribute("errorMessage", "Không tìm thấy người dùng!");
-                response.sendRedirect(request.getContextPath() + "/userlist");
+                response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
                 return;
             }
             
@@ -82,11 +82,11 @@ public class EditUserDepartmentServlet extends HttpServlet {
                     // Reset position to NULL if it doesn't belong to new department
                     boolean resetSuccess = changeDepartmentDAO.updateUserDepartmentAndResetPosition(userID, newDepartmentID);
                     if (resetSuccess) {
-                        session.setAttribute("successMessage", "Cập nhật phòng ban thành công! Chức vụ đã được reset do không thuộc phòng ban mới.");
+                        session.setAttribute("successMessage", "Update department successful! Position has been reset because it does not belong to the new department.");
                     } else {
-                        session.setAttribute("errorMessage", "Cập nhật phòng ban thất bại!");
+                        session.setAttribute("errorMessage", "Update department failed!");
                     }
-                    response.sendRedirect(request.getContextPath() + "/userlist");
+                    response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
                     return;
                 }
             }
@@ -95,16 +95,23 @@ public class EditUserDepartmentServlet extends HttpServlet {
             boolean success = changeDepartmentDAO.updateUserDepartment(userID, newDepartmentID);
 
             if(success) {
-                session.setAttribute("successMessage", "Cập nhật phòng ban thành công!");
+                session.setAttribute("successMessage", "Update department successfull!");
             } else {
-                session.setAttribute("errorMessage", "Cập nhật phòng ban thất bại!");
+                session.setAttribute("errorMessage", "Update department failed!");
             }
         } catch (NumberFormatException e) {
-            session.setAttribute("errorMessage", "Dữ liệu không hợp lệ!");
+            int userID = Integer.parseInt(request.getParameter("userID"));
+            session.setAttribute("errorMessage", "Invalid data!");
+            response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
+            return;
         } catch (Exception e) {
-            session.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
+            int userID = Integer.parseInt(request.getParameter("userID"));
+            session.setAttribute("errorMessage", "System error: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
+            return;
         }
-
-        response.sendRedirect(request.getContextPath() + "/userlist");
+        
+        int userID = Integer.parseInt(request.getParameter("userID"));
+        response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
     }
 }

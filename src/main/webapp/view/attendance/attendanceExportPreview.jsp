@@ -27,6 +27,13 @@
             margin-top: 20px;
             margin-bottom: 20px;
         }
+        /* Custom table header style */
+        .table thead th {
+            background-color: #f8f9fa !important;
+            color: #2c3e50 !important;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef !important;
+        }
     </style>
 </head>
 <body>
@@ -157,7 +164,7 @@
         <div class="table-container">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover text-center">
-                    <thead class="table-dark">
+                    <thead>
                         <tr>
                             <th>Employee ID</th>
                             <th>Employee Name</th>

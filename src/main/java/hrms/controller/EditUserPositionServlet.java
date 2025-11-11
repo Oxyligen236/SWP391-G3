@@ -43,7 +43,7 @@ public class EditUserPositionServlet extends HttpServlet {
         if (currentDepartmentID <= 0) {
             HttpSession session = request.getSession();
             session.setAttribute("errorMessage", "Người dùng chưa có phòng ban! Vui lòng cập nhật phòng ban trước.");
-            response.sendRedirect(request.getContextPath() + "/userlist");
+            response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
             return;
         }
         
@@ -55,7 +55,7 @@ public class EditUserPositionServlet extends HttpServlet {
         if (positions.isEmpty()) {
             HttpSession session = request.getSession();
             session.setAttribute("errorMessage", "Phòng ban hiện tại chưa có chức vụ nào! Vui lòng thêm chức vụ cho phòng ban.");
-            response.sendRedirect(request.getContextPath() + "/userlist");
+            response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
             return;
         }
 
@@ -83,7 +83,7 @@ public class EditUserPositionServlet extends HttpServlet {
             
             if (currentDepartmentID <= 0) {
                 session.setAttribute("errorMessage", "Người dùng chưa có phòng ban! Vui lòng cập nhật phòng ban trước.");
-                response.sendRedirect(request.getContextPath() + "/userlist");
+                response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
                 return;
             }
             
@@ -92,7 +92,7 @@ public class EditUserPositionServlet extends HttpServlet {
             
             if (!positionBelongsToDepartment) {
                 session.setAttribute("errorMessage", "Chức vụ này không thuộc phòng ban hiện tại của người dùng!");
-                response.sendRedirect(request.getContextPath() + "/userlist");
+                response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
                 return;
             }
             
@@ -105,11 +105,18 @@ public class EditUserPositionServlet extends HttpServlet {
                 session.setAttribute("errorMessage", "Cập nhật chức vụ thất bại!");
             }
         } catch (NumberFormatException e) {
+            int userID = Integer.parseInt(request.getParameter("userID"));
             session.setAttribute("errorMessage", "Dữ liệu không hợp lệ!");
+            response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
+            return;
         } catch (Exception e) {
+            int userID = Integer.parseInt(request.getParameter("userID"));
             session.setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
+            return;
         }
-
-        response.sendRedirect(request.getContextPath() + "/userlist");
+        
+        int userID = Integer.parseInt(request.getParameter("userID"));
+        response.sendRedirect(request.getContextPath() + "/user_detail?userID=" + userID);
     }
 }
