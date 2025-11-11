@@ -144,7 +144,7 @@ public class ContractDAO extends DBContext {
     }
 
     public List<ContractDTO> getContracts(String searchField, String searchValue, String fromDate, String toDate,
-            String sortField, String sortOrder) throws Exception {
+            String sortField, String sortOrder, String statusFilter) throws Exception {
         List<ContractDTO> list = new ArrayList<>();
         DBContext db = new DBContext();
         StringBuilder sql = new StringBuilder(
@@ -159,6 +159,12 @@ public class ContractDAO extends DBContext {
                 + "WHERE 1=1"
         );
         List<Object> params = new ArrayList<>();
+
+        // Filter by status if provided
+        if (statusFilter != null && !statusFilter.trim().isEmpty()) {
+            sql.append(" AND c.Status = ?");
+            params.add(statusFilter.trim());
+        }
 
         String col = null;
         if (searchField != null) {
