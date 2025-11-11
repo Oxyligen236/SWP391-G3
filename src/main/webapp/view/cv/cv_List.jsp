@@ -18,63 +18,83 @@
                     <form action="<c:url value='/cv'/>" method="get" class="search-form">
                         <div class="form-row text-inputs">
                             <div class="form-group">
-                                <p>Name:</p>
-                                <input type="text" name="name" placeholder="Enter name" value="${param.name}">
+                                <p>Name</p>
+                                <input type="text" name="name" placeholder="Enter name"
+                                    value="${sessionScope.searchName != null ? sessionScope.searchName : param.name}">
                             </div>
                             <div class="form-group">
-                                <p>Email:</p>
-                                <input type="text" name="email" placeholder="Enter email" value="${param.email}">
+                                <p>Email</p>
+                                <input type="text" name="email" placeholder="Enter email"
+                                    value="${sessionScope.searchEmail != null ? sessionScope.searchEmail : param.email}">
                             </div>
                             <div class="form-group">
-                                <p>Phone Number:</p>
-                                <input type="text" name="phone" placeholder="Enter phone number" value="${param.phone}">
+                                <p>Phone</p>
+                                <input type="text" name="phone" placeholder="Enter phone"
+                                    value="${sessionScope.searchPhone != null ? sessionScope.searchPhone : param.phone}">
                             </div>
                         </div>
 
                         <div class="form-row select-inputs">
                             <div class="form-group">
-                                <p>Gender:</p>
-                                <select name="gender">
-                                    <option value="">All</option>
-                                    <option value="male" <c:if test="${param.gender == 'male'}">selected</c:if>>Male
-                                    </option>
-                                    <option value="female" <c:if test="${param.gender == 'female'}">selected</c:if>
-                                        >Female
-                                    </option>
-                                    <option value="other" <c:if test="${param.gender == 'other'}">selected</c:if>>Other
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <p>Job Position:</p>
+                                <p>Job</p>
                                 <select name="jobID">
-                                    <option value="">All Positions</option>
+                                    <option value="">All Jobs</option>
                                     <c:forEach var="job" items="${jobs}">
-                                        <option value="${job.jobID}" <c:if test="${param.jobID == job.jobID}">selected
-                                            </c:if>>
+                                        <option value="${job.jobID}" ${(sessionScope.searchJobID !=null &&
+                                            sessionScope.searchJobID==job.jobID) || (sessionScope.searchJobID==null &&
+                                            param.jobID==job.jobID) ? 'selected' : '' }>
                                             ${job.jobTitle}
                                         </option>
                                     </c:forEach>
                                 </select>
                             </div>
+
                             <div class="form-group">
-                                <p>Status:</p>
+                                <p>Gender</p>
+                                <select name="gender">
+                                    <option value="">All</option>
+                                    <option value="Male" ${(sessionScope.searchGender !=null &&
+                                        sessionScope.searchGender=='Male' ) || (sessionScope.searchGender==null &&
+                                        param.gender=='Male' ) ? 'selected' : '' }>
+                                        Male
+                                    </option>
+                                    <option value="Female" ${(sessionScope.searchGender !=null &&
+                                        sessionScope.searchGender=='Female' ) || (sessionScope.searchGender==null &&
+                                        param.gender=='Female' ) ? 'selected' : '' }>
+                                        Female
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <p>Status</p>
                                 <select name="status">
-                                    <option value="">All Statuses</option>
-                                    <option value="Pending" <c:if test="${param.status == 'Pending'}">selected</c:if>
-                                        >Pending</option>
-                                    <option value="Reviewed" <c:if test="${param.status == 'Reviewed'}">selected</c:if>
-                                        >Reviewed</option>
-                                    <option value="Rejected" <c:if test="${param.status == 'Rejected'}">selected</c:if>
-                                        >Rejected</option>
-                                    <option value="Accepted" <c:if test="${param.status == 'Accepted'}">selected</c:if>
-                                        >Accepted</option>
+                                    <option value="">All</option>
+                                    <option value="Pending" ${(sessionScope.searchStatus !=null &&
+                                        sessionScope.searchStatus=='Pending' ) || (sessionScope.searchStatus==null &&
+                                        param.status=='Pending' ) ? 'selected' : '' }>
+                                        Pending
+                                    </option>
+                                    <option value="Reviewed" ${(sessionScope.searchStatus !=null &&
+                                        sessionScope.searchStatus=='Reviewed' ) || (sessionScope.searchStatus==null &&
+                                        param.status=='Reviewed' ) ? 'selected' : '' }>
+                                        Reviewed
+                                    </option>
+                                    <option value="Rejected" ${(sessionScope.searchStatus !=null &&
+                                        sessionScope.searchStatus=='Rejected' ) || (sessionScope.searchStatus==null &&
+                                        param.status=='Rejected' ) ? 'selected' : '' }>
+                                        Rejected
+                                    </option>
+                                    <option value="Accepted" ${(sessionScope.searchStatus !=null &&
+                                        sessionScope.searchStatus=='Accepted' ) || (sessionScope.searchStatus==null &&
+                                        param.status=='Accepted' ) ? 'selected' : '' }>
+                                        Accepted
+                                    </option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="button-row">
-                            <input type="hidden" name="itemsPerPage" value="${itemsPerPage}" />
                             <button type="submit">Search</button>
                             <a href="<c:url value='/cv'/>">Reset</a>
                         </div>

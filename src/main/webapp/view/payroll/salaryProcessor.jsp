@@ -50,7 +50,7 @@
                                     <p>Failure</p>
                                 </div>
                                 <div class="stats-card">
-                                    <h3>${fn:length(employeesWithoutPayroll)}</h3>
+                                    <h3>${totalEmployees}</h3>
                                     <p>No Payroll</p>
                                 </div>
                             </div>
@@ -59,44 +59,11 @@
                         <c:if test="${empty successCount && empty failCount}">
                             <div class="stats-section">
                                 <div class="stats-card">
-                                    <h3>${fn:length(employeesWithoutPayroll)}</h3>
+                                    <h3>${totalEmployees}</h3>
                                     <p>Employees Without Payroll</p>
                                 </div>
                             </div>
                         </c:if>
-
-                        <div class="action-section">
-                            <div class="action-card">
-                                <h3>Create Payroll</h3>
-                                <p>Create basic payroll for employees without payroll this month</p>
-                                <p class="note-text">
-                                    <strong>Note:</strong> Only create basic information (UserID, BaseSalary, Month,
-                                    Year,
-                                    PayDate).
-                                    Salary calculation should be done after having complete attendance data.
-                                </p>
-                                <form action="${pageContext.request.contextPath}/salary" method="post">
-                                    <input type="hidden" name="action" value="generate">
-                                    <button type="submit" class="btn-generate" ${fn:length(employeesWithoutPayroll)==0
-                                        ? 'disabled' : '' }>
-                                        Create Payroll (${fn:length(employeesWithoutPayroll)} employees)
-                                    </button>
-                                </form>
-                            </div>
-
-                            <div class="action-card">
-                                <h3>Calculate Salary</h3>
-                                <p>Calculate salary for all employees for the current month</p>
-                                <p class="note-text">
-                                    <strong>Note:</strong> Calculate NetSalary, TotalWorkHours based on attendance data,
-                                    OT, leave. Perform after the 25th of the month.
-                                </p>
-                                <form action="${pageContext.request.contextPath}/salary" method="post">
-                                    <input type="hidden" name="action" value="calculate">
-                                    <button type="submit" class="btn-calculate">Calculate Salary</button>
-                                </form>
-                            </div>
-                        </div>
                         <c:if test="${not empty employeesWithoutPayroll}">
                             <div class="employee-table-section">
                                 <h2>List of Employees Without Payroll (${totalEmployees} employees)</h2>
@@ -161,6 +128,38 @@
                                 </div>
                             </div>
                         </c:if>
+
+                        <div class="action-section">
+                            <div class="action-card">
+                                <h3>Create Payroll</h3>
+                                <p>Create basic payroll for employees without payroll this month</p>
+                                <p class="note-text">
+                                    <strong>Note:</strong> Only create basic information (UserID, BaseSalary, Month,
+                                    Year,
+                                    PayDate).
+                                    Salary calculation should be done after having complete attendance data.
+                                </p>
+                                <form action="${pageContext.request.contextPath}/salary" method="post">
+                                    <input type="hidden" name="action" value="generate">
+                                    <button type="submit" class="btn-generate" ${totalEmployees==0 ? 'disabled' : '' }>
+                                        Create Payroll (${totalEmployees} employees)
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="action-card">
+                                <h3>Calculate Salary</h3>
+                                <p>Calculate salary for all employees for the current month</p>
+                                <p class="note-text">
+                                    <strong>Note:</strong> Calculate NetSalary, TotalWorkHours based on attendance data,
+                                    OT, leave. Perform after the 25th of the month.
+                                </p>
+                                <form action="${pageContext.request.contextPath}/salary" method="post">
+                                    <input type="hidden" name="action" value="calculate">
+                                    <button type="submit" class="btn-calculate">Calculate Salary</button>
+                                </form>
+                            </div>
+                        </div>
 
                     </div>
                 </body>

@@ -68,7 +68,6 @@
                                 <button type="submit" class="btn-update">Update Status</button>
                             </form>
 
-                            <!-- Nút Create User chỉ hiện khi status là Accepted -->
                             <c:if test="${cvDetail.status eq 'Accepted'}">
                                 <form action="<c:url value='/user/create'/>" method="get" class="create-user-form">
                                     <input type="hidden" name="fullname" value="${cvDetail.name}">
@@ -89,7 +88,10 @@
                     </div>
 
                     <div class="nav-buttons">
-                        <a href="<c:url value='/cv'/>">Back to CV List</a>
+                        <a
+                            href="<c:url value='/cv?jobID=${sessionScope.searchJobID}&name=${sessionScope.searchName}&email=${sessionScope.searchEmail}&phone=${sessionScope.searchPhone}&gender=${sessionScope.searchGender}&status=${sessionScope.searchStatus}'/>">
+                            Back to CV List
+                        </a>
                         <c:if test="${not empty prevCV}">
                             <a href="<c:url value='/cv/detail?id=${prevCV.cvID}'/>">Previous CV</a>
                         </c:if>

@@ -54,6 +54,7 @@ public class CvSubmitServlet extends HttpServlet {
             LocalDate dob = LocalDate.parse(dobStr);
             List<Degree> degrees = degreeDAO.getAll();
             request.setAttribute("degrees", degrees);
+
             if (name == null
                     || name.trim().isEmpty()
                     || dob == null
@@ -74,19 +75,21 @@ public class CvSubmitServlet extends HttpServlet {
                 request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
                 return;
             }
+
             CVs newCV = new CVs(jdIDInt, name, dob, gender, CCCD, address, nationality, email, phone, degree, experience, education, skills, aboutMe, "Pending");
             boolean isAdded = cvService.addCV(newCV);
+
             if (isAdded) {
                 request.setAttribute("successMessage", "Submit CV successful!");
+                request.setAttribute("redirectUrl", request.getContextPath() + "/view/home/homePage_guest.jsp");
             } else {
                 request.setAttribute("errorMessage", "Submit CV failed. Please try again!");
             }
             request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
+
         } catch (NumberFormatException e) {
             request.setAttribute("errorMessage", "JD ID is invalid.");
             request.getRequestDispatcher("/view/cv/cv_Submit.jsp").forward(request, response);
         }
-
     }
-
 }

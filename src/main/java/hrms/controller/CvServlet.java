@@ -11,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/cv")
 public class CvServlet extends HttpServlet {
@@ -34,6 +35,15 @@ public class CvServlet extends HttpServlet {
         phone = (phone != null && !phone.trim().isEmpty()) ? phone.trim() : null;
         gender = (gender != null && !gender.trim().isEmpty()) ? gender.trim() : null;
         status = (status != null && !status.trim().isEmpty()) ? status.trim() : null;
+
+        // Lưu search params vào session
+        HttpSession session = request.getSession();
+        session.setAttribute("searchJobID", jobID);
+        session.setAttribute("searchName", name);
+        session.setAttribute("searchEmail", email);
+        session.setAttribute("searchPhone", phone);
+        session.setAttribute("searchGender", gender);
+        session.setAttribute("searchStatus", status);
 
         // Phân trang
         int itemsPerPage = 5;
@@ -62,11 +72,11 @@ public class CvServlet extends HttpServlet {
             List<CVJobDetailDTO> cvList;
             if (jobIdInt > 0 || name != null || email != null || phone != null || gender != null || status != null) {
                 cvList = cvService.searchCVs(jobIdInt, name, email, phone, gender, status);
-                request.getSession().setAttribute("filteredCVs", cvList);
-                request.getSession().setAttribute("isFiltering", true);
+                session.setAttribute("filteredCVs", cvList);
+                session.setAttribute("isFiltering", true);
             } else {
                 cvList = cvService.getAllCVJobTitle();
-                request.getSession().setAttribute("isFiltering", false);
+                session.setAttribute("isFiltering", false);
             }
 
             // Tính toán phân trang
