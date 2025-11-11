@@ -47,9 +47,11 @@
                         </div>
 
                         <input type="hidden" name="userID" value="${userID}">
+                        <input type="hidden" name="itemsPerPage" value="${itemsPerPage}" />
 
                         <div class="button-row">
                             <button type="submit">Search</button>
+                            <a href="<c:url value='/payroll/company'/>">Reset</a>
                         </div>
                     </form>
 
@@ -60,6 +62,7 @@
                     <table border="1">
                         <thead>
                             <tr>
+                                <th>No</th>
                                 <th>Department</th>
                                 <th>Position</th>
                                 <th>Month</th>
@@ -75,13 +78,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:if test="${empty payrolls}">
+                            <c:if test="${not empty message}">
                                 <tr>
-                                    <td colspan="12" class="no-data">No payroll records found</td>
+                                    <td colspan="13" class="no-data">${message}</td>
                                 </tr>
                             </c:if>
-                            <c:forEach var="employee" items="${payrolls}">
+                            <c:forEach var="employee" items="${payrolls}" varStatus="status">
                                 <tr>
+                                    <td>${(currentPage - 1) * itemsPerPage + status.index + 1}</td>
                                     <td>${employee.userDepartment}</td>
                                     <td>${employee.userPosition}</td>
                                     <td>${employee.month}</td>
@@ -137,6 +141,42 @@
                             </c:forEach>
                         </tbody>
                     </table>
+
+                    <div class="pagination-container">
+                        <form action="<c:url value='/payroll/company'/>" method="post" class="items-per-page-form">
+                            <label>Items per page:</label>
+                            <input type="number" name="itemsPerPage" value="${itemsPerPage}" min="1" max="50" />
+                            <button type="submit">Apply</button>
+
+                            <input type="hidden" name="month" value="${param.month}" />
+                            <input type="hidden" name="year" value="${param.year}" />
+                            <input type="hidden" name="status" value="${param.status}" />
+                            <input type="hidden" name="userID" value="${param.userID}" />
+                            <input type="hidden" name="page" value="1" />
+                        </form>
+
+                        <nav class="pagination-nav">
+                            <ul class="pagination">
+                                <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                        href="<c:url value='/payroll/company?page=${currentPage - 1}&itemsPerPage=${itemsPerPage}&month=${param.month}&year=${param.year}&status=${param.status}&userID=${param.userID}'/>">
+                                        Previous
+                                    </a>
+                                </li>
+
+                                <li class="page-item disabled">
+                                    <span class="page-link">Page ${currentPage} / ${totalPages}</span>
+                                </li>
+
+                                <li class="page-item ${currentPage == totalPages || totalPages == 0 ? 'disabled' : ''}">
+                                    <a class="page-link"
+                                        href="<c:url value='/payroll/company?page=${currentPage + 1}&itemsPerPage=${itemsPerPage}&month=${param.month}&year=${param.year}&status=${param.status}&userID=${param.userID}'/>">
+                                        Next
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </body>
 

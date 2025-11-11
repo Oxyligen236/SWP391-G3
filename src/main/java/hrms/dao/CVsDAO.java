@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +14,16 @@ import hrms.utils.DBContext;
 public class CVsDAO extends DBContext {
 
     private CVs extractCVFromResultSet(ResultSet rs) throws SQLException {
+        LocalDate Birth_Date = null;
+        if (rs.getDate("Birth_Date") != null) {
+            Birth_Date = rs.getDate("Birth_Date").toLocalDate();
+        }
+
         return new CVs(
                 rs.getInt(1),
                 rs.getInt(2),
                 rs.getString(3),
-                rs.getDate(4).toLocalDate(),
+                Birth_Date,
                 rs.getString(5),
                 rs.getString(6),
                 rs.getString(7),

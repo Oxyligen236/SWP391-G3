@@ -65,36 +65,6 @@
                             </div>
                         </c:if>
 
-                        <c:if test="${not empty employeesWithoutPayroll}">
-                            <div class="employee-table-section">
-                                <h2>List of Employees Without Payroll</h2>
-                                <table class="employee-table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Full Name</th>
-                                            <th>Email</th>
-                                            <th>Phone Number</th>
-                                            <th>Department</th>
-                                            <th>Position</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach var="employee" items="${employeesWithoutPayroll}">
-                                            <tr>
-                                                <td>${employee.userId}</td>
-                                                <td>${employee.fullname}</td>
-                                                <td>${employee.email}</td>
-                                                <td>${employee.phoneNumber}</td>
-                                                <td>${employee.departmentName}</td>
-                                                <td>${employee.positionName}</td>
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </c:if>
-
                         <div class="action-section">
                             <div class="action-card">
                                 <h3>Create Payroll</h3>
@@ -127,6 +97,71 @@
                                 </form>
                             </div>
                         </div>
+                        <c:if test="${not empty employeesWithoutPayroll}">
+                            <div class="employee-table-section">
+                                <h2>List of Employees Without Payroll (${totalEmployees} employees)</h2>
+                                <table class="employee-table">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>ID</th>
+                                            <th>Full Name</th>
+                                            <th>Email</th>
+                                            <th>Phone Number</th>
+                                            <th>Department</th>
+                                            <th>Position</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach var="employee" items="${employeesWithoutPayroll}" varStatus="status">
+                                            <tr>
+                                                <td>${(currentPage - 1) * itemsPerPage + status.index + 1}</td>
+                                                <td>${employee.userId}</td>
+                                                <td>${employee.fullname}</td>
+                                                <td>${employee.email}</td>
+                                                <td>${employee.phoneNumber}</td>
+                                                <td>${employee.departmentName}</td>
+                                                <td>${employee.positionName}</td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+
+                                <div class="pagination-container">
+                                    <form action="<c:url value='/salary'/>" method="get" class="items-per-page-form">
+                                        <label>Items per page:</label>
+                                        <input type="number" name="itemsPerPage" value="${itemsPerPage}" min="1"
+                                            max="50" />
+                                        <button type="submit">Apply</button>
+                                        <input type="hidden" name="page" value="1" />
+                                    </form>
+
+                                    <nav class="pagination-nav">
+                                        <ul class="pagination">
+                                            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                                <a class="page-link"
+                                                    href="<c:url value='/salary?page=${currentPage - 1}&itemsPerPage=${itemsPerPage}'/>">
+                                                    Previous
+                                                </a>
+                                            </li>
+
+                                            <li class="page-item disabled">
+                                                <span class="page-link">Page ${currentPage} / ${totalPages}</span>
+                                            </li>
+
+                                            <li
+                                                class="page-item ${currentPage == totalPages || totalPages == 0 ? 'disabled' : ''}">
+                                                <a class="page-link"
+                                                    href="<c:url value='/salary?page=${currentPage + 1}&itemsPerPage=${itemsPerPage}'/>">
+                                                    Next
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </c:if>
+
                     </div>
                 </body>
 
