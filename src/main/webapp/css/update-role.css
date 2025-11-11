@@ -41,12 +41,12 @@ form[action="searchAccountRole"] {
 }
 
 #searchValue:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  border-color: #3498db;
+  box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
 }
 
 button[type="submit"] {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3498db;
   border: none;
   color: white;
   padding: 10px 18px;
@@ -57,8 +57,9 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
+  background: #2980b9;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
 }
 
 
@@ -74,23 +75,24 @@ table {
 }
 
 thead {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f8f9fa;
 }
 
 th, td {
-  text-align: left;
+  text-align: center;
   padding: 14px 18px;
   border-bottom: 1px solid #e9ecef;
   font-size: 15px;
 }
 
 th {
-  color: white;
+  color: #2c3e50;
   font-weight: 600;
+  border-bottom: 2px solid #e9ecef;
 }
 
 tr:hover {
-  background-color: rgba(102, 126, 234, 0.05);
+  background-color: #f8f9fa;
 }
 
 
@@ -109,14 +111,15 @@ button[type="button"]:hover {
 }
 
 button[id^="saveBtn-"] {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3498db;
   color: white;
   border: none;
 }
 
 button[id^="saveBtn-"]:hover {
+  background: #2980b9;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
 }
 
 
@@ -154,13 +157,14 @@ select {
 }
 
 .popup-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #f8f9fa;
+  color: #2c3e50;
   padding: 25px 30px;
   border-radius: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 2px solid #e9ecef;
 }
 
 .popup-header h5 {
@@ -175,7 +179,7 @@ select {
 .close-btn {
   background: transparent;
   border: none;
-  color: white;
+  color: #2c3e50;
   font-size: 24px;
   cursor: pointer;
   padding: 0;
@@ -199,7 +203,7 @@ select {
   padding: 15px;
   background: #f8f9fa;
   border-radius: 8px;
-  border-left: 4px solid #667eea;
+  border-left: 4px solid #3498db;
 }
 
 .info-row:last-of-type {
@@ -218,7 +222,7 @@ select {
 }
 
 .info-label i {
-  color: #667eea;
+  color: #3498db;
   font-size: 16px;
 }
 
@@ -237,7 +241,7 @@ select {
 
 .current-role-badge {
   display: inline-block;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3498db;
   color: white;
   padding: 8px 16px;
   border-radius: 20px;
@@ -261,7 +265,7 @@ select {
 }
 
 .select-label i {
-  color: #667eea;
+  color: #3498db;
   font-size: 16px;
 }
 
@@ -278,8 +282,8 @@ select {
 }
 
 .role-select:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  border-color: #3498db;
+  box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
 }
 
 .popup-footer {
@@ -311,7 +315,7 @@ select {
 }
 
 .btn-submit {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #3498db;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -326,6 +330,7 @@ select {
 }
 
 .btn-submit:hover {
+  background: #2980b9;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
 }

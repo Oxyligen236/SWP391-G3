@@ -13,6 +13,22 @@
 <div class="container">
     <h2>User Information</h2>
 
+    <!-- Success Message -->
+    <c:if test="${not empty successMessage}">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> ${successMessage}
+        </div>
+        <c:remove var="successMessage" scope="session"/>
+    </c:if>
+
+    <!-- Error Message -->
+    <c:if test="${not empty errorMessage}">
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i> ${errorMessage}
+        </div>
+        <c:remove var="errorMessage" scope="session"/>
+    </c:if>
+
     <c:if test="${not empty user}">
         <table>
             <tr><td>ID:</td><td>${user.userId}</td></tr>

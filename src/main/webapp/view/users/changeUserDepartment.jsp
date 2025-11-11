@@ -5,14 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cập Nhật Phòng Ban - HRMS</title>
+    <title>Update Department - HRMS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="<c:url value='/css/update-department.css'/>?v=2.0">
 </head>
 <body>
     <div class="popup-container">
         <div class="popup-header">
-            <h5><i class="fas fa-building"></i> Cập Nhật Phòng Ban</h5>
+            <h5><i class="fas fa-building"></i> Update Department</h5>
         </div>
         
         <form action="<c:url value='/updateDepartment'/>" method="post">
@@ -30,7 +30,7 @@
                 
                 <div class="info-row">
                     <div class="info-label">
-                        <i class="fas fa-user"></i> Họ Tên:
+                        <i class="fas fa-user"></i> Full Name:
                     </div>
                     <div class="info-value">
                         <strong>${user.fullname}</strong>
@@ -48,7 +48,7 @@
                 
                 <div class="info-row">
                     <div class="info-label">
-                        <i class="fas fa-building"></i> Phòng Ban Hiện Tại:
+                        <i class="fas fa-building"></i> Current Department:
                     </div>
                     <div class="info-value">
                         <span class="current-department-badge">${user.departmentName}</span>
@@ -57,10 +57,10 @@
                 
                 <div class="form-group">
                     <label for="newDepartmentID" class="select-label">
-                        <i class="fas fa-exchange-alt"></i> <strong>Chọn Phòng Ban Mới:</strong>
+                        <i class="fas fa-exchange-alt"></i> <strong>Select New Department:</strong>
                     </label>
                     <select class="department-select" name="newDepartmentID" id="newDepartmentID" required>
-                        <option value="">-- Chọn phòng ban --</option>
+                        <option value="">-- Select Department --</option>
                         <c:forEach var="dept" items="${departments}">
                             <option value="${dept.departmentId}" ${currentDepartmentID == dept.departmentId ? 'selected' : ''}>
                                 ${dept.name}
@@ -71,11 +71,11 @@
             </div>
             
             <div class="popup-footer">
-                <button type="button" class="btn-cancel" onclick="window.location.href='<c:url value='/userlist'/>'">
-                    <i class="fas fa-times"></i> Hủy
+                <button type="button" class="btn-cancel" onclick="window.location.href='${pageContext.request.contextPath}/user_detail?userID=${user.userId}'">
+                    <i class="fas fa-times"></i> Cancel
                 </button>
                 <button type="submit" class="btn-submit">
-                    <i class="fas fa-check"></i> Xác Nhận
+                    <i class="fas fa-check"></i> Confirm
                 </button>
             </div>
         </form>

@@ -5,14 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cập Nhật Vai Trò - HRMS</title>
+    <title>Update Role - HRMS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="<c:url value='/css/update-role.css'/>?v=2.0">
 </head>
 <body>
     <div class="popup-container">
         <div class="popup-header">
-            <h5><i class="fas fa-user-tag"></i> Cập Nhật Vai Trò</h5>
+            <h5><i class="fas fa-user-tag"></i> Update Role</h5>
         </div>
         
         <form action="<c:url value='/updateRole'/>" method="post">
@@ -39,7 +39,7 @@
                 
                 <div class="info-row">
                     <div class="info-label">
-                        <i class="fas fa-signature"></i> Họ Tên:
+                        <i class="fas fa-signature"></i> Full Name:
                     </div>
                     <div class="info-value">
                         ${account.fullName}
@@ -48,7 +48,7 @@
                 
                 <div class="info-row">
                     <div class="info-label">
-                        <i class="fas fa-user-shield"></i> Role Hiện Tại:
+                        <i class="fas fa-user-shield"></i> Current Role:
                     </div>
                     <div class="info-value">
                         <span class="current-role-badge">${account.roleName}</span>
@@ -57,10 +57,10 @@
                 
                 <div class="form-group">
                     <label for="newRoleID" class="select-label">
-                        <i class="fas fa-exchange-alt"></i> <strong>Chọn Role Mới:</strong>
+                        <i class="fas fa-exchange-alt"></i> <strong>Select New Role:</strong>
                     </label>
                     <select class="role-select" name="newRoleID" id="newRoleID" required>
-                        <option value="">-- Chọn vai trò --</option>
+                        <option value="">-- Select Role --</option>
                         <c:forEach var="role" items="${roles}">
                             <option value="${role.roleID}" ${currentRoleID == role.roleID ? 'selected' : ''}>
                                 ${role.name}
@@ -72,10 +72,10 @@
             
             <div class="popup-footer">
                 <button type="button" class="btn-cancel" onclick="window.location.href='<c:url value='/account/view'/>'">
-                    <i class="fas fa-times"></i> Hủy
+                    <i class="fas fa-times"></i> Cancel
                 </button>
                 <button type="submit" class="btn-submit">
-                    <i class="fas fa-check"></i> Xác Nhận
+                    <i class="fas fa-check"></i> Confirm
                 </button>
             </div>
         </form>
