@@ -353,38 +353,6 @@
                 </c:forEach>
             </tbody>
         </table>
-
-        <!-- Fixed Items (Insurance & Tax - Read Only) -->
-        <h3>Fixed Deductions (Insurance & Tax)</h3>
-        <table class="items-table">
-            <thead>
-                <tr>
-                    <th>Type Name</th>
-                    <th>Category</th>
-                    <th>Amount</th>
-                    <th>Amount Type</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="item" items="${payrollDetail.payrollItems}">
-                    <c:if test="${item.category == 'Insurance' || item.category == 'Tax'}">
-                        <tr>
-                            <td>${item.typeName}</td>
-                            <td>${item.category}</td>
-                            <td>
-                                <fmt:formatNumber value="${item.amount}" type="number" groupingUsed="true" maxFractionDigits="2"/>
-                            </td>
-                            <td>
-                                <span class="badge ${item.amountType == 'fixed' ? 'badge-fixed' : 'badge-percent'}">
-                                    ${item.amountType == 'fixed' ? 'Fixed (₫)' : 'Percent (%)'}
-                                </span>
-                            </td>
-                        </tr>
-                    </c:if>
-                </c:forEach>
-            </tbody>
-        </table>
-
         <div class="action-buttons">
             <a href="${pageContext.request.contextPath}/payroll/company/detail?payrollID=${payrollDetail.payrollID}&userID=${payrollDetail.userID}" 
                class="btn btn-secondary">Back to Detail</a>

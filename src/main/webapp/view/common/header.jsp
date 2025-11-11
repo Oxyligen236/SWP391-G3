@@ -20,7 +20,8 @@
       <!-- Select2 -->
       <link href="<c:url value='/assets/img/css/select2.min.css'/>" rel="stylesheet" />
       <!-- Icons -->
-      <link href="<c:url value='/assets/img/css/materialdesignicons.min.css'/>" rel="stylesheet" type="text/css" />
+      <!-- Material Design Icons from CDN -->
+      <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" rel="stylesheet" type="text/css" />
       <link href="<c:url value='/assets/img/css/remixicon.css'/>" rel="stylesheet" type="text/css" />
       <link href="https://unicons.iconscout.com/release/v3.0.6/css/line.css" rel="stylesheet">
       <!-- SLIDER -->
