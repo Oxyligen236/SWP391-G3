@@ -38,6 +38,15 @@
                 <li>
                   <a href="<c:url value='/userlist'/>" target="mainFrame">User List</a>
                 </li>
+                <li>
+                  <a href="<c:url value='/option/position'/>" target="mainFrame">Add Position</a>
+                </li>
+                <li>
+                  <a href="<c:url value='/option/department'/>" target="mainFrame">Add Department</a>
+                </li>
+                <li>
+                  <a href="<c:url value='/option/degree'/>" target="mainFrame">Add Degree</a>
+                </li>
               </ul>
             </div>
           </li>

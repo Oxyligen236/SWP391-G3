@@ -96,4 +96,24 @@ public class WorkHistoryDAO extends DBContext {
 
         return list;
     }
+
+    public boolean addWorkHistory(int userID, String type, String oldValue, String newValue, 
+                                   String description, String evaluate) {
+        String sql = "INSERT INTO WorkHistory (UserID, Type, Effective_Date, Old_Value, New_Value, Description, Evaluate) " +
+                     "VALUES (?, ?, CURDATE(), ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userID);
+            ps.setString(2, type);
+            ps.setString(3, oldValue);
+            ps.setString(4, newValue);
+            ps.setString(5, description);
+            ps.setString(6, evaluate);
+            
+            int result = ps.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

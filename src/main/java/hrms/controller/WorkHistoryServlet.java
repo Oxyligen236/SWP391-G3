@@ -1,16 +1,20 @@
 package hrms.controller;
 
-import hrms.dao.UserDAO;
-import hrms.dao.WorkHistoryDAO;
-import hrms.model.User;
-import hrms.model.WorkHistory;
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import hrms.dao.UserDAO;
+import hrms.dao.WorkHistoryDAO;
+import hrms.model.User;
+import hrms.model.WorkHistory;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/workhistory")
 public class WorkHistoryServlet extends HttpServlet {
@@ -57,5 +61,7 @@ request.setAttribute("UserNames", userNames);
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi hệ thống: " + e.getMessage());
         }
+        
     }
+    
 }

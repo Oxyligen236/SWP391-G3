@@ -118,8 +118,7 @@
                 </li>
                 <li>
                   <a href="<c:url value='/department-ticket'/>" target="mainFrame">View employee Ticket</a>
-                </li>
-              </ul>
+                </li>              </ul>
             </div>
           </li>
 
@@ -141,7 +140,7 @@
           <!-- SHIFT -->
           <li class="sidebar-dropdown">
             <a href="javascript:void(0)"><i class="uil uil-clock me-2 d-inline-block"></i>Shift</a>
-            <div class="sidebar-submenu">
+            <div class="sidebar-submvn menu">
               <ul>
                 <li>
                   <a href="<c:url value='/shift'/>" target="mainFrame">Shift Management</a>
