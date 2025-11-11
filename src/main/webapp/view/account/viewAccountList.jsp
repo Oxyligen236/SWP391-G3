@@ -7,49 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Management</title>
     <link rel="stylesheet" href="<c:url value='/css/cv-list.css'/>">
-    <style>
-        /* Success message */
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 12px 20px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
-        }
-
-        /* Error message */
-        .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 12px 20px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border: 1px solid #f5c6cb;
-        }
-
-        /* Optional: table styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 8px 12px;
-            text-align: left;
-        }
-        .status-badge.status-accepted {
-            color: #155724;
-            font-weight: bold;
-        }
-        .status-badge.status-rejected {
-            color: #721c24;
-            font-weight: bold;
-        }
-    </style>
+     <link rel="stylesheet" href="<c:url value='/css/view-accountlist.css'/>">
     <script>
         function confirmToggle(button, message) {
             if(confirm(message)) {

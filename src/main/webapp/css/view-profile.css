@@ -1,184 +1,40 @@
-/* 🌸 Reset cơ bản */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
-/* 🌸 Toàn màn hình với gradient dịu nhẹ */
-body {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #fffafc, #ffeef5);
-    font-family: "Poppins", sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
-    color: #2c3e50;
-}
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color:#f5f5f5; }
 
-/* 🌸 Container chính */
-.profile-container {
-    width: 100%;
-    max-width: 900px;
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 40px 50px;
-    box-shadow: 0 10px 30px rgba(255, 182, 193, 0.2);
-    transition: all 0.3s ease;
-    animation: fadeIn 0.6s ease;
-}
+        .profile-container { max-width:950px; margin:40px auto; padding:20px; }
+        h2.page-title { color:#2c3e50; font-weight:700; text-align:center; margin-bottom:25px; border-bottom:3px solid #3498db; padding-bottom:10px; }
 
-/* 🌸 Header hồ sơ */
-.profile-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 35px;
-    gap: 12px;
-    text-align: center;
-}
+        .profile-header { text-align:center; margin-bottom:30px; }
+        .avatar { border-radius:50%; width:140px; height:140px; border:3px solid #b5d3ff; }
+        .profile-header h2 { color:#2c3e50; font-weight:700; margin-top:15px; }
+        .profile-header p { color:#6c757d; }
 
-.profile-header .avatar {
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #ffb3c6;
-    background-color: #fff;
-    box-shadow: 0 0 12px rgba(255, 180, 200, 0.25);
-}
+        .info-card {
+            background:#fff;
+            border-radius:12px;
+            padding:25px 30px;
+            margin-bottom:20px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+        }
 
-.profile-header h2 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #e7549f;
-}
+        .section-title { font-weight:600; color:#2c3e50; margin-bottom:15px; font-size:18px; border-bottom:2px solid #3498db; padding-bottom:5px; }
 
-.profile-header .user-id {
-    font-size: 0.9rem;
-    color: #555;
-    background-color: #fff0f5;
-    padding: 6px 14px;
-    border-radius: 20px;
-    box-shadow: 0 2px 6px rgba(255, 182, 193, 0.15);
-}
+        .info-row { margin-bottom:15px; }
+        .info-label { font-weight:500; color:#2c3e50; margin-bottom:5px; display:block; }
+        .info-value { color:#495057; font-size:14px; }
 
-/* 🌸 Lưới thông tin theo từng nhóm */
-.info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px 40px;
-    text-align: left;
-    margin-bottom: 35px;
-}
+        .btn-custom { padding:8px 20px; font-weight:500; border-radius:8px; font-size:14px; cursor:pointer; transition:all 0.2s ease; text-decoration:none; }
+        .btn-edit { background:#3498db; color:#fff; border:none; }
+        .btn-edit:hover { background:#2980b9; transform:translateY(-1px); box-shadow:0 4px 8px rgba(52,152,219,0.3); text-decoration:none; }
+        .btn-back { background:#6c757d; color:#fff; border:none; }
+        .btn-back:hover { background:#5a6268; transform:translateY(-1px); }
 
-.info-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+        @media (max-width:768px) {
+            .avatar { width:120px; height:120px; }
+            .profile-container { padding:0 15px; }
+        }
 
-.info-label {
-    font-weight: 600;
-    color: #e7549f;
-    font-size: 0.95rem;
-}
-
-.info-value {
-    font-size: 1rem;
-    color: #d63384;
-    background-color: #fff0f6;
-    border-radius: 12px;
-    padding: 10px 16px;
-    font-weight: 500;
-    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.15);
-    transition: all 0.3s ease;
-    border: 1px solid #ffcce6;
-}
-
-.info-value:hover {
-    background-color: #ffe6f0;
-    box-shadow: 0 6px 18px rgba(255, 105, 180, 0.25);
-    transform: translateY(-1px);
-}
-
-/* 🌸 Nút thao tác */
-.buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 25px;
-    gap: 18px;
-    flex-wrap: wrap;
-}
-
-.btn-custom {
-    border-radius: 25px;
-    padding: 12px 30px;
-    font-weight: 500;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: none;
-    text-decoration: none;
-}
-
-/* Edit Button */
-.btn-edit {
-    background: linear-gradient(135deg, #ff99bb, #ff66aa);
-    color: white;
-    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.35);
-}
-
-.btn-edit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 105, 180, 0.55);
-}
-
-/* Back Button */
-.btn-back {
-    background: #fff;
-    color: #e7549f;
-    border: 2px solid #ffb3c6;
-}
-
-.btn-back:hover {
-    background: #fff2f8;
-    color: #b91d73;
-    box-shadow: 0 4px 15px rgba(255, 128, 171, 0.25);
-    transform: translateY(-2px);
-}
-
-/* 🌸 Hiệu ứng fade-in */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 🌸 Responsive */
-@media (max-width: 768px) {
-    .profile-container {
-        padding: 25px 25px;
-    }
-
-    .info-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .btn-custom {
-        width: 100%;
-    }
-
-    .profile-header h2 {
-        font-size: 1.5rem;
-    }
-}
+        .btn-save { background:#3498db; color:#fff; border:none; padding:8px 20px; border-radius:8px; font-size:14px; cursor:pointer; transition:all 0.2s ease; text-decoration:none; }
+        .btn-save:hover { background:#2980b9; transform:translateY(-1px); box-shadow:0 4px 8px rgba(52,152,219,0.3); text-decoration:none; }
+        .form-actions { display:flex; flex-wrap:wrap; gap:15px; justify-content:center; margin-top:20px; }

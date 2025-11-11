@@ -10,59 +10,7 @@
     <title>Đổi Mật Khẩu - HRMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #e9f2ff;
-        }
-        .change-password-card {
-            max-width: 450px;
-            margin: 60px auto;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .card-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .card-header i {
-            color: #0d6efd;
-        }
-        .btn-change {
-            background-color: #0d6efd;
-            color: #fff;
-            border-radius: 8px;
-        }
-        .btn-change:hover {
-            background-color: #0b5ed7;
-        }
-        .btn-cancel {
-            background-color: #cfe2ff;
-            color: #084298;
-            border-radius: 8px;
-            text-decoration: none;
-        }
-        .btn-cancel:hover {
-            background-color: #0d6efd;
-            color: #fff;
-        }
-        .password-input-wrapper {
-            position: relative;
-        }
-        .password-toggle {
-            position: absolute;
-            top: 50%;
-            right: 12px;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #6c757d;
-        }
-        .password-strength {
-            margin-top: 5px;
-            font-weight: 500;
-        }
-    </style>
+     <link rel="stylesheet" href="<c:url value='/css/change-password.css'/>">
 </head>
 <body>
     <div class="change-password-card">

@@ -9,43 +9,7 @@
     <title>Personal Information - HRMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a2e0e6ad53.js" crossorigin="anonymous"></script>
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color:#f5f5f5; }
-
-        .profile-container { max-width:950px; margin:40px auto; padding:20px; }
-        h2.page-title { color:#2c3e50; font-weight:700; text-align:center; margin-bottom:25px; border-bottom:3px solid #3498db; padding-bottom:10px; }
-
-        .profile-header { text-align:center; margin-bottom:30px; }
-        .avatar { border-radius:50%; width:140px; height:140px; border:3px solid #b5d3ff; }
-        .profile-header h2 { color:#2c3e50; font-weight:700; margin-top:15px; }
-        .profile-header p { color:#6c757d; }
-
-        .info-card {
-            background:#fff;
-            border-radius:12px;
-            padding:25px 30px;
-            margin-bottom:20px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .section-title { font-weight:600; color:#2c3e50; margin-bottom:15px; font-size:18px; border-bottom:2px solid #3498db; padding-bottom:5px; }
-
-        .info-row { margin-bottom:15px; }
-        .info-label { font-weight:500; color:#2c3e50; margin-bottom:5px; display:block; }
-        .info-value { color:#495057; font-size:14px; }
-
-        .btn-custom { padding:8px 20px; font-weight:500; border-radius:8px; font-size:14px; cursor:pointer; transition:all 0.2s ease; text-decoration:none; }
-        .btn-edit { background:#3498db; color:#fff; border:none; }
-        .btn-edit:hover { background:#2980b9; transform:translateY(-1px); box-shadow:0 4px 8px rgba(52,152,219,0.3); text-decoration:none; }
-        .btn-back { background:#6c757d; color:#fff; border:none; }
-        .btn-back:hover { background:#5a6268; transform:translateY(-1px); }
-
-        @media (max-width:768px) {
-            .avatar { width:120px; height:120px; }
-            .profile-container { padding:0 15px; }
-        }
-    </style>
+     <link rel="stylesheet" href="<c:url value='/css/view-profile.css'/>">
 </head>
 <body>
 <div class="container py-5">
