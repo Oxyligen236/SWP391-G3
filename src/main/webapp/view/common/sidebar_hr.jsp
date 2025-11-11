@@ -27,6 +27,23 @@
             </div>
           </li>
 
+          <li class="sidebar-dropdown">
+        <a href="javascript:void(0)"
+          ><i class="uil uil-users-alt me-2 d-inline-block"></i>Account</a
+        >
+        <div class="sidebar-submenu">
+          <ul>
+            <li>
+              <a
+                href="<c:url value='/account/view'/>"
+                target="mainFrame"
+                >View Account List</a
+              >
+            </li>
+          </ul>
+        </div>
+      </li>
+
           <!-- USER MANAGEMENT -->
           <li class="sidebar-dropdown">
             <a href="javascript:void(0)"><i class="uil uil-users-alt me-2 d-inline-block"></i>User Management</a>
