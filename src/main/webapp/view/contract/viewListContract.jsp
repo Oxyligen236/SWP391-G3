@@ -34,6 +34,17 @@
 
         <!-- Filter and Sort Section -->
         <form action="${pageContext.request.contextPath}/viewContracts" method="get" id="searchForm">
+            <!-- Status Filter -->
+            <select id="statusFilter" name="statusFilter">
+                <option value="">All Status</option>
+                <option value="Pending" ${statusFilter == 'Pending' ? 'selected' : ''}>Pending</option>
+                <option value="Approved" ${statusFilter == 'Approved' ? 'selected' : ''}>Approved</option>
+                <option value="Active" ${statusFilter == 'Active' ? 'selected' : ''}>Active</option>
+                <option value="Expired" ${statusFilter == 'Expired' ? 'selected' : ''}>Expired</option>
+                <option value="Cancelled" ${statusFilter == 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                <option value="Archived" ${statusFilter == 'Archived' ? 'selected' : ''}>Archived</option>
+            </select>
+
             <!-- Search Field -->
             <select id="searchField" name="searchField" onchange="onFieldChange()">
                 <option value="">All</option>
@@ -213,27 +224,27 @@
             <div class="muted">Showing ${contracts.size()} contracts | Page ${currentPage} of ${totalPages > 0 ? totalPages : 1}</div>
 
             <div class="pagination">
-                <c:url var="prevUrl" value="/viewContracts">
-                    <c:param name="page" value="${currentPage - 1}" />
-                    <c:if test="${not empty searchField}"><c:param name="searchField" value="${searchField}" /></c:if>
-                    <c:if test="${not empty searchValue}"><c:param name="searchValue" value="${searchValue}" /></c:if>
-                    <c:if test="${not empty fromDate}"><c:param name="fromDate" value="${fromDate}" /></c:if>
-                    <c:if test="${not empty toDate}"><c:param name="toDate" value="${toDate}" /></c:if>
-                    <c:if test="${not empty sortField}"><c:param name="sortField" value="${sortField}" /></c:if>
-                    <c:if test="${not empty sortOrder}"><c:param name="sortOrder" value="${sortOrder}" /></c:if>
-                </c:url>
-                
-                <c:url var="nextUrl" value="/viewContracts">
-                    <c:param name="page" value="${currentPage + 1}" />
-                    <c:if test="${not empty searchField}"><c:param name="searchField" value="${searchField}" /></c:if>
-                    <c:if test="${not empty searchValue}"><c:param name="searchValue" value="${searchValue}" /></c:if>
-                    <c:if test="${not empty fromDate}"><c:param name="fromDate" value="${fromDate}" /></c:if>
-                    <c:if test="${not empty toDate}"><c:param name="toDate" value="${toDate}" /></c:if>
-                    <c:if test="${not empty sortField}"><c:param name="sortField" value="${sortField}" /></c:if>
-                    <c:if test="${not empty sortOrder}"><c:param name="sortOrder" value="${sortOrder}" /></c:if>
-                </c:url>
-
-                <c:if test="${currentPage > 1}">
+            <c:url var="prevUrl" value="/viewContracts">
+                <c:param name="page" value="${currentPage - 1}" />
+                <c:if test="${not empty statusFilter}"><c:param name="statusFilter" value="${statusFilter}" /></c:if>
+                <c:if test="${not empty searchField}"><c:param name="searchField" value="${searchField}" /></c:if>
+                <c:if test="${not empty searchValue}"><c:param name="searchValue" value="${searchValue}" /></c:if>
+                <c:if test="${not empty fromDate}"><c:param name="fromDate" value="${fromDate}" /></c:if>
+                <c:if test="${not empty toDate}"><c:param name="toDate" value="${toDate}" /></c:if>
+                <c:if test="${not empty sortField}"><c:param name="sortField" value="${sortField}" /></c:if>
+                <c:if test="${not empty sortOrder}"><c:param name="sortOrder" value="${sortOrder}" /></c:if>
+            </c:url>
+            
+            <c:url var="nextUrl" value="/viewContracts">
+                <c:param name="page" value="${currentPage + 1}" />
+                <c:if test="${not empty statusFilter}"><c:param name="statusFilter" value="${statusFilter}" /></c:if>
+                <c:if test="${not empty searchField}"><c:param name="searchField" value="${searchField}" /></c:if>
+                <c:if test="${not empty searchValue}"><c:param name="searchValue" value="${searchValue}" /></c:if>
+                <c:if test="${not empty fromDate}"><c:param name="fromDate" value="${fromDate}" /></c:if>
+                <c:if test="${not empty toDate}"><c:param name="toDate" value="${toDate}" /></c:if>
+                <c:if test="${not empty sortField}"><c:param name="sortField" value="${sortField}" /></c:if>
+                <c:if test="${not empty sortOrder}"><c:param name="sortOrder" value="${sortOrder}" /></c:if>
+            </c:url>                <c:if test="${currentPage > 1}">
                     <a href="${prevUrl}">Previous</a>
                 </c:if>
                 
@@ -241,6 +252,7 @@
                     <c:forEach var="i" begin="1" end="${totalPages}">
                         <c:url var="pageUrl" value="/viewContracts">
                             <c:param name="page" value="${i}" />
+                            <c:if test="${not empty statusFilter}"><c:param name="statusFilter" value="${statusFilter}" /></c:if>
                             <c:if test="${not empty searchField}"><c:param name="searchField" value="${searchField}" /></c:if>
                             <c:if test="${not empty searchValue}"><c:param name="searchValue" value="${searchValue}" /></c:if>
                             <c:if test="${not empty fromDate}"><c:param name="fromDate" value="${fromDate}" /></c:if>
