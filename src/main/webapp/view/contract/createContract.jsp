@@ -344,7 +344,7 @@
                 <c:forEach var="s" items="${signers}">
                   <%-- Only show users with role 1 (HR Manager) or 2 (HR Staff) --%>
                   <c:set var="userRole" value="${userRoles[s.userId]}" />
-                  <c:if test="${userRole == 1 || userRole == 2 || userRole == 3}">
+                  <c:if test="${userRole == 1}">
                     <option value="${s.userId}">${s.fullname}</option>
                   </c:if>
                 </c:forEach>

@@ -69,6 +69,7 @@ public class ViewContractServlet extends HttpServlet {
 
         String sortField = request.getParameter("sortField");
         String sortOrder = request.getParameter("sortOrder");
+        String statusFilter = request.getParameter("statusFilter");
 
         if (sortOrder == null || (!sortOrder.equals("asc") && !sortOrder.equals("desc"))) {
             sortOrder = "asc"; 
@@ -95,12 +96,13 @@ public class ViewContractServlet extends HttpServlet {
             toDate = null;
             sortField = null;
             sortOrder = "asc";
+            statusFilter = null;
             page = 1; 
         }
         request.setAttribute("showAll", showAll);
 
         try {
-            List<ContractDTO> allContracts = dao.getContracts(searchField, searchValue, fromDate, toDate, sortField, sortOrder);
+            List<ContractDTO> allContracts = dao.getContracts(searchField, searchValue, fromDate, toDate, sortField, sortOrder, statusFilter);
 
             int totalRecords = allContracts.size();
             int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
@@ -137,6 +139,7 @@ public class ViewContractServlet extends HttpServlet {
             request.setAttribute("toDate", toDate);
             request.setAttribute("sortField", sortField);
             request.setAttribute("sortOrder", sortOrder);
+            request.setAttribute("statusFilter", statusFilter);
 
             // Check for success message in session
             String successMessage = (String) request.getSession().getAttribute("successMessage");
