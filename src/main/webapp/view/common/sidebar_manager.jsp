@@ -23,12 +23,26 @@
                 <li>
                   <a href="<c:url value='/edit'/>" target="mainFrame">Edit Profile</a>
                 </li>
-                <li>
-                  <a href="<c:url value='/option/add'/>" target="mainFrame">Add Option</a>
-                </li>
               </ul>
             </div>
           </li>
+
+          <li class="sidebar-dropdown">
+        <a href="javascript:void(0)"
+          ><i class="uil uil-users-alt me-2 d-inline-block"></i>Account</a
+        >
+        <div class="sidebar-submenu">
+          <ul>
+            <li>
+              <a
+                href="<c:url value='/account/view'/>"
+                target="mainFrame"
+                >View Account List</a
+              >
+            </li>
+          </ul>
+        </div>
+      </li>
 
           <!-- USER MANAGEMENT -->
           <li class="sidebar-dropdown">
