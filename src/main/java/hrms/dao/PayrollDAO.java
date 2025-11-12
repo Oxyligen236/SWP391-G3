@@ -398,8 +398,8 @@ public class PayrollDAO extends DBContext {
         String sqlPayrollItems = """
         insert into payroll_item (payroll_id, type_id, amount, amounttype, is_positive) values
         (?, 1, 1600000.00, 'fixed', 0),
-        (?, 2, 300000.00, 'fixed', 0),
-        (?, 3, 200000.00, 'fixed', 0),
+        (?, 2, 10.50, 'percent', 0),
+        (?, 3, 1.00, 'percent', 0),
         (?, 4, 5.00, 'percent', 0),
         (?, 6, 800000.00, 'fixed', 1)
     """;
