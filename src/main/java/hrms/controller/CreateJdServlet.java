@@ -11,7 +11,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/createjd")
@@ -19,23 +18,33 @@ public class CreateJdServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-@Override
-protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
+        String ticketIdParam = request.getParameter("ticketID");
+        if (ticketIdParam != null && !ticketIdParam.isEmpty()) {
+            request.setAttribute("ticketID", ticketIdParam);
+            try {
+                int ticketID = Integer.parseInt(ticketIdParam);
+                JobDAO jobDao = new JobDAO();
+                // ✅ Kiểm tra TicketID đã có JD nào chưa
+                if (jobDao.existsByTicketID(ticketID)) {
+                    request.getSession().setAttribute("error", "You have already used this Ticket!");
+                    response.sendRedirect(request.getContextPath() + "/ticketList");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                // không hợp lệ, bỏ qua
+            }
+        }
 
-    String ticketIdParam = request.getParameter("ticketID");
-    if (ticketIdParam != null && !ticketIdParam.isEmpty()) {
-        request.setAttribute("ticketID", ticketIdParam);
+        DepartmentDAO dao = new DepartmentDAO();
+        List<Department> departments = dao.getAll();
+        request.setAttribute("departments", departments);
+
+        request.getRequestDispatcher("/view/jd/createJd.jsp").forward(request, response);
     }
-
-    DepartmentDAO dao = new DepartmentDAO();
-    List<Department> departments = dao.getAll();
-    request.setAttribute("departments", departments);
-
-    request.getRequestDispatcher("/view/jd/createJd.jsp").forward(request, response);
-}
-
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -44,7 +53,6 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         request.setCharacterEncoding("UTF-8");
 
         try {
-
             int ticketID = Integer.parseInt(request.getParameter("ticketID"));
             String jobTitle = request.getParameter("jobTitle");
             LocalDate startDate = LocalDate.parse(request.getParameter("startDate"));
@@ -57,28 +65,34 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             String officeAddress = request.getParameter("officeAddress");
             String workingConditions = request.getParameter("workingConditions");
 
+            // ✅ Kiểm tra ngày bắt đầu - kết thúc
             if (startDate.isAfter(endDate)) {
                 request.setAttribute("error", "Start date cannot be after end date!");
                 DepartmentDAO dao = new DepartmentDAO();
                 List<Department> departments = dao.getAll();
                 request.setAttribute("departments", departments);
                 request.getRequestDispatcher("/view/jd/createJd.jsp").forward(request, response);
+                return;
             }
-            //max vacancies 1000000=>sap luon
-             if (vacancies>100000) {
+
+            // ✅ Giới hạn số lượng tuyển
+            if (vacancies > 100000) {
                 request.setAttribute("error", "Number of vacancies is too large (max 100 000)!");
                 DepartmentDAO dao = new DepartmentDAO();
                 List<Department> departments = dao.getAll();
                 request.setAttribute("departments", departments);
                 request.getRequestDispatcher("/view/jd/createJd.jsp").forward(request, response);
+                return;
             }
 
-
-            JobDescription jd = new JobDescription(0, ticketID, jobTitle, startDate, endDate, department,
-                    vacancies, responsibilities, requirements, compensation, officeAddress, workingConditions);
-
-            JobDAO dao = new JobDAO();
-            dao.insertJobDescription(jd);
+            // ✅ Tạo JD mới
+            JobDescription jd = new JobDescription(
+                    0, ticketID, jobTitle, startDate, endDate, department,
+                    vacancies, responsibilities, requirements,
+                    compensation, officeAddress, workingConditions
+            );
+            JobDAO jobDao = new JobDAO();
+            jobDao.insertJobDescription(jd);
 
             request.getSession().setAttribute("message", "Create JD Successfully!");
             response.sendRedirect(request.getContextPath() + "/jdlist");
