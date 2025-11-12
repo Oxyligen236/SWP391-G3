@@ -177,7 +177,7 @@ public class SubmitTicketServlet extends HttpServlet {
 
                     // Validation
                     if (reason.trim().length() < 1) {
-                        session.setAttribute("errorMessage", "Reason must be at least 10 characters!");
+                        session.setAttribute("errorMessage", "Reason must be at least 1 characters!");
                         session.setAttribute("selectedTypeId", selectedTypeId);
                         response.sendRedirect(request.getContextPath() + "/create-ticket");
                         return;
