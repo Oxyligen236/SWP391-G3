@@ -36,6 +36,7 @@ public class CompanyAttendanceServlet extends HttpServlet {
         String shiftIdParam = req.getParameter("shiftId");
         String fromDateParam = req.getParameter("fromDate");
         String toDateParam = req.getParameter("toDate");
+        String resetParam = req.getParameter("reset");
 
         String hasLateParam = req.getParameter("hasLate");
         String hasEarlyLeaveParam = req.getParameter("hasEarlyLeave");
@@ -45,7 +46,9 @@ public class CompanyAttendanceServlet extends HttpServlet {
         boolean hasEarlyLeave = "true".equals(hasEarlyLeaveParam);
         boolean hasOT = "true".equals(hasOTParam);
 
-        boolean isFirstLoad = req.getParameter("userName") == null
+        boolean isReset = "true".equals(resetParam);
+        boolean isFirstLoad = !isReset
+                && req.getParameter("userName") == null
                 && req.getParameter("department") == null
                 && req.getParameter("position") == null
                 && req.getParameter("shiftId") == null
@@ -53,7 +56,9 @@ public class CompanyAttendanceServlet extends HttpServlet {
                 && req.getParameter("toDate") == null
                 && req.getParameter("hasLate") == null
                 && req.getParameter("hasEarlyLeave") == null
-                && req.getParameter("hasOT") == null;
+                && req.getParameter("hasOT") == null
+                && req.getParameter("itemsPerPage") == null
+                && req.getParameter("page") == null;
 
         if (isFirstLoad) {
             YearMonth currentMonth = YearMonth.now();
@@ -169,6 +174,7 @@ public class CompanyAttendanceServlet extends HttpServlet {
         req.setAttribute("searchDepartment", department != null ? department : "");
         req.setAttribute("searchPosition", position != null ? position : "");
         req.setAttribute("selectedShift", shiftIdParam != null ? shiftIdParam : "All");
+
         req.setAttribute("fromDate", fromDateParam != null ? fromDateParam : "");
         req.setAttribute("toDate", toDateParam != null ? toDateParam : "");
 
