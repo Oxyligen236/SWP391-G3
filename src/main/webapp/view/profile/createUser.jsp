@@ -142,7 +142,6 @@
                 <p>User ID: <code>${newUserId}</code></p>
             </div>
             <div class="modal-footer">
-                <a href="${cvListUrl}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to CV List</a>
                 <a href="<c:url value='/addContracts' />?userId=${newUserId}" class="btn btn-success">
                     <i class="fas fa-file-contract"></i> Create Contract
                 </a>

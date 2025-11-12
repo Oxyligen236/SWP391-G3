@@ -3,21 +3,21 @@
 <%@ page isELIgnored="false" %>
 
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đổi Mật Khẩu - HRMS</title>
+    <title>Change Password - HRMS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-     <link rel="stylesheet" href="<c:url value='/css/change-password.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/change-password.css'/>">
 </head>
 <body>
     <div class="change-password-card">
         <div class="card-header">
             <i class="fas fa-key fa-3x mb-3"></i>
-            <h2 class="fw-bold text-primary">Đổi Mật Khẩu</h2>
-            <p class="text-muted">Đăng nhập với: <strong>${sessionScope.account.username}</strong></p>
+            <h2 class="fw-bold text-primary">Change Password</h2>
+            <p class="text-muted">Logged in as: <strong>${sessionScope.account.username}</strong></p>
         </div>
 
         <c:if test="${not empty errorMessage}">
@@ -30,20 +30,20 @@
         <form action="${pageContext.request.contextPath}/account/change-password" method="post" id="changePasswordForm">
             <div class="mb-3">
                 <label for="currentPassword" class="form-label">
-                    <i class="fas fa-lock"></i> Mật khẩu hiện tại <span class="text-danger">*</span>
+                    <i class="fas fa-lock"></i> Current Password <span class="text-danger">*</span>
                 </label>
                 <div class="password-input-wrapper">
-                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required placeholder="Nhập mật khẩu hiện tại">
+                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required placeholder="Enter current password">
                     <i class="fas fa-eye password-toggle" onclick="togglePassword('currentPassword', this)"></i>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="newPassword" class="form-label">
-                    <i class="fas fa-key"></i> Mật khẩu mới <span class="text-danger">*</span>
+                    <i class="fas fa-key"></i> New Password <span class="text-danger">*</span>
                 </label>
                 <div class="password-input-wrapper">
-                    <input type="password" class="form-control" id="newPassword" name="newPassword" required minlength="6" placeholder="Nhập mật khẩu mới">
+                    <input type="password" class="form-control" id="newPassword" name="newPassword" required minlength="6" placeholder="Enter new password">
                     <i class="fas fa-eye password-toggle" onclick="togglePassword('newPassword', this)"></i>
                 </div>
                 <div id="passwordStrength" class="password-strength"></div>
@@ -51,10 +51,10 @@
 
             <div class="mb-3">
                 <label for="confirmPassword" class="form-label">
-                    <i class="fas fa-check-circle"></i> Xác nhận mật khẩu mới <span class="text-danger">*</span>
+                    <i class="fas fa-check-circle"></i> Confirm New Password <span class="text-danger">*</span>
                 </label>
                 <div class="password-input-wrapper">
-                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required placeholder="Nhập lại mật khẩu mới">
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter new password">
                     <i class="fas fa-eye password-toggle" onclick="togglePassword('confirmPassword', this)"></i>
                 </div>
                 <div id="passwordMatch" class="password-strength"></div>
@@ -62,10 +62,10 @@
 
             <div class="d-flex justify-content-center gap-3 mt-4">
                 <button type="submit" class="btn-change btn-custom">
-                    <i class="fas fa-save me-2"></i>Đổi Mật Khẩu
+                    <i class="fas fa-save me-2"></i>Change Password
                 </button>
                 <a href="<c:url value='/account/view'/>" class="btn-cancel btn-custom">
-                    <i class="fas fa-times me-2"></i>Hủy
+                    <i class="fas fa-times me-2"></i>Cancel
                 </a>
             </div>
         </form>
@@ -98,10 +98,10 @@
             if (/\d/.test(password)) strength++;
             if (/[^a-zA-Z0-9]/.test(password)) strength++;
 
-            const levels = ['Rất yếu','Yếu','Trung bình','Mạnh','Rất mạnh'];
-            const colors = ['text-danger','text-warning','text-info','text-primary','text-success'];
+            const levels = ['Very Weak', 'Weak', 'Fair', 'Strong', 'Very Strong'];
+            const colors = ['text-danger', 'text-warning', 'text-info', 'text-primary', 'text-success'];
 
-            strengthDiv.textContent = '🔐 Độ mạnh: ' + levels[strength];
+            strengthDiv.textContent = '🔐 Strength: ' + levels[strength];
             strengthDiv.className = 'password-strength ' + colors[strength];
         });
 
@@ -114,10 +114,10 @@
             if (!confirmPassword) { matchDiv.textContent=''; return; }
 
             if (newPassword === confirmPassword) {
-                matchDiv.textContent = '✓ Mật khẩu khớp';
+                matchDiv.textContent = '✓ Passwords match';
                 matchDiv.className = 'password-strength text-success';
             } else {
-                matchDiv.textContent = '✗ Mật khẩu không khớp';
+                matchDiv.textContent = '✗ Passwords do not match';
                 matchDiv.className = 'password-strength text-danger';
             }
         });
@@ -130,20 +130,20 @@
 
             if (newPassword !== confirmPassword) {
                 e.preventDefault();
-                alert('Mật khẩu mới và xác nhận không khớp!');
+                alert('New password and confirmation do not match!');
                 return false;
             }
             if (newPassword.length < 6) {
                 e.preventDefault();
-                alert('Mật khẩu mới phải có ít nhất 6 ký tự!');
+                alert('New password must be at least 6 characters!');
                 return false;
             }
             if (currentPassword === newPassword) {
                 e.preventDefault();
-                alert('Mật khẩu mới phải khác mật khẩu hiện tại!');
+                alert(' New password must be different from current password!');
                 return false;
             }
-            return confirm('Bạn có chắc chắn muốn đổi mật khẩu?\nBạn sẽ phải đăng nhập lại sau khi đổi.');
+            return confirm('Are you sure you want to change your password?\nYou will need to log in again after changing.');
         });
     </script>
 </body>
