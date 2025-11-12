@@ -162,16 +162,7 @@ public class SalaryServlet extends HttpServlet {
                 }
 
                 if (baseSalary > 0) {
-                    Payroll payroll = salaryProcessor.createPayroll(
-                            user.getUserId(),
-                            baseSalary,
-                            currentMonth,
-                            currentYear
-                    );
-
-                    String workHoursStr = "00:00";
-
-                    if (payrollDAO.insertPayroll(payroll, workHoursStr)) {
+                    if (payrollDAO.addNewPayroll(user.getUserId(), baseSalary, currentMonth, currentYear)) {
                         successCount++;
                     } else {
                         failCount++;

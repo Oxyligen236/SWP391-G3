@@ -69,7 +69,14 @@ public class PayrollDAO extends DBContext {
         String sql = """
         select p.* from payroll p
         join users u on p.userid = u.userid
-        order by u.fullname, p.year desc, p.month desc
+        order by 
+            case p.status 
+                when 'Pending' then 1 
+                else 2 
+            end,
+            u.fullname, 
+            p.year desc, 
+            p.month desc
     """;
         List<Payroll> payrolls = new ArrayList<>();
         try {
@@ -386,17 +393,42 @@ public class PayrollDAO extends DBContext {
     }
 
     public boolean addNewPayroll(int userId, double baseSalary, int month, int year) {
-        String sql = "insert into payroll (userid, basesalary, month, year, totalworkhours, paydate, status) values (?, ?, ?, ?, ?, ?, ?)";
+        String sqlPayroll = "insert into payroll (userid, basesalary, month, year, totalworkhours, paymentdate, status) values (?, ?, ?, ?, '00:00', null, 'Pending')";
+        String sqlGetLastId = "select @@identity as payroll_id";
+        String sqlPayrollItems = """
+        insert into payroll_item (payroll_id, type_id, amount, amounttype, is_positive) values
+        (?, 1, 1600000.00, 'fixed', 0),
+        (?, 2, 300000.00, 'fixed', 0),
+        (?, 3, 200000.00, 'fixed', 0),
+        (?, 4, 5.00, 'percent', 0),
+        (?, 6, 800000.00, 'fixed', 1)
+    """;
+
         try {
-            PreparedStatement st = connection.prepareStatement(sql);
+            PreparedStatement st = connection.prepareStatement(sqlPayroll);
             st.setInt(1, userId);
             st.setDouble(2, baseSalary);
             st.setInt(3, month);
             st.setInt(4, year);
-            st.setString(5, "00:00");
-            st.setObject(6, null);
-            st.setString(7, "Pending");
-            return st.executeUpdate() > 0;
+            int result = st.executeUpdate();
+
+            if (result > 0) {
+                PreparedStatement stGetId = connection.prepareStatement(sqlGetLastId);
+                ResultSet rs = stGetId.executeQuery();
+                if (rs.next()) {
+                    int payrollId = rs.getInt("payroll_id");
+
+                    PreparedStatement stItems = connection.prepareStatement(sqlPayrollItems);
+                    stItems.setInt(1, payrollId);
+                    stItems.setInt(2, payrollId);
+                    stItems.setInt(3, payrollId);
+                    stItems.setInt(4, payrollId);
+                    stItems.setInt(5, payrollId);
+                    stItems.executeUpdate();
+
+                    return true;
+                }
+            }
         } catch (SQLException e) {
             System.out.println(e);
         }
