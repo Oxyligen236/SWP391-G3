@@ -344,6 +344,10 @@ public class SalaryProcessor {
 
         double totalSalary = actualSalary + otSalary - unpaidDeduction - lateEarlyDeduction + payrollItemsAdjustment;
 
+        if (totalSalary < 0) {
+            totalSalary = 0;
+        }
+
         result.put("standardWorkHours", standardWorkHours);
         result.put("actualWorkHours", actualWorkHours);
         result.put("hourlyRate", hourlyRate);
