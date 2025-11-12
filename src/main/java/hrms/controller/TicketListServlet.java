@@ -36,6 +36,12 @@ public class TicketListServlet extends HttpServlet {
 
         int userId = account.getUserID();
 
+        String error = (String) session.getAttribute("error");
+        if (error != null) {
+            request.setAttribute("error", error);
+            session.removeAttribute("error");
+        }
+
         String statusFilter = request.getParameter("status");
         String typeFilter = request.getParameter("type");
 

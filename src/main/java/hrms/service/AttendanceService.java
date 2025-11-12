@@ -15,6 +15,7 @@ import hrms.model.Department;
 import hrms.model.Position;
 import hrms.model.Shift;
 import hrms.model.User;
+import hrms.utils.AttendanceCalculator;
 
 public class AttendanceService {
 
@@ -24,13 +25,36 @@ public class AttendanceService {
     private final DepartmentDAO departmentDAO = new DepartmentDAO();
     private final PositionDAO positionDAO = new PositionDAO();
 
-    // Helper method: Chuyển Model → DTO (KHÔNG CẦN CONVERT LocalTime NỮA)
     private AttendanceDTO convertToDTO(Attendance attendance, List<User> users,
             List<Department> departments, List<Position> positions,
             List<Shift> shifts) {
+
+        // Tính các giờ tự động dựa trên Shift
+        Shift shift = shifts.stream()
+                .filter(s -> s.getShiftID() == attendance.getShiftID())
+                .findFirst()
+                .orElse(null);
+
+        if (shift != null) {
+            attendance.setLateMinutes(AttendanceCalculator.calculateLate(attendance.getCheckin1(), shift.getCheckin1()));
+            attendance.setEarlyLeaveMinutes(AttendanceCalculator.calculateEarlyLeave(attendance.getCheckout2(), shift.getCheckout2()));
+            attendance.setTotalWorkHours(AttendanceCalculator.calculateWorkHours(
+                    attendance.getCheckin1(), attendance.getCheckout1(),
+                    attendance.getCheckin2(), attendance.getCheckout2(),
+                    attendance.getCheckin3(), attendance.getCheckout3()
+            ));
+            LocalTime standardHours = AttendanceCalculator.calculateWorkHours(
+                    shift.getCheckin1(), shift.getCheckout1(),
+                    shift.getCheckin2(), shift.getCheckout2(),
+                    null, null
+            );
+            attendance.setOtHours(AttendanceCalculator.calculateOT(attendance.getTotalWorkHours(), standardHours));
+
+            attendanceDAO.updateAttendanceTimes(attendance);
+        }
+
         AttendanceDTO dto = new AttendanceDTO();
 
-        // Set trực tiếp vì cùng kiểu LocalTime
         dto.setAttendanceID(attendance.getAttendanceID());
         dto.setUserID(attendance.getUserID());
         dto.setDate(attendance.getDate());
@@ -47,16 +71,13 @@ public class AttendanceService {
         dto.setTotalWorkHours(attendance.getTotalWorkHours());
         dto.setOtHours(attendance.getOtHours());
 
-        // Lấy thông tin User
         User user = users.stream()
                 .filter(u -> u.getUserId() == attendance.getUserID())
                 .findFirst()
                 .orElse(null);
-
         if (user != null) {
             dto.setUserName(user.getFullname());
 
-            // Lấy thông tin Department
             Department department = departments.stream()
                     .filter(d -> d.getDepartmentId() == user.getDepartmentId())
                     .findFirst()
@@ -65,7 +86,6 @@ public class AttendanceService {
                 dto.setDepartmentName(department.getName());
             }
 
-            // Lấy thông tin Position
             Position position = positions.stream()
                     .filter(p -> p.getPositionId() == user.getPositionId())
                     .findFirst()
@@ -74,12 +94,6 @@ public class AttendanceService {
                 dto.setPositionName(position.getName());
             }
         }
-
-        // Lấy thông tin Shift - Trực tiếp vì cùng kiểu LocalTime
-        Shift shift = shifts.stream()
-                .filter(s -> s.getShiftID() == attendance.getShiftID())
-                .findFirst()
-                .orElse(null);
 
         if (shift != null) {
             dto.setShiftName(shift.getName());
@@ -93,16 +107,13 @@ public class AttendanceService {
     }
 
     public List<AttendanceDTO> getAllAttendances() {
-        // Lấy Model từ DAO
         List<Attendance> attendances = attendanceDAO.getAllAttendances();
 
-        // Load dữ liệu cần thiết 1 lần
         List<User> users = userDAO.getAll();
         List<Department> departments = departmentDAO.getAll();
         List<Position> positions = positionDAO.getAll();
         List<Shift> shifts = shiftDAO.getAllShifts();
 
-        // Chuyển đổi sang DTO
         List<AttendanceDTO> attendanceDTOs = new ArrayList<>();
         for (Attendance attendance : attendances) {
             attendanceDTOs.add(convertToDTO(attendance, users, departments, positions, shifts));
@@ -128,6 +139,7 @@ public class AttendanceService {
     public List<AttendanceDTO> searchAttendances(String name, String department, String position,
             boolean hasCheckout3, boolean hasLate,
             boolean hasEarlyLeave, boolean hasOT) {
+
         List<Attendance> attendances = attendanceDAO.getAllAttendances();
 
         List<User> users = userDAO.getAll();
@@ -141,7 +153,6 @@ public class AttendanceService {
 
             boolean match = true;
 
-            // Filter by name
             if (name != null && !name.trim().isEmpty()) {
                 if (dto.getUserName() == null
                         || !dto.getUserName().toLowerCase().contains(name.toLowerCase().trim())) {
@@ -149,7 +160,6 @@ public class AttendanceService {
                 }
             }
 
-            // Filter by department
             if (department != null && !department.trim().isEmpty()) {
                 if (dto.getDepartmentName() == null
                         || !dto.getDepartmentName().toLowerCase().contains(department.toLowerCase().trim())) {
@@ -157,7 +167,6 @@ public class AttendanceService {
                 }
             }
 
-            // Filter by position
             if (position != null && !position.trim().isEmpty()) {
                 if (dto.getPositionName() == null
                         || !dto.getPositionName().toLowerCase().contains(position.toLowerCase().trim())) {
@@ -165,36 +174,20 @@ public class AttendanceService {
                 }
             }
 
-            // Filter by checkout3
             if (hasCheckout3 && dto.getCheckout3() == null) {
                 match = false;
             }
 
-            // Filter by late (00:00:00 = không trễ)
-            if (hasLate) {
-                if (dto.getLateMinutes() == null
-                        || dto.getLateMinutes().equals(LocalTime.MIDNIGHT)
-                        || dto.getLateMinutes().equals(LocalTime.of(0, 0, 0))) {
-                    match = false;
-                }
+            if (hasLate && (dto.getLateMinutes() == null || dto.getLateMinutes().equals(LocalTime.MIDNIGHT))) {
+                match = false;
             }
 
-            // Filter by early leave
-            if (hasEarlyLeave) {
-                if (dto.getEarlyLeaveMinutes() == null
-                        || dto.getEarlyLeaveMinutes().equals(LocalTime.MIDNIGHT)
-                        || dto.getEarlyLeaveMinutes().equals(LocalTime.of(0, 0, 0))) {
-                    match = false;
-                }
+            if (hasEarlyLeave && (dto.getEarlyLeaveMinutes() == null || dto.getEarlyLeaveMinutes().equals(LocalTime.MIDNIGHT))) {
+                match = false;
             }
 
-            // Filter by OT
-            if (hasOT) {
-                if (dto.getOtHours() == null
-                        || dto.getOtHours().equals(LocalTime.MIDNIGHT)
-                        || dto.getOtHours().equals(LocalTime.of(0, 0, 0))) {
-                    match = false;
-                }
+            if (hasOT && (dto.getOtHours() == null || dto.getOtHours().equals(LocalTime.MIDNIGHT))) {
+                match = false;
             }
 
             if (match) {
