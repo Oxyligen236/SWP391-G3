@@ -37,7 +37,7 @@
               <a
                 href="<c:url value='/account/view'/>"
                 target="mainFrame"
-                >View Account List</a
+                >My Account</a
               >
             </li>
           </ul>
