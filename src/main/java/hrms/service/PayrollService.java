@@ -141,7 +141,7 @@ public class PayrollService {
     }
 
     public List<PayrollDTO> getAllCompanyPayrolls() {
-        List<Payroll> payrolls = payrollDao.getAllCompanyPayrolls();
+        List<Payroll> payrolls = payrollDao.getAllCompanyPayrollsOrdered();
         List<PayrollDTO> dtos = new ArrayList<>();
 
         for (Payroll payroll : payrolls) {
@@ -155,7 +155,7 @@ public class PayrollService {
     }
 
     public List<PayrollDTO> getAllCompanyPayrollDetails() {
-        List<Payroll> payrolls = payrollDao.getAllCompanyPayrolls();
+        List<Payroll> payrolls = payrollDao.getAllCompanyPayrollsOrdered();
         List<PayrollDTO> dtos = new ArrayList<>();
 
         for (Payroll payroll : payrolls) {

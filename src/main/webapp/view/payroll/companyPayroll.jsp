@@ -63,6 +63,7 @@
                         <thead>
                             <tr>
                                 <th>No</th>
+                                <th>Name</th>
                                 <th>Department</th>
                                 <th>Position</th>
                                 <th>Month</th>
@@ -86,6 +87,7 @@
                             <c:forEach var="employee" items="${payrolls}" varStatus="status">
                                 <tr>
                                     <td>${(currentPage - 1) * itemsPerPage + status.index + 1}</td>
+                                    <td>${employee.userName}</td>
                                     <td>${employee.userDepartment}</td>
                                     <td>${employee.userPosition}</td>
                                     <td>${employee.month}</td>

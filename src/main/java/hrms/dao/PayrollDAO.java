@@ -65,8 +65,12 @@ public class PayrollDAO extends DBContext {
         );
     }
 
-    public List<Payroll> getAllCompanyPayrolls() {
-        String sql = "select * from payroll";
+    public List<Payroll> getAllCompanyPayrollsOrdered() {
+        String sql = """
+        select p.* from payroll p
+        join users u on p.userid = u.userid
+        order by u.fullname, p.year desc, p.month desc
+    """;
         List<Payroll> payrolls = new ArrayList<>();
         try {
             PreparedStatement st = connection.prepareStatement(sql);
