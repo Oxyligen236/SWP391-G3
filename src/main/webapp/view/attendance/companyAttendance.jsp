@@ -91,7 +91,6 @@
                 <input type="date" name="toDate" value="${toDate}" class="form-control">
             </div>
          
-       
             <div class="col-md-12">
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" name="hasLate" 
@@ -115,7 +114,8 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-search me-1"></i>Search
                 </button>
-                <a href="${pageContext.request.contextPath}/company-attendance" class="btn btn-secondary">
+                
+                <a href="${pageContext.request.contextPath}/company-attendance?reset=true" class="btn btn-secondary">
                     <i class="bi bi-arrow-clockwise me-1"></i>Reset
                 </a>
             </div>
@@ -129,7 +129,6 @@
             <input type="hidden" name="shiftId" value="${selectedShift}">
             <input type="hidden" name="fromDate" value="${fromDate}">
             <input type="hidden" name="toDate" value="${toDate}">
-           
             <input type="hidden" name="hasLate" value="${hasLate}">
             <input type="hidden" name="hasEarlyLeave" value="${hasEarlyLeave}">
             <input type="hidden" name="hasOT" value="${hasOT}">
@@ -240,7 +239,6 @@
                 <input type="hidden" name="shiftId" value="${selectedShift}" />
                 <input type="hidden" name="fromDate" value="${fromDate}" />
                 <input type="hidden" name="toDate" value="${toDate}" />
-            
                 <input type="hidden" name="hasLate" value="${hasLate}" />
                 <input type="hidden" name="hasEarlyLeave" value="${hasEarlyLeave}" />
                 <input type="hidden" name="hasOT" value="${hasOT}" />

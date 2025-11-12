@@ -45,16 +45,20 @@ public class CompanyAttendanceServlet extends HttpServlet {
         boolean hasEarlyLeave = "true".equals(hasEarlyLeaveParam);
         boolean hasOT = "true".equals(hasOTParam);
 
-        LocalDate defaultFromDate = null;
-        LocalDate defaultToDate = null;
+        boolean isFirstLoad = req.getParameter("userName") == null
+                && req.getParameter("department") == null
+                && req.getParameter("position") == null
+                && req.getParameter("shiftId") == null
+                && req.getParameter("fromDate") == null
+                && req.getParameter("toDate") == null
+                && req.getParameter("hasLate") == null
+                && req.getParameter("hasEarlyLeave") == null
+                && req.getParameter("hasOT") == null;
 
-        if ((fromDateParam == null || fromDateParam.isEmpty())
-                && (toDateParam == null || toDateParam.isEmpty())) {
+        if (isFirstLoad) {
             YearMonth currentMonth = YearMonth.now();
-            defaultFromDate = currentMonth.atDay(1);
-            defaultToDate = currentMonth.atEndOfMonth();
-            fromDateParam = defaultFromDate.toString();
-            toDateParam = defaultToDate.toString();
+            fromDateParam = currentMonth.atDay(1).toString();
+            toDateParam = currentMonth.atEndOfMonth().toString();
         }
 
         int itemsPerPage = 10;
@@ -135,7 +139,6 @@ public class CompanyAttendanceServlet extends HttpServlet {
                     .collect(Collectors.toList());
         }
 
-        // sort table
         attendanceList.sort(
                 Comparator.comparing(AttendanceDTO::getDepartmentName,
                         Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER))
