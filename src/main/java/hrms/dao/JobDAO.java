@@ -188,6 +188,19 @@ public void autoCancelExpiredJobs() {
     }
 }
 
+public boolean existsByTicketID(int ticketID) {
+    String sql = "SELECT COUNT(*) FROM Job_Description WHERE ticketID = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setInt(1, ticketID);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return false;
+}
 
 
 

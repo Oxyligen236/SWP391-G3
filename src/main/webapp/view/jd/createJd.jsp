@@ -16,9 +16,10 @@
         <div class="container">
             <h2>Create Job Description</h2>
 
-            <c:if test="${not empty error}">
-                <p style="color:red;">${error}</p>
-            </c:if>
+<c:if test="${not empty requestScope.error}">
+    <p style="color:red;">${requestScope.error}</p>
+</c:if>
+
 
             <form action="<%= request.getContextPath() %>/createjd" method="post">
 
@@ -64,7 +65,7 @@
                 <textarea id="workingConditions" name="workingConditions" rows="3"></textarea>
                 <div class="button-group">
                     <button type="submit" class="btn-primary">Save</button>
-                    <button type="button" class="btn-secondary" onclick="window.location.href = '/jdlist'">Cancel</button>
+                    <button type="button" class="btn-secondary" onclick="window.location.href = '/ticketList'">Cancel</button>
                 </div>
 
             </form>
