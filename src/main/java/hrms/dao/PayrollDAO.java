@@ -451,27 +451,6 @@ public class PayrollDAO extends DBContext {
         }
     }
 
-    public boolean insertPayroll(Payroll payroll, String workHoursStr) {
-        String sql = "insert into payroll (userid, basesalary, month, year, totalworkhours, netsalary, paymentdate, status) "
-                + "values (?, ?, ?, ?, ?, ?, ?, ?)";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, payroll.getUserID());
-            st.setDouble(2, payroll.getBaseSalary());
-            st.setInt(3, payroll.getMonth());
-            st.setInt(4, payroll.getYear());
-            st.setString(5, workHoursStr);
-            st.setDouble(6, payroll.getNetSalary());
-            st.setObject(7, null);
-            st.setString(8, payroll.getStatus());
-            int result = st.executeUpdate();
-            return result > 0;
-        } catch (SQLException e) {
-            System.err.println("Error inserting payroll: " + e.getMessage());
-            return false;
-        }
-    }
-
     public boolean isPayrollExistForMonth(int month, int year) {
         String sql = "select count(*) from payroll where month = ? and year = ? and paymentdate is not null";
         try {
