@@ -39,29 +39,40 @@ public class UpdateAttendanceServlet extends HttpServlet {
         req.getRequestDispatcher("/view/attendance/updateAttendance.jsp").forward(req, resp);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+@Override
+protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+        throws ServletException, IOException {
 
-        try {
-            int attendanceID = Integer.parseInt(req.getParameter("attendanceID"));
-            int userID = Integer.parseInt(req.getParameter("userID"));
-            LocalDate date = LocalDate.parse(req.getParameter("date"));
-            String day = req.getParameter("day");
+    try {
+        int attendanceID = Integer.parseInt(req.getParameter("attendanceID"));
+        int userID = Integer.parseInt(req.getParameter("userID"));
+        LocalDate date = LocalDate.parse(req.getParameter("date"));
+        String day = req.getParameter("day");
 
-            LocalTime checkin1 = parseTime(req.getParameter("checkin1"));
-            LocalTime checkout1 = parseTime(req.getParameter("checkout1"));
-            LocalTime checkin2 = parseTime(req.getParameter("checkin2"));
-            LocalTime checkout2 = parseTime(req.getParameter("checkout2"));
-            LocalTime checkin3 = parseTime(req.getParameter("checkin3"));
-            LocalTime checkout3 = parseTime(req.getParameter("checkout3"));
+        LocalTime checkin1 = parseTime(req.getParameter("checkin1"));
+        LocalTime checkout1 = parseTime(req.getParameter("checkout1"));
+        LocalTime checkin2 = parseTime(req.getParameter("checkin2"));
+        LocalTime checkout2 = parseTime(req.getParameter("checkout2"));
+        LocalTime checkin3 = parseTime(req.getParameter("checkin3"));
+        LocalTime checkout3 = parseTime(req.getParameter("checkout3"));
 
-            int shiftID = Integer.parseInt(req.getParameter("shiftID"));
-            LocalTime lateMinutes = parseTime(req.getParameter("lateMinutes"));
-            LocalTime earlyLeaveMinutes = parseTime(req.getParameter("earlyLeaveMinutes"));
-            LocalTime totalWorkHours = parseTime(req.getParameter("totalWorkHours"));
-            LocalTime otHours = parseTime(req.getParameter("otHours"));
+        int shiftID = Integer.parseInt(req.getParameter("shiftID"));
+        LocalTime lateMinutes = parseTime(req.getParameter("lateMinutes"));
+        LocalTime earlyLeaveMinutes = parseTime(req.getParameter("earlyLeaveMinutes"));
+        LocalTime totalWorkHours = parseTime(req.getParameter("totalWorkHours"));
+        LocalTime otHours = parseTime(req.getParameter("otHours"));
 
+        // --- Kiểm tra điều kiện Checkin < Checkout ---
+        String error = null;
+        if (checkin1 != null && checkout1 != null && !checkin1.isBefore(checkout1)) {
+            error = "Checkin 1 phải nhỏ hơn Checkout 1.";
+        } else if (checkin2 != null && checkout2 != null && !checkin2.isBefore(checkout2)) {
+            error = "Checkin 2 phải nhỏ hơn Checkout 2.";
+        } else if (checkin3 != null && checkout3 != null && !checkin3.isBefore(checkout3)) {
+            error = "Checkin 3 phải nhỏ hơn Checkout 3.";
+        }
+
+        if (error != null) {
             Attendance updated = new Attendance();
             updated.setAttendanceID(attendanceID);
             updated.setUserID(userID);
@@ -79,22 +90,46 @@ public class UpdateAttendanceServlet extends HttpServlet {
             updated.setTotalWorkHours(totalWorkHours);
             updated.setOtHours(otHours);
 
-            boolean success = dao.updateAttendance(updated);
+            req.setAttribute("error", error);
+            req.setAttribute("attendance", updated);
+            req.getRequestDispatcher("/view/attendance/updateAttendance.jsp").forward(req, resp);
+            return;
+        }
 
-            if (success) {
-                resp.sendRedirect(req.getContextPath() + "/company-attendance");
-            } else {
-                req.setAttribute("error", "Cập nhật không thành công.");
-                req.setAttribute("attendance", updated);
-                req.getRequestDispatcher("/view/attendance/updateAttendance.jsp").forward(req, resp);
-            }
+        Attendance updated = new Attendance();
+        updated.setAttendanceID(attendanceID);
+        updated.setUserID(userID);
+        updated.setDate(date);
+        updated.setDay(day);
+        updated.setCheckin1(checkin1);
+        updated.setCheckout1(checkout1);
+        updated.setCheckin2(checkin2);
+        updated.setCheckout2(checkout2);
+        updated.setCheckin3(checkin3);
+        updated.setCheckout3(checkout3);
+        updated.setShiftID(shiftID);
+        updated.setLateMinutes(lateMinutes);
+        updated.setEarlyLeaveMinutes(earlyLeaveMinutes);
+        updated.setTotalWorkHours(totalWorkHours);
+        updated.setOtHours(otHours);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            req.setAttribute("error", "Lỗi xử lý dữ liệu: " + e.getMessage());
+        boolean success = dao.updateAttendance(updated);
+
+        if (success) {
+            resp.sendRedirect(req.getContextPath() + "/company-attendance");
+        } else {
+            req.setAttribute("error", "Cập nhật không thành công.");
+            req.setAttribute("attendance", updated);
             req.getRequestDispatcher("/view/attendance/updateAttendance.jsp").forward(req, resp);
         }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        req.setAttribute("error", "Lỗi xử lý dữ liệu: " + e.getMessage());
+        req.getRequestDispatcher("/view/attendance/updateAttendance.jsp").forward(req, resp);
     }
+}
+
 
     private LocalTime parseTime(String value) {
         if (value == null || value.isEmpty()) return null;
