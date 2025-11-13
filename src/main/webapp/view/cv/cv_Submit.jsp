@@ -41,8 +41,7 @@
                         <div class="form-group">
                             <label for="name">Full Name:</label>
                             <input type="text" id="name" name="name" placeholder="Enter your full name"
-                                value="${param.name}" pattern="[a-zA-ZÀ-ỹ\s]+"
-                                title="Tên không được chứa số hoặc ký tự đặc biệt" required>
+                                value="${param.name}" required>
                         </div>
                         <div class="form-group">
                             <label for="dob">Date of Birth:</label>
@@ -61,20 +60,17 @@
                         <div class="form-group">
                             <label for="CCCD">CCCD:</label>
                             <input type="text" id="CCCD" name="CCCD" placeholder="Enter your CCCD" value="${param.CCCD}"
-                                pattern="\d{9}|\d{12}" title="CCCD must be exactly 9 or 12 digits" required>
+                                required>
                         </div>
                         <div class="form-group">
                             <label for="address">Address:</label>
                             <input type="text" id="address" name="address" placeholder="Enter your address"
-                                value="${param.address}" pattern="[a-zA-Z0-9À-ỹ\s,.-]+"
-                                title="Address cannot contain special characters other than commas, periods, and hyphens"
-                                required>
+                                value="${param.address}" required>
                         </div>
                         <div class="form-group">
                             <label for="nationality">Nationality:</label>
                             <input type="text" id="nationality" name="nationality" placeholder="Enter your nationality"
-                                value="${param.nationality}" pattern="[a-zA-ZÀ-ỹ\s]+"
-                                title="Nationality cannot contain numbers or special characters" required>
+                                value="${param.nationality}" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Email:</label>
@@ -84,8 +80,7 @@
                         <div class="form-group">
                             <label for="phone">Phone Number:</label>
                             <input type="text" id="phone" name="phone" placeholder="Enter your phone number"
-                                value="${param.phone}" pattern="\d{10}" title="Phone number must be exactly 10 digits"
-                                required>
+                                value="${param.phone}" required>
                         </div>
                         <div class="form-group">
                             <label for="Degree">Degree:</label>
