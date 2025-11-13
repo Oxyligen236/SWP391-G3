@@ -64,6 +64,12 @@ public class CreateContractServlet extends HttpServlet {
             }
         }
 
+        // Nhận positionId từ URL parameter (nếu có - khi tạo từ profile)
+        String positionIdParam = request.getParameter("positionId");
+        if (positionIdParam != null && !positionIdParam.trim().isEmpty()) {
+            request.setAttribute("prefilledPositionId", positionIdParam);
+        }
+
         request.getRequestDispatcher("/view/contract/createContract.jsp").forward(request, response);
     }
     @Override
