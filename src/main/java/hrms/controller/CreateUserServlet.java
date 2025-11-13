@@ -132,6 +132,7 @@ public class CreateUserServlet extends HttpServlet {
         if (userId != null) {
             request.setAttribute("success", "User created successfully!");
             request.setAttribute("newUserId", userId);
+            request.setAttribute("newUserPositionId", positionId);
             System.out.println("User created: " + userId);
         } else {
             request.setAttribute("error", "User creation failed!");

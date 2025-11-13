@@ -284,7 +284,10 @@
               <select name="positionID" id="positionID" required>
                 <option value="">-- Select Position --</option>
                 <c:forEach var="p" items="${positions}">
-                  <option value="${p.positionId}">${p.name}</option>
+                  <option value="${p.positionId}" 
+                    <c:if test="${not empty prefilledPositionId && prefilledPositionId eq p.positionId.toString()}">selected</c:if>>
+                    ${p.name}
+                  </option>
                 </c:forEach>
               </select>
             </div>

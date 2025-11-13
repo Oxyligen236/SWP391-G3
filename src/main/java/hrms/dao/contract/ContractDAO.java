@@ -167,7 +167,7 @@ public class ContractDAO extends DBContext {
         }
 
         String col = null;
-        if (searchField != null) {
+        if (searchField != null && !searchField.trim().isEmpty()) {
             switch (searchField) {
                 case "userId":
                     col = "c.UserID";
@@ -193,7 +193,11 @@ public class ContractDAO extends DBContext {
             }
         }
 
-        if (col != null && searchValue != null && !searchValue.trim().isEmpty()) {
+        // Khi searchField là null/empty (chọn "All") và có searchValue, tìm theo tên
+        if ((searchField == null || searchField.trim().isEmpty()) && searchValue != null && !searchValue.trim().isEmpty()) {
+            sql.append(" AND u.FullName LIKE ?");
+            params.add("%" + searchValue.trim() + "%");
+        } else if (col != null && searchValue != null && !searchValue.trim().isEmpty()) {
             if ("c.UserID".equals(col)) {
                 sql.append(" AND ").append(col).append(" = ?");
                 params.add(Integer.parseInt(searchValue.trim()));

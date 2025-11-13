@@ -47,7 +47,7 @@
 
             <!-- Search Field -->
             <select id="searchField" name="searchField" onchange="onFieldChange()">
-                <option value="">All</option>
+                <option value="">All (Search by Name)</option>
                 <option value="userId" ${searchField == 'userId' ? 'selected' : ''}>User ID</option>
                 <option value="duration" ${searchField == 'duration' ? 'selected' : ''}>Duration</option>
                 <option value="baseSalary" ${searchField == 'baseSalary' ? 'selected' : ''}>Salary</option>
@@ -97,12 +97,26 @@
                 var field = document.getElementById('searchField').value;
                 var textInput = document.getElementById('searchValue');
                 var dateInput = document.getElementById('dateInputWrapper');
+                
                 if (field === 'startDate' || field === 'endDate' || field === 'signDate') {
                     textInput.style.display = 'none';
                     dateInput.style.display = 'flex';
                 } else {
                     textInput.style.display = 'block';
                     dateInput.style.display = 'none';
+                    
+                    // Update placeholder based on selected field
+                    if (field === '') {
+                        textInput.placeholder = 'Enter employee name';
+                    } else if (field === 'userId') {
+                        textInput.placeholder = 'Enter User ID';
+                    } else if (field === 'duration') {
+                        textInput.placeholder = 'Enter Duration (months)';
+                    } else if (field === 'baseSalary') {
+                        textInput.placeholder = 'Enter Salary';
+                    } else {
+                        textInput.placeholder = 'Enter search value';
+                    }
                 }
             }
 
