@@ -474,6 +474,27 @@ public int countActiveAdmins() throws SQLException {
     return 0;
 }
 
-
+/**
+     * Change password for an account (with hashed password)
+     * @param accountId - Account ID to change password
+     * @param newHashedPassword - New hashed password
+     * @return true if password changed successfully, false otherwise
+     */
+    public boolean changePassword(int accountId, String newHashedPassword) {
+        String sql = "UPDATE Account SET Password = ? WHERE AccountID = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, newHashedPassword);
+            ps.setInt(2, accountId);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("✅ Password updated successfully for AccountID: " + accountId);
+                return true;
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Error updating password: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }
