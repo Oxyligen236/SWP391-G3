@@ -65,7 +65,7 @@ public class CreateJdServlet extends HttpServlet {
             String officeAddress = request.getParameter("officeAddress");
             String workingConditions = request.getParameter("workingConditions");
 
-            // ✅ Kiểm tra ngày bắt đầu - kết thúc
+
             if (startDate.isAfter(endDate)) {
                 request.setAttribute("error", "Start date cannot be after end date!");
                 DepartmentDAO dao = new DepartmentDAO();
@@ -75,7 +75,7 @@ public class CreateJdServlet extends HttpServlet {
                 return;
             }
 
-            // ✅ Giới hạn số lượng tuyển
+
             if (vacancies > 100000) {
                 request.setAttribute("error", "Number of vacancies is too large (max 100 000)!");
                 DepartmentDAO dao = new DepartmentDAO();
@@ -85,13 +85,14 @@ public class CreateJdServlet extends HttpServlet {
                 return;
             }
 
-            // ✅ Tạo JD mới
+
             JobDescription jd = new JobDescription(
                     0, ticketID, jobTitle, startDate, endDate, department,
                     vacancies, responsibilities, requirements,
                     compensation, officeAddress, workingConditions
             );
             JobDAO jobDao = new JobDAO();
+           jd.setStatus("Pending");
             jobDao.insertJobDescription(jd);
 
             request.getSession().setAttribute("message", "Create JD Successfully!");

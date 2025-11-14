@@ -21,6 +21,44 @@ public class AttendanceCalculator {
         return LocalTime.of(0, 0);
     }
 
+    // =============================
+    //  🔥 HÀM MỚI — Tính tổng Late ca 1 + ca 2
+    // =============================
+    public static LocalTime calculateLateFull(
+            LocalTime checkin1, LocalTime checkin2,
+            LocalTime shiftStart1, LocalTime shiftStart2) {
+
+        long sec = 0;
+
+        if (checkin1 != null && shiftStart1 != null && checkin1.isAfter(shiftStart1)) {
+            sec += Duration.between(shiftStart1, checkin1).getSeconds();
+        }
+        if (checkin2 != null && shiftStart2 != null && checkin2.isAfter(shiftStart2)) {
+            sec += Duration.between(shiftStart2, checkin2).getSeconds();
+        }
+
+        return LocalTime.ofSecondOfDay(sec);
+    }
+
+    // =============================
+    //  🔥 HÀM MỚI — Tính tổng Early ca 1 + ca 2
+    // =============================
+    public static LocalTime calculateEarlyFull(
+            LocalTime checkout1, LocalTime checkout2,
+            LocalTime shiftEnd1, LocalTime shiftEnd2) {
+
+        long sec = 0;
+
+        if (checkout1 != null && shiftEnd1 != null && checkout1.isBefore(shiftEnd1)) {
+            sec += Duration.between(checkout1, shiftEnd1).getSeconds();
+        }
+        if (checkout2 != null && shiftEnd2 != null && checkout2.isBefore(shiftEnd2)) {
+            sec += Duration.between(checkout2, shiftEnd2).getSeconds();
+        }
+
+        return LocalTime.ofSecondOfDay(sec);
+    }
+
     public static LocalTime calculateWorkHours(LocalTime checkin1, LocalTime checkout1,
                                                LocalTime checkin2, LocalTime checkout2,
                                                LocalTime checkin3, LocalTime checkout3) {

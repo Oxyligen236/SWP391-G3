@@ -29,27 +29,54 @@ public class AttendanceService {
             List<Department> departments, List<Position> positions,
             List<Shift> shifts) {
 
-        // Tính các giờ tự động dựa trên Shift
         Shift shift = shifts.stream()
                 .filter(s -> s.getShiftID() == attendance.getShiftID())
                 .findFirst()
                 .orElse(null);
 
         if (shift != null) {
-            attendance.setLateMinutes(AttendanceCalculator.calculateLate(attendance.getCheckin1(), shift.getCheckin1()));
-            attendance.setEarlyLeaveMinutes(AttendanceCalculator.calculateEarlyLeave(attendance.getCheckout2(), shift.getCheckout2()));
-            attendance.setTotalWorkHours(AttendanceCalculator.calculateWorkHours(
+
+            // ================================
+            // 🔥 Tính Late và EarlyLeave
+            // ================================
+            attendance.setLateMinutes(
+                AttendanceCalculator.calculateLateFull(
+                    attendance.getCheckin1(),
+                    attendance.getCheckin2(),
+                    shift.getCheckin1(),
+                    shift.getCheckin2()
+                )
+            );
+
+            attendance.setEarlyLeaveMinutes(
+                AttendanceCalculator.calculateEarlyFull(
+                    attendance.getCheckout1(),
+                    attendance.getCheckout2(),
+                    shift.getCheckout1(),
+                    shift.getCheckout2()
+                )
+            );
+
+            // ================================
+            // Tính WorkHours và OT
+            // ================================
+            LocalTime totalWorkHours = AttendanceCalculator.calculateWorkHours(
                     attendance.getCheckin1(), attendance.getCheckout1(),
                     attendance.getCheckin2(), attendance.getCheckout2(),
                     attendance.getCheckin3(), attendance.getCheckout3()
-            ));
+            );
+            attendance.setTotalWorkHours(totalWorkHours);
+
+            // Nếu OT null hoặc chưa có dữ liệu, vẫn tính dựa trên ca chuẩn
             LocalTime standardHours = AttendanceCalculator.calculateWorkHours(
                     shift.getCheckin1(), shift.getCheckout1(),
                     shift.getCheckin2(), shift.getCheckout2(),
                     null, null
             );
-            attendance.setOtHours(AttendanceCalculator.calculateOT(attendance.getTotalWorkHours(), standardHours));
 
+            attendance.setOtHours(AttendanceCalculator.calculateOT(totalWorkHours, standardHours));
+
+            // Cập nhật database
             attendanceDAO.updateAttendanceTimes(attendance);
         }
 

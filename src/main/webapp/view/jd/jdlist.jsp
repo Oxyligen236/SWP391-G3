@@ -3,6 +3,9 @@
 <%@ page import="hrms.model.JobDescription" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<%-- Lấy role từ session, mặc định 0 nếu chưa login --%>
+<c:set var="role" value="${not empty sessionScope.role ? sessionScope.role : 0}" />
+
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -87,21 +90,23 @@
                     <td>
                         <a href="jd_detail?id=${jd.jobID}" class="btn btn-sm btn-primary">View</a>
 
-                        <!-- Giữ nguyên logic nút -->
-                        <c:choose>
-                            <c:when test="${jd.status == 'InProgress'}">
-                                <a href="pendingjd?id=${jd.jobID}" class="btn btn-sm btn-warning"
-                                   onclick="return confirm('Suspend this JD?');">Suspend</a>
-                            </c:when>
-                            <c:when test="${jd.status == 'Pending'}">
-                                <a href="reopenjd?id=${jd.jobID}" class="btn btn-sm btn-success"
-                                   onclick="return confirm('Reopen this JD?');">Open</a>
-                            </c:when>
-                        </c:choose>
+                        <!-- Chỉ HR Manager (role = 1) mới hiển thị các nút thao tác -->
+                        <c:if test="${role == 1}">
+                            <c:choose>
+                                <c:when test="${jd.status == 'InProgress'}">
+                                    <a href="pendingjd?id=${jd.jobID}" class="btn btn-sm btn-warning"
+                                       onclick="return confirm('Suspend this JD?');">Suspend</a>
+                                </c:when>
+                                <c:when test="${jd.status == 'Pending'}">
+                                    <a href="reopenjd?id=${jd.jobID}" class="btn btn-sm btn-success"
+                                       onclick="return confirm('Reopen this JD?');">Open</a>
+                                </c:when>
+                            </c:choose>
 
-                        <c:if test="${jd.status != 'Cancelled'}">
-                            <a href="canceljd?id=${jd.jobID}" class="btn btn-sm btn-danger"
-                               onclick="return confirm('Cancel this JD?');">Cancel</a>
+                            <c:if test="${jd.status != 'Cancelled'}">
+                                <a href="canceljd?id=${jd.jobID}" class="btn btn-sm btn-danger"
+                                   onclick="return confirm('Cancel this JD?');">Cancel</a>
+                            </c:if>
                         </c:if>
                     </td>
                 </tr>
