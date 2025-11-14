@@ -56,7 +56,7 @@ public class ChangePasswordServlet extends HttpServlet {
                 newPassword == null || newPassword.trim().isEmpty() ||
                 confirmPassword == null || confirmPassword.trim().isEmpty()) {
 
-                request.setAttribute("errorMessage", "Please fill in all fields!");
+                request.setAttribute("errorMessage", " Please fill in all fields!");
                 request.getRequestDispatcher("/view/account/changePassword.jsp").forward(request, response);
                 return;
             }
@@ -79,13 +79,21 @@ public class ChangePasswordServlet extends HttpServlet {
                 return;
             }
 
-            // ===== HASH PASSWORD =====
+            // ===== VERIFY CURRENT PASSWORD =====
+            Account account = accountDAO.getAccountById(currentUser.getAccountID());
+            if (account == null || !PasswordUtil.verifyPassword(currentPassword, account.getPassword())) {
+                request.setAttribute("errorMessage", " Current password is incorrect!");
+                request.getRequestDispatcher("/view/account/changePassword.jsp").forward(request, response);
+                System.out.println("⚠️ Wrong current password for account ID: " + currentUser.getAccountID());
+                return;
+            }
+
+            // ===== HASH NEW PASSWORD =====
             String hashedNewPassword = PasswordUtil.hashPassword(newPassword);
 
             // ===== CHANGE PASSWORD =====
             boolean success = accountDAO.changePassword(
                 currentUser.getAccountID(),
-                currentPassword,
                 hashedNewPassword
             );
 
@@ -94,15 +102,15 @@ public class ChangePasswordServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/view/account/changePasswordSuccess.jsp");
                 System.out.println("✅ Password changed successfully for account ID: " + currentUser.getAccountID());
             } else {
-                request.setAttribute("errorMessage", " Current password is incorrect or system error occurred!");
+                request.setAttribute("errorMessage", "❌ Failed to change password! Please try again.");
                 request.getRequestDispatcher("/view/account/changePassword.jsp").forward(request, response);
-                System.out.println(" Password change failed for account ID: " + currentUser.getAccountID());
+                System.out.println("❌ Password change failed for account ID: " + currentUser.getAccountID());
             }
 
         } catch (Exception e) {
-            request.setAttribute("errorMessage", " System error: " + e.getMessage());
+            request.setAttribute("errorMessage", "💥 System error: " + e.getMessage());
             request.getRequestDispatcher("/view/account/changePassword.jsp").forward(request, response);
-            System.out.println(" Exception in ChangePasswordServlet: " + e.getMessage());
+            System.out.println("💥 Exception in ChangePasswordServlet: " + e.getMessage());
             e.printStackTrace();
         }
     }
