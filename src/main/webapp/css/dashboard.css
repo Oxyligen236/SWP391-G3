@@ -1,0 +1,198 @@
+/* Dashboard Quick Access Cards Styles */
+
+/* Quick Access Card Component */
+.quick-access-card {
+    transition: all 0.3s ease;
+    height: 100%;
+    min-height: 180px;
+    border: 0;
+    border-radius: 0.5rem;
+}
+
+.quick-access-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.quick-access-card .card-body {
+    padding: 1.5rem;
+}
+
+/* Icon Wrapper */
+.quick-access-card .icon-wrapper {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(47, 85, 212, 0.1);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.quick-access-card:hover .icon-wrapper {
+    background-color: rgba(47, 85, 212, 0.2);
+    transform: scale(1.1);
+}
+
+.quick-access-card .icon-wrapper i {
+    color: #2f55d4;
+    transition: color 0.3s ease;
+}
+
+.quick-access-card:hover .icon-wrapper i {
+    color: #1a3bb8;
+}
+
+/* Card Title */
+.quick-access-card .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2f3d4a;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.quick-access-card:hover .card-title {
+    color: #2f55d4;
+}
+
+/* Card Description */
+.quick-access-card .text-muted {
+    font-size: 0.875rem;
+    color: #8492a6;
+    line-height: 1.4;
+}
+
+/* Dashboard Welcome Section */
+.dashboard-welcome {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 0.5rem;
+    color: white;
+}
+
+.dashboard-welcome h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-welcome p {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 0;
+}
+
+/* Dashboard Section Headers */
+.dashboard-section-header {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.dashboard-section-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2f3d4a;
+    margin-bottom: 0;
+}
+
+/* Responsive Grid Layout */
+.dashboard-cards-container {
+    margin-top: 1.5rem;
+}
+
+/* Responsive adjustments for laptop screens */
+@media (min-width: 1200px) and (max-width: 1366px) {
+    /* For 1366x768 screens - 3 cards per row */
+    .quick-access-card {
+        min-height: 170px;
+    }
+    
+    .quick-access-card .card-title {
+        font-size: 0.95rem;
+    }
+    
+    .quick-access-card .text-muted {
+        font-size: 0.8rem;
+    }
+    
+    .quick-access-card .icon-wrapper {
+        width: 55px;
+        height: 55px;
+    }
+}
+
+@media (min-width: 1367px) and (max-width: 1920px) {
+    /* For 1920x1080 screens - 4 cards per row */
+    .quick-access-card {
+        min-height: 180px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    /* For medium laptops - 3 cards per row */
+    .quick-access-card {
+        min-height: 160px;
+    }
+    
+    .quick-access-card .card-title {
+        font-size: 0.9rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    /* For tablets - 2 cards per row */
+    .quick-access-card {
+        min-height: 150px;
+    }
+}
+
+/* Link styling for cards */
+a.text-decoration-none:hover {
+    text-decoration: none !important;
+}
+
+/* Card shadow effects */
+.card.shadow {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card.shadow:hover {
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+}
+
+/* Smooth transitions for all interactive elements */
+.quick-access-card,
+.quick-access-card .icon-wrapper,
+.quick-access-card .icon-wrapper i,
+.quick-access-card .card-title {
+    transition: all 0.3s ease;
+}
+
+/* Focus states for accessibility */
+a:focus .quick-access-card {
+    outline: 2px solid #2f55d4;
+    outline-offset: 2px;
+}
+
+/* Loading state (optional) */
+.quick-access-card.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Disabled state (optional) */
+.quick-access-card.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.quick-access-card.disabled:hover {
+    transform: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
