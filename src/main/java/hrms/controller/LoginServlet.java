@@ -126,6 +126,8 @@ public class LoginServlet extends HttpServlet {
                 response.addCookie(passwordCookie);
             }
             request.getSession().setAttribute("account", account);
+            int role = account.getRole();  // 1 = HR Manager, 2 = HR
+            request.getSession().setAttribute("role", role);
             response.sendRedirect(request.getContextPath() + "/landing");
         } else {
             request.setAttribute("errorMessage", "Invalid username or password");
