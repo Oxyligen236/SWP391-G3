@@ -41,14 +41,13 @@ public class SalaryProcessor {
     }
 
     public LocalDate getPayrollStartDate(int month, int year) {
-        if (month == 1) {
-            return LocalDate.of(year - 1, 12, 26);
-        }
-        return LocalDate.of(year, month - 1, 26);
+        return LocalDate.of(year, month, 1);
     }
 
     public LocalDate getPayrollEndDate(int month, int year) {
-        return LocalDate.of(year, month, 25);
+        return LocalDate.of(year, month, 1).withDayOfMonth(
+                LocalDate.of(year, month, 1).lengthOfMonth()
+        );
     }
 
     public int calculateStandardWorkDays(int month, int year) {
