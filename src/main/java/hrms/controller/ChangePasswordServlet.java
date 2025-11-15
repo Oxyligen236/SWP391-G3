@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/account/change-password")
 public class ChangePasswordServlet extends HttpServlet {
-
     private final AccountDAO accountDAO = new AccountDAO();
 
     @Override
@@ -53,9 +52,9 @@ public class ChangePasswordServlet extends HttpServlet {
 
         try {
             // ===== VALIDATION =====
-            if (currentPassword == null || currentPassword.trim().isEmpty()
-                    || newPassword == null || newPassword.trim().isEmpty()
-                    || confirmPassword == null || confirmPassword.trim().isEmpty()) {
+            if (currentPassword == null || currentPassword.trim().isEmpty() ||
+                newPassword == null || newPassword.trim().isEmpty() ||
+                confirmPassword == null || confirmPassword.trim().isEmpty()) {
 
                 request.setAttribute("errorMessage", " Please fill in all fields!");
                 request.getRequestDispatcher("/view/account/changePassword.jsp").forward(request, response);
@@ -94,8 +93,8 @@ public class ChangePasswordServlet extends HttpServlet {
 
             // ===== CHANGE PASSWORD =====
             boolean success = accountDAO.changePassword(
-                    currentUser.getAccountID(),
-                    hashedNewPassword
+                currentUser.getAccountID(),
+                hashedNewPassword
             );
 
             if (success) {

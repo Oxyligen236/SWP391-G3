@@ -73,7 +73,7 @@ public class SalaryProcessor {
 
         int workDays = calculateStandardWorkDays(month, year);
         return workDays * standardHoursPerDay;
-    }
+    }   
 
     public double calculateHourlyRate(double baseSalary, int month, int year) {
         double standardWorkHours = calculateStandardWorkHours(month, year);
